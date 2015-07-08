@@ -35,7 +35,7 @@
            
       <form ng-submit="submitProfileForm()" id="profile-up-form" name="profile" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h2 class="form-signin-heading">Edit profile for <%- me.name%></h2>
+        <h2 class="form-signin-heading">Edit profile for <%= me.name%></h2>
         <div class="row">
   
           <!-- N A M E -->
