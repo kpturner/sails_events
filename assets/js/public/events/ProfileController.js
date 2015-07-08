@@ -4,7 +4,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		loading: false
 	}
 
-	$scope.profileForm.name="Foobar!";
+	//$scope.profileForm.name="Foobar!";
 
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
