@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Events Management</title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/angular-toastr.css">
+    <link rel="stylesheet" href="/styles/bootstrap.3.1.1.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
+
+    <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
+    <script type="text/javascript">
+    window.SAILS_LOCALS = { _csrf: "<%= _csrf %>" };
+    </script>
+
+  </head>
+
+  <body ng-app="EventsModule" ng-cloak>
+  
+    <div class="container-fluid">               
+        <% include partials/navbar.ejs %>     
+    </div>  
+
+    <div class=" col-md-8 col-md-offset-2">
+      <div class="jumbotron">
+        <h1>Events Management v0.1</h1>
+        <h2>Simple events management prototype</h2>
+        <a href="/signup" class="btn btn-lg btn-success">Sign up now!</a>
+      </div>
+    </div>
+
+
+    <% include partials/footer.ejs %>     
+
+
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/angular.js"></script>
+    <script src="/js/dependencies/angular-toastr.js"></script>
+    <script src="/js/dependencies/compareTo.module.js"></script>
+    <script src="/js/private/dashboard/DashboardModule.js"></script>
+    <script src="/js/private/dashboard/DashboardController.js"></script>
+    <script src="/js/public/events/EventsModule.js"></script>
+    <script src="/js/public/events/LoginController.js"></script>
+    <script src="/js/public/events/SignupController.js"></script>
+    <!--SCRIPTS END-->
+  </body>
+</html>
