@@ -1,1 +1,5 @@
-angular.module('DashboardModule').controller('DashboardController', [ function(){}]);
+angular.module('DashboardModule').controller('DashboardController', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
+	
+	 
+	
+}]);

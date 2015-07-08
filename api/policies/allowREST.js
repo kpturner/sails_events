@@ -16,7 +16,7 @@ module.exports = function(req, res, next) {
   var allowed=true;
  
   if (action=="find" && process.env.NODE_ENV!=='development') {
-    allowed=false
+    allowed=false;
   }
  
   if (allowed) {

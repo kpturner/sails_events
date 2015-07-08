@@ -35,22 +35,18 @@ module.exports.routes = {
   //'/': {
   //  view: 'homepage'
   //}
-  
-  ////////////////////////////////////////////////////////////
-  // Server-rendered HTML webpages
-  ////////////////////////////////////////////////////////////
 
+
+  'GET /': 'PageController.validateRequest',
   'GET /signup': {view: 'signup'},
-  'GET /': 'PageController.showHomePage',
-  
-  ////////////////////////////////////////////////////////////
-  // JSON API
-  ////////////////////////////////////////////////////////////
-
-  // User enrollment + authentication
   'POST /signup': 'UserController.signup',
   'PUT /login': 'UserController.login',
-  'GET /logout': 'UserController.logout'
+  'GET /logout': 'UserController.logout',
+  'GET /profile': 'UserController.profile',
+  'GET /editprofile': {view: 'profile'}
+  
+  
+
 
   /***************************************************************************
   *                                                                          *

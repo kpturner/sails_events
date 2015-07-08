@@ -37,7 +37,9 @@
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
-    window.SAILS_LOCALS = { _csrf: "<%= _csrf %>" };
+    window.SAILS_LOCALS = {
+       _csrf: "<%= _csrf %>"
+    };
     </script>
     
   </head>
@@ -47,12 +49,13 @@
                      
     <div class="container-fluid">
        
-      <% include partials/navbar.ejs %>     
+      <% include partials/public/navbar.ejs %>     
 
       <!-- SIGNUP FORM --> 
-      <!-- form ng-submit="submitSignupForm()" id="sign-up-form" class="form-signin" name="signup" -->
       <div data-ng-controller="SignupController">
-      <form ng-submit="submitSignupForm()" id="sign-up-form" name="signup">
+      <!-- form ng-submit="submitSignupForm()" id="sign-up-form" class="form-signin" name="signup" -->      
+      <form ng-submit="submitSignupForm()" id="sign-up-form" name="signup" 
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h2 class="form-signin-heading">Create an account</h2>
         <div class="row">
   
@@ -92,7 +95,7 @@
           
           <!-- L O D G E  N U M B E R-->
   
-          <div class="control-group form-group col-xs-6 col-md-2"
+          <div class="control-group form-group col-xs-6 col-md-4"
             ng-class="{'has-error':signup.lodgeno.$invalid &&
                                   signup.lodgeno.$dirty}">
             <label>Your lodge number</label>
@@ -133,7 +136,7 @@
           ng-class="{'has-error':signup.email.$invalid &&
                                 signup.email.$dirty}">
             <label>Your email address</label>
-            <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="signupForm.email" required >
+            <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="signupForm.email" required compare-to="signupForm.confirmemail">
             <span class="help-block has-error" ng-if="signup.email.$dirty">
               <span ng-show="signup.email.$error.required">Email address is required.</span>
               <span ng-show="signup.email.$error.email">Not a valid email address.</span>
@@ -194,7 +197,7 @@
 
      </div>  
 
-    <% include partials/footer.ejs %>   
+    <% include partials/public/footer.ejs %>   
       
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
@@ -205,6 +208,7 @@
     <script src="/js/private/dashboard/DashboardController.js"></script>
     <script src="/js/public/events/EventsModule.js"></script>
     <script src="/js/public/events/LoginController.js"></script>
+    <script src="/js/public/events/ProfileController.js"></script>
     <script src="/js/public/events/SignupController.js"></script>
     <!--SCRIPTS END-->
   </body>

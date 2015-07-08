@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Events Management - Edit profile</title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/angular-toastr.css">
+    <link rel="stylesheet" href="/styles/bootstrap.3.1.1.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
+
+    <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
+    <script type="text/javascript">
+    window.SAILS_LOCALS = {
+      _csrf: "<%= _csrf %>",
+      me: <%- JSON.stringify(me) %>
+    };
+    </script>
+    
+  </head>
+
+  <body ng-app="EventsModule" ng-cloak>
+    
+                     
+    <div class="container-fluid">
+       
+      <% include partials/private/navbar.ejs %>     
+
+      <!-- PROFILE FORM --> 
+      <div data-ng-controller="ProfileController">
+           
+      <form ng-submit="submitProfileForm()" id="profile-up-form" name="profile" 
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        <h2 class="form-signin-heading">Edit profile for <%- me.name%></h2>
+        <div class="row">
+  
+          <!-- N A M E -->
+  
+          <!-- checking whether the form "profile" with the "name" property is both $invalid AND $dirty.  If it is
+          insert the "has-error" class on the input field (i.e. insert a red border around the input field)
+          -->
+          <div class="control-group form-group col-xs-10"
+          ng-class="{'has-error':profile.name.$invalid &&
+                                profile.name.$dirty}">
+            <label>Your full name</label>  
+            <!-- For this input field make it required, and have a max length of 505 -->
+            <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="profileForm.name" ng-maxlength="50" >  
+            <!-- Also, if profile.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+            and/or maxlength) -->
+            <span class="help-block has-error" ng-if="profile.name.$dirty">
+              <span ng-show="profile.name.$error.required">Name is required.</span>
+              <span ng-show="profile.name.$error.maxlength">The name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+  
+          <!-- L O D G E -->
+  
+          <div class="control-group form-group col-xs-10 col-md-6"
+            ng-class="{'has-error':profile.lodge.$invalid &&
+                                  profile.lodge.$dirty}">
+            <label>Your lodge name</label>
+            <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="profileForm.lodge" ng-maxlength="50" >
+            <span class="help-block has-error" ng-if="profile.lodge.$dirty">
+              <span ng-show="profile.lodge.$error.required">Lodge name is required.</span>
+              <span ng-show="profile.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+          
+          <!-- L O D G E  N U M B E R-->
+  
+          <div class="control-group form-group col-xs-6 col-md-4"
+            ng-class="{'has-error':profile.lodgeno.$invalid &&
+                                  profile.lodgeno.$dirty}">
+            <label>Your lodge number</label>
+            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="profileForm.lodgeno" ng-maxlength="5" >
+            <span class="help-block has-error" ng-if="profile.lodgeno.$dirty">
+              <span ng-show="profile.lodgeno.$error.required">Lodge number is required.</span>
+              <span ng-show="profile.lodgeno.$error.maxlength">The name cannot be more than 5 characters.</span>
+            </span>
+          </div>
+          
+           <!-- R A N K -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':profile.rank.$invalid &&
+                                  profile.rank.$dirty}">
+            <label>Your rank</label>
+            <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="profileForm.rank" ng-maxlength="100" >
+            <span class="help-block has-error" ng-if="profile.rank.$dirty">
+              <span ng-show="profile.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
+            </span>
+          </div>
+  
+          <!-- D I E T A R Y -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':profile.dietary.$invalid &&
+                                  profile.dietary.$dirty}">
+            <label>Your dietary requirements</label>
+            <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="profileForm.dietary" ng-maxlength="50" >
+            <span class="help-block has-error" ng-if="profile.dietary.$dirty">
+              <span ng-show="profile.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+            </span>
+          </div>
+  
+          <!-- E M A I L -->
+  
+          <div class="control-group form-group col-xs-10"
+          ng-class="{'has-error':profile.email.$invalid &&
+                                profile.email.$dirty}">
+            <label>Your email address</label>
+            <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="profileForm.email" compare-to="profileForm.confirmemail">
+            <span class="help-block has-error" ng-if="profile.email.$dirty">
+              <span ng-show="profile.email.$error.required">Email address is required.</span>
+              <span ng-show="profile.email.$error.email">Not a valid email address.</span>
+            </span>
+          </div>
+          
+           <!-- C O N F I R M  E M A I L -->
+  
+          <div class="control-group form-group col-xs-10"
+          ng-class="{'has-error':profile.confirmemail.$invalid &&
+                                profile.confirmemail.$dirty}">
+            <label>Re-enter your email address</label>
+            <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="profileForm.confirmemail"  >
+            <span class="help-block has-error" ng-if="profile.confirmemail.$dirty">
+              <span ng-show="profile.confirmemail.$error.required">Confirmation email address is required.</span>
+              <span ng-show="profile.confirmemail.$error.email">Not a valid email address.</span>
+            </span>
+          </div>
+  
+          <!-- P A S S W O R D -->
+  
+          <div class="control-group form-group col-xs-7"
+          ng-class="{'has-error':profile.password.$invalid &&
+                                profile.password.$dirty}">
+            <label>Choose a password</label>
+            <!-- Added the compareTo directive that compares the passowrds -->
+            <input type="password" class="form-control" placeholder="at least 6 characters" name="password" ng-model="profileForm.password" id="password" ng-minlength="6" compare-to="profileForm.confirmPassword" >
+            <span class="help-block has-error" ng-if="profile.password.$dirty">
+              <span ng-show="profile.password.$error.required">Password is required.</span>
+              <span ng-show="profile.password.$error.minlength">Password must be at least 6 characters.</span>
+            </span>
+          </div>
+  
+          <!-- C O N F I R M  P A S S W O R D -->
+  
+          <div class="control-group form-group col-xs-7">
+            <label>Re-enter your password</label>
+            <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="profileForm.confirmPassword" >
+            <span class="help-block has-error" ng-if="profile.confirmation.$dirty">
+              <span ng-show="profile.password.$error.compareTo">Password must match.</span>
+              <span ng-show="profile.confirmation.$error.required">Confirmation password is required.</span>
+            </span>
+          </div>
+        </div>
+  
+        <br/>
+  
+        <!-- Disable button until the form has no errors -->
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="profile.$invalid">
+          <span ng-show="!profileForm.loading">Save Details</span>
+          <span class="overlord-loading-spinner fa fa-spinner" ng-show="profileForm.loading" ></span>
+          <span ng-show="profileForm.loading">Saving your details...</span>
+        </button>
+  
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      </form>
+      </div>
+
+     </div>  
+
+    <% include partials/public/footer.ejs %>   
+      
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/angular.js"></script>
+    <script src="/js/dependencies/angular-toastr.js"></script>
+    <script src="/js/dependencies/compareTo.module.js"></script>
+    <script src="/js/private/dashboard/DashboardModule.js"></script>
+    <script src="/js/private/dashboard/DashboardController.js"></script>
+    <script src="/js/public/events/EventsModule.js"></script>
+    <script src="/js/public/events/LoginController.js"></script>
+    <script src="/js/public/events/ProfileController.js"></script>
+    <script src="/js/public/events/SignupController.js"></script>
+    <!--SCRIPTS END-->
+  </body>
+</html>

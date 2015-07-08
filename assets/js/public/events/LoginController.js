@@ -5,6 +5,7 @@ angular.module('EventsModule').controller('LoginController', ['$scope', '$http',
 		loading: false
 	}
 
+  
 	$scope.navbarLoginForm = function (){
      
     // Set the loading state (i.e. show loading spinner)

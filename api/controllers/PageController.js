@@ -6,8 +6,9 @@
  */
 
 module.exports = {
-	showHomePage: function (req, res) {
-   
+	validateRequest: function (req, res) {
+  
+      
     // If not logged in, show the public view.
     if (!req.session.me) {
       return res.view('homepage');

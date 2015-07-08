@@ -7,18 +7,10 @@
 
 module.exports = {
 	
-	// This switches off actions, shortcuts and REST for this controller via the address bar.
-	// TODO only disable in production mode
-	//_config: {
-    // 	actions: false,
-    // 	shortcuts: false,
-    // 	rest: false
-    //},
-	
-		 
+			 
 	/**
 	* Check the provided email address and password, and if they
-	* match a real user in the database, sign in to Activity Overlord.
+	* match a real user in the database, sign in.
 	*/
 	login: function (req, res) {
 	
@@ -26,6 +18,7 @@ module.exports = {
 		User.findOne({
 		  email: req.param('email')
 		}, function foundUser(err, user) {
+			
 		  if (err) return res.negotiate(err);
 		  if (!user) return res.notFound();
 		
@@ -105,9 +98,7 @@ module.exports = {
 							gravatarUrl:		gravatarUrl
 						},function userCreated(err, newUser){
 							if (err) {
-								console.log("err: "+err);
-								console.log("err.invalidAttributes: "+err.invalidAttributes);
-								
+																
 				                // If this is a uniqueness error about the email attribute,
 				                // send back an easily parseable status code.
 				                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
@@ -134,15 +125,19 @@ module.exports = {
 	},
 	 
 	/**
-	* Log out of Activity Overlord.
-	* (wipes `me` from the sesion)
+	* Log out
+	* (wipes `me` from the session)
 	*/
 	logout: function (req, res) {
 	
 		// Look up the user record from the database which is
 		// referenced by the id in the user session (req.session.me)
 		User.findOne(req.session.me, function foundUser(err, user) {
-		  if (err) return res.negotiate(err);
+		  //if (err) return res.negotiate(err);
+		  if (err) {
+			sails.log.verbose('Error occurred trying to retrieve user.');
+		    return res.backToHomePage();
+		  }	
 		
 		  // If session refers to a user who no longer exists, still allow logout.
 		  if (!user) {
@@ -158,6 +153,40 @@ module.exports = {
 		  return res.backToHomePage();
 		
 		});
+	}, 
+	
+	/**
+	* Edit profile
+	*/
+	profile: function (req, res) {
+	
+		// Look up the user record from the database which is
+		// referenced by the id in the user session (req.session.me)
+		User.findOne(req.session.me, function foundUser(err, user) {
+		 	//if (err) return res.negotiate(err);
+		  if (err) {
+			sails.log.verbose('Error occurred trying to retrieve user.');
+		    return res.backToHomePage();
+		  }	
+		
+		  // If session refers to a user who no longer exists, still allow logout.
+		  if (!user) {
+		    sails.log.verbose('Session refers to a user who no longer exists.');
+		    return res.backToHomePage();
+		  }
+		 
+		  return res.editProfile(user);
+		
+		});
+	}, 
+	
+	/**
+	* Update profile
+	*/
+	updateprofile: function (req, res) {
+	
+		// All done- let the client know that everything worked.
+		return res.ok();
 	} 
 };
 

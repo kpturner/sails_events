@@ -11,7 +11,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 			name: $scope.signupForm.name,
 			lodge: $scope.signupForm.lodge,
 			lodgeno: $scope.signupForm.lodgeno,
-			rank: $scope.signupform.rank,
+			rank: $scope.signupForm.rank,
 			dietary: $scope.signupForm.dietary,
 			email: $scope.signupForm.email,
 			password: $scope.signupForm.password
