@@ -28,7 +28,7 @@ module.exports.policies = {
 
   // '*': true,
 
-  // test the "sessionAuth" policy for the userController 
+  // Pass all requests through UserController through the allowRest policy
   UserController: {
     '*': 'allowREST'
   }
