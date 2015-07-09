@@ -7,7 +7,9 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 	$http.get('/getprofile').success(function(data, status) {
 		$scope.profileForm = data; 
 		// Tweak the lodge no
-		$scope.profileForm.lodgeno=parseInt($scope.profileForm.lodgeno);   	
+		$scope.profileForm.lodgeno=parseInt($scope.profileForm.lodgeno);   
+		// Set the confirm email
+		$scope.profileForm.confirmemail=$scope.profileForm.email;   	
 	});
 	
 	$scope.submitProfileForm = function(){
