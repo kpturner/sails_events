@@ -156,14 +156,15 @@ module.exports = {
 	}, 
 	
 	/**
-	* Edit profile
+	* Get profile
+	* 
 	*/
-	profile: function (req, res) {
+	getProfile: function (req, res) {
 	
 		// Look up the user record from the database which is
 		// referenced by the id in the user session (req.session.me)
 		User.findOne(req.session.me, function foundUser(err, user) {
-		 	//if (err) return res.negotiate(err);
+		  //if (err) return res.negotiate(err);
 		  if (err) {
 			sails.log.verbose('Error occurred trying to retrieve user.');
 		    return res.backToHomePage();
@@ -174,8 +175,8 @@ module.exports = {
 		    sails.log.verbose('Session refers to a user who no longer exists.');
 		    return res.backToHomePage();
 		  }
-		 
-		  return res.editProfile(user);
+		
+		 return res.json(user);
 		
 		});
 	}, 
@@ -183,7 +184,7 @@ module.exports = {
 	/**
 	* Update profile
 	*/
-	updateprofile: function (req, res) {
+	updateProfile: function (req, res) {
 	
 		// All done- let the client know that everything worked.
 		return res.ok();

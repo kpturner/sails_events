@@ -1,11 +1,15 @@
-angular.module('EventsModule').controller('ProfileController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('PrivateModule').controller('ProfileController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
 	$scope.profileForm = {
 		loading: false
 	}
 
-	//$scope.profileForm.name="Foobar!";
-
+	$http.get('/getprofile').success(function(data, status) {
+		$scope.profileForm = data; 
+		// Tweak the lodge no
+		$scope.profileForm.lodgeno=parseInt($scope.profileForm.lodgeno);   	
+	});
+	
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
 		// Submit request to Sails.

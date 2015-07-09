@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('LoginController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('PublicModule').controller('LoginController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
 	// set-up loginForm loading state
 	$scope.loginForm = {

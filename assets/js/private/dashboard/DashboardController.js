@@ -1,5 +1,5 @@
-angular.module('DashboardModule').controller('DashboardController', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
+angular.module('PrivateModule').controller('DashboardController', ['$scope', '$http', '$location', 'toastr', function($scope, $http, $location, toastr) {
 	
-	 
-	
+	 	
+		 
 }]);

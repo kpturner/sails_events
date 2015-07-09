@@ -1,0 +1,1 @@
+angular.module('PublicModule', ['toastr', 'compareTo']);
