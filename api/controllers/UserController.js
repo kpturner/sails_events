@@ -160,11 +160,12 @@ module.exports = {
 	* 
 	*/
 	getProfile: function (req, res) {
-	
+		 
 		// Look up the user record from the database which is
 		// referenced by the id in the user session (req.session.me)
 		User.findOne(req.session.me, function foundUser(err, user) {
 		  //if (err) return res.negotiate(err);
+		  
 		  if (err) {
 			sails.log.verbose('Error occurred trying to retrieve user.');
 		    return res.backToHomePage();
@@ -185,9 +186,72 @@ module.exports = {
 	* Update profile
 	*/
 	updateProfile: function (req, res) {
-	
-		// All done- let the client know that everything worked.
-		return res.ok();
-	} 
+	 	
+		// First get the original record for comparison purposes
+		// Look up the user record from the database which is
+		// referenced by the id in the user session (req.session.me)
+		User.findOne(req.session.me, function foundUser(err, currentUser) {
+		  //if (err) return res.negotiate(err);
+		  if (err) {
+			sails.log.verbose('Error occurred trying to retrieve user.');
+		    return res.backToHomePage();
+		  }	
+		
+		  // If session refers to a user who no longer exists, still allow logout.
+		  if (!currentUser) {
+		    sails.log.verbose('Session refers to a user who no longer exists.');
+		    return res.backToHomePage();
+		  }
+		  
+		  // Build the update JSON specifying only the deltas
+		  var delta={};
+		  if (req.param('name')!=currentUser.name)
+		  	delta.name=req.param('name')
+		  if (req.param('lodge')!=currentUser.lodge)
+		  	delta.lodge=req.param('lodge')
+		  if (req.param('lodgeno')!=currentUser.lodgeno)
+		  	delta.lodgeno=req.param('lodgeno')
+		  if (req.param('rank')!=currentUser.rank)
+		  	delta.rank=req.param('rank')
+		  if (req.param('dietary')!=currentUser.dietary)
+		  	delta.dietary=req.param('dietary')	 
+		  if (req.param('email')!=currentUser.email)
+		  	delta.email=req.param('email') 
+			
+		  // Did they change the password?
+		  if (req.param('password') && req.param('password').length>0) {
+			Passwords.encryptPassword({
+				password: req.param('password')			
+			}).exec({
+				success: function (encryptedPassword){
+					if (encryptedPassword!=currentUser.password) 
+						delta.password=encryptedPassword;
+				}	
+			})		  
+		  }
+		 
+		 		  
+		  // Perform the update		  
+		  user.update(req.session.me,delta).exec(function afterwards(err, updatedUser){
+			  
+			  if (err) {
+													
+	                // If this is a uniqueness error about the email attribute,
+	                // send back an easily parseable status code.
+	                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+	                  && err.invalidAttributes.email[0].rule === 'unique') {
+	                  return res.emailAddressInUse();
+	                }
+					// Otherwise, send back something reasonable as our error response.
+   					 return res.negotiate(err);
+				}
+								 
+				// Success
+		  		return res.ok();
+		  })		 						
+		  		 
+		});
+	}
+
 };
 

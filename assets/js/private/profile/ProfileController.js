@@ -5,12 +5,22 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 	}
 
 	$http.get('/getprofile').success(function(data, status) {
-		$scope.profileForm = data; 
-		// Tweak the lodge no
-		$scope.profileForm.lodgeno=parseInt($scope.profileForm.lodgeno);   
-		// Set the confirm email
-		$scope.profileForm.confirmemail=$scope.profileForm.email;   	
-	});
+		if (typeof data == 'object') {
+			$scope.profileForm = data; 
+			// Tweak the lodge no
+			$scope.profileForm.lodgeno=parseInt($scope.profileForm.lodgeno);   
+			// Set the confirm email
+			$scope.profileForm.confirmemail=$scope.profileForm.email;   		
+		}
+		else {
+			window.location = '/';
+		}
+	}).
+	error(function(data, status, headers, config) {
+   		// called asynchronously if an error occurs
+    	// or server returns response with an error status.
+		window.location = '/';
+  	});
 	
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
