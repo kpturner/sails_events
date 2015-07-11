@@ -20,9 +20,10 @@ module.exports = {
   // models: {
   //   connection: 'someMongodbServer'
   // }
-
+  
   models: {
-      connection: 'localhostMysqlServer'  
-  }
+      connection: 'localhostMysqlServer',  
+      migrate:  'alter'            
+  },  
 
 };
