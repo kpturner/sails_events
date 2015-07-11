@@ -17,7 +17,7 @@ OPTS="--prod"
 SERVER="$ROOT_DIR/app.js"
 LOG_FILE="$ROOT_DIR/app.js.log"
 
-LOCK_FILE="/var/lock/subsys/event-service"
+LOCK_FILE="/var/lock/subsys/events-service"
 
 do_start()
 {
