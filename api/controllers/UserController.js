@@ -191,67 +191,115 @@ module.exports = {
 		// Look up the user record from the database which is
 		// referenced by the id in the user session (req.session.me)
 		User.findOne(req.session.me, function foundUser(err, currentUser) {
-		  //if (err) return res.negotiate(err);
-		  if (err) {
-			sails.log.verbose('Error occurred trying to retrieve user.');
-		    return res.backToHomePage();
-		  }	
+			//if (err) return res.negotiate(err);
+		  	if (err) {
+				sails.log.verbose('Error occurred trying to retrieve user.');
+		    	return res.backToHomePage();
+		  	}	
 		
-		  // If session refers to a user who no longer exists, still allow logout.
-		  if (!currentUser) {
-		    sails.log.verbose('Session refers to a user who no longer exists.');
-		    return res.backToHomePage();
-		  }
+		  	// If session refers to a user who no longer exists, still allow logout.
+		  	if (!currentUser) {
+		    	sails.log.verbose('Session refers to a user who no longer exists.');
+		    	return res.backToHomePage();
+		  	}
 		  
-		  // Build the update JSON specifying only the deltas
-		  var delta={};
-		  if (req.param('name')!=currentUser.name)
-		  	delta.name=req.param('name')
-		  if (req.param('lodge')!=currentUser.lodge)
-		  	delta.lodge=req.param('lodge')
-		  if (req.param('lodgeno')!=currentUser.lodgeno)
-		  	delta.lodgeno=req.param('lodgeno')
-		  if (req.param('rank')!=currentUser.rank)
-		  	delta.rank=req.param('rank')
-		  if (req.param('dietary')!=currentUser.dietary)
-		  	delta.dietary=req.param('dietary')	 
-		  if (req.param('email')!=currentUser.email)
-		  	delta.email=req.param('email') 
-			
-		  // Did they change the password?
-		  if (req.param('password') && req.param('password').length>0) {
-			Passwords.encryptPassword({
-				password: req.param('password')			
-			}).exec({
-				success: function (encryptedPassword){
-					if (encryptedPassword!=currentUser.password) 
-						delta.password=encryptedPassword;
-				}	
-			})		  
-		  }
-		 
-		 		  
-		  // Perform the update		  
-		  user.update(req.session.me,delta).exec(function afterwards(err, updatedUser){
-			  
-			  if (err) {
-													
-	                // If this is a uniqueness error about the email attribute,
-	                // send back an easily parseable status code.
-	                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-	                  && err.invalidAttributes.email[0].rule === 'unique') {
-	                  return res.emailAddressInUse();
-	                }
-					// Otherwise, send back something reasonable as our error response.
-   					 return res.negotiate(err);
+		  	// Build the update JSON specifying only the deltas
+		  	var delta={};
+		  	if (req.param('name')!=currentUser.name)
+		  		delta.name=req.param('name')
+		 	 if (req.param('lodge')!=currentUser.lodge)
+		  		delta.lodge=req.param('lodge')
+		  	if (req.param('lodgeno')!=currentUser.lodgeno)
+		  		delta.lodgeno=req.param('lodgeno')
+		  	if (req.param('rank')!=currentUser.rank)
+		  		delta.rank=req.param('rank')
+		  	if (req.param('dietary')!=currentUser.dietary)
+		  		delta.dietary=req.param('dietary')	 
+		  	if (req.param('email')!=currentUser.email)
+		  		delta.email=req.param('email') 
+				  
+			var handleDelta=function(req,delta){
+				if (delta.email) {					 
+					var Gravatar = require('machinepack-gravatar');
+					// Build the URL of a gravatar image for a particular email address.
+					Gravatar.getImageUrl({
+						emailAddress: delta.email,
+						gravatarSize: 400,
+						rating: 'g',
+						useHttps: true,
+					}).exec({
+						error: function(err) {
+							return res.negotiate(err)
+						},
+						success: function(gravatarUrl) {
+							delta.gravatarUrl=gravatarUrl;
+							return handlePassword(req,delta);
+						}	
+					});				 			
 				}
-								 
-				// Success
-		  		return res.ok();
-		  })		 						
-		  		 
+				else {
+					return handlePassword(req,delta)
+				}
+			}	
+			
+			var handlePassword=function(req,delta){
+				if (req.param('password')) {
+					var Passwords = require('machinepack-passwords');  
+					Passwords.encryptPassword({
+						password: req.param('password')			
+					})
+					.exec({
+						// An unexpected error occurred.
+						error: function (err){
+							return res.negotiate(err)
+						},
+						success: function (encryptedPassword){
+							if (encryptedPassword!=currentUser.encryptedPassword) {
+								delta.encryptedPassword=encryptedPassword;
+								return updateUser(delta)
+							}
+						}	
+					})		  	
+				}
+				else {
+					return updateUser(delta)
+				}				
+			}  
+			
+			var updateUser=function(delta) {
+				User.update(req.session.me,delta).exec(function afterwards(err, updatedUser){
+					if (err) {
+															
+						// If this is a uniqueness error about the email attribute,
+					    // send back an easily parseable status code.
+					    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+					      && err.invalidAttributes.email[0].rule === 'unique') {
+					      return res.emailAddressInUse();
+					    }
+						// Otherwise, send back something reasonable as our error response.
+						 return res.negotiate(err);
+					}
+					// Success
+					// Logout if the password has changed
+					if (delta.encryptedPassword) {
+						// Wipe out the session (log out)
+						req.session.me = null;
+						req.session.authenticated=false;						  
+						// Either send a 200 OK or redirect to the home page
+						return res.backToHomePage();
+					}
+					else {
+						return res.ok();	 
+					}
+				})	
+			}
+			
+			// Handle the delta model
+			return handleDelta(req,delta);				
+			 
 		});
-	}
+	},
 
+ 
 };
 
