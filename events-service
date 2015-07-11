@@ -7,10 +7,9 @@
 
 . /etc/rc.d/init.d/functions
 
-USER="kpturner"
+USER="root"
 
-DAEMON_START="forever start"
-DAEMON_STOP="forever stop"
+DAEMON="/root/local/bin/forever"
 ROOT_DIR="/usr/sails/projects/events"
 OPTS="--prod"
 
@@ -23,7 +22,7 @@ do_start()
 {
         if [ ! -f "$LOCK_FILE" ] ; then
                 echo -n $"Starting $SERVER: "
-                runuser -l "$USER" -c "$DAEMON_START $SERVER $OPTS >> $LOG_FILE &" && echo_success || echo_failure
+                runuser -l "$USER" -c "$DAEMON start $SERVER $OPTS >> $LOG_FILE &" && echo_success || echo_failure
                 RETVAL=$?
                 echo
                 [ $RETVAL -eq 0 ] && touch $LOCK_FILE
@@ -35,8 +34,10 @@ do_start()
 do_stop()
 {
         echo -n $"Stopping $SERVER: "
-        pid=`ps -aefw | grep "$DAEMON_STOP $SERVER" | grep -v " grep " | awk '{print $2}'`
-        kill -9 $pid > /dev/null 2>&1 && echo_success || echo_failure
+        # pid=`ps -aefw | grep "$DAEMON $SERVER" | grep -v " grep " | awk '{print $2}'`
+        #kill -9 $pid > /dev/null 2>&1 && echo_success || echo_failure
+        echo -n $"Stopping $SERVER: "
+        runuser -l "$USER" -c "$DAEMON stop $SERVER >> $LOG_FILE &" && echo_success || echo_failure
         RETVAL=$?
         echo
         [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
