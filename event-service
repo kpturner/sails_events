@@ -9,9 +9,9 @@
 
 USER="kpturner"
 
-DAEMON_START="/root/local/bin/forever start"
-DAEMON_STOP="/root/local/bin/forever stop"
-ROOT_DIR="/root/sails/projects/events"
+DAEMON_START="forever start"
+DAEMON_STOP="forever stop"
+ROOT_DIR="/usr/sails/projects/events"
 OPTS="--prod"
 
 SERVER="$ROOT_DIR/app.js"
