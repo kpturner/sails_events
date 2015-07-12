@@ -30,7 +30,9 @@
     -->
 
     <!--STYLES-->
-    <link rel="stylesheet" href="/min/production.min.css">
+    <link rel="stylesheet" href="/styles/angular-toastr.css">
+    <link rel="stylesheet" href="/styles/bootstrap.3.1.1.css">
+    <link rel="stylesheet" href="/styles/importer.css">
     <!--STYLES END-->
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
@@ -198,7 +200,19 @@
     <% include partials/public/footer.ejs %>   
       
     <!--SCRIPTS-->
-    <script src="/min/production.min.js"></script>
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/jquery/jquery.js"></script>
+    <script src="/js/dependencies/angular.js"></script>
+    <script src="/js/dependencies/angular-toastr.js"></script>
+    <script src="/js/dependencies/compareTo.module.js"></script>
+    <script src="/js/dependencies/jquery/jquery.min.js"></script>
+    <script src="/js/public/PublicModule.js"></script>
+    <script src="/js/private/PrivateModule.js"></script>
+    <script src="/js/private/dashboard/DashboardController.js"></script>
+    <script src="/js/private/profile/ProfileController.js"></script>
+    <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/LoginController.js"></script>
+    <script src="/js/public/SignupController.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>
