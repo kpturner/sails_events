@@ -15,8 +15,8 @@
     <div class="nav navbar-nav navbar-right navbar-form btn-toolbar">
       <!-- navbar-right pulls this element right -->
       
-          <!-- Only show this button if the user isAdmin -->
-          <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-hide="!me.isAdmin">
+          <!-- Only show this button if the user isAdmin, and then only on desktops -->
+          <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-hide="!me.isAdmin || '<%- req.device.type %>'!='desktop'">
             <span>Users</span>
           </button>
       

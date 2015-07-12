@@ -2,6 +2,7 @@ angular.module('PrivateModule').controller('DashboardController', ['$scope', '$h
 	
 		// Initialise "me" in the scope with the data set in the view script 
 		$scope.me=SAILS_LOCALS.me;
-		 
+		// Store in sessionStorage also
+		sessionStorage.setItem('me',JSON.stringify(SAILS_LOCALS.me)); 
 		 
 }]);

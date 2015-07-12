@@ -4,6 +4,7 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 		loading: false
 	}
 
+	/*
 	$http.get('/getprofile').success(function(data, status) {
 		if (typeof data == 'object') {
 			$scope.profileForm = data; 
@@ -21,6 +22,13 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
     	// or server returns response with an error status.
 		window.location = '/';
   	});
+	*/
+	
+	$scope.profileForm = JSON.parse(sessionStorage.getItem('me'));
+	// Tweak the lodge no
+	$scope.profileForm.lodgeNo=parseInt($scope.profileForm.lodgeNo);   
+	// Set the confirm email
+	$scope.profileForm.confirmemail=$scope.profileForm.email;   		
 	
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;

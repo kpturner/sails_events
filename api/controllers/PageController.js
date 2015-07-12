@@ -29,6 +29,7 @@ module.exports = {
       return res.view('dashboard', {
         me: {
           id: user.id,
+          userName: user.userName,
           name: user.name,
           email: user.email,
           lodge: user.lodge,

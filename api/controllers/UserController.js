@@ -187,7 +187,9 @@ module.exports = {
 		 
 		// Look up the user record from the database which is
 		// referenced by the id in the user session (req.session.me)
-		User.findOne(req.session.me, function foundUser(err, user) {
+		// unless we have received an id as a parameter
+		var id=(req.param("id")?req.param("id"):req.session.me);
+		User.findOne(id, function foundUser(err, user) {
 		  //if (err) return res.negotiate(err);
 		  
 		  if (err) {
