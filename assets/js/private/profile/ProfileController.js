@@ -1,5 +1,6 @@
 angular.module('PrivateModule').controller('ProfileController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
+	
 	$scope.profileForm = {
 		loading: false
 	}
@@ -24,7 +25,9 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
   	});
 	*/
 	
-	$scope.profileForm = JSON.parse(sessionStorage.getItem('me'));
+	$scope.me = JSON.parse(sessionStorage.getItem('me'));
+	$scope.profileForm = $scope.me;
+	
 	// Tweak the lodge no
 	$scope.profileForm.lodgeNo=parseInt($scope.profileForm.lodgeNo);   
 	// Set the confirm email

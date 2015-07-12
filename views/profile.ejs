@@ -23,7 +23,7 @@
     
   </head>
 
-  <body ng-app="PrivateModule" ng-cloak>
+  <body ng-app="PrivateModule" data-ng-controller="ProfileController" ng-cloak>
     
                      
     <div class="container-fluid">
@@ -31,8 +31,6 @@
       <% include partials/private/navbar.ejs %>     
 
       <!-- PROFILE FORM --> 
-      <div data-ng-controller="ProfileController">
-           
       <form ng-submit="submitProfileForm()" id="profile-up-form" name="profile" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h2 class="form-signin-heading">Edit profile for {{profileForm.name}}</h2>
@@ -189,8 +187,7 @@
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form>
-      </div>
-
+     
      </div>  
 
     <% include partials/public/footer.ejs %>   
