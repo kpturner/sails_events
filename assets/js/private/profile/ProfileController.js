@@ -8,7 +8,7 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 		if (typeof data == 'object') {
 			$scope.profileForm = data; 
 			// Tweak the lodge no
-			$scope.profileForm.lodgeno=parseInt($scope.profileForm.lodgeno);   
+			$scope.profileForm.lodgeNo=parseInt($scope.profileForm.lodgeNo);   
 			// Set the confirm email
 			$scope.profileForm.confirmemail=$scope.profileForm.email;   		
 		}
@@ -27,11 +27,13 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 		// Submit request to Sails.
 		$http.post('/updateprofile', {
 			name: $scope.profileForm.name,
+			userName: $scope.profileForm.userName,
 			lodge: $scope.profileForm.lodge,
-			lodgeno: $scope.profileForm.lodgeno,
+			lodgeNo: $scope.profileForm.lodgeNo,
 			rank: $scope.profileForm.rank,
 			dietary: $scope.profileForm.dietary,
 			email: $scope.profileForm.email,
+			isAdmin: $scope.profileForm.isAdmin,
 			password: $scope.profileForm.password
 		})
 		.then(function onSuccess(sailsResponse){
@@ -45,6 +47,13 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 
 			if (emailAddressAlreadyInUse) {
 				toastr.error('That email address has already been taken, please try again.', 'Error');
+				return;
+			}
+			
+			var userNamelreadyInUse = sailsResponse.status == 410;
+
+			if (userNameAlreadyInUse) {
+				toastr.error('That user name has already been taken, please try again.', 'Error');
 				return;
 			}
 

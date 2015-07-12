@@ -12,15 +12,23 @@
   <a class="navbar-brand" href="/"> Events</a>
   <!-- This is what is the above collapse button points to when the mark-up below is collapsed -->
   <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
-    <!-- This is what "styles" the li's as navbar items -->
-    <ul class="nav navbar-nav navbar-right">
+    <div class="nav navbar-nav navbar-right navbar-form btn-toolbar">
       <!-- navbar-right pulls this element right -->
-      <li>
-        <a href="/profile">Edit profile</a>
-      </li>   
-      <li>
-        <a href="/logout">Sign out</a>
-      </li>          
-    </ul>
+      
+          <!-- Only show this button if the user isAdmin -->
+          <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-hide="!me.isAdmin">
+            <span>Users</span>
+          </button>
+      
+          <button type="button" class="btn btn-success" onclick="window.location='/profile'">
+            <span>Edit profile</span>
+          </button>         
+             
+          <button type="button" class="btn btn-success" onclick="window.location='/logout'">
+            <span>Sign out</span>
+          </button>
+                
+    </div>     
+    
   </div>
 </nav>

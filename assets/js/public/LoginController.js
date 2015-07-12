@@ -24,10 +24,8 @@ angular.module('PublicModule').controller('LoginController', ['$scope', '$http',
 
       // Handle known error type(s).
       // Invalid username / password combination.
-      if (sailsResponse.status === 400 || 404) {
-        // $scope.loginForm.topLevelErrorMessage = 'Invalid email/password combination.';
-        //
-        toastr.error('Invalid email/password combination.', 'Error', {
+      if (sailsResponse.status === 400 || 404) {        
+        toastr.error('Invalid email/user name/password combination.', 'Error', {
           closeButton: true
         });
         return;

@@ -8,7 +8,7 @@
 module.exports = {
 	validateRequest: function (req, res) {
   
-     
+    
     // If not logged in, show the public view.
     if (!req.session.me) {
       return res.view('homepage');
@@ -32,10 +32,10 @@ module.exports = {
           name: user.name,
           email: user.email,
           lodge: user.lodge,
-          lodgeno: user.lodgeno,
+          lodgeNo: user.lodgeNo,
           rank: user.rank,
           dietary: user.dietary,
-          isAdmin: !!user.admin,
+          isAdmin: user.isAdmin,
           gravatarUrl: user.gravatarUrl
         }
       });

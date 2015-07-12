@@ -44,7 +44,8 @@ module.exports.routes = {
   'GET /logout': 'UserController.logout',
   'GET /profile': {view: 'profile'},
   'GET /getprofile': 'UserController.getProfile',
-  'POST /updateprofile': 'UserController.updateProfile'
+  'POST /updateprofile': 'UserController.updateProfile',
+  'GET /users': {view: 'users'},
   
   
 

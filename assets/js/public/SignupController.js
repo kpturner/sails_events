@@ -9,8 +9,9 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 		// Submit request to Sails.
 		$http.post('/signup', {
 			name: $scope.signupForm.name,
+			userName: $scope.signupForm.userName,
 			lodge: $scope.signupForm.lodge,
-			lodgeno: $scope.signupForm.lodgeno,
+			lodgeNo: $scope.signupForm.lodgeNo,
 			rank: $scope.signupForm.rank,
 			dietary: $scope.signupForm.dietary,
 			email: $scope.signupForm.email,
@@ -27,6 +28,13 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 
 			if (emailAddressAlreadyInUse) {
 				toastr.error('That email address has already been taken, please try again.', 'Error');
+				return;
+			}
+			
+			var userNamelreadyInUse = sailsResponse.status == 410;
+
+			if (userNameAlreadyInUse) {
+				toastr.error('That user name has already been taken, please try again.', 'Error');
 				return;
 			}
 

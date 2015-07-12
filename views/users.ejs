@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Events Management</title>
+    <title>Events Management - Users</title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-toastr.css">
@@ -16,35 +15,32 @@
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
-    window.SAILS_LOCALS = { _csrf: "<%= _csrf %>" };
+    window.SAILS_LOCALS = {
+      _csrf: "<%= _csrf %>"
+    };
+    
     </script>
-
+    
   </head>
 
-  <body ng-app="PublicModule" ng-cloak>
-  
-    <div class="container-fluid">          
-        <% include partials/public/navbar.ejs %>     
+  <body ng-app="PrivateModule" ng-cloak>
+    
+                     
+    <div class="container-fluid">
+       
+      <% include partials/private/navbar.ejs %>     
+
+      <!-- USERS --> 
+      <div data-ng-controller="UsersController">
+           
+
+      
+      </div>
+
     </div>  
 
-    <div class=" col-md-8 col-md-offset-2" ng-controller="HomepageController">
-      <div class="jumbotron">
-        <h1>Events Management v0.1</h1>
-        <h2>Simple events management prototype</h2>
-        <div class="visible-xs-inline">
-          <a href="" class="btn btn-lg btn-success" ng-click="toggleNavbar()">Sign in</a>
-          <h4>...or, if you don't have an account</h4>
-        </div>   
-        <div>
-          <a href="/signup" class="btn btn-lg btn-success">Sign up now!</a>
-        </div>
-      </div>
-    </div>
-
-
-    <% include partials/public/footer.ejs %>     
-
-
+    <% include partials/public/footer.ejs %>   
+      
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery/jquery.js"></script>

@@ -9,46 +9,63 @@ module.exports = {
 	
 			 
 	/**
-	* Check the provided email address and password, and if they
+	* Check the provided email address (or user name) and password, and if they
 	* match a real user in the database, sign in.
 	*/
 	login: function (req, res) {
+	
+		var handleFoundUser=function(req, err, user, byEmail){
+			if (err) return res.negotiate(err);
+			if (!user) {
+				// If checking by email, try again by user name (they may have entered a user name rather than an email address)
+				if (byEmail) {
+					User.findOne({
+					  userName: req.param('email')
+					}, function foundUser(err, user) {
+						return handleFoundUser(req, err, user, false)	
+					});
+				}
+				else {
+					return res.notFound();	
+				}				
+			}
+			else {
+				// Compare password attempt from the form params to the encrypted password
+				// from the database (`user.password`)
+				
+				require('machinepack-passwords').checkPassword({
+					passwordAttempt: req.param('password'),
+					encryptedPassword: user.encryptedPassword
+					}).exec({
+					
+					error: function (err){
+					  return res.negotiate(err);
+					},
+					
+					// If the password from the form params doesn't checkout w/ the encrypted
+					// password from the database...
+					incorrect: function (){
+					  return res.notFound();
+					},
+					
+					success: function (){
+					
+					  // Store user id in the user session
+					  req.session.me = user.id;
+					  req.session.authenticated=true;
+					
+					  // All done- let the client know that everything worked.
+					  return res.ok();
+					}
+				});
+			}			
+		}
 	
 		// Try to look up user using the provided email address
 		User.findOne({
 		  email: req.param('email')
 		}, function foundUser(err, user) {
-			
-		  if (err) return res.negotiate(err);
-		  if (!user) return res.notFound();
-		
-		  // Compare password attempt from the form params to the encrypted password
-		  // from the database (`user.password`)
-		  require('machinepack-passwords').checkPassword({
-		    passwordAttempt: req.param('password'),
-		    encryptedPassword: user.encryptedPassword
-		  }).exec({
-		
-		    error: function (err){
-		      return res.negotiate(err);
-		    },
-		
-		    // If the password from the form params doesn't checkout w/ the encrypted
-		    // password from the database...
-		    incorrect: function (){
-		      return res.notFound();
-		    },
-		
-		    success: function (){
-		
-		      // Store user id in the user session
-		      req.session.me = user.id;
-			  req.session.authenticated=true;
-		
-		      // All done- let the client know that everything worked.
-		      return res.ok();
-		    }
-		  });
+			return handleFoundUser(req, err, user, true)	
 		});
 	
 	}, 
@@ -88,8 +105,9 @@ module.exports = {
 						// Create a user with the params sent from the sign-up form --> signup.ejs
 						User.create({
 							name:  				req.param('name'),
+							userName:  			req.param('userName'),
 							lodge:				req.param('lodge'),
-							lodgeno:			req.param('lodgeno'),
+							lodgeNo:			req.param('lodgeNo'),
 							rank:				req.param('rank'),
 							dietary:			req.param('dietary'),
 							email:				req.param('email'),
@@ -104,6 +122,12 @@ module.exports = {
 				                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
 				                  && err.invalidAttributes.email[0].rule === 'unique') {
 				                  return res.emailAddressInUse();
+				                }
+								// If this is a uniqueness error about the userName attribute,
+				                // send back an easily parseable status code.
+				                if (err.invalidAttributes && err.invalidAttributes.userName && err.invalidAttributes.userName[0]
+				                  && err.invalidAttributes.userName[0].rule === 'unique') {
+				                  return res.userNameInUse();
 				                }
 								// Otherwise, send back something reasonable as our error response.
                					 return res.negotiate(err);
@@ -207,16 +231,20 @@ module.exports = {
 		  	var delta={};
 		  	if (req.param('name')!=currentUser.name)
 		  		delta.name=req.param('name')
-		 	 if (req.param('lodge')!=currentUser.lodge)
+			if (req.param('userName')!=currentUser.userName)
+		  		delta.userName=req.param('userName')
+		 	if (req.param('lodge')!=currentUser.lodge)
 		  		delta.lodge=req.param('lodge')
-		  	if (req.param('lodgeno')!=currentUser.lodgeno)
-		  		delta.lodgeno=req.param('lodgeno')
+		  	if (req.param('lodgeNo')!=currentUser.lodgeNo)
+		  		delta.lodgeNo=req.param('lodgeNo')
 		  	if (req.param('rank')!=currentUser.rank)
 		  		delta.rank=req.param('rank')
 		  	if (req.param('dietary')!=currentUser.dietary)
 		  		delta.dietary=req.param('dietary')	 
 		  	if (req.param('email')!=currentUser.email)
 		  		delta.email=req.param('email') 
+			if (req.param('isAdmin')!=currentUser.isAdmin)
+		  		delta.isAdmin=req.param('isAdmin') 
 				  
 			var handleDelta=function(req,delta){
 				if (delta.email) {					 
@@ -276,6 +304,12 @@ module.exports = {
 					      && err.invalidAttributes.email[0].rule === 'unique') {
 					      return res.emailAddressInUse();
 					    }
+						// If this is a uniqueness error about the userName attribute,
+				        // send back an easily parseable status code.
+				        if (err.invalidAttributes && err.invalidAttributes.userName && err.invalidAttributes.userName[0]
+				          && err.invalidAttributes.userName[0].rule === 'unique') {
+				          return res.userNameInUse();
+				        }
 						// Otherwise, send back something reasonable as our error response.
 						 return res.negotiate(err);
 					}

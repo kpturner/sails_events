@@ -14,7 +14,14 @@ module.exports = {
       type: 'string',
       required: true
     },
-
+    
+    // user name (can be used instead of email address)
+    userName: {
+      type: 'string',
+      required: true,
+      unique: true  
+    },
+    
     // The user's lodge
     // e.g. Hamtun
     lodge: {
@@ -24,7 +31,7 @@ module.exports = {
     
     // The user's lodge no
     // e.g. 7083
-    lodgeno: {
+    lodgeNo: {
       type: 'string',
       required: true
     },
@@ -49,6 +56,11 @@ module.exports = {
       unique: true
     },
 
+    // Administrator?
+    isAdmin: {
+      type: 'boolean' 
+    },
+    
     // The encrypted password for the user
     // e.g. asdgh8a249321e9dhgaslcbqn2913051#T(@GHASDGA
     encryptedPassword: {
