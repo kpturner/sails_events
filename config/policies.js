@@ -27,10 +27,12 @@ module.exports.policies = {
   ***************************************************************************/
 
   // '*': true,
+  
+  '*': 'noCache',
 
   // Pass all requests through UserController through the allowRest policy and also disable browser cache
   UserController: {
-    '*': ['allowREST','noCache']
+    '*': 'allowREST'
   }
 
   /***************************************************************************
