@@ -31,7 +31,7 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 				return;
 			}
 			
-			var userNamelreadyInUse = sailsResponse.status == 410;
+			var userNameAlreadyInUse = sailsResponse.status == 410;
 
 			if (userNameAlreadyInUse) {
 				toastr.error('That user name has already been taken, please try again.', 'Error');

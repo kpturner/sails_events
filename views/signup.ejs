@@ -172,6 +172,7 @@
             <label>Re-enter your email address</label>
             <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="signupForm.confirmemail" required >
             <span class="help-block has-error" ng-if="signup.confirmemail.$dirty">
+              <span ng-show="signup.confirmemail.$error.compareTo">Email address must match.</span>
               <span ng-show="signup.confirmemail.$error.required">Confirmation email address is required.</span>
               <span ng-show="signup.confirmemail.$error.email">Not a valid email address.</span>
             </span>
