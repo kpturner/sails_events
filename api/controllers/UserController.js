@@ -39,6 +39,7 @@ module.exports = {
 					}).exec({
 					
 					error: function (err){
+					  console.log(err)		
 					  return res.negotiate(err);
 					},
 					
