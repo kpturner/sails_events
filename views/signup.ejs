@@ -117,13 +117,13 @@
           <!-- L O D G E  N U M B E R-->
   
           <div class="control-group form-group col-xs-6 col-md-4"
-            ng-class="{'has-error':signup.LodgeNo.$invalid &&
-                                  signup.LodgeNo.$dirty}">
+            ng-class="{'has-error':signup.lodgeNo.$invalid &&
+                                  signup.lodgeNo.$dirty}">
             <label>Your lodge number</label>
-            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="signupForm.LodgeNo" ng-maxlength="5" required>
-            <span class="help-block has-error" ng-if="signup.LodgeNo.$dirty">
-              <span ng-show="signup.LodgeNo.$error.required">Lodge number is required.</span>
-              <span ng-show="signup.LodgeNo.$error.maxlength">The name cannot be more than 5 characters.</span>
+            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="signupForm.lodgeNo" ng-maxlength="5" required>
+            <span class="help-block has-error" ng-if="signup.lodgeNo.$dirty">
+              <span ng-show="signup.lodgeNo.$error.required">Lodge number is required.</span>
+              <span ng-show="signup.lodgeNo.$error.maxlength">The name cannot be more than 5 characters.</span>
             </span>
           </div>
           
@@ -172,7 +172,7 @@
             <label>Re-enter your email address</label>
             <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="signupForm.confirmemail" required >
             <span class="help-block has-error" ng-if="signup.confirmemail.$dirty">
-              <span ng-show="signup.confirmemail.$error.compareTo">Email address must match.</span>
+              <span ng-show="signup.email.$error.compareTo">Email address must match.</span>
               <span ng-show="signup.confirmemail.$error.required">Confirmation email address is required.</span>
               <span ng-show="signup.confirmemail.$error.email">Not a valid email address.</span>
             </span>
@@ -199,7 +199,7 @@
             <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="signupForm.confirmPassword" required>
             <span class="help-block has-error" ng-if="signup.confirmation.$dirty">
               <span ng-show="signup.password.$error.compareTo">Password must match.</span>
-              <span ng-show="signup.confirmation.$error.required">Confirmation password is required.</span>
+              <span ng-show="signup.confirmPassword.$error.required">Confirmation password is required.</span>
             </span>
           </div>
         </div>
