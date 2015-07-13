@@ -28,9 +28,9 @@ module.exports.policies = {
 
   // '*': true,
 
-  // Pass all requests through UserController through the allowRest policy
+  // Pass all requests through UserController through the allowRest policy and also disable browser cache
   UserController: {
-    '*': 'allowREST'
+    '*': ['allowREST','noCache']
   }
 
   /***************************************************************************
