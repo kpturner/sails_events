@@ -11,6 +11,7 @@ module.exports = {
     
     // If not logged in, show the public view.
     if (!req.session.me) {
+      console.log("return res.view('homepage');")
       return res.view('homepage');
     }
 
@@ -18,14 +19,17 @@ module.exports = {
     // bootstrapping basic user data in the HTML sent from the server
     User.findOne(req.session.me, function (err, user){
       if (err) {
+        console.log("return res.negotiate(err);")
         return res.negotiate(err);
       }
 
       if (!user) {
         sails.log.verbose('Session refers to a user who no longer exists- did you delete a user, then try to refresh the page with an open tab logged-in as that user?');
+        console.log('Session refers to a user who no longer exists- did you delete a user, then try to refresh the page with an open tab logged-in as that user?');
         return res.view('homepage');
       }
 
+      console.log("return res.view('dashboard');")
       return res.view('dashboard', {
         me: {
           id: user.id,
