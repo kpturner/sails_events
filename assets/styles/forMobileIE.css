@@ -1,0 +1,8 @@
+// This piece of CSS is to aid page responsiveness on IE running on a mobile device.
+// K Turner 14/07/15
+// See: http://getbootstrap.com/getting-started/#support-ie10-width
+@-webkit-viewport   { width: device-width; }
+@-moz-viewport      { width: device-width; }
+@-ms-viewport       { width: device-width; }
+@-o-viewport        { width: device-width; }
+@viewport           { width: device-width; }
