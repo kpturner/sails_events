@@ -11,9 +11,11 @@ module.exports = {
     
     // If not logged in, show the public view.
     if (!req.session.me) {
-      //console.log("return res.view('homepage');")
+      //console.log("return res.view('homepage');")     
       return res.view('homepage');
     }
+    
+    
 
     // Otherwise, look up the logged-in user and show the logged-in view,
     // bootstrapping basic user data in the HTML sent from the server

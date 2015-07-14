@@ -136,6 +136,27 @@ module.exports = {
 							 
 							// Log the user in
 							req.session.me=newUser.id; 
+							
+							// Send confirmation email
+							sails.hooks.email.send(
+								"signupConfirmation",
+							    {
+							      recipientName: newUser.name,
+							      senderName: "Events Management",
+								  userName: newUser.userName,
+								  email: newUser.email,
+								  lodge: newUser.lodge,
+								  lodgeNo: newUser.lodgeNo,
+								  rank: newUser.rank,
+								  dietary: newUser.dietary,
+								  domain:	sails.config.events.domain,
+							    },
+							    {
+							      to: newUser.email,
+							      subject: "Welcome to Events Management"
+							    },
+							    function(err) {if (err) console.log(err);}
+							  )     
 							 
 							// Success
 							return res.json({
