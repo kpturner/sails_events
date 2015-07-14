@@ -1,0 +1,41 @@
+/**
+ *  Local configuration overrides (omitted from Git)
+ *	RENAME THIS FILE to locals.js for it to take effect
+ *
+ */
+
+module.exports = {
+
+  // Events management details
+  events: {
+    domain: "domain.com"	
+  },
+    
+  // Email configuration
+  email: {
+   //service: "Gmail",
+   //auth: {
+   //  user:  "me@gmail.com",
+   //  pass:  "xxxxxxxxxx"
+   //},
+   /**
+	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
+	  */
+	transporter:	{
+      host: 'localhost',
+      port: 25,
+    	tls:{rejectUnauthorized: false},
+      auth: {
+        user: "xxxxx",
+        pass: "yyyyy"
+      }
+	 },
+   from: 'Events Management <email@address.com>', // sender address
+   testMode:  false 
+  },
+  
+  log: {
+    //level: 'silly'
+  }
+  
+};

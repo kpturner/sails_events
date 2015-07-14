@@ -10,6 +10,6 @@
 
 module.exports.events = {
 
-	domain:	"kpturner.co.uk:1337"
+	//domain:	"domain.com"
 	
 };

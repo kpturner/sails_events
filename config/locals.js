@@ -8,7 +8,7 @@ module.exports = {
 
   // Events management details
   events: {
-    
+    domain: "kpturner.co.uk:1337"
   },
     
   // Email configuration
