@@ -38,7 +38,7 @@ module.exports.routes = {
 
 
   // Passport control
-  'get /login': 'AuthController.login',
+  'get /homepage': 'AuthController.homepage',
   'get /logout': 'AuthController.logout',
   'get /register': 'AuthController.register',
 

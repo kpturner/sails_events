@@ -25,7 +25,9 @@ module.exports.passport = {
 
   twitter: {
     name: 'Twitter',
-    img:  '/images/twitter/sign-in-with-twitter-gray.png',
+    icon:  'fa-twitter',
+    label: 'Twitter',
+    class:  'omb_btn-twitter',
     protocol: 'oauth',
     strategy: require('passport-twitter').Strategy,
     options: {

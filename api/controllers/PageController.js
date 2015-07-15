@@ -16,7 +16,8 @@ module.exports = {
     // If not logged in, show the public view.
     if (!req.session.authenticated) {
       //console.log("return res.view('homepage');")     
-      return res.view('homepage');
+      //return res.view('homepage');
+      return res.redirect("/homepage");
     }
     
     // Otherwise, look up the logged-in user and show the logged-in view,
