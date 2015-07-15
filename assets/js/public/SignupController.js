@@ -24,6 +24,7 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 
 			// Handle known error type(s).
 			// If using sails-disk adaptor -- Handle Duplicate Key
+			/*
 			var emailAddressAlreadyInUse = sailsResponse.status == 409;
 
 			if (emailAddressAlreadyInUse) {
@@ -37,6 +38,8 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 				toastr.error('That user name has already been taken, please try again.', 'Error');
 				return;
 			}
+			*/
+			toastr.error(sailsResponse.data, 'Error');
 
 		})
 		.finally(function eitherWay(){

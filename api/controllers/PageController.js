@@ -33,11 +33,18 @@ module.exports = {
         return res.view('homepage');
       }
 
-      // If we have no email address, edit the profile
-      if (!user.email || user.email==null || user.email.length==0) {
-        return res.view('profile');  
-      }
-
+      // Edit the profile if essentials are missing
+      if ( (!user.name || user.name.length==0)
+  			|| (!user.lodge || user.lodge.length==0)
+  			|| (!user.lodgeNo || isNaN(user.lodgeNo))
+  			|| (!user.email || user.email.length==0)
+  			|| ((user.authProvider=="local")
+  					&& ( !user.username || user.username.length==0 )
+  				)
+  		) {
+  			 return res.view('profile'); 
+  		}
+      
       //console.log("return res.view('dashboard');")
       return res.view('dashboard');
 

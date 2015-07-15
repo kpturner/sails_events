@@ -36,6 +36,7 @@
       <form ng-submit="submitProfileForm()" id="profile-up-form" name="profile" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h2 class="form-signin-heading">Edit profile for {{profileForm.name}}</h2>
+        <h5>Items marked with * are mandatory</h5>
         <div class="row">
   
           <!-- N A M E -->
@@ -46,9 +47,9 @@
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':profile.name.$invalid &&
                                 profile.name.$dirty}">
-            <label>Your full name</label>  
+            <label>* Your full name</label>  
             <!-- For this input field make it required, and have a max length of 505 -->
-            <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="profileForm.name" ng-maxlength="50" >  
+            <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="profileForm.name" ng-maxlength="50" required>  
             <!-- Also, if profile.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
             and/or maxlength) -->
             <span class="help-block has-error" ng-if="profile.name.$dirty">
@@ -64,8 +65,8 @@
           -->
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':profile.username.$invalid &&
-                                profile.username.$dirty}">
-            <label>User name (for logging in)</label>
+                                profile.username.$dirty}" ng-hide="user.authProvider!='local'">
+            <label>* User name (for logging in)</label>
               <!-- For this input field make it required, and have a max length of 25 -->
             <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="profileForm.username" ng-maxlength="50" required>
               <!-- Also, if profile.username.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
@@ -81,8 +82,8 @@
           <div class="control-group form-group col-xs-10 col-md-6"
             ng-class="{'has-error':profile.lodge.$invalid &&
                                   profile.lodge.$dirty}">
-            <label>Your lodge name</label>
-            <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="profileForm.lodge" ng-maxlength="50" >
+            <label>* Your lodge name</label>
+            <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="profileForm.lodge" ng-maxlength="50" required>
             <span class="help-block has-error" ng-if="profile.lodge.$dirty">
               <span ng-show="profile.lodge.$error.required">Lodge name is required.</span>
               <span ng-show="profile.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
@@ -94,7 +95,7 @@
           <div class="control-group form-group col-xs-6 col-md-4"
             ng-class="{'has-error':profile.lodgeNo.$invalid &&
                                   profile.lodgeNo.$dirty}">
-            <label>Your lodge number</label>
+            <label>* Your lodge number</label>
             <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="profileForm.lodgeNo" ng-maxlength="5" >
             <span class="help-block has-error" ng-if="profile.lodgeNo.$dirty">
               <span ng-show="profile.lodgeNo.$error.required">Lodge number is required.</span>
@@ -131,8 +132,8 @@
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':profile.email.$invalid &&
                                 profile.email.$dirty}">
-            <label>Your email address</label>
-            <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="profileForm.email" compare-to="profileForm.confirmemail">
+            <label>* Your email address</label>
+            <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="profileForm.email" compare-to="profileForm.confirmemail" required>
             <span class="help-block has-error" ng-if="profile.email.$dirty">
               <span ng-show="profile.email.$error.required">Email address is required.</span>
               <span ng-show="profile.email.$error.email">Not a valid email address.</span>
@@ -145,7 +146,7 @@
           ng-class="{'has-error':profile.confirmemail.$invalid &&
                                 profile.confirmemail.$dirty}">
             <label>Re-enter your email address</label>
-            <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="profileForm.confirmemail"  >
+            <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="profileForm.confirmemail" required >
             <span class="help-block has-error" ng-if="profile.confirmemail.$dirty">
               <span ng-show="profile.confirmemail.$error.required">Confirmation email address is required.</span>
               <span ng-show="profile.confirmemail.$error.email">Not a valid email address.</span>
@@ -156,8 +157,8 @@
   
           <div class="control-group form-group col-xs-7"
           ng-class="{'has-error':profile.password.$invalid &&
-                                profile.password.$dirty}">
-            <label>Choose a password</label>
+                                profile.password.$dirty}" ng-hide="user.authProvider!='local'">
+            <label>* Choose a password</label>
             <!-- Added the compareTo directive that compares the passwords -->
             <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="profileForm.password" id="password" ng-minlength="8" compare-to="profileForm.confirmPassword" >
             <span class="help-block has-error" ng-if="profile.password.$dirty">
@@ -168,7 +169,7 @@
   
           <!-- C O N F I R M  P A S S W O R D -->
   
-          <div class="control-group form-group col-xs-7">
+          <div class="control-group form-group col-xs-7"  ng-hide="user.authProvider!='local'">
             <label>Re-enter your password</label>
             <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="profileForm.confirmPassword" >
             <span class="help-block has-error" ng-if="profile.confirmation.$dirty">
@@ -181,7 +182,7 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="profile.$invalid  || !profile.$dirty">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete()">
           <span ng-show="!profileForm.loading">Save Details</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="profileForm.loading" ></span>
           <span ng-show="profileForm.loading">Saving your details...</span>

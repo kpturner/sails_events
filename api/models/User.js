@@ -42,6 +42,12 @@ var User = {
     isAdmin: {
       type: 'boolean' 
     },
+    
+    // Authentication provider (some redundancy here as we can get this from the passport, but takes
+    // the additional I/O out of each request)
+    authProvider: {
+      type: 'string'  
+    },
         
     // The timestamp when the the user last logged in
     // (i.e. sent a username and password to the server)

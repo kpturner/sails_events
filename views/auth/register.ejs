@@ -75,6 +75,7 @@
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         
         <h2 class="form-signin-heading">Create an account</h2>
+        <h5>Items marked with * are mandatory</h5>
         <div class="row">
   
           <!-- N A M E -->
@@ -85,7 +86,7 @@
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':signup.name.$invalid &&
                                 signup.name.$dirty}">
-            <label>Your full name</label>
+            <label>* Your full name</label>
   
             <!-- For this input field make it required, and have a max length of 25 -->
             <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="signupForm.name" ng-maxlength="50" required>
@@ -106,7 +107,7 @@
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':signup.username.$invalid &&
                                 signup.username.$dirty}">
-            <label>User name (for logging in)</label>
+            <label>* User name (for logging in)</label>
   
             <!-- For this input field make it required, and have a max length of 25 -->
             <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="signupForm.username" ng-maxlength="50" required>
@@ -124,7 +125,7 @@
           <div class="control-group form-group col-xs-10 col-md-6"
             ng-class="{'has-error':signup.lodge.$invalid &&
                                   signup.lodge.$dirty}">
-            <label>Your lodge name</label>
+            <label>* Your lodge name</label>
             <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="signupForm.lodge" ng-maxlength="50" required>
             <span class="help-block has-error" ng-if="signup.lodge.$dirty">
               <span ng-show="signup.lodge.$error.required">Lodge name is required.</span>
@@ -137,7 +138,7 @@
           <div class="control-group form-group col-xs-6 col-md-4"
             ng-class="{'has-error':signup.lodgeNo.$invalid &&
                                   signup.lodgeNo.$dirty}">
-            <label>Your lodge number</label>
+            <label>* Your lodge number</label>
             <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="signupForm.lodgeNo" ng-maxlength="5" required>
             <span class="help-block has-error" ng-if="signup.lodgeNo.$dirty">
               <span ng-show="signup.lodgeNo.$error.required">Lodge number is required.</span>
@@ -174,7 +175,7 @@
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':signup.email.$invalid &&
                                 signup.email.$dirty}">
-            <label>Your email address</label>
+            <label>* Your email address</label>
             <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="signupForm.email" required compare-to="signupForm.confirmemail">
             <span class="help-block has-error" ng-if="signup.email.$dirty">
               <span ng-show="signup.email.$error.required">Email address is required.</span>
@@ -201,7 +202,7 @@
           <div class="control-group form-group col-xs-7"
           ng-class="{'has-error':signup.password.$invalid &&
                                 signup.password.$dirty}">
-            <label>Choose a password</label>
+            <label>* Choose a password</label>
             <!-- Added the compareTo directive that compares the passowrds -->
             <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="signupForm.password" id="password" required ng-minlength="8" compare-to="signupForm.confirmPassword" >
             <span class="help-block has-error" ng-if="signup.password.$dirty">

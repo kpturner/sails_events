@@ -47,6 +47,7 @@ exports.register = function (req, res, next) {
           , rank          = req.param('rank')
           , dietary       = req.param('dietary')
           , email         = req.param('email')
+          , authProvider  = 'local'
           , lastLoggedIn  = new Date()
           , gravatarUrl   = gravatarUrl;
 
@@ -58,6 +59,7 @@ exports.register = function (req, res, next) {
 							rank:				  rank,
 							dietary:			dietary,
 							email:				email,
+              authProvider: authProvider,
 							lastLoggedIn: lastLoggedIn,
 							gravatarUrl:	gravatarUrl
 						},function(err, newUser) {
@@ -122,11 +124,17 @@ exports.register = function (req, res, next) {
         							      subject: "Welcome to Events Management"
         							    },
         							    function(err) {if (err) console.log(err);}
-      							  )     
+      							   )     
                       
                       // Success
                       // Mark the session as authenticated to work with default Sails sessionAuth.js policy
-                      req.session.authenticated = true;
+                      req.login(newUser, function (err) {
+                        if (err) {
+                          return res.registrationError(412,"Failed to login after registration");
+                        }
+                        // Mark the session as authenticated to work with default Sails sessionAuth.js policy
+                        req.session.authenticated = true;                        
+                      });
         							return res.json({
         								id:	newUser.id
         							})

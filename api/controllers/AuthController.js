@@ -185,7 +185,207 @@ var AuthController = {
    */
   disconnect: function (req, res) {
     passport.disconnect(req, res);
-  }
+  },
+  
+  /**
+	 * Edit profile
+   *
+   * @param {Object} req
+   * @param {Object} res
+	*/
+  profile: function(req, res) {
+    res.view('profile',{
+      errors: req.flash('error')
+    });  
+  }, 
+  
+  
+  /**
+	 * Edit profile
+   *
+   * @param {Object} req
+   * @param {Object} res
+	*/
+  users: function(req, res) {
+    res.view('users',{
+      errors: req.flash('error')
+    });  
+  }, 
+  
+  
+  /**
+	 * Edit profile
+   *
+   * @param {Object} req
+   * @param {Object} res
+	*/
+  events: function(req, res) {
+    res.view('events',{
+      errors: req.flash('error')
+    });  
+  }, 
+  
+  /**
+	 * Update profile
+   *
+   * @param {Object} req
+   * @param {Object} res
+	*/
+	updateProfile: function (req, res) {
+	 	
+		// First get the original record for comparison purposes
+		// Look up the user record from the database which is
+		// referenced by the id in the user session (req.session.me)
+		User.findOne(req.user.id, function foundUser(err, currentUser) {
+			//if (err) return res.negotiate(err);
+		  	if (err) {
+				sails.log.verbose('Error occurred trying to retrieve user.');
+				req.session.authenticated=false;
+		    	return res.backToHomePage();
+		  	}	
+		
+		  	// If session refers to a user who no longer exists, still allow logout.
+		  	if (!currentUser) {
+		    	sails.log.verbose('Session refers to a user who no longer exists.');
+				req.session.authenticated=false;
+		    	return res.backToHomePage();
+		  	}
+		  
+		  	// Build the update JSON specifying only the deltas
+		  	var delta={};
+		  	if (req.param('name')!=currentUser.name)
+		  		delta.name=req.param('name')
+			if (req.param('username')!=currentUser.username)
+		  		delta.username=req.param('username')
+		 	if (req.param('lodge')!=currentUser.lodge)
+		  		delta.lodge=req.param('lodge')
+		  	if (req.param('lodgeNo')!=currentUser.lodgeNo)
+		  		delta.lodgeNo=req.param('lodgeNo')
+		  	if (req.param('rank')!=currentUser.rank)
+		  		delta.rank=req.param('rank')
+		  	if (req.param('dietary')!=currentUser.dietary)
+		  		delta.dietary=req.param('dietary')	 
+		  	if (req.param('email')!=currentUser.email)
+		  		delta.email=req.param('email') 
+			if (req.param('isAdmin')!=currentUser.isAdmin)
+		  		delta.isAdmin=req.param('isAdmin') 
+				  
+			var handleDelta=function(req,delta){
+				if (delta.email) {					 
+					var Gravatar = require('machinepack-gravatar');
+					// Build the URL of a gravatar image for a particular email address.
+					Gravatar.getImageUrl({
+						emailAddress: delta.email,
+						gravatarSize: 400,
+						rating: 'g',
+						useHttps: true,
+					}).exec({
+						error: function(err) {
+							return res.negotiate(err)
+						},
+						success: function(gravatarUrl) {
+							delta.gravatarUrl=gravatarUrl;
+							return handlePassword(req,delta);
+						}	
+					});				 			
+				}
+				else {
+					return handlePassword(req,delta)
+				}
+			}	
+			
+			var handlePassword=function(req,delta){
+				if (req.param('password')) {
+					/*
+					var Passwords = require('machinepack-passwords');  
+					Passwords.encryptPassword({
+						password: req.param('password')			
+					})
+					.exec({
+						// An unexpected error occurred.
+						error: function (err){
+							return res.negotiate(err)
+						},
+						success: function (encryptedPassword){
+							if (encryptedPassword!=currentUser.encryptedPassword) {
+								delta.encryptedPassword=encryptedPassword;
+								return updateUser(delta)
+							}
+						}	
+					})	
+					*/
+					// Get the existing passport
+					Passport.findOne({ user: req.user.id }, function(err, passport) {
+					    if (err) { return res.negotiate(err); }
+					    if (!passport) { return res.negotiate(err); }
+					    var validator = require('validator');
+						var crypto    = require('crypto');
+						var token = crypto.randomBytes(48).toString('base64'); 
+						Passport.update(
+							passport.id,{
+								password: 		req.param("password"),
+								accessToken: 	token
+							}
+						).exec(function(err, passport){
+							if (err) {
+		                      if (err.code === 'E_VALIDATION') {
+		                        //req.flash('error', 'Error.Passport.Password.Invalid');
+		                        //return user.destroy(function (destroyErr) {
+		                        //  next(destroyErr || err);
+		                        //});
+		                        return res.registrationError(411,"Passport password is invalid");
+		                      }         
+                      
+                    		}
+							return updateUser(delta)
+						}); 
+					});	  	
+				}
+				else {
+					return updateUser(delta)
+				}						
+			}  
+			
+			var updateUser=function(delta) {
+				User.update(req.user.id,delta).exec(function afterwards(err, updatedUser){
+					if (err) {
+															
+						// If this is a uniqueness error about the email attribute,
+					    // send back an easily parseable status code.
+					    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+					      && err.invalidAttributes.email[0].rule === 'unique') {
+					       return res.registrationError(409,"Email address is already in use");
+					    }
+						// If this is a uniqueness error about the username attribute,
+				        // send back an easily parseable status code.
+				        if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
+				          && err.invalidAttributes.username[0].rule === 'unique') {
+				          return res.registrationError(410,"User name is already in use");
+				        }
+						// Otherwise, send back something reasonable as our error response.
+						 return res.negotiate(err);
+					}
+					// Success
+					// Logout if the password has changed
+					if (req.param('password')) {
+						// Wipe out the session (log out)
+						req.logout();
+						req.session.authenticated=false;						  
+						// Either send a 200 OK or redirect to the home page
+						return res.backToHomePage();
+					}
+					else {            
+						return res.ok();	 
+					}
+				})
+        
+      }
+		
+  		// Handle the delta model
+  		return handleDelta(req,delta);				
+			 
+		});
+	},	
 };
 
 module.exports = AuthController;

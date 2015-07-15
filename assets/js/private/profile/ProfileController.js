@@ -32,7 +32,28 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 	// Tweak the lodge no
 	$scope.profileForm.lodgeNo=parseInt($scope.profileForm.lodgeNo);   
 	// Set the confirm email
-	$scope.profileForm.confirmemail=$scope.profileForm.email;   		
+	$scope.profileForm.confirmemail=$scope.profileForm.email;   
+	
+	/**
+	 * Test if the details are complete on the profile
+	 */
+	$scope.detailsComplete = function() {
+		var complete=true;
+		if (   (!$scope.profileForm.name || $scope.profileForm.name.length==0)
+			|| (!$scope.profileForm.lodge || $scope.profileForm.lodge.length==0)
+			|| (!$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo))
+			|| (!$scope.profileForm.email || $scope.profileForm.email.length==0)
+			|| (($scope.user.authProvider=="local")
+					&& (   (!$scope.profileForm.username || $scope.profileForm.username.length==0)
+						|| (!$scope.profileForm.password ||$scope.profileForm.password.length==0)
+						)
+				)
+		) {
+			complete=false;
+		}
+			
+		return complete;
+	}		
 	
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
@@ -54,20 +75,7 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 		.catch(function onError(sailsResponse){
 
 			// Handle known error type(s).
-			// If using sails-disk adaptor -- Handle Duplicate Key
-			var emailAddressAlreadyInUse = sailsResponse.status == 409;
-
-			if (emailAddressAlreadyInUse) {
-				toastr.error('That email address has already been taken, please try again.', 'Error');
-				return;
-			}
-			
-			var userNamelreadyInUse = sailsResponse.status == 410;
-
-			if (userNameAlreadyInUse) {
-				toastr.error('That user name has already been taken, please try again.', 'Error');
-				return;
-			}
+			toastr.error(sailsResponse.data, 'Error');
 
 		})
 		.finally(function eitherWay(){

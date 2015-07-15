@@ -50,11 +50,10 @@ module.exports.routes = {
 
   // Normal processing
   'GET /': 'PageController.validateRequest',
-  'GET /profile': {view: 'profile'},
-  'GET /getprofile': 'UserController.getProfile',
-  'POST /updateprofile': 'UserController.updateProfile',
-  'GET /users': {view: 'users'},
-  'GET /events': {view: 'events'},
+  'GET /profile': 'AuthController.profile',
+  'POST /updateprofile': 'AuthController.updateProfile',
+  'GET /users': 'AuthController.users',
+  'GET /events': 'AuthController.events',
   
 
 
