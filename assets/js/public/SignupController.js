@@ -7,9 +7,9 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 	$scope.submitSignupForm = function(){
 		$scope.signupForm.loading=true;
 		// Submit request to Sails.
-		$http.post('/signup', {
+		$http.post('/auth/local/register', {
 			name: $scope.signupForm.name,
-			userName: $scope.signupForm.userName,
+			username: $scope.signupForm.username,
 			lodge: $scope.signupForm.lodge,
 			lodgeNo: $scope.signupForm.lodgeNo,
 			rank: $scope.signupForm.rank,
@@ -31,9 +31,9 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 				return;
 			}
 			
-			var userNameAlreadyInUse = sailsResponse.status == 410;
+			var usernameAlreadyInUse = sailsResponse.status == 410;
 
-			if (userNameAlreadyInUse) {
+			if (usernameAlreadyInUse) {
 				toastr.error('That user name has already been taken, please try again.', 'Error');
 				return;
 			}

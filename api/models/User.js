@@ -1,58 +1,40 @@
-/**
-* User.js
-*
-* @description :: TODO: You might write a short summary of how this model works and what it represents here.
-* @docs        :: http://sailsjs.org/#!documentation/models
-*/
+var User = {
+  // Enforce model schema in the case of schemaless databases
+  schema: true,
 
-module.exports = {
-   
   attributes: {
-    // The user's full name
-    // e.g. Nikola Tesla
-    name: {
-      type: 'string',
-      required: true
-    },
+    username  : { type: 'string', unique: true },
+    //email     : { type: 'email',  unique: true },
+    passports : { collection: 'Passport', via: 'user' },
     
-    // user name (can be used instead of email address)
-    userName: {
-      type: 'string',
-      required: true,
-      unique: true  
+    // Preferred name
+    name: {
+      type: 'string'
     },
     
     // The user's lodge
-    // e.g. Hamtun
     lodge: {
-      type: 'string',
-      required: true
+      type: 'string'
     },
     
     // The user's lodge no
-    // e.g. 7083
     lodgeNo: {
-      type: 'string',
-      required: true
+      type: 'string'
     },
     
     // The user's rank
-    // e.g. PPDGDC
     rank: {
       type: 'string'
     },
     
     // The user's dietary requirements
-    // e.g. Vegetarian
     dietary: {
       type: 'string'
     },
 
     // The user's email address
-    // e.g. nikola@tesla.com
     email: {
-      type: 'email',     
-      required: true,
+      type: 'email', 
       unique: true
     },
 
@@ -60,19 +42,11 @@ module.exports = {
     isAdmin: {
       type: 'boolean' 
     },
-    
-    // The encrypted password for the user
-    // e.g. asdgh8a249321e9dhgaslcbqn2913051#T(@GHASDGA
-    encryptedPassword: {
-      type: 'string',
-      required: true
-    },
-
+        
     // The timestamp when the the user last logged in
     // (i.e. sent a username and password to the server)
     lastLoggedIn: {
       type: 'date',
-      required: true,
       defaultsTo: new Date(0)
     },
 
@@ -83,3 +57,4 @@ module.exports = {
   }
 };
 
+module.exports = User;

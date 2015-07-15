@@ -1,17 +1,16 @@
 /**
  *
  * Usage:
- * res.userNameInUse();
+ * res.registrationError();
  */
 
-module.exports = function userNameInUse() {
+module.exports = function registrationError(errorCode, errorMsg) {
 
   // Get access to `req`, `res`, & `sails`
   var req = this.req;
   var res = this.res;
   var sails = req._sails;
 
-  return res.send(410, 'User name is already taken by another user')
+  return res.send(errorCode, errorMsg)
 
 };
-

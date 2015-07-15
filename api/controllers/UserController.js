@@ -20,7 +20,7 @@ module.exports = {
 				// If checking by email, try again by user name (they may have entered a user name rather than an email address)
 				if (byEmail) {
 					User.findOne({
-					  userName: req.param('email')
+					  username: req.param('email')
 					}, function foundUser(err, user) {
 						return handleFoundUser(req, err, user, false)	
 					});
@@ -52,7 +52,7 @@ module.exports = {
 					success: function (){
 					
 					  // Store user id in the user session
-					  req.session.me = user.id;
+					  //req.session.me = user.id;
 					  req.session.authenticated=true;
 					
 					  // All done- let the client know that everything worked.
@@ -71,108 +71,10 @@ module.exports = {
 	
 	}, 
 	 
-	/**
-	* Signup for a user account
-	*/
-	signup: function(req, res) {
-		
-		var Passwords = require('machinepack-passwords');
-		 
-		// Encrypt a string using the BCrypt algorithm.
-		Passwords.encryptPassword({
-			password: req.param('password'),
-			
-		}).exec({
-			// An unexpected error occurred.
-			error: function (err){
-			 	return res.negotiate(err)
-			},
-			// OK.
-			success: function (encryptedPassword){
-				
-				var Gravatar = require('machinepack-gravatar');
-
-				// Build the URL of a gravatar image for a particular email address.
-				Gravatar.getImageUrl({
-					emailAddress: req.param('email'),
-					gravatarSize: 400,
-					rating: 'g',
-					useHttps: true,
-				}).exec({
-					error: function(err) {
-						return res.negotiate(err)
-					},
-					success: function(gravatarUrl) {
-						// Create a user with the params sent from the sign-up form --> signup.ejs
-						User.create({
-							name:  				req.param('name'),
-							userName:  			req.param('userName'),
-							lodge:				req.param('lodge'),
-							lodgeNo:			req.param('lodgeNo'),
-							rank:				req.param('rank'),
-							dietary:			req.param('dietary'),
-							email:				req.param('email'),
-							encryptedPassword:	encryptedPassword,
-							lastLoggedIn:		new Date(),
-							gravatarUrl:		gravatarUrl
-						},function userCreated(err, newUser){
-							if (err) {
-																
-				                // If this is a uniqueness error about the email attribute,
-				                // send back an easily parseable status code.
-				                if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-				                  && err.invalidAttributes.email[0].rule === 'unique') {
-				                  return res.emailAddressInUse();
-				                }
-								// If this is a uniqueness error about the userName attribute,
-				                // send back an easily parseable status code.
-				                if (err.invalidAttributes && err.invalidAttributes.userName && err.invalidAttributes.userName[0]
-				                  && err.invalidAttributes.userName[0].rule === 'unique') {
-				                  return res.userNameInUse();
-				                }
-								// Otherwise, send back something reasonable as our error response.
-               					 return res.negotiate(err);
-							}
-							 
-							// Log the user in
-							req.session.me=newUser.id; 
-							
-							// Send confirmation email
-							sails.hooks.email.send(
-								"signupConfirmation",
-							    {
-							      recipientName: newUser.name,
-							      senderName: "Events Management",
-								  userName: newUser.userName,
-								  email: newUser.email,
-								  lodge: newUser.lodge,
-								  lodgeNo: newUser.lodgeNo,
-								  rank: newUser.rank,
-								  dietary: newUser.dietary,
-								  domain:	sails.config.events.domain,
-							    },
-							    {
-							      to: newUser.email,
-							      subject: "Welcome to Events Management"
-							    },
-							    function(err) {if (err) console.log(err);}
-							  )     
-							 
-							// Success
-							return res.json({
-								id:	newUser.id
-							})
-						})							
-					}
-				});		
-			 },
-		});	
-		
-	},
+	
 	 
 	/**
 	* Log out
-	* (wipes `me` from the session)
 	*/
 	logout: function (req, res) {
 	
@@ -192,7 +94,7 @@ module.exports = {
 		  }
 		
 		  // Wipe out the session (log out)
-		  req.session.me = null;
+		  //req.session.me = null;
 		  req.session.authenticated=false;
 		  
 		  // Either send a 200 OK or redirect to the home page
@@ -255,8 +157,8 @@ module.exports = {
 		  	var delta={};
 		  	if (req.param('name')!=currentUser.name)
 		  		delta.name=req.param('name')
-			if (req.param('userName')!=currentUser.userName)
-		  		delta.userName=req.param('userName')
+			if (req.param('username')!=currentUser.username)
+		  		delta.username=req.param('username')
 		 	if (req.param('lodge')!=currentUser.lodge)
 		  		delta.lodge=req.param('lodge')
 		  	if (req.param('lodgeNo')!=currentUser.lodgeNo)
@@ -328,10 +230,10 @@ module.exports = {
 					      && err.invalidAttributes.email[0].rule === 'unique') {
 					      return res.emailAddressInUse();
 					    }
-						// If this is a uniqueness error about the userName attribute,
+						// If this is a uniqueness error about the username attribute,
 				        // send back an easily parseable status code.
-				        if (err.invalidAttributes && err.invalidAttributes.userName && err.invalidAttributes.userName[0]
-				          && err.invalidAttributes.userName[0].rule === 'unique') {
+				        if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
+				          && err.invalidAttributes.username[0].rule === 'unique') {
 				          return res.userNameInUse();
 				        }
 						// Otherwise, send back something reasonable as our error response.

@@ -25,8 +25,9 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
   	});
 	*/
 	
-	$scope.me = JSON.parse(sessionStorage.getItem('me'));
-	$scope.profileForm = $scope.me;
+	// Initialise "user" in the scope with the data set in the view script 
+	$scope.user=SAILS_LOCALS.user;
+	$scope.profileForm = $scope.user;
 	
 	// Tweak the lodge no
 	$scope.profileForm.lodgeNo=parseInt($scope.profileForm.lodgeNo);   
@@ -38,7 +39,7 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 		// Submit request to Sails.
 		$http.post('/updateprofile', {
 			name: $scope.profileForm.name,
-			userName: $scope.profileForm.userName,
+			username: $scope.profileForm.username,
 			lodge: $scope.profileForm.lodge,
 			lodgeNo: $scope.profileForm.lodgeNo,
 			rank: $scope.profileForm.rank,

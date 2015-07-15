@@ -15,7 +15,7 @@
     <script type="text/javascript">
     window.SAILS_LOCALS = {
       _csrf: '<%= _csrf %>',
-      me: <%- JSON.stringify(me) %>
+      user: <%- JSON.stringify(res.locals.user) %>
     };
     </script>
   </head>
@@ -25,7 +25,8 @@
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %>  
        
-      <h1>This is the Dashboard</h1>
+      <h1>This is the Dashboard</h1>    
+      <%- JSON.stringify(res.locals.user)%>
     
       <% include partials/public/footer.ejs %>   
 

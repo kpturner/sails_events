@@ -50,13 +50,30 @@
                      
     <div class="container-fluid">
        
-      <% include partials/public/navbar.ejs %>     
+      <% include ../partials/public/navbar.ejs %>     
 
-      <!-- SIGNUP FORM --> 
+            
       <div data-ng-controller="SignupController">
-      <!-- form ng-submit="submitSignupForm()" id="sign-up-form" class="form-signin" name="signup" -->      
-      <form ng-submit="submitSignupForm()" id="sign-up-form" name="signup" 
+      
+        <!-- SIGNUP FORM --> 
+        <% if (errors) {%>
+          <% errors.forEach(function (error) { %>
+            <%= __(error) %>
+          <% }) %>
+        <% } %>
+        
+        <!--
+        <form role="form" action="/auth/local/register" method="post">
+          <input type="text" name="username" placeholder="Username">
+          <input type="text" name="email" placeholder="Email">
+          <input type="password" name="password" placeholder="Password">
+          <button type="submit">Sign up</button>
+        </form>
+        -->
+      
+        <form ng-submit="submitSignupForm()" id="sign-up-form" name="signup" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        
         <h2 class="form-signin-heading">Create an account</h2>
         <div class="row">
   
@@ -87,18 +104,18 @@
           insert the "has-error" class on the input field (i.e. insert a red border around the input field)
           -->
           <div class="control-group form-group col-xs-10"
-          ng-class="{'has-error':signup.userName.$invalid &&
-                                signup.userName.$dirty}">
+          ng-class="{'has-error':signup.username.$invalid &&
+                                signup.username.$dirty}">
             <label>User name (for logging in)</label>
   
             <!-- For this input field make it required, and have a max length of 25 -->
-            <input type="text" class="form-control" placeholder="e.g. fbloggs" name="userName" ng-model="signupForm.userName" ng-maxlength="50" required>
+            <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="signupForm.username" ng-maxlength="50" required>
   
-            <!-- Also, if signup.userName.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+            <!-- Also, if signup.username.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
             and/or maxlength) -->
-            <span class="help-block has-error" ng-if="signup.userName.$dirty">
-              <span ng-show="signup.userName.$error.required">User name is required.</span>
-              <span ng-show="signup.userName.$error.maxlength">The user name cannot be more than 50 characters.</span>
+            <span class="help-block has-error" ng-if="signup.username.$dirty">
+              <span ng-show="signup.username.$error.required">User name is required.</span>
+              <span ng-show="signup.username.$error.maxlength">The user name cannot be more than 50 characters.</span>
             </span>
           </div>
   
@@ -186,10 +203,10 @@
                                 signup.password.$dirty}">
             <label>Choose a password</label>
             <!-- Added the compareTo directive that compares the passowrds -->
-            <input type="password" class="form-control" placeholder="at least 6 characters" name="password" ng-model="signupForm.password" id="password" required ng-minlength="6" compare-to="signupForm.confirmPassword" >
+            <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="signupForm.password" id="password" required ng-minlength="8" compare-to="signupForm.confirmPassword" >
             <span class="help-block has-error" ng-if="signup.password.$dirty">
               <span ng-show="signup.password.$error.required">Password is required.</span>
-              <span ng-show="signup.password.$error.minlength">Password must be at least 6 characters.</span>
+              <span ng-show="signup.password.$error.minlength">Password must be at least 8 characters.</span>
             </span>
           </div>
   
@@ -220,7 +237,7 @@
 
      </div>  
 
-    <% include partials/public/footer.ejs %>   
+    <% include ../partials/public/footer.ejs %>   
       
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>

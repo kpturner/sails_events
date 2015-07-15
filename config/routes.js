@@ -37,11 +37,19 @@ module.exports.routes = {
   //}
 
 
+  // Passport control
+  'get /login': 'AuthController.login',
+  'get /logout': 'AuthController.logout',
+  'get /register': 'AuthController.register',
+
+  'post /auth/local': 'AuthController.callback',
+  'post /auth/local/:action': 'AuthController.callback',
+
+  'get /auth/:provider': 'AuthController.provider',
+  'get /auth/:provider/callback': 'AuthController.callback',
+
+  // Normal processing
   'GET /': 'PageController.validateRequest',
-  'GET /signup': {view: 'signup'},
-  'POST /signup': 'UserController.signup',
-  'PUT /login': 'UserController.login',
-  'GET /logout': 'UserController.logout',
   'GET /profile': {view: 'profile'},
   'GET /getprofile': 'UserController.getProfile',
   'POST /updateprofile': 'UserController.updateProfile',

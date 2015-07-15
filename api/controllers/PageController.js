@@ -1,5 +1,7 @@
 /**
  * PageController
+ * 
+ ************* OBSOLETE ***************
  *
  * @description :: Server-side logic for managing pages
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
@@ -8,18 +10,18 @@
 module.exports = {
 	validateRequest: function (req, res) {
   
+    //console.log(req.user);
+    //console.log(res.locals.user);
     
     // If not logged in, show the public view.
-    if (!req.session.me) {
+    if (!req.session.authenticated) {
       //console.log("return res.view('homepage');")     
       return res.view('homepage');
     }
     
-    
-
     // Otherwise, look up the logged-in user and show the logged-in view,
     // bootstrapping basic user data in the HTML sent from the server
-    User.findOne(req.session.me, function (err, user){
+    User.findOne(res.locals.user.id, function (err, user){
       if (err) {
         //console.log("return res.negotiate(err);")
         return res.negotiate(err);
@@ -31,21 +33,13 @@ module.exports = {
         return res.view('homepage');
       }
 
+      // If we have no email address, edit the profile
+      if (!user.email || user.email==null || user.email.length==0) {
+        return res.view('profile');  
+      }
+
       //console.log("return res.view('dashboard');")
-      return res.view('dashboard', {
-        me: {
-          id: user.id,
-          userName: user.userName,
-          name: user.name,
-          email: user.email,
-          lodge: user.lodge,
-          lodgeNo: user.lodgeNo,
-          rank: user.rank,
-          dietary: user.dietary,
-          isAdmin: user.isAdmin,
-          gravatarUrl: user.gravatarUrl
-        }
-      });
+      return res.view('dashboard');
 
     });
   },

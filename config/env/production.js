@@ -30,7 +30,7 @@ module.exports = {
   csrf: false,
   
   // Increase hook timeout
-  hookTimeout: 60000, // 60 seconds
+  hookTimeout: 90000, // 90 seconds
 
   /***************************************************************************
    * Set the port in the production environment to 80                        *

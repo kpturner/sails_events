@@ -17,7 +17,8 @@
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
     window.SAILS_LOCALS = {
-      _csrf: "<%= _csrf %>"
+      _csrf: "<%= _csrf %>",
+      user: <%- JSON.stringify(res.locals.user) %>
     };
     
     </script>
@@ -62,16 +63,16 @@
           insert the "has-error" class on the input field (i.e. insert a red border around the input field)
           -->
           <div class="control-group form-group col-xs-10"
-          ng-class="{'has-error':profile.userName.$invalid &&
-                                profile.userName.$dirty}">
+          ng-class="{'has-error':profile.username.$invalid &&
+                                profile.username.$dirty}">
             <label>User name (for logging in)</label>
               <!-- For this input field make it required, and have a max length of 25 -->
-            <input type="text" class="form-control" placeholder="e.g. fbloggs" name="userName" ng-model="profileForm.userName" ng-maxlength="50" required>
-              <!-- Also, if profile.userName.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+            <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="profileForm.username" ng-maxlength="50" required>
+              <!-- Also, if profile.username.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
             and/or maxlength) -->
-            <span class="help-block has-error" ng-if="profile.userName.$dirty">
-              <span ng-show="profile.userName.$error.required">User name is required.</span>
-              <span ng-show="profile.userName.$error.maxlength">The user name cannot be more than 50 characters.</span>
+            <span class="help-block has-error" ng-if="profile.username.$dirty">
+              <span ng-show="profile.username.$error.required">User name is required.</span>
+              <span ng-show="profile.username.$error.maxlength">The user name cannot be more than 50 characters.</span>
             </span>
           </div>
   
@@ -157,11 +158,11 @@
           ng-class="{'has-error':profile.password.$invalid &&
                                 profile.password.$dirty}">
             <label>Choose a password</label>
-            <!-- Added the compareTo directive that compares the passowrds -->
-            <input type="password" class="form-control" placeholder="at least 6 characters" name="password" ng-model="profileForm.password" id="password" ng-minlength="6" compare-to="profileForm.confirmPassword" >
+            <!-- Added the compareTo directive that compares the passwords -->
+            <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="profileForm.password" id="password" ng-minlength="8" compare-to="profileForm.confirmPassword" >
             <span class="help-block has-error" ng-if="profile.password.$dirty">
               <span ng-show="profile.password.$error.required">Password is required.</span>
-              <span ng-show="profile.password.$error.minlength">Password must be at least 6 characters.</span>
+              <span ng-show="profile.password.$error.minlength">Password must be at least 8 characters.</span>
             </span>
           </div>
   
@@ -179,8 +180,8 @@
   
         <br/>
   
-        <!-- Disable button until the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="profile.$invalid">
+        <!-- Disable button until something has been edited and the form has no errors -->
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="profile.$invalid  || !profile.$dirty">
           <span ng-show="!profileForm.loading">Save Details</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="profileForm.loading" ></span>
           <span ng-show="profileForm.loading">Saving your details...</span>
