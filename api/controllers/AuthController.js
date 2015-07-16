@@ -243,9 +243,9 @@ var AuthController = {
 		  	var delta={};
 		  	if (req.param('name')!=currentUser.name)
 		  		delta.name=req.param('name')
-			if (req.param('username')!=currentUser.username)
+		    if (req.param('username')!=currentUser.username)
 		  		delta.username=req.param('username')
-		 	if (req.param('lodge')!=currentUser.lodge)
+		 	  if (req.param('lodge')!=currentUser.lodge)
 		  		delta.lodge=req.param('lodge')
 		  	if (req.param('lodgeNo')!=currentUser.lodgeNo)
 		  		delta.lodgeNo=req.param('lodgeNo')
@@ -253,10 +253,11 @@ var AuthController = {
 		  		delta.rank=req.param('rank')
 		  	if (req.param('dietary')!=currentUser.dietary)
 		  		delta.dietary=req.param('dietary')	 
-		  	if (req.param('email')!=currentUser.email)
-		  		delta.email=req.param('email') 
-			if (req.param('isAdmin')!=currentUser.isAdmin)
-		  		delta.isAdmin=req.param('isAdmin') 
+		  	if (req.param('isAdmin')!=currentUser.isAdmin)
+		  		delta.isAdmin=req.param('isAdmin')
+          
+        // Always treat the email as changed so the gravatar is updated after a social media sign-up
+        delta.email=req.param('email')  
 				  
 			var handleDelta=function(req,delta){
 				if (delta.email) {					 

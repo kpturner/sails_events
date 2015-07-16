@@ -124,26 +124,45 @@ passport.connect = function (req, query, profile, next) {
           if (err) {
             if (err.code === 'E_VALIDATION') {
               if (err.invalidAttributes.email) {
-                req.flash('error', 'Error.Passport.Email.Exists');
+                // Get the user details and find out the provider
+                User.findOne({
+                  email: profile.emails[0].value  
+                },function(err, already){
+                  if (already.authProvider=="twitter")
+                    req.flash('error', 'Error.Passport.Email.Exists.Twitter');
+                  else if (already.authProvider=="facebook")
+                    req.flash('error', 'Error.Passport.Email.Exists.Facebook');
+                  else if (already.authProvider=="google")
+                    req.flash('error', 'Error.Passport.Email.Exists.Google');
+                  else
+                    req.flash('error', 'Error.Passport.Email.Exists');
+                  return next(err)
+                })               
               }
               else {
                 req.flash('error', 'Error.Passport.User.Exists');
-              }
+                return next(err);
+              }              
             }
-
-            return next(err);
-          }
-
-          query.user = user.id;
-
-          Passport.create(query, function (err, passport) {
-            // If a passport wasn't created, bail out
-            if (err) {
+            else {
               return next(err);
             }
+           
+          }
 
-            next(err, user);
-          });
+          if (user) {
+            query.user = user.id;
+
+            Passport.create(query, function (err, passport) {
+              // If a passport wasn't created, bail out
+              if (err) {
+                return next(err);
+              }
+  
+              next(err, user);
+            });  
+          }
+          
         });
       }
       // Scenario: An existing user is trying to log in using an already
