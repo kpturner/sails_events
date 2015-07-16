@@ -354,6 +354,10 @@ var AuthController = {
 						 return res.negotiate(err);
 					}
 					// Success
+          if (updatedUser[0].dietary==null)
+            updatedUser[0].dietary=""
+          if (updatedUser[0].rank==null)
+            updatedUser[0].rank=""
           // Send confirmation email
 					sails.hooks.email.send(
 						"profileChanged",
