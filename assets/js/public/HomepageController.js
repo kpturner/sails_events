@@ -7,7 +7,7 @@ angular.module('PublicModule').controller('HomepageController', ['$scope', '$htt
 
   
 	$scope.submitLoginForm = function (){
-     
+    /******NOT CURRENTLY USED ****/ 
     // Set the loading state (i.e. show loading spinner)
     $scope.loginForm.loading = true;
 
@@ -31,10 +31,10 @@ angular.module('PublicModule').controller('HomepageController', ['$scope', '$htt
         return;
       }
 
-				toastr.error('An unexpected error occurred, please try again.', 'Error', {
-					closeButton: true
-				});
-				return;
+			toastr.error(i18n(sailsResponse.data), 'Error', {
+				closeButton: true
+			});
+			return;
 
     })
     .finally(function eitherWay(){

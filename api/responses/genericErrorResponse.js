@@ -1,10 +1,10 @@
 /**
  *
  * Usage:
- * res.registrationError();
+ * res.genericErrorResponse();
  */
 
-module.exports = function registrationError(errorCode, errorMsg) {
+module.exports = function genericErrorResponse(errorCode, errorMsg) {
 
   // Get access to `req`, `res`, & `sails`
   var req = this.req;

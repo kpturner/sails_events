@@ -23,22 +23,6 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 		.catch(function onError(sailsResponse){
 
 			// Handle known error type(s).
-			// If using sails-disk adaptor -- Handle Duplicate Key
-			/*
-			var emailAddressAlreadyInUse = sailsResponse.status == 409;
-
-			if (emailAddressAlreadyInUse) {
-				toastr.error('That email address has already been taken, please try again.', 'Error');
-				return;
-			}
-			
-			var usernameAlreadyInUse = sailsResponse.status == 410;
-
-			if (usernameAlreadyInUse) {
-				toastr.error('That user name has already been taken, please try again.', 'Error');
-				return;
-			}
-			*/
 			toastr.error(sailsResponse.data, 'Error');
 
 		})

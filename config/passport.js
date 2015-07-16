@@ -52,21 +52,23 @@ module.exports.passport = {
     protocol: 'oauth2',
     strategy: require('passport-facebook').Strategy,
     options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret',
+      clientID: '999387826772688',
+      clientSecret: '2ba728651b3b4d40029c54d7019545b6',
       scope: ['email'] /* email is necessary for login behavior */
     }
   },
 
   google: {
     name: 'Google',
-    icon:  'fa-google',
+    icon:  'fa-google-plus',
     klass:  'omb_btn-google',
     protocol: 'oauth2',
     strategy: require('passport-google-oauth').OAuth2Strategy,
     options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret'
+      clientID: '1044760933538-h91m7atpd59n9ieurq49msne5p98sbsb.apps.googleusercontent.com',
+      clientSecret: 'PGEGQRLVeEeyP_5Ah3HqDig7',
+      max_auth_age: '0',
+      scope: ['email'] /* email is necessary for login behavior */
     }
   },
 

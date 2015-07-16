@@ -68,13 +68,13 @@ exports.register = function (req, res, next) {
 				            // send back an easily parseable status code.
 				            if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
 				              && err.invalidAttributes.email[0].rule === 'unique') {
-				              return res.registrationError(409,"Email address is already in use");
+				              return res.genericErrorResponse(409,"Email address is already in use");
 				            }
 								    // If this is a uniqueness error about the username attribute,
 				            // send back an easily parseable status code.
 				            if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
 				              && err.invalidAttributes.username[0].rule === 'unique') {
-				              return res.registrationError(410,"User name is already in use");
+				              return res.genericErrorResponse(410,"User name is already in use");
 				            }
                 }
                
@@ -95,7 +95,7 @@ exports.register = function (req, res, next) {
                         //  next(destroyErr || err);
                         //});
                         newUser.destroy();
-                        return res.registrationError(411,"Passport password is invalid");
+                        return res.genericErrorResponse(411,"Passport password is invalid");
                       }         
                       
                     }
@@ -130,7 +130,7 @@ exports.register = function (req, res, next) {
                       // Mark the session as authenticated to work with default Sails sessionAuth.js policy
                       req.login(newUser, function (err) {
                         if (err) {
-                          return res.registrationError(412,"Failed to login after registration");
+                          return res.genericErrorResponse(412,"Failed to login after registration");
                         }
                         // Mark the session as authenticated to work with default Sails sessionAuth.js policy
                         req.session.authenticated = true;                        
@@ -210,6 +210,7 @@ exports.login = function (req, identifier, password, next) {
     query.username = identifier;
   }
 
+  
   User.findOne(query, function (err, user) {
     if (err) {
       return next(err);
@@ -217,7 +218,7 @@ exports.login = function (req, identifier, password, next) {
 
     if (!user) {
       if (isEmail) {
-        req.flash('error', 'Error.Passport.Email.NotFound');
+        req.flash('error', 'Error.Passport.Email.NotFound');   
       } else {
         req.flash('error', 'Error.Passport.Username.NotFound');
       }

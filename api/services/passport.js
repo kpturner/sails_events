@@ -88,6 +88,10 @@ passport.connect = function (req, query, profile, next) {
   if (profile.hasOwnProperty('username')) {
     user.username = profile.username;
   }
+  else {
+    // We need something from a database perspective
+    user.username = user.email; 
+  }
   // Some redundancy, but store the provider on the user record
   user.authProvider = provider;
   

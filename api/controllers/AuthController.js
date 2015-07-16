@@ -112,6 +112,7 @@ var AuthController = {
    * @param {Object} res
    */
   callback: function (req, res) {
+    
     function tryAgain (err) {
       //console.log("I am in callback")
       // Only certain error messages are returned via req.flash('error', someError)
@@ -320,7 +321,7 @@ var AuthController = {
 		                        //return user.destroy(function (destroyErr) {
 		                        //  next(destroyErr || err);
 		                        //});
-		                        return res.registrationError(411,"Passport password is invalid");
+		                        return res.genericErrorResponse(411,"Passport password is invalid");
 		                      }         
                       
                     		}
@@ -341,13 +342,13 @@ var AuthController = {
 					    // send back an easily parseable status code.
 					    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
 					      && err.invalidAttributes.email[0].rule === 'unique') {
-					       return res.registrationError(409,"Email address is already in use");
+					       return res.genericErrorResponse(409,"Email address is already in use");
 					    }
 						// If this is a uniqueness error about the username attribute,
 				        // send back an easily parseable status code.
 				        if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
 				          && err.invalidAttributes.username[0].rule === 'unique') {
-				          return res.registrationError(410,"User name is already in use");
+				          return res.genericErrorResponse(410,"User name is already in use");
 				        }
 						// Otherwise, send back something reasonable as our error response.
 						 return res.negotiate(err);
