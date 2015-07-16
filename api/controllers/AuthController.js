@@ -354,6 +354,27 @@ var AuthController = {
 						 return res.negotiate(err);
 					}
 					// Success
+          // Send confirmation email
+					sails.hooks.email.send(
+						"profileChanged",
+					    {
+					      recipientName: updatedUser[0].name,
+					      senderName: "Events Management",
+							  username: updatedUser[0].username,
+							  email: updatedUser[0].email,
+							  lodge: updatedUser[0].lodge,
+							  lodgeNo: updatedUser[0].lodgeNo,
+							  rank: updatedUser[0].rank,
+							  dietary: updatedUser[0].dietary,
+							  //domain:	sails.config.events.domain,
+                domain:	sails.getBaseUrl(),
+						    },
+						    {
+						      to: updatedUser[0].email,
+						      subject: "Events Management - Profile updated confirmation"
+						    },
+						    function(err) {if (err) console.log(err);}
+					   )     
 					// Logout if the password has changed
 					if (req.param('password')) {
 						// Wipe out the session (log out)
