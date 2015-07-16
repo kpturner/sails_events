@@ -117,7 +117,8 @@ exports.register = function (req, res, next) {
         								  lodgeNo: newUser.lodgeNo,
         								  rank: newUser.rank,
         								  dietary: newUser.dietary,
-        								  domain:	sails.config.events.domain,
+        								  //domain:	sails.config.events.domain,
+                          domain:	sails.getBaseUrl(),
         							    },
         							    {
         							      to: newUser.email,

@@ -8,8 +8,10 @@ module.exports = {
 
   // Events management details
   events: {
-    domain: "domain.com"	
+     
   },
+  
+  proxyHost: 'http://squareevents.org:1337/',  
     
   // Email configuration
   email: {
