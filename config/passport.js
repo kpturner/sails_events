@@ -26,8 +26,7 @@ module.exports.passport = {
   twitter: {
     name: 'Twitter',
     icon:  'fa-twitter',
-    label: 'Twitter',
-    class:  'omb_btn-twitter',
+    klass:  'omb_btn-twitter',
     protocol: 'oauth',
     strategy: require('passport-twitter').Strategy,
     options: {
@@ -46,26 +45,30 @@ module.exports.passport = {
   //  }
   //},
 
-  //facebook: {
-  //  name: 'Facebook',
-  //  protocol: 'oauth2',
-  //  strategy: require('passport-facebook').Strategy,
-  //  options: {
-  //    clientID: 'your-client-id',
-  //    clientSecret: 'your-client-secret',
-  //    scope: ['email'] /* email is necessary for login behavior */
-  //  }
-  //},
+  facebook: {
+    name: 'Facebook',
+    icon:  'fa-facebook',
+    klass:  'omb_btn-facebook',
+    protocol: 'oauth2',
+    strategy: require('passport-facebook').Strategy,
+    options: {
+      clientID: 'your-client-id',
+      clientSecret: 'your-client-secret',
+      scope: ['email'] /* email is necessary for login behavior */
+    }
+  },
 
-  //google: {
-  //  name: 'Google',
-  //  protocol: 'oauth2',
-  //  strategy: require('passport-google-oauth').OAuth2Strategy,
-  //  options: {
-  //    clientID: 'your-client-id',
-  //    clientSecret: 'your-client-secret'
-  //  }
-  //},
+  google: {
+    name: 'Google',
+    icon:  'fa-google',
+    klass:  'omb_btn-google',
+    protocol: 'oauth2',
+    strategy: require('passport-google-oauth').OAuth2Strategy,
+    options: {
+      clientID: 'your-client-id',
+      clientSecret: 'your-client-secret'
+    }
+  },
 
   //cas: {
   //  name: 'CAS',

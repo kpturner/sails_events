@@ -28,7 +28,7 @@ var AuthController = {
       providers[key] = {
         name: strategies[key].name,
         icon: strategies[key].icon,
-        class: strategies[key].class,
+        klass: strategies[key].klass,
         label: strategies[key].label,
         slug: key
       };

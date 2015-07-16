@@ -57,9 +57,9 @@
               <% if (Object.keys(providers).length) {%>                         
                 <% Object.keys(providers).forEach(function (key) { %>
                   <div class="col-xs-4 col-sm-2">
-      		          <a href="/auth/<%= providers[key].slug %>" class="btn btn-lg btn-block <%= providers[key].class %>">
+      		          <a href="/auth/<%= providers[key].slug %>" class="btn btn-lg btn-block <%= providers[key].klass %>">
       			         <i class="fa <%= providers[key].icon %> visible-xs"></i>
-      			         <span class="hidden-xs"><%= providers[key].label %></span>
+      			         <span class="hidden-xs"><%= providers[key].name %></span>
       		          </a>
       	          </div>
                 <% }) %>
@@ -96,7 +96,14 @@
       				  <input type="hidden" name="_csrf" value="<%= _csrf %>" />
               </form>
       			</div>
-          	</div>
+            <!-- Flash errors -->
+            <% if (errors) {%>
+              <% errors.forEach(function (error) { %>
+                <%= __(error) %>
+              <% }) %>
+            <% } %>
+          </div>
+          <!-- Remember me and forgot password -->
       		<div class="row omb_row-sm-offset-3" style="display:none">
       			<div class="col-xs-12 col-sm-3">
       				<label class="checkbox">
