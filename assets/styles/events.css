@@ -6,17 +6,17 @@
     }
 }
 
-.a-unstyled { color: #333; text-decoration: none}
-.a-unstyled:link { color: #333; text-decoration: none}
-.a-unstyled:visited { color: #333; text-decoration: none}
-.a-unstyled:hover { color: #000; text-decoration: none}
-.a-unstyled:active { color: #333; text-decoration: none}
+.a-unstyled {  text-decoration: none}
+.a-unstyled:link {  text-decoration: none}
+.a-unstyled:visited {  text-decoration: none}
+.a-unstyled:hover {  text-decoration: none}
+.a-unstyled:active {  text-decoration: none}
 
-.navbar-inverse .a-unstyled { color: #969696; text-decoration: none}
-.navbar-inverse .a-unstyled:link { color: #969696; text-decoration: none}
-.navbar-inverse .a-unstyled:visited { color: #969696; text-decoration: none}
-.navbar-inverse .a-unstyled:hover { color: #FFF; text-decoration: none}
-.navbar-inverse .a-unstyled:active { color: #969696; text-decoration: none}
+.navbar-inverse .a-unstyled {  text-decoration: none}
+.navbar-inverse .a-unstyled:link {  text-decoration: none}
+.navbar-inverse .a-unstyled:visited {  text-decoration: none}
+.navbar-inverse .a-unstyled:hover {  text-decoration: none}
+.navbar-inverse .a-unstyled:active {  text-decoration: none}
 
 .omb_login .omb_authTitle {
     text-align: center;

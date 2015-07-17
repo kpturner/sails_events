@@ -10,6 +10,7 @@
 
 module.exports.events = {
 
-	//domain:	"domain.com"
+	// Admins can be a single string or an array, each representing a user name or email address
+	// admin: ['user']
 	
 };

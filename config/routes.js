@@ -55,6 +55,9 @@ module.exports.routes = {
   'GET /users': 'AuthController.users',
   'GET /events': 'AuthController.events',
   
+  // Events
+  'get /openevents': 'EventController.openEvents',
+  
 
 
   /***************************************************************************
