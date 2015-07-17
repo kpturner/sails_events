@@ -12,14 +12,14 @@ module.exports = {
 	 * 
 	 */
 	/**
-	 * Update profile
-   *
-   * @param {Object} req
-   * @param {Object} res
-	*/
+	 * Get open events
+     *
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
 	openEvents: function (req, res) {
 		var today=new Date().getDate();
-		Event.find({open:true,closingDate: { '>': today }}, function (err, events) {
+		Event.find({where:{open:true,closingDate: { '>': today }}, sort: {date:1,time:1}}, function (err, events) {
 			if (err) {
 				sails.log.verbose('Error occurred trying to retrieve events.');
 				return res.negotiate(err);
