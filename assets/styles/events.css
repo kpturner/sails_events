@@ -1,9 +1,4 @@
 
-/*
-    Note: It is best to use a less version of this file ( see http://css2less.cc
-    For the media queries use @screen-sm-min instead of 768px.
-    For .omb_spanOr use @body-bg instead of white.
-*/
 
 @media (min-width: 768px) {
     .omb_row-sm-offset-3 div:first-child[class*="col-"] {
@@ -11,13 +6,25 @@
     }
 }
 
+.a-unstyled { color: #333; text-decoration: none}
+.a-unstyled:link { color: #333; text-decoration: none}
+.a-unstyled:visited { color: #333; text-decoration: none}
+.a-unstyled:hover { color: #000; text-decoration: none}
+.a-unstyled:active { color: #333; text-decoration: none}
+
+.navbar-inverse .a-unstyled { color: #969696; text-decoration: none}
+.navbar-inverse .a-unstyled:link { color: #969696; text-decoration: none}
+.navbar-inverse .a-unstyled:visited { color: #969696; text-decoration: none}
+.navbar-inverse .a-unstyled:hover { color: #FFF; text-decoration: none}
+.navbar-inverse .a-unstyled:active { color: #969696; text-decoration: none}
+
 .omb_login .omb_authTitle {
     text-align: center;
 	/* line-height: 300%; */
 }
 	
 .omb_login .omb_socialButtons a {
-	color: white; // In yourUse @body-bg 
+	color: white; //  
 	opacity:0.9;
 }
 .omb_login .omb_socialButtons a:hover {
