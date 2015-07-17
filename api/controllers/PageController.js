@@ -37,7 +37,7 @@ module.exports = {
       // Edit the profile if essentials are missing
       if ( (!user.name || user.name.length==0)
   			|| (!user.lodge || user.lodge.length==0)
-  			|| (!user.lodgeNo || isNaN(user.lodgeNo))
+  			|| (!user.lodgeNo || user.lodgeNo.length==0)
   			|| (!user.email || user.email.length==0)
   			|| ((user.authProvider=="local")
   					&& ( !user.username || user.username.length==0 )

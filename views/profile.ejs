@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!--STYLES-->
+    <link rel="stylesheet" href="/styles/angular-deckgrid.css">
     <link rel="stylesheet" href="/styles/angular-toastr.css">
     <link rel="stylesheet" href="/styles/bootstrap.3.1.1.css">
     <link rel="stylesheet" href="/styles/events.css">
@@ -149,6 +150,7 @@
             <label>Re-enter your email address</label>
             <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="profileForm.confirmemail" required >
             <span class="help-block has-error" ng-if="profile.confirmemail.$dirty">
+              <span ng-show="profile.email.$error.compareTo">Email address must match.</span>
               <span ng-show="profile.confirmemail.$error.required">Confirmation email address is required.</span>
               <span ng-show="profile.confirmemail.$error.email">Not a valid email address.</span>
             </span>
@@ -200,6 +202,7 @@
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery/jquery.js"></script>
     <script src="/js/dependencies/angular.js"></script>
+    <script src="/js/dependencies/angular-deckgrid.js"></script>
     <script src="/js/dependencies/angular-initial-value.min.js"></script>
     <script src="/js/dependencies/angular-toastr.js"></script>
     <script src="/js/dependencies/compareTo.module.js"></script>

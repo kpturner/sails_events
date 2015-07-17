@@ -19,6 +19,12 @@ module.exports = {
       required: true 
     },
     
+    // Where it is
+    venue : {
+      type: 'string',
+      required: true
+    },
+    
     // Description
     blurb: {
       type: 'string',      
@@ -33,13 +39,7 @@ module.exports = {
     dressCode: {
       type: 'string'
     },
-    
-    // Where it is
-    venue : {
-      type: 'string',
-      required: true
-    },
-    
+            
     // Number of people 
     capacity: {
       type: 'integer',

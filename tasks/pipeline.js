@@ -29,11 +29,10 @@ var jsFilesToInject = [
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/jquery/jquery.js',
   'js/dependencies/angular.js',
-  'js/dependencies/angular-initial-value.min.js',
   'js/dependencies/**/*.js',
 
   // All of the rest of your client-side js files
-  // will be injected here in no particular order.
+  // will be injected here in no particular order.  
   'js/public/PublicModule.js', 
   'js/private/PrivateModule.js', 
   'js/**/*.js'
