@@ -228,7 +228,7 @@
         <br/>
   
         <!-- Disable signup button until the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="signup.$invalid">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="signup.$invalid || signupForm.loading">
           <span ng-show="!signupForm.loading">Create Account</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="signupForm.loading" ></span>
           <span ng-show="signupForm.loading">Preparing your new account...</span>
@@ -253,6 +253,7 @@
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/public/PublicModule.js"></script>
     <script src="/js/private/PrivateModule.js"></script>
+    <script src="/js/private/book/BookController.js"></script>
     <script src="/js/private/dashboard/DashboardController.js"></script>
     <script src="/js/private/events/EventsController.js"></script>
     <script src="/js/private/profile/ProfileController.js"></script>

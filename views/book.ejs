@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Events Management - Book in</title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/angular-deckgrid.css">
+    <link rel="stylesheet" href="/styles/angular-toastr.css">
+    <link rel="stylesheet" href="/styles/bootstrap.3.1.1.css">
+    <link rel="stylesheet" href="/styles/events.css">
+    <link rel="stylesheet" href="/styles/forMobileIE.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
+
+    <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
+    <script type="text/javascript">
+    window.SAILS_LOCALS = {
+      _csrf: "<%= _csrf %>",
+      user: <%- JSON.stringify(res.locals.user) %>,
+      event: <%- JSON.stringify(res.locals.event) %>
+    };
+    
+    </script>
+    
+  </head>
+
+  <body ng-app="PrivateModule" data-ng-controller="BookController" ng-cloak>
+    
+                     
+    <div class="container-fluid">
+       
+      <% include partials/private/navbar.ejs %>     
+
+      <!-- BOOKING FORM --> 
+      <form ng-submit="submitBookingForm()" id="booking-up-form" name="booking" 
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        <h2 class="form-signin-heading">Booking for {{event.name}}</h2>
+        <h3>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h3>
+        <h3>{{event.venue}}<h3>   
+        <h5>Items marked with * are mandatory</h5>
+        <div class="row">
+            
+  
+          <!-- N A M E -->
+  
+          <!-- checking whether the form "booking" with the "name" property is both $invalid AND $dirty.  If it is
+          insert the "has-error" class on the input field (i.e. insert a red border around the input field)
+          -->
+          <div class="control-group form-group col-xs-10"
+          ng-class="{'has-error':booking.name.$invalid &&
+                                booking.name.$dirty}">
+            <label>* Full name</label>  
+            <!-- For this input field make it required, and have a max length of 505 -->
+            <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="bookingForm.name" ng-maxlength="50" required>  
+            <!-- Also, if booking.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+            and/or maxlength) -->
+            <span class="help-block has-error" ng-if="booking.name.$dirty">
+              <span ng-show="booking.name.$error.required">Name is required.</span>
+              <span ng-show="booking.name.$error.maxlength">The name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+          
+            
+          <!-- L O D G E -->
+  
+          <div class="control-group form-group col-xs-10 col-md-6"
+            ng-class="{'has-error':booking.lodge.$invalid &&
+                                  booking.lodge.$dirty}">
+            <label>* Lodge name</label>
+            <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="bookingForm.lodge" ng-maxlength="50" required>
+            <span class="help-block has-error" ng-if="booking.lodge.$dirty">
+              <span ng-show="booking.lodge.$error.required">Lodge name is required.</span>
+              <span ng-show="booking.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+          
+          <!-- L O D G E  N U M B E R-->
+  
+          <div class="control-group form-group col-xs-6 col-md-4"
+            ng-class="{'has-error':booking.lodgeNo.$invalid &&
+                                  booking.lodgeNo.$dirty}">
+            <label>* Lodge number</label>
+            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="bookingForm.lodgeNo" ng-maxlength="5" >
+            <span class="help-block has-error" ng-if="booking.lodgeNo.$dirty">
+              <span ng-show="booking.lodgeNo.$error.required">Lodge number is required.</span>
+              <span ng-show="booking.lodgeNo.$error.maxlength">The name cannot be more than 5 characters.</span>
+            </span>
+          </div>
+          
+           <!-- R A N K -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':booking.rank.$invalid &&
+                                  booking.rank.$dirty}">
+            <label>Rank</label>
+            <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="bookingForm.rank" ng-maxlength="100" >
+            <span class="help-block has-error" ng-if="booking.rank.$dirty">
+              <span ng-show="booking.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
+            </span>
+          </div>
+  
+          <!-- D I E T A R Y -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':booking.dietary.$invalid &&
+                                  booking.dietary.$dirty}">
+            <label>Dietary requirements</label>
+            <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="bookingForm.dietary" ng-maxlength="50" >
+            <span class="help-block has-error" ng-if="booking.dietary.$dirty">
+              <span ng-show="booking.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+            </span>
+          </div>
+  
+          <!-- E M A I L -->
+  
+          <div class="control-group form-group col-xs-10"
+          ng-class="{'has-error':booking.email.$invalid &&
+                                booking.email.$dirty}">
+            <label>* Email address</label>
+            <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="bookingForm.email" compare-to="bookingForm.confirmemail" required>
+            <span class="help-block has-error" ng-if="booking.email.$dirty">
+              <span ng-show="booking.email.$error.required">Email address is required.</span>
+              <span ng-show="booking.email.$error.email">Not a valid email address.</span>
+            </span>
+          </div>
+          
+           <!-- C O N F I R M  E M A I L -->
+  
+          <div class="control-group form-group col-xs-10"
+          ng-class="{'has-error':booking.confirmemail.$invalid &&
+                                booking.confirmemail.$dirty}">
+            <label>Re-enter your email address</label>
+            <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="bookingForm.confirmemail" required >
+            <span class="help-block has-error" ng-if="booking.confirmemail.$dirty">
+              <span ng-show="booking.email.$error.compareTo">Email address must match.</span>
+              <span ng-show="booking.confirmemail.$error.required">Confirmation email address is required.</span>
+              <span ng-show="booking.confirmemail.$error.email">Not a valid email address.</span>
+            </span>
+          </div>
+          
+  
+        <br/>
+  
+        <!-- Disable button until something has been edited and the form has no errors -->
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || bookingForm.loading">
+          <span ng-show="!bookingForm.loading">Book Now</span>
+          <span class="overlord-loading-spinner fa fa-spinner" ng-show="bookingForm.loading" ></span>
+          <span ng-show="bookingForm.loading">Making your booking...</span>
+        </button>
+  
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      </form>
+     
+     </div>  
+
+    <% include partials/public/footer.ejs %>   
+      
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/jquery/jquery.js"></script>
+    <script src="/js/dependencies/angular.js"></script>
+    <script src="/js/dependencies/angular-deckgrid.js"></script>
+    <script src="/js/dependencies/angular-initial-value.min.js"></script>
+    <script src="/js/dependencies/angular-toastr.js"></script>
+    <script src="/js/dependencies/compareTo.module.js"></script>
+    <script src="/js/dependencies/forMobileIE.js"></script>
+    <script src="/js/public/PublicModule.js"></script>
+    <script src="/js/private/PrivateModule.js"></script>
+    <script src="/js/private/book/BookController.js"></script>
+    <script src="/js/private/dashboard/DashboardController.js"></script>
+    <script src="/js/private/events/EventsController.js"></script>
+    <script src="/js/private/profile/ProfileController.js"></script>
+    <script src="/js/private/users/UsersController.js"></script>
+    <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/SignupController.js"></script>
+    <!--SCRIPTS END-->
+  </body>
+</html>

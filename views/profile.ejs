@@ -49,8 +49,8 @@
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':profile.name.$invalid &&
                                 profile.name.$dirty}">
-            <label>* Your full name</label>  
-            <!-- For this input field make it required, and have a max length of 505 -->
+            <label>* Full name</label>  
+            <!-- For this input field make it required, and have a max length of 50 -->
             <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="profileForm.name" ng-maxlength="50" required>  
             <!-- Also, if profile.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
             and/or maxlength) -->
@@ -84,7 +84,7 @@
           <div class="control-group form-group col-xs-10 col-md-6"
             ng-class="{'has-error':profile.lodge.$invalid &&
                                   profile.lodge.$dirty}">
-            <label>* Your lodge name</label>
+            <label>* Lodge name</label>
             <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="profileForm.lodge" ng-maxlength="50" required>
             <span class="help-block has-error" ng-if="profile.lodge.$dirty">
               <span ng-show="profile.lodge.$error.required">Lodge name is required.</span>
@@ -97,7 +97,7 @@
           <div class="control-group form-group col-xs-6 col-md-4"
             ng-class="{'has-error':profile.lodgeNo.$invalid &&
                                   profile.lodgeNo.$dirty}">
-            <label>* Your lodge number</label>
+            <label>* Lodge number</label>
             <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="profileForm.lodgeNo" ng-maxlength="5" >
             <span class="help-block has-error" ng-if="profile.lodgeNo.$dirty">
               <span ng-show="profile.lodgeNo.$error.required">Lodge number is required.</span>
@@ -110,7 +110,7 @@
           <div class="control-group form-group col-xs-10"
             ng-class="{'has-error':profile.rank.$invalid &&
                                   profile.rank.$dirty}">
-            <label>Your rank</label>
+            <label>Rank</label>
             <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="profileForm.rank" ng-maxlength="100" >
             <span class="help-block has-error" ng-if="profile.rank.$dirty">
               <span ng-show="profile.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
@@ -122,7 +122,7 @@
           <div class="control-group form-group col-xs-10"
             ng-class="{'has-error':profile.dietary.$invalid &&
                                   profile.dietary.$dirty}">
-            <label>Your dietary requirements</label>
+            <label>Dietary requirements</label>
             <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="profileForm.dietary" ng-maxlength="50" >
             <span class="help-block has-error" ng-if="profile.dietary.$dirty">
               <span ng-show="profile.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
@@ -134,7 +134,7 @@
           <div class="control-group form-group col-xs-10"
           ng-class="{'has-error':profile.email.$invalid &&
                                 profile.email.$dirty}">
-            <label>* Your email address</label>
+            <label>* Email address</label>
             <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="profileForm.email" compare-to="profileForm.confirmemail" required>
             <span class="help-block has-error" ng-if="profile.email.$dirty">
               <span ng-show="profile.email.$error.required">Email address is required.</span>
@@ -185,7 +185,7 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete()">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || profileForm.loading">
           <span ng-show="!profileForm.loading">Save Details</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="profileForm.loading" ></span>
           <span ng-show="profileForm.loading">Saving your details...</span>
@@ -209,6 +209,7 @@
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/public/PublicModule.js"></script>
     <script src="/js/private/PrivateModule.js"></script>
+    <script src="/js/private/book/BookController.js"></script>
     <script src="/js/private/dashboard/DashboardController.js"></script>
     <script src="/js/private/events/EventsController.js"></script>
     <script src="/js/private/profile/ProfileController.js"></script>

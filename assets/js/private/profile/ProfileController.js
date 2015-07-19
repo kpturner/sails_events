@@ -5,34 +5,16 @@ angular.module('PrivateModule').controller('ProfileController', ['$scope', '$htt
 		loading: false
 	}
 
-	/*
-	$http.get('/getprofile').success(function(data, status) {
-		if (typeof data == 'object') {
-			$scope.profileForm = data; 
-			// Tweak the lodge no
-			$scope.profileForm.lodgeNo=parseInt($scope.profileForm.lodgeNo);   
-			// Set the confirm email
-			$scope.profileForm.confirmemail=$scope.profileForm.email;   		
-		}
-		else {
-			window.location = '/';
-		}
-	}).
-	error(function(data, status, headers, config) {
-   		// called asynchronously if an error occurs
-    	// or server returns response with an error status.
-		window.location = '/';
-  	});
-	*/
-	
+		
 	// Initialise "user" in the scope with the data set in the view script 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.profileForm = $scope.user;
 	
-	// Tweak the lodge no
-	$scope.profileForm.lodgeNo=parseInt($scope.profileForm.lodgeNo);   
+	// Convert lodge no to numeric
+	$scope.profileForm.lodgeNo = parseInt($scope.user.lodgeNo); 
 	// Set the confirm email
-	$scope.profileForm.confirmemail=$scope.profileForm.email;   
+	$scope.profileForm.confirmemail=$scope.profileForm.email; 
+	  
 	
 	/**
 	 * Test if the details are complete on the profile

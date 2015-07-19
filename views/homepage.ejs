@@ -35,7 +35,7 @@
         <h1>Square Events</h1>
         <h2 class="hidden-xs">Masonic events management</h2>
         <div class="omb_login">
-          	<h3 class="omb_authTitle">Login or <a href="/register">Sign up</a></h3>
+          	<h3 class="omb_authTitle">Login via Social Media</h3>
       		<div class="row omb_row-sm-offset-3 omb_socialButtons">
               <% if (Object.keys(providers).length) {%>                         
                 <% Object.keys(providers).forEach(function (key) { %>
@@ -48,7 +48,7 @@
                 <% }) %>
               <% } %>          	    
       		</div>
-      
+          <h4 class="omb_authTitle">or <a href="/register">Sign up</a></h4>
       		<div class="row omb_row-sm-offset-3 omb_loginOr">
       			<div class="col-xs-12 col-sm-6">
       				<hr class="omb_hrOr">
@@ -122,6 +122,7 @@
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/public/PublicModule.js"></script>
     <script src="/js/private/PrivateModule.js"></script>
+    <script src="/js/private/book/BookController.js"></script>
     <script src="/js/private/dashboard/DashboardController.js"></script>
     <script src="/js/private/events/EventsController.js"></script>
     <script src="/js/private/profile/ProfileController.js"></script>

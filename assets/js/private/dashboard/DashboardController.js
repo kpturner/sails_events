@@ -18,5 +18,5 @@ angular.module('PrivateModule').controller('DashboardController', ['$scope', '$h
 			window.location = '/';
 	  	});
 		
-						
+								
 }]);

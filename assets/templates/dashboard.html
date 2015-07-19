@@ -1,9 +1,5 @@
 <div class="photo ng-scope">
-    <a href="" data-ng-click="card.showIndex = !card.showIndex" class="a-unstyled"> 
-        <div class="photo-index ng-scope" data-ng-if="card.showIndex">
-            <p>The ability to book event {{card.$index}} is coming soon!</p>
-            <p>Click again!</p>           
-        </div><!-- end ngIf: card.showIndex -->          
+   <a href="/booking?eventid={{card.id}}" class="a-unstyled">        
         <div class="photo-description">
             <h3>{{card.name}}</h3>            
             <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>

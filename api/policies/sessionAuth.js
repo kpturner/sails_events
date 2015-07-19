@@ -11,11 +11,16 @@ module.exports = function(req, res, next) {
 
   // User is allowed, proceed to the next policy, 
   // or if this is the last policy, the controller
-  if (req.session.authenticated) {
+  // Bear mind that if the user is not authenticated, but the URL
+  // is the homepage or just "/" (the PageController will handle this)
+  // or we are being authenticated, we can also proceed
+  if (req.session.authenticated || req.url=="/" || req.url=="/homepage" || req.url.indexOf("/auth/")>=0) {
     return next();
   }
 
   // User is not allowed
   // (default res.forbidden() behavior can be overridden in `config/403.js`)
-  return res.forbidden('You are not permitted to perform this action.');
+  //return res.forbidden('You are not permitted to perform this action.');
+  return res.redirect("/");  //Page controller can take over
+    
 };

@@ -49,11 +49,14 @@ module.exports.routes = {
   'get /auth/:provider/callback': 'AuthController.callback',
 
   // Normal processing
-  'GET /': 'PageController.validateRequest',
-  'GET /profile': 'AuthController.profile',
-  'POST /updateprofile': 'AuthController.updateProfile',
-  'GET /users': 'AuthController.users',
-  'GET /events': 'AuthController.events',
+  'get /': 'PageController.validateRequest',
+  'get /profile': 'AuthController.profile',
+  'post /updateprofile': 'AuthController.updateProfile',
+  'get /users': 'AuthController.users',
+  'get /events': 'AuthController.events',
+  'get /booking' : 'BookingController.prepareBooking',
+  'post /makebooking': 'BookingController.makeBooking',
+  
   
   // Events
   'get /openevents': 'EventController.openEvents',
