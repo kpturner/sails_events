@@ -16,7 +16,7 @@ angular.module('PrivateModule').controller('BookController', ['$scope', '$http',
 	$scope.bookingForm.confirmemail = $scope.bookingForm.email;
 	
 	/**
-	 * Test if the details are complete on the profile
+	 * Test if the details are complete on the booking
 	 */
 	$scope.detailsComplete = function() {
 		var complete=true;
@@ -38,7 +38,14 @@ angular.module('PrivateModule').controller('BookController', ['$scope', '$http',
 		$scope.bookingForm.loading=true;
 		// Submit request to Sails.
 		$http.post('/makebooking', {
-			eventid: $scope.event.id,			
+			eventid: $scope.event.id,	
+			name: $scope.bookingForm.name,
+			lodge: $scope.bookingForm.lodge,
+			lodgeNo: $scope.bookingForm.lodgeNo,
+			rank: $scope.bookingForm.rank,
+			dietary: $scope.bookingForm.dietary,
+			email: $scope.bookingForm.email,
+			
 		})
 		.then(function onSuccess(sailsResponse){
 			toastr.success("Your booking was successful")
