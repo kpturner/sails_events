@@ -48,7 +48,7 @@ exports.register = function (req, res, next) {
           , dietary       = req.param('dietary')
           , email         = req.param('email')
           , authProvider  = 'local'
-          , lastLoggedIn  = Date.now()
+          , lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ')
           , gravatarUrl   = gravatarUrl;
 
           User.create({
@@ -243,7 +243,7 @@ exports.login = function (req, identifier, password, next) {
           } else {
             
             var delta={};
-            delta.lastLoggedIn=Date.now();
+            delta.lastLoggedIn=new Date().toISOString().slice(0, 19).replace('T', ' ');
             
             User.update(user.id,delta).exec(
               function(){

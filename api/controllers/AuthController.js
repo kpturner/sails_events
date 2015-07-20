@@ -160,7 +160,7 @@ var AuthController = {
         
         if (user.authProvider!="local") {
           var delta={};
-          delta.lastLoggedIn=Date.now();
+          delta.lastLoggedIn=new Date().toISOString().slice(0, 19).replace('T', ' ');
           User.update(user.id,delta).exec(function(){});  
         }           
            
