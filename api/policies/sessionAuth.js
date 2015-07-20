@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
   // Bear mind that if the user is not authenticated, but the URL
   // is the homepage or just "/" (the PageController will handle this)
   // or we are being authenticated, we can also proceed
-  if (req.session.authenticated || req.url=="/" || req.url=="/homepage" || req.url.indexOf("/auth/")>=0) {
+  if (req.session.authenticated || req.url=="/" || req.url=="/homepage" || req.url=="/register" || req.url.indexOf("/auth/")>=0) {
     return next();
   }
 
