@@ -58,7 +58,7 @@ var User = {
     // The timestamp when the the user last logged in
     // (i.e. sent a username and password to the server)
     lastLoggedIn: {
-      type: 'date',
+      type: 'datetime',
       defaultsTo: new Date(0)
     },
 

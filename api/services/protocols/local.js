@@ -48,7 +48,7 @@ exports.register = function (req, res, next) {
           , dietary       = req.param('dietary')
           , email         = req.param('email')
           , authProvider  = 'local'
-          , lastLoggedIn  = new Date()
+          , lastLoggedIn  = Date.now()
           , gravatarUrl   = gravatarUrl;
 
           User.create({
@@ -241,7 +241,16 @@ exports.login = function (req, identifier, password, next) {
             req.flash('error', 'Error.Passport.Password.Wrong');
             return next(null, false);
           } else {
-            return next(null, user);
+            
+            var delta={};
+            delta.lastLoggedIn=Date.now();
+            
+            User.update(user.id,delta).exec(
+              function(){
+                return next(null, user);    
+              }
+            )      
+            
           }
         });
       }

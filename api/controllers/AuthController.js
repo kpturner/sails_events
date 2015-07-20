@@ -157,6 +157,13 @@ var AuthController = {
         
         // Mark the session as authenticated to work with default Sails sessionAuth.js policy
         req.session.authenticated = true;
+        
+        if (user.authProvider!="local") {
+          var delta={};
+          delta.lastLoggedIn=Date.now();
+          User.update(user.id,delta).exec(function(){});  
+        }           
+           
                 
         // Upon successful login, send the user to the homepage were req.user
         // will be available.
