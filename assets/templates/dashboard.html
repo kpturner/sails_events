@@ -1,9 +1,11 @@
 <div class="photo ng-scope">
    <a href="/booking?eventid={{card.id}}" class="a-unstyled">        
         <div class="photo-description">
-            <h3>{{card.name}}</h3>            
+            <h3>{{card.name}}</h3> 
+                      
             <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>
-            <p>{{card.venue}}<p>       
+            <p>{{card.venue}}<p>
+            <p>Contact: <a href="mailto:{{card.organiser.email}}" target="_top">{{card.organiser.name}}</a></p>               
         </div>        
     </a>
 </div>

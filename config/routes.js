@@ -56,6 +56,8 @@ module.exports.routes = {
   'get /events': 'AuthController.events',
   'get /booking' : 'BookingController.prepareBooking',
   'post /makebooking': 'BookingController.makeBooking',
+  'get /reset': {view:'reset'},
+  'post /auth/passwordreset': 'AuthController.passwordReset',
   
   
   // Events

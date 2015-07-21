@@ -19,6 +19,8 @@ module.exports = {
       required: true 
     },
     
+    organiser: { model: 'User', required: true },
+    
     // Where it is
     venue : {
       type: 'string',
@@ -71,6 +73,10 @@ module.exports = {
     price: {
       type: 'float',
       required: true
+    },
+    
+    instantPayment: {
+      type: 'boolean'
     }
     
   }

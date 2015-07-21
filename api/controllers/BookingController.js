@@ -14,7 +14,7 @@ module.exports = {
 		
 		var eventId=req.param("eventid");
 		 
-		Event.findOne(eventId,function(err,event){
+		Event.findOne(eventId).populate('organiser').exec(function(err,event){
 			if (err) {
 				return res.negotiate(err);
 			}

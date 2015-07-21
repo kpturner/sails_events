@@ -26,9 +26,11 @@ module.exports = function (req, res, next) {
   passport.initialize()(req, res, function () {
     // Use the built-in sessions
     passport.session()(req, res, function () {
-      // Make the user available throughout the frontend
+      // Allow the user.isAdmin boolean to be overridden by locals.js
+      if(req.user) req.user.isAdmin=Utility.isAdmin(req.user);
+      // Make the user available throughout the frontend      
       res.locals.user = req.user;
-        next();
+      next();
     });
   });
 };

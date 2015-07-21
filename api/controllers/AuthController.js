@@ -404,7 +404,69 @@ var AuthController = {
   		return handleDelta(req,delta);				
 			 
 		});
-	},	
+	},
+  
+  
+  /**
+	 * Password reset email
+   *
+   * @param {Object} req
+   * @param {Object} res
+	*/
+	passwordReset: function (req, res) {
+	 	
+    var crypto    = require('crypto');
+     
+   	User.findOne({email:req.param("email")}).exec(function(err, user) {
+       
+        var sendEmail=function(user,newPassword){
+           // Send confirmation email
+  					sails.hooks.email.send(
+  						"passwordReset", {
+      				    recipientName: user.name,
+      				    senderName: "Events Management",
+  				        newPassword: newPassword  							   
+  					   },
+  						 {
+                  to: user.email,
+  						    subject: "Events Management - Password reset"
+  						 },
+  						    function(err) {if (err) console.log(err);}
+  					   )             
+        }
+			  
+        if (user) {
+          
+          Passport.findOne({user:user.id}).exec(function(err,passport){
+            
+            var newPassword;
+            
+            if (passport.provider) {
+              newPassword="You need to log on with your "+passport.provider+" account!";
+              sendEmail(user,newPassword);
+            }
+            else {
+              // Create new password
+              newPassword = crypto.randomBytes(8).toString('base64');
+              //var token = crypto.randomBytes(48).toString('base64'); 
+              Passport.update(passport.id,{
+                password    : newPassword
+              }).exec(function(err,passport){
+                console.log(err)
+              });
+              sendEmail(user,newPassword);  
+            }            
+           
+              
+          })          
+           
+        }
+        
+        return res.ok();	 			  
+		});
+	},
+   
+  	
 };
 
 module.exports = AuthController;

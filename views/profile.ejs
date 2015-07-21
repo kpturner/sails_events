@@ -35,7 +35,7 @@
       <% include partials/private/navbar.ejs %>     
 
       <!-- PROFILE FORM --> 
-      <form ng-submit="submitProfileForm()" id="profile-up-form" name="profile" 
+      <form ng-submit="submitProfileForm()" id="profile-form" name="profile" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h2 class="form-signin-heading">Edit profile for {{profileForm.name}}</h2>
         <h5>Items marked with * are mandatory</h5>
@@ -216,6 +216,7 @@
     <script src="/js/private/users/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>
     <script src="/js/public/SignupController.js"></script>
+    <script src="/js/public/reminder/ResetController.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>
