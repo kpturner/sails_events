@@ -35,7 +35,7 @@ module.exports = {
 		
 		var eventId=req.param("eventid");
 		 
-		Event.findOne(eventId,function(err,event){
+		Event.findOne(eventId).populate("organiser").exec(function(err,event){
 			if (err) {
 				return res.negotiate(err);
 			}
@@ -97,6 +97,7 @@ module.exports = {
 						    },
 						    {
 						      to: res.locals.user.email,
+							  cc: event.organiser.email,
 						      subject: "Event booking confirmation"
 						    },
 						    function(err) {if (err) console.log(err);}
