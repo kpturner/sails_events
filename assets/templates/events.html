@@ -1,0 +1,20 @@
+<div class="photo ng-scope">
+   <a href="/event/edit?eventid=/{{card.id}}" class="a-unstyled">        
+        <div class="photo-description">
+            <h4>{{card.name}}</h4> 
+                      
+            <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>     
+            
+                        
+        </div>        
+    </a>
+    <div class="photo-description">
+    <button type="button" class="btn btn-success" onclick="window.location='/event/copy/?eventid=/{{card.id}}'">
+        <span>Copy</span>
+    </button>   
+    
+    <button type="button" class="btn btn-danger" onclick="window.location='/event/delete/?eventid=/{{card.id}}'">
+        <span>Delete</span>
+    </button>
+    </div>            
+</div>

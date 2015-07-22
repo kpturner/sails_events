@@ -16,12 +16,12 @@
       <!-- navbar-right pulls this element right -->
       
           <!-- Only show this button if the user isAdmin, and then only on desktops -->
-          <button type="button" class="btn btn-success" onclick="window.location='/events'" ng-hide="!user.isAdmin || '<%- req.device.type %>'!='desktop'">
+          <button type="button" class="btn btn-success" onclick="window.location='/events'" ng-hide="!user.isAdmin">
             <span>Events</span>
           </button>
           
           <!-- Only show this button if the user isAdmin, and then only on desktops -->
-          <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-hide="!user.isAdmin || '<%- req.device.type %>'!='desktop'">
+          <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-hide="!user.isAdmin">
             <span>Users</span>
           </button>
       

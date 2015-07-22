@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Events Management - Users</title>
-
+    <title>Events Management | Events</title>
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-deckgrid.css">
     <link rel="stylesheet" href="/styles/angular-toastr.css">
@@ -15,32 +13,29 @@
     <link rel="stylesheet" href="/styles/forMobileIE.css">
     <link rel="stylesheet" href="/styles/importer.css">
     <!--STYLES END-->
-
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
     window.SAILS_LOCALS = {
-      _csrf: "<%= _csrf %>"
+      _csrf: '<%= _csrf %>',
+      user: <%- JSON.stringify(res.locals.user) %>
     };
-    
     </script>
-    
   </head>
-
   <body ng-app="PrivateModule" data-ng-controller="EventsController" ng-cloak>
-    
-                     
+
+    <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
+      <% include partials/private/navbar.ejs %>  
        
-      <% include partials/private/navbar.ejs %>     
-
-      <!-- USERS --> 
-      <h1>A page for admins to edit events will be shown here</h1>
+      <h4 class="hidden-md hidden-lg">Tap an event to edit</h4>  
+      <h4 class="hidden-xs hidden-sm">Click an event to edit</h4>  
       
+      <div deckgrid source="events" cardTemplate="templates/events.html" class="deckgrid"></div>
+     
+    
+      <% include partials/public/footer.ejs %>   
 
-    </div>  
-
-    <% include partials/public/footer.ejs %>   
-      
+    </div>
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery/jquery.js"></script>
@@ -61,5 +56,6 @@
     <script src="/js/public/SignupController.js"></script>
     <script src="/js/public/reminder/ResetController.js"></script>
     <!--SCRIPTS END-->
+
   </body>
 </html>
