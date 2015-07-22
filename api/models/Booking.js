@@ -22,6 +22,34 @@ module.exports = {
     event: {
       model: 'Event',
       required: true
+    },    
+      
+    // Places booked
+    places: {
+      type: 'integer'
+    },  
+          
+    // Total cost
+    cost: {
+      type: 'float'
+    },
+    
+    amountPaid: {
+      type: 'float'
+    },
+    
+    paid: {
+      type: 'boolean'
+    },
+    
+    // Additional info
+    info: {
+      type: 'text'
+    },
+    
+    // linked bookings
+    linkBookings : { 
+      collection: 'LinkedBooking', via: 'booking' 
     },
 
   }

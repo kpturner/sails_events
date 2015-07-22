@@ -10,10 +10,23 @@ angular.module('PrivateModule').controller('BookController', ['$scope', '$http',
 	$scope.user=SAILS_LOCALS.user;
 	$scope.event=SAILS_LOCALS.event;
 	$scope.bookingForm = $scope.user;
+	$scope.bookingForm.places=1;
+	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
 	// Convert lodge no to numeric
 	$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
 	// Initialise confirmation email
 	$scope.bookingForm.confirmemail = $scope.bookingForm.email;
+
+		
+	// Enable a repeater for additional attendees
+	$scope.linkedBookings=[];
+	$scope.linkedBookingsArr=[];
+	$scope.makeArray = function(){
+		$scope.linkedBookingsArr.length=0;
+		for (var i=0;i<(parseInt($scope.bookingForm.places)-1);i++) {
+			$scope.linkedBookingsArr.push(i)
+		} 
+	}
 	
 	/**
 	 * Test if the details are complete on the booking
@@ -36,6 +49,18 @@ angular.module('PrivateModule').controller('BookController', ['$scope', '$http',
 	 */	
 	$scope.submitBookingForm = function(){
 		$scope.bookingForm.loading=true;
+		
+		// Remove items from the linkedBookings that are beyond the number of places
+		if ($scope.bookingForm.places<2) {
+			$scope.linkedBookings=[]
+		}
+		else {
+			$scope.linkedBookings=$.grep($scope.linkedBookings,function(obj,n){
+				return (n<=($scope.bookingForm.places-2))
+			})	
+		}	
+		
+		
 		// Submit request to Sails.
 		$http.post('/makebooking', {
 			eventid: $scope.event.id,	
@@ -45,7 +70,9 @@ angular.module('PrivateModule').controller('BookController', ['$scope', '$http',
 			rank: $scope.bookingForm.rank,
 			dietary: $scope.bookingForm.dietary,
 			email: $scope.bookingForm.email,
-			
+			info: $scope.bookingForm.info,
+			places: $scope.bookingForm.places,
+			linkedBookings: $scope.linkedBookings
 		})
 		.then(function onSuccess(sailsResponse){
 			toastr.success("Your booking was successful")

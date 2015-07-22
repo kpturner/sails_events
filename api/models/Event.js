@@ -19,7 +19,14 @@ module.exports = {
       required: true 
     },
     
+    // Organiser
     organiser: { model: 'User', required: true },
+    
+    // Code (for booking references)
+    code : {
+      type: 'string',
+      required: true
+    },
     
     // Where it is
     venue : {
@@ -29,7 +36,7 @@ module.exports = {
     
     // Description
     blurb: {
-      type: 'string',      
+      type: 'text',      
     },
     
     // Menu
@@ -73,10 +80,19 @@ module.exports = {
     price: {
       type: 'float',
       required: true
-    },
-    
+    },    
+     
+    maxBookingPlaces: {
+      type: 'integer',
+      defaultsTo: 10
+    }, 
+        
     instantPayment: {
       type: 'boolean'
+    },
+    
+    paymentDetails: {
+      type: 'text'
     }
     
   }

@@ -6,18 +6,37 @@
  
 
 <p>
-	Event: <%=eventName%>
+	Booking ref: <b><%=bookingRef%></b>
+	<br>Event: <%=eventName%>
 	<br>On: <%=eventDate%> at <%=eventTime%>
 	<br>At: <%=eventVenue%> 
 	<br>Info: <%=eventBlurb%>
 	<br>Menu: <%=eventMenu%> 
 	<br>Dress code: <%=eventDressCode%> 
-	<br><br>Your details: 
+	<br><br><b>Your details:</b> 
 	<br>Lodge: <%=lodge%>
 	<br>Lodge no: <%=lodgeNo%>
 	<br>Rank: <%=rank%>
 	<br>Dietary reqs: <%=dietary%>
 	<br>Email address: <%=email%>
+	<br>Additional info: <%=info%>
+	<br>Places: <%=places%>
+	<br>
+	
+	<% if (linkedBookings) {%>
+	  <br><b>Additional places</b></br>	
+      <% linkedBookings.forEach(function (linkedBooking,place) { %>
+	  	<p><i>Additional attendee <%=place+1%></i></p>
+        <br>Name: <%=linkedBooking.name%>
+		<br>Lodge: <%=linkedBooking.lodge%>
+		<br>Lodge no: <%=linkedBooking.lodgeNo%>
+		<br>Rank: <%=linkedBooking.rank%>
+		<br>Dietary reqs: <%=linkedBooking.dietary%>
+      <% }) %>
+    <% } %>
+	
+	
+	<p> Payment details: <b><%=paymentDetails%></b>
 
 <p>Yours S&F,<br/><%=senderName%></p>
 

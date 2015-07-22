@@ -141,7 +141,7 @@
             ng-class="{'has-error':signup.lodgeNo.$invalid &&
                                   signup.lodgeNo.$dirty}">
             <label>* Your lodge number</label>
-            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="signupForm.lodgeNo" ng-maxlength="5" required>
+            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="signupForm.lodgeNo" ng-maxlength="5" required min="1">
             <span class="help-block has-error" ng-if="signup.lodgeNo.$dirty">
               <span ng-show="signup.lodgeNo.$error.required">Lodge number is required.</span>
               <span ng-show="signup.lodgeNo.$error.maxlength">The name cannot be more than 5 characters.</span>

@@ -292,24 +292,7 @@ var AuthController = {
 			
 			var handlePassword=function(req,delta){
 				if (req.param('password')) {
-					/*
-					var Passwords = require('machinepack-passwords');  
-					Passwords.encryptPassword({
-						password: req.param('password')			
-					})
-					.exec({
-						// An unexpected error occurred.
-						error: function (err){
-							return res.negotiate(err)
-						},
-						success: function (encryptedPassword){
-							if (encryptedPassword!=currentUser.encryptedPassword) {
-								delta.encryptedPassword=encryptedPassword;
-								return updateUser(delta)
-							}
-						}	
-					})	
-					*/
+					
 					// Get the existing passport
 					Passport.findOne({ user: req.user.id }, function(err, passport) {
 					    if (err) { return res.negotiate(err); }
@@ -425,7 +408,8 @@ var AuthController = {
   						"passwordReset", {
       				    recipientName: user.name,
       				    senderName: "Events Management",
-  				        newPassword: newPassword  							   
+  				        newPassword: newPassword,
+                  domain:	sails.getBaseUrl(),  							   
   					   },
   						 {
                   to: user.email,
@@ -452,9 +436,14 @@ var AuthController = {
               Passport.update(passport.id,{
                 password    : newPassword
               }).exec(function(err,passport){
-                console.log(err)
-              });
-              sendEmail(user,newPassword);  
+                if (err)
+                  console.log(err)
+                else {
+                  newPassword="Your new temporary password is: "+newPassword;
+                  sendEmail(user,newPassword);   
+                }                
+              });              
+              
             }            
            
               
