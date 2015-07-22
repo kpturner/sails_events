@@ -74,17 +74,21 @@ angular.module('PrivateModule').controller('BookController', ['$scope', '$http',
 			places: $scope.bookingForm.places,
 			linkedBookings: $scope.linkedBookings
 		})
-		.then(function onSuccess(sailsResponse){
+		.then(function onSuccess(sailsResponse){			 
 			toastr.success("Your booking was successful")
 			setTimeout(function(){
 				window.location = '/'
 			},1000);
 		})
-		.catch(function onError(sailsResponse){
-
+		.catch(function onError(sailsResponse){			 
 			// Handle known error type(s).
 			toastr.error(sailsResponse.data, 'Error');
 			$scope.bookingForm.loading = false;
+			// Re-evaluate the capacity
+			$http.post('/reevaluateevent',{eventid:$scope.event.id})
+				.then(function onSuccess(sailsResponse){
+					$scope.event=sailsResponse.data
+				})
 		})
 		.finally(function eitherWay(){
 			//$scope.bookingForm.loading = false;
