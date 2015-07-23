@@ -6,6 +6,10 @@
     }
 }
 
+.bigcheckbox {
+	transform:scale(2, 2);
+}
+
 .a-unstyled {  text-decoration: none}
 .a-unstyled:link {  text-decoration: none}
 .a-unstyled:visited {  text-decoration: none}

@@ -1,1 +1,1 @@
-angular.module('PrivateModule', ['toastr', 'compareTo', 'akoenig.deckgrid']);
+angular.module('PrivateModule', ['ui.bootstrap', 'toastr', 'compareTo', 'akoenig.deckgrid']);

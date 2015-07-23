@@ -68,12 +68,68 @@ module.exports = {
 	 * Prepare event for copy/edit/delete
 	 */	
 	prepareEvent: function(req, res) {
-		var action=req.param("action")
-	
-		console.log(action);
 		
-		return res.json({})
+		var action=req.param("action");
+		var eventId=req.param("eventid");
+		var mode=action.substr(0,1).toUpperCase()+action.substr(1);		
+		
+		// If we have an event id, retrieve it
+		if (eventId) {
+			Event.findOne(eventId).exec(function(err, event){
+				if (err) {
+					return res.negotiate(err);	
+				}
+				// Send the details
+				return res.view("eventdetails",{
+					mode:mode,
+					event:event
+				})	
+			})	
+		} 
+		else {
+			return res.view("eventdetails",{
+				mode:mode
+			})	
+		}	
+	},
 	
+	/**
+	 * Update event (copy/edit/delete)
+	 */	
+	updateEvent: function(req, res) {
+		
+		var action=req.param("action");
+		var event=req.param("data");
+		var eventId=event.id;
+		
+		// Sort out the event time
+		if (event.time.length>8) {
+			try {
+				event.time=(new Date(event.time).toTimeString()).split(" ")[0];		
+			}
+			catch (e) {
+				// Mmmm, whats going on?   Let the database throw the error
+			}		
+		}
+		
+		// Decide what to do based on the action
+		if (action=="edit") {
+			Event.update(eventId,event).exec(function(err,event){
+				if (err) {
+					return res.negotiate(err)
+				}
+				return res.ok();	
+			})
+		}
+		else if (action=="delete") {
+			
+		}
+		else if (action=="copy") {
+			
+		}
+		
+		
 	}
+	
 };
 

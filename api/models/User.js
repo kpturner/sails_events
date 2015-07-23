@@ -49,6 +49,11 @@ var User = {
       type: 'boolean' 
     },
     
+    // Organiser?
+    isOrganiser: {
+      type: 'boolean' 
+    },
+    
     // Authentication provider (some redundancy here as we can get this from the passport, but takes
     // the additional I/O out of each request)
     authProvider: {

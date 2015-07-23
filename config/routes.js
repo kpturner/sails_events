@@ -65,6 +65,8 @@ module.exports.routes = {
   'get /openevents': 'EventController.openEvents',
   'get /allevents/:filter?': 'EventController.allEvents',  // the ? in :filter? means that the filter part or the URL is optional
   'get /event/:action': 'EventController.prepareEvent',
+  'get /organisers': 'UserController.organisers',
+  'post /updateevent/:action': 'EventController.updateEvent',
 
 
 

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Events Management - Event Details</title>
+
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/angular-deckgrid.css">
+    <link rel="stylesheet" href="/styles/angular-toastr.css">
+    <link rel="stylesheet" href="/styles/bootstrap.3.1.1.css">
+    <link rel="stylesheet" href="/styles/events.css">
+    <link rel="stylesheet" href="/styles/forMobileIE.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
+
+    <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
+    <script type="text/javascript">
+    window.SAILS_LOCALS = {
+      _csrf: "<%= _csrf %>",
+      user: <%- JSON.stringify(res.locals.user) %>,
+      event: <%- JSON.stringify(event) %>,
+      mode: "<%= mode.toLowerCase() %>"
+    };
+    
+    </script>
+    
+  </head>
+
+  <body ng-app="PrivateModule" data-ng-controller="EventDetailsController" ng-cloak>
+    
+                     
+    <div class="container-fluid">
+       
+      <% include partials/private/navbar.ejs %>     
+
+      <!-- EVENT FORM --> 
+      <form ng-submit="submitEventForm()" id="profile-form" name="event" 
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        <h2 class="form-signin-heading">Event Maintenance - <%=mode%></h2>
+        <h5>Items marked with * are mandatory</h5>
+        <div class="row">
+  
+          <!-- O P E N ? -->
+  
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':event.open.$invalid &&
+                                  event.open.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="open" ng-model="eventForm.open"></input>
+              &nbsp;Open for bookings?
+             </label>
+           </div>
+  
+          <!-- N A M E -->
+  
+          <!-- checking whether the form "profile" with the "name" property is both $invalid AND $dirty.  If it is
+          insert the "has-error" class on the input field (i.e. insert a red border around the input field)
+          -->
+          <div class="control-group form-group col-md-10"
+          ng-class="{'has-error':event.name.$invalid &&
+                                event.name.$dirty}">
+            <label>* Full name</label>  
+            <!-- For this input field make it required, and have a max length of 50 -->
+            <input type="text" class="form-control" placeholder="e.g. Provincial AGM" name="name" ng-model="eventForm.name" ng-maxlength="50" required>  
+            <!-- Also, if event.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+            and/or maxlength) -->
+            <span class="help-block has-error" ng-if="event.name.$dirty">
+              <span ng-show="event.name.$error.required">Name is required.</span>
+              <span ng-show="event.name.$error.maxlength">The name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+          
+           
+          
+          <!-- O R G A N I S E R -->
+          <div class="control-group form-group col-md-7"
+            ng-class="{'has-error':event.organiser.$invalid &&
+                                  event.organiser.$dirty}">
+            <label>* Organiser</label>
+            <select type="text" class="form-control" placeholder="event organiser" name="organiser" ng-options="a.id as a.name for a in organisers" ng-model="eventForm.organiser"   required></select>
+            <span class="help-block has-error" ng-if="event.organiser.$dirty">
+              <span ng-show="event.organiser.$error.required">Organiser is required.</span> 
+            </span>
+          </div>
+         
+  
+          <!-- C O D E -->
+  
+          <div class="control-group form-group col-md-7"
+            ng-class="{'has-error':event.code.$invalid &&
+                                  event.code.$dirty}">
+            <label>* Code (for payment)</label>
+            <input type="text" class="form-control" placeholder="e.g. AGM16" name="code" ng-model="eventForm.code" ng-maxlength="8" required>
+            <span class="help-block has-error" ng-if="event.code.$dirty">
+              <span ng-show="event.code.$error.required">Event code is required.</span>
+              <span ng-show="event.code.$error.maxlength">The event code cannot be more than 8 characters.</span>
+            </span>
+          </div>
+          
+              
+          <!-- V E N U E -->
+  
+          <div class="control-group form-group col-md-10"
+            ng-class="{'has-error':event.rank.$invalid &&
+                                  event.rank.$dirty}">
+            <label>* Venue</label>
+            <textarea type="text" class="form-control" placeholder="full address details" name="venue" ng-model="eventForm.venue" required rows="3"></textarea>
+            <span class="help-block has-error" ng-if="event.venue.$dirty">
+              <span ng-show="event.venue.$error.required">Venue is required.</span>
+            </span>
+          </div>
+          
+          <!-- D A T E -->
+  
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':event.date.$invalid &&
+                                  event.date.$dirty}">
+             <label>* Date</label>
+            <p class="input-group">             
+              <input type="date" class="form-control" datepicker-popup datepicker-options="dateOptions" is-open="dateOpened"  placeholder="date of event" name="date" 
+                ng-model="eventForm.date" required></input>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>              
+            </p>           
+            <span class="help-block has-error" ng-if="event.date.$dirty">
+              <span ng-show="event.date.$error.required">Date is required.</span>
+            </span>
+           </div>
+           
+           <!-- T I M E -->
+  
+          <div class="control-group form-group col-md-3"
+            ng-class="{'has-error':event.time.$invalid &&
+                                  event.time.$dirty}">
+              <label>* Time</label>       
+              <input type="time" class="form-control" placeholder="e.g. 18:00:00" name="time" ng-model="eventForm.time" required></input>
+              <span class="help-block has-error" ng-if="event.time.$dirty">
+                <span ng-show="event.time.$error.required">Time is required.</span>
+              </span>
+           </div>
+           
+                     
+           <!-- P R I C E -->
+  
+          <div class="control-group form-group col-md-3"
+            ng-class="{'has-error':event.price.$invalid &&
+                                  event.price.$dirty}">
+              <label>* Price</label>       
+              <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required></input>
+              <span class="help-block has-error" ng-if="event.price.$dirty">
+                <span ng-show="event.price.$error.required">Price is required.</span>
+              </span>
+           </div>  
+           
+                      
+           <!-- M A X I M U M   B O O K I N G   P L A C E S -->
+  
+          <div class="control-group form-group col-md-8"
+            ng-class="{'has-error':event.maxBookingPlaces.$invalid &&
+                                  event.event.maxBookingPlaces.$dirty}">
+              <label>* Maximum number of places per booking</label>       
+              <input type="number" class="form-control" placeholder="e.g. 10" name="event.maxBookingPlaces" ng-model="eventForm.maxBookingPlaces" min="1" required></input>
+              <span class="help-block has-error" ng-if="event.event.maxBookingPlaces.$dirty">
+                <span ng-show="event.event.maxBookingPlaces.$error.required">Maximum number of booking places is required.</span>
+                <span ng-show="event.event.maxBookingPlaces.$error.min">Maximum number of booking places must be greater than 0.</span>
+              </span>
+           </div>
+           
+           <!-- C A P A C I T Y -->
+          </br>
+          <div class="control-group form-group col-md-3"
+            ng-class="{'has-error':event.capacity.$invalid &&
+                                  event.capacity.$dirty}">
+              <label>* Capacity</label>       
+              <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" required></input>
+              <span class="help-block has-error" ng-if="event.capacity.$dirty">
+                <span ng-show="event.capacity.$error.required">Capacity is required.</span>
+              </span>
+           </div>
+                      
+           <!-- B L U R B -->
+  
+          <div class="control-group form-group col-md-10"
+            ng-class="{'has-error':event.blurb.$invalid &&
+                                  event.blurb.$dirty}">
+            <label>Blurb</label>
+            <textarea type="text" class="form-control" placeholder="describe the event" name="blurb" ng-model="eventForm.blurb" rows="10"></textarea>
+          
+          </div>
+  
+           <!-- M E N U -->
+  
+          <div class="control-group form-group col-md-10"
+            ng-class="{'has-error':event.menu.$invalid &&
+                                  event.menu.$dirty}">
+            <label>Menu</label>
+            <textarea type="text" class="form-control" placeholder="menu details if known" name="menu" ng-model="eventForm.menu"></textarea>
+          
+          </div>
+          
+           <!-- D R E S S  C O D E -->
+  
+          <div class="control-group form-group col-md-10"
+            ng-class="{'has-error':event.dressCode.$invalid &&
+                                  event.dressCode.$dirty}">
+            <label>Dress code</label>
+            <textarea type="text" class="form-control" placeholder="dress code if known" name="dressCode" ng-model="eventForm.dressCode"></textarea>
+          
+          </div>
+      
+  
+          <!-- C L O S I N G  D A T E -->
+  
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':event.closingDate.$invalid &&
+                                  event.date.$dirty}">
+             <label>* Closing date for bookings</label>
+            <p class="input-group">             
+              <input type="date" class="form-control" datepicker-popup datepicker-options="dateOptions" is-open="closingDateOpened"  placeholder="closing date for bookings" name="closingDate" 
+                ng-model="eventForm.closingDate" required></input>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openClosingDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>              
+            </p>
+            <span class="help-block has-error" ng-if="event.closingDate.$dirty">
+              <span ng-show="event.closingDate.$error.required">Closing date is required.</span>
+            </span>
+           </div>
+           
+           <!-- P A Y M E N T   D E T A I L S -->
+  
+            <div class="control-group form-group col-md-10"
+              ng-class="{'has-error':event.paymentDetails.$invalid &&
+                                    event.paymentDetails.$dirty}">
+              <label>Payment details</label>
+              <textarea type="text" class="form-control" placeholder="e.g. Bank details for BACS payments" name="paymentDetails" ng-model="eventForm.paymentDetails"></textarea>
+            
+            </div>
+           
+            <!-- I N S T A N T  P A Y M E N T  ? -->
+  
+            <div class="control-group form-group col-md-7"
+              ng-class="{'has-error':event.instantPayment.$invalid &&
+                                    event.instantPayment.$dirty}">
+               <label>
+                <input type="checkbox" class="bigcheckbox" name="instantPayment" ng-model="eventForm.instantPayment" ></input>
+                &nbsp;Instant payment required?
+               </label>
+             </div>
+         
+        </div>
+  
+        <br/>
+  
+        <!-- Disable button until something has been edited and the form has no errors -->
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || eventForm.loading">
+          <span ng-show="!eventForm.loading">Save Details</span>
+          <span class="overlord-loading-spinner fa fa-spinner" ng-show="eventForm.loading" ></span>
+          <span ng-show="eventForm.loading">Saving event details...</span>
+        </button>
+  
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      </form>
+     
+     </div>  
+
+    <% include partials/public/footer.ejs %>   
+      
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/jquery/jquery.js"></script>
+    <script src="/js/dependencies/angular.js"></script>
+    <script src="/js/dependencies/angular-deckgrid.js"></script>
+    <script src="/js/dependencies/angular-initial-value.min.js"></script>
+    <script src="/js/dependencies/angular-toastr.js"></script>
+    <script src="/js/dependencies/compareTo.module.js"></script>
+    <script src="/js/dependencies/forMobileIE.js"></script>
+    <script src="/js/dependencies/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="/js/public/PublicModule.js"></script>
+    <script src="/js/private/PrivateModule.js"></script>
+    <script src="/js/private/book/BookController.js"></script>
+    <script src="/js/private/dashboard/DashboardController.js"></script>
+    <script src="/js/private/events/EventDetailsController.js"></script>
+    <script src="/js/private/events/EventsController.js"></script>
+    <script src="/js/private/profile/ProfileController.js"></script>
+    <script src="/js/private/users/UsersController.js"></script>
+    <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/SignupController.js"></script>
+    <script src="/js/public/reminder/ResetController.js"></script>
+    <!--SCRIPTS END-->
+  </body>
+</html>
