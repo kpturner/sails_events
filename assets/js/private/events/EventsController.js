@@ -32,4 +32,11 @@ angular.module('PrivateModule').controller('EventsController', ['$scope', '$http
 		  	});
 		}  
 
+		/**
+		 * Navigate to editor
+		 */
+		$scope.navigate = function(action,eventId) {
+			$document.location("/event/"+action+"?eventid="+eventId)
+		}
+
 }])

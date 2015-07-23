@@ -4,17 +4,19 @@
             <h4>{{card.name}}</h4> 
                       
             <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>     
-            
-                        
+                          
         </div>        
-    </a>
+    </a>  
     <div class="photo-description">
-    <button type="button" class="btn btn-success" onclick="window.location='/event/copy/?eventid={{card.id}}'">
-        <span>Copy</span>
-    </button>   
-    
-    <button type="button" class="btn btn-danger" onclick="window.location='/event/delete/?eventid={{card.id}}'">
-        <span>Delete</span>
-    </button>
-    </div>            
-</div>
+        <a href="/event/copy?eventid={{card.id}}" class="a-unstyled">      
+            <button type="button" class="btn btn-success">
+                <span>Copy</span>
+            </button>   
+        </a>
+        <a href="/event/delete?eventid={{card.id}}" class="a-unstyled">     
+            <button type="button" class="btn btn-danger">
+                <span>Delete</span>
+            </button>
+        </a>          
+    </div>
+ </div>

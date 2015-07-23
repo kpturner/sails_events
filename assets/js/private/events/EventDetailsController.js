@@ -29,11 +29,14 @@ angular.module('PrivateModule').controller('EventDetailsController', ['$scope', 
 	
 	// Convert the date/time
 	$scope.eventForm.date = new Date($scope.eventForm.date);
-	var timeArr=$scope.eventForm.time.split(":");
-	$scope.eventForm.date.setHours(timeArr[0]); 
-	$scope.eventForm.date.setMinutes(timeArr[1]); 
-	$scope.eventForm.date.setSeconds(timeArr[2]); 
-	$scope.eventForm.time = new Date($scope.eventForm.date);
+	if ($scope.eventForm.time) {
+		var timeArr=$scope.eventForm.time.split(":");
+		$scope.eventForm.date.setHours(timeArr[0]); 
+		$scope.eventForm.date.setMinutes(timeArr[1]); 
+		$scope.eventForm.date.setSeconds(timeArr[2]); 
+		$scope.eventForm.time = new Date($scope.eventForm.date);	
+	}
+	
 		
 	// Convert the closing date 
 	$scope.eventForm.closingDate = new Date($scope.eventForm.closingDate);

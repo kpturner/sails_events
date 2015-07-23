@@ -15,7 +15,6 @@ module.exports = {
     // Name 
     name  : { 
       type: 'string', 
-      unique: true,
       required: true 
     },
     
@@ -61,9 +60,10 @@ module.exports = {
       required: true
     },
     
-    // Time of arrival
+    // Time of arrival (seems to be a bug in sails-mysql with regard to using a type of "time" so switched to "string")
+    //  https://github.com/balderdashy/sails-mysql/issues/241
     time: {
-      type: 'time'
+      type: 'string'
     },
     
     // When do booking close

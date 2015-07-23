@@ -27,8 +27,14 @@
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %>  
        
-      <h4 class="hidden-md hidden-lg">Tap an event to edit</h4>  
-      <h4 class="hidden-xs hidden-sm">Click an event to edit</h4>  
+       <a href="/event/create/" class="a-unstyled">     
+        <button type="button" class="btn btn-primary">
+            <span>Create</span>
+        </button>
+      </a>       
+      
+      <h4 class="hidden-md hidden-lg">Or tap an event to edit</h4>  
+      <h4 class="hidden-xs hidden-sm">Or click an event to edit</h4>  
       
       <div deckgrid source="events" cardTemplate="templates/events.html" class="deckgrid"></div>
      

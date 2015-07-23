@@ -88,7 +88,8 @@ module.exports = {
 		} 
 		else {
 			return res.view("eventdetails",{
-				mode:mode
+				mode:mode,
+				event:{}
 			})	
 		}	
 	},
@@ -122,10 +123,29 @@ module.exports = {
 			})
 		}
 		else if (action=="delete") {
-			
+			// Make sure there are no bookings!
+			Booking.find({event:eventId}).exec(function(err,bookings){
+				if (bookings && bookings.length>0) {
+					return res.genericErrorResponse(460,"You cannot delete an event with bookings against it!")
+				}
+				// Carry on and delete it
+				Event.destroy(eventId).exec(function(err){
+					if (err) {
+						return res.negotiate(err)
+					}
+					return res.ok();
+				})
+				
+			})
 		}
-		else if (action=="copy") {
-			
+		else if (action=="copy" || action=="create") {
+			delete event.id;
+			Event.create(event).exec(function(err,event){
+				if (err) {
+					return res.negotiate(err)
+				}
+				return res.ok();	
+			})
 		}
 		
 		
