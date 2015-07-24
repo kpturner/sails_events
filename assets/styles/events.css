@@ -6,9 +6,16 @@
     }
 }
 
+@media (max-width: 480px) {
+    .nav-btn-space {
+		margin-bottom: 2px
+	}
+}
+
 .bigcheckbox {
 	transform:scale(2, 2);
 }
+
 
 .a-unstyled {  text-decoration: none}
 .a-unstyled:link {  text-decoration: none}
