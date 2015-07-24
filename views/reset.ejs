@@ -27,7 +27,7 @@
     
   </head>
 
-  <body ng-app="PublicModule" data-ng-controller="ResetController" ng-cloak>
+  <body ng-app="EventsModule" data-ng-controller="ResetController" ng-cloak>
     
                      
     <div class="container-fluid">
@@ -60,7 +60,7 @@
   
         <!-- Disable button until something has been edited and the form has no errors -->
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || resetForm.loading">
-          <span ng-show="!resetForm.loading">Email reset</span>
+          <span ng-show="!resetForm.loading">Send me instructions</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="resetForm.loading" ></span>
           <span ng-show="resetForm.loading">Emailing...</span>
         </button>
@@ -82,17 +82,16 @@
     <script src="/js/dependencies/compareTo.module.js"></script>
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/dependencies/ui-bootstrap-tpls-0.13.0.min.js"></script>
-    <script src="/js/public/PublicModule.js"></script>
-    <script src="/js/private/PrivateModule.js"></script>
-    <script src="/js/private/book/BookController.js"></script>
-    <script src="/js/private/dashboard/DashboardController.js"></script>
-    <script src="/js/private/events/EventDetailsController.js"></script>
-    <script src="/js/private/events/EventsController.js"></script>
-    <script src="/js/private/profile/ProfileController.js"></script>
-    <script src="/js/private/users/UsersController.js"></script>
+    <script src="/js/EventsModule.js"></script>
+    <script src="/js/private/BookController.js"></script>
+    <script src="/js/private/DashboardController.js"></script>
+    <script src="/js/private/EventDetailsController.js"></script>
+    <script src="/js/private/EventsController.js"></script>
+    <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
-    <script src="/js/public/reminder/ResetController.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

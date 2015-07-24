@@ -18,6 +18,16 @@ var User = {
       type: 'string'
     },
     
+    // Surname
+    surname: {
+      type: 'string'
+    },
+    
+    // First name
+    firstName: {
+      type: 'string'
+    },
+    
     // The user's lodge
     lodge: {
       type: 'string'
@@ -52,6 +62,21 @@ var User = {
     // Organiser?
     isOrganiser: {
       type: 'boolean' 
+    },
+    
+    // Visiting Officer?
+    isVO: {
+      type: 'boolean'
+    },
+    
+    // VO Lodge
+    voLodge: {
+      type: 'string'
+    },
+    
+    // VO lodge number
+    voLodgeNo: {
+      type: 'string'
     },
     
     // Authentication provider (some redundancy here as we can get this from the passport, but takes

@@ -21,21 +21,48 @@
     };
     </script>
   </head>
-  <body ng-app="PrivateModule" data-ng-controller="EventsController" ng-cloak>
+  <body ng-app="EventsModule" data-ng-controller="EventsController" ng-cloak>
 
     <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %>  
        
-       <a href="/event/create/" class="a-unstyled">     
-        <button type="button" class="btn btn-primary">
-            <span>Create</span>
+      <!-- PROFILE FORM --> 
+      <form ng-submit="filterEvents()" id="filter-form" name="filter" 
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        <h2 class="form-signin-heading">Events Maintenance</h2>
+        
+        <div class="row">
+  
+          <!-- F I L T E R -->
+           
+          <div class="control-group form-group col-xs-10">
+             
+            <input type="text" class="form-control" placeholder="key text to filter events" name="filter" ng-model="filterForm.filter">  
+          </div>                    
+         
+        </div>
+         
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="filterForm.loading">
+          <span ng-show="!filterForm.loading">Filter events</span>
+          <span class="overlord-loading-spinner fa fa-spinner" ng-show="filterForm.loading" ></span>
+          <span ng-show="filterForm.loading">Filtering...</span>
         </button>
-      </a>       
+        </br> 
+        <a href="/event/create/" class="a-unstyled">     
+          <button type="button"  class="btn btn-primary btn-lg btn-block">
+              <span>Create an event</span>
+          </button>
+        </a>      
       
-      <h4 class="hidden-md hidden-lg">Or tap an event to edit</h4>  
-      <h4 class="hidden-xs hidden-sm">Or click an event to edit</h4>  
+  
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      </form> 
+        
       
+       
+      <h4 class="hidden-md hidden-lg">Tap an event to edit it</h4>  
+      <h4 class="hidden-xs hidden-sm">Click an event to edit it</h4>   
       <div deckgrid source="events" cardTemplate="templates/events.html" class="deckgrid"></div>
      
     
@@ -52,17 +79,16 @@
     <script src="/js/dependencies/compareTo.module.js"></script>
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/dependencies/ui-bootstrap-tpls-0.13.0.min.js"></script>
-    <script src="/js/public/PublicModule.js"></script>
-    <script src="/js/private/PrivateModule.js"></script>
-    <script src="/js/private/book/BookController.js"></script>
-    <script src="/js/private/dashboard/DashboardController.js"></script>
-    <script src="/js/private/events/EventDetailsController.js"></script>
-    <script src="/js/private/events/EventsController.js"></script>
-    <script src="/js/private/profile/ProfileController.js"></script>
-    <script src="/js/private/users/UsersController.js"></script>
+    <script src="/js/EventsModule.js"></script>
+    <script src="/js/private/BookController.js"></script>
+    <script src="/js/private/DashboardController.js"></script>
+    <script src="/js/private/EventDetailsController.js"></script>
+    <script src="/js/private/EventsController.js"></script>
+    <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
-    <script src="/js/public/reminder/ResetController.js"></script>
     <!--SCRIPTS END-->
 
   </body>

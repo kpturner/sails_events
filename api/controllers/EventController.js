@@ -18,21 +18,32 @@ module.exports = {
 	openEvents: function (req, res) {
 		var today=new Date().getDate();
 		
-		Event.find({where:{open:true,closingDate: { '>': today }}, sort: {date:1,time:1}}).populate('organiser').exec(
-			function(err, events){
-				if (err) {
-					sails.log.verbose('Error occurred trying to retrieve events.');
-					return res.negotiate(err);
-			  	}	
-			
-			  	// If session refers to a user who no longer exists, still allow logout.
-			  	if (!events) {
-			    	return res.json({});
-			  	}
-				  
-				return res.json(events);  
-			}
-		)
+		Event.find({
+					where:	{
+								open:true,
+								closingDate: { '>': today } 
+							}, 
+					sort: 	{
+								date:1,
+								time:1
+							}
+					})
+					.populate('organiser')
+			.exec(
+				function(err, events){
+					if (err) {
+						sails.log.verbose('Error occurred trying to retrieve events.');
+						return res.negotiate(err);
+				  	}	
+				
+				  	// If session refers to a user who no longer exists, still allow logout.
+				  	if (!events) {
+				    	return res.json({});
+				  	}
+					  
+					return res.json(events);  
+				}
+			)
 			
 	},
 	
@@ -45,8 +56,28 @@ module.exports = {
 	allEvents: function (req, res) {
 		
 		var filter=req.param('filter');
-								
-		Event.find({sort: {date:2,time:2}}).populate('organiser').exec(
+						
+		var where = {};
+		
+		if (filter && filter.length>0) {
+			where = {
+				or: [
+					{name: {contains: filter}},
+					{venue: {contains: filter}},	
+					{blurb: {contains: filter}},
+				 
+				]
+			}
+		}
+										
+		Event.find({
+						where: where,
+						sort: {
+								date:2,
+								time:2
+						}
+					}
+			).populate('organiser').exec(
 			function(err, events){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve events.');

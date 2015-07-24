@@ -14,8 +14,6 @@ module.exports = {
     
     // If not logged in, show the public view.
     if (!req.session.authenticated) {
-      //console.log("return res.view('homepage');")     
-      //return res.view('homepage');
       return res.redirect("/homepage");
     }
     
@@ -38,6 +36,8 @@ module.exports = {
   			|| (!user.lodge || user.lodge.length==0)
   			|| (!user.lodgeNo || user.lodgeNo.length==0)
   			|| (!user.email || user.email.length==0)
+        || (!user.firstName || user.firstName.length==0)
+        || (!user.surname || user.surname.length==0)
   			|| ((user.authProvider=="local")
   					&& ( !user.username || user.username.length==0 )
   				)

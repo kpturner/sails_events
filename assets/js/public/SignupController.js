@@ -1,4 +1,4 @@
-angular.module('PublicModule').controller('SignupController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('SignupController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
 	$scope.signupForm = {
 		loading: false
@@ -14,8 +14,13 @@ angular.module('PublicModule').controller('SignupController', ['$scope', '$http'
 			lodgeNo: $scope.signupForm.lodgeNo,
 			rank: $scope.signupForm.rank,
 			dietary: $scope.signupForm.dietary,
+			isVO: $scope.signupForm.isVO,
+			voLodge: $scope.signupForm.voLodge,
+			voLodgeNo: $scope.signupForm.voLodgeNo,
 			email: $scope.signupForm.email,
-			password: $scope.signupForm.password
+			password: $scope.signupForm.password,
+			surname: $scope.signupForm.surname,
+			firstName: $scope.signupForm.firstName,
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/';

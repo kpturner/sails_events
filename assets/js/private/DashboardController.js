@@ -1,4 +1,4 @@
-angular.module('PrivateModule').controller('DashboardController', ['$scope', '$http', '$location', 'toastr', function($scope, $http, $location, toastr) {
+angular.module('EventsModule').controller('DashboardController', ['$scope', '$http', '$location', 'toastr', function($scope, $http, $location, toastr) {
 	
 		// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
@@ -6,6 +6,12 @@ angular.module('PrivateModule').controller('DashboardController', ['$scope', '$h
 		// Get the events
 		$http.get('/openevents').success(function(data, status) {
 			if (typeof data == 'object') {
+				// Filter out VO only events if this user is not a VO
+				if (!$scope.user.isVO) {
+					data=$.grep(data,function(event,index){
+						return (!event.voOnly)
+					})
+				}
 				$scope.events = data;					
 			}
 			else {

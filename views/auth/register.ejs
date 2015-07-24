@@ -47,7 +47,7 @@
     
   </head>
 
-  <body ng-app="PublicModule" ng-cloak>
+  <body ng-app="EventsModule" ng-cloak>
     
                      
     <div class="container-fluid">
@@ -79,6 +79,17 @@
         <h2 class="form-signin-heading">Create an account</h2>
         <h5>Items marked with * are mandatory</h5>
         <div class="row">
+          
+          <!-- V O ? -->
+  
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':signup.isvo.$invalid &&
+                                  signup.isvo.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="signupForm.isVO"></input>
+              &nbsp;Visiting Officer?
+             </label>
+           </div>
   
           <!-- N A M E -->
   
@@ -91,7 +102,7 @@
             <label>* Your full name</label>
   
             <!-- For this input field make it required, and have a max length of 25 -->
-            <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="signupForm.name" ng-maxlength="50" required>
+            <input type="text" populate-names="['surname:1','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="signupForm.name" ng-maxlength="50" required>
   
             <!-- Also, if signup.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
             and/or maxlength) -->
@@ -119,6 +130,34 @@
             <span class="help-block has-error" ng-if="signup.username.$dirty">
               <span ng-show="signup.username.$error.required">User name is required.</span>
               <span ng-show="signup.username.$error.maxlength">The user name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+          
+          <!-- S U R N A M E -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':signup.surname.$invalid &&
+                                signup.surname.$dirty}">
+            <label>* Surname</label>  
+            <!-- For this input field make it required, and have a max length of 50 -->
+            <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="signupForm.surname" ng-maxlength="50" required>  
+            <span class="help-block has-error" ng-if="signup.surname.$dirty">
+              <span ng-show="signup.surname.$error.required">Surname is required.</span>
+              <span ng-show="signup.surname.$error.maxlength">The surname cannot be more than 50 characters.</span>
+            </span>
+          </div>
+          
+           <!-- F I R S T  N A M E -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':signup.firstName.$invalid &&
+                                signup.firstName.$dirty}">
+            <label>* First name</label>  
+            <!-- For this input field make it required, and have a max length of 50 -->
+            <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="signupForm.firstName" ng-maxlength="50" required>  
+            <span class="help-block has-error" ng-if="signup.firstname.$dirty">
+              <span ng-show="signup.firstname.$error.required">First name is required.</span>
+              <span ng-show="signup.firstname.$error.maxlength">The first name cannot be more than 50 characters.</span>
             </span>
           </div>
   
@@ -169,6 +208,31 @@
             <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="signupForm.dietary" ng-maxlength="50" >
             <span class="help-block has-error" ng-if="signup.dietary.$dirty">
               <span ng-show="signup.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+            </span>
+          </div>
+  
+                     
+           <!-- V O  L O D G E -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':signup.volodge.$invalid &&
+                                  signup.volodge.$dirty}" ng-hide="!signupForm.isVO">
+            <label>VO lodge</label>
+            <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="signupForm.voLodge" ng-maxlength="50" >
+            <span class="help-block has-error" ng-if="signup.volodge.$dirty">
+              <span ng-show="signup.volodge.$error.maxlength">VO lodge name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+  
+          <!-- V O  L O D G E  N U M B E R-->
+  
+          <div class="control-group form-group col-xs-6 col-md-4"
+            ng-class="{'has-error':signup.lodgeNo.$invalid &&
+                                  signup.lodgeNo.$dirty}" ng-hide="!signupForm.isVO">
+            <label>VO lodge number</label>
+            <input type="number" class="form-control"  name="volodgeno" ng-model="signupForm.voLodgeNo" ng-maxlength="5" >
+            <span class="help-block has-error" ng-if="signup.lodgeno.$dirty">
+              <span ng-show="signup.volodgeno.$error.maxlength">The name cannot be more than 5 characters.</span>
             </span>
           </div>
   
@@ -252,17 +316,16 @@
     <script src="/js/dependencies/compareTo.module.js"></script>
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/dependencies/ui-bootstrap-tpls-0.13.0.min.js"></script>
-    <script src="/js/public/PublicModule.js"></script>
-    <script src="/js/private/PrivateModule.js"></script>
-    <script src="/js/private/book/BookController.js"></script>
-    <script src="/js/private/dashboard/DashboardController.js"></script>
-    <script src="/js/private/events/EventDetailsController.js"></script>
-    <script src="/js/private/events/EventsController.js"></script>
-    <script src="/js/private/profile/ProfileController.js"></script>
-    <script src="/js/private/users/UsersController.js"></script>
+    <script src="/js/EventsModule.js"></script>
+    <script src="/js/private/BookController.js"></script>
+    <script src="/js/private/DashboardController.js"></script>
+    <script src="/js/private/EventDetailsController.js"></script>
+    <script src="/js/private/EventsController.js"></script>
+    <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
-    <script src="/js/public/reminder/ResetController.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

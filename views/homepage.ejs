@@ -24,7 +24,7 @@
 
   </head>
 
-  <body ng-app="PublicModule" ng-cloak>
+  <body ng-app="EventsModule" ng-cloak>
   
     <div class="container-fluid">          
         <% include partials/public/navbar.ejs %>     
@@ -41,8 +41,8 @@
                 <% Object.keys(providers).forEach(function (key) { %>
                   <div class="col-xs-4 col-sm-2">
       		          <a href="/auth/<%= providers[key].slug %>" class="btn btn-lg btn-block <%= providers[key].klass %>">
-      			         <i class="fa <%= providers[key].icon %> visible-xs"></i>
-      			         <span class="hidden-xs"><%= providers[key].name %></span>
+      			         <i class="fa <%= providers[key].icon %> visible-xs visible-sm"></i>  
+      			         <span class="hidden-xs hidden-sm"><%= providers[key].name %></span>
       		          </a>
       	          </div>
                 <% }) %>
@@ -121,17 +121,16 @@
     <script src="/js/dependencies/compareTo.module.js"></script>
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/dependencies/ui-bootstrap-tpls-0.13.0.min.js"></script>
-    <script src="/js/public/PublicModule.js"></script>
-    <script src="/js/private/PrivateModule.js"></script>
-    <script src="/js/private/book/BookController.js"></script>
-    <script src="/js/private/dashboard/DashboardController.js"></script>
-    <script src="/js/private/events/EventDetailsController.js"></script>
-    <script src="/js/private/events/EventsController.js"></script>
-    <script src="/js/private/profile/ProfileController.js"></script>
-    <script src="/js/private/users/UsersController.js"></script>
+    <script src="/js/EventsModule.js"></script>
+    <script src="/js/private/BookController.js"></script>
+    <script src="/js/private/DashboardController.js"></script>
+    <script src="/js/private/EventDetailsController.js"></script>
+    <script src="/js/private/EventsController.js"></script>
+    <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
-    <script src="/js/public/reminder/ResetController.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

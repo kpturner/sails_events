@@ -1,4 +1,4 @@
-angular.module('PublicModule').controller('ResetController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('ResetController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
 	
 	$scope.resetForm = {

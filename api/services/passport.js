@@ -105,6 +105,11 @@ passport.connect = function (req, query, profile, next) {
   // If the profile object contains a displayName, add it to the user.
   if (profile.hasOwnProperty('displayName')) {
     user.name = profile.displayName;
+    var splits = user.name.split(" ");
+    if (splits.length>1) {
+      user.firstName=splits[0];
+      user.surname=splits[1];
+    }
   }
 
   Passport.findOne({

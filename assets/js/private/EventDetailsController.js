@@ -1,4 +1,4 @@
-angular.module('PrivateModule').controller('EventDetailsController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('EventDetailsController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.mode=SAILS_LOCALS.mode;

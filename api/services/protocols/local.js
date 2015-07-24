@@ -47,6 +47,11 @@ exports.register = function (req, res, next) {
           , rank          = req.param('rank')
           , dietary       = req.param('dietary')
           , email         = req.param('email')
+          , surname       = req.param('surname')
+          , firstName     = req.param('firstName')
+          , isVO          = req.param('isVO')
+          , voLodge       = req.param('voLodge')
+          , voLodgeNo     = req.param('voLodgeNo')
           , authProvider  = 'local'
           , lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ')
           , gravatarUrl   = gravatarUrl;
@@ -59,6 +64,11 @@ exports.register = function (req, res, next) {
 							rank:				  rank,
 							dietary:			dietary,
 							email:				email,
+              surname:      surname,
+              firstName:    firstName,
+              isVO          :isVO,
+              voLodge:      voLodge,
+              voLodgeNo:    voLodgeNo,
               authProvider: authProvider,
 							lastLoggedIn: lastLoggedIn,
 							gravatarUrl:	gravatarUrl
@@ -111,12 +121,7 @@ exports.register = function (req, res, next) {
       							    {
       							      recipientName: newUser.name,
       							      senderName: "Events Management",
-        								  username: newUser.username,
-        								  email: newUser.email,
-        								  lodge: newUser.lodge,
-        								  lodgeNo: newUser.lodgeNo,
-        								  rank: newUser.rank,
-        								  dietary: newUser.dietary,
+                          details: newUser,        								 
         								  //domain:	sails.config.events.domain,
                           domain:	sails.getBaseUrl(),
         							    },

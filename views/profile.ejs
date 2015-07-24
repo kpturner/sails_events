@@ -27,7 +27,7 @@
     
   </head>
 
-  <body ng-app="PrivateModule" data-ng-controller="ProfileController" ng-cloak>
+  <body ng-app="EventsModule" data-ng-controller="ProfileController" ng-cloak>
     
                      
     <div class="container-fluid">
@@ -37,9 +37,21 @@
       <!-- PROFILE FORM --> 
       <form ng-submit="submitProfileForm()" id="profile-form" name="profile" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h2 class="form-signin-heading">Edit profile for {{profileForm.name}}</h2>
+        <h2 class="form-signin-heading">Edit profile</h2>
         <h5>Items marked with * are mandatory</h5>
         <div class="row">
+          
+                    
+          <!-- V O ? -->
+  
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':profile.isvo.$invalid &&
+                                  profile.isvo.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="profileForm.isVO"></input>
+              &nbsp;Visiting Officer?
+             </label>
+           </div>
   
           <!-- N A M E -->
   
@@ -51,7 +63,7 @@
                                 profile.name.$dirty}">
             <label>* Full name</label>  
             <!-- For this input field make it required, and have a max length of 50 -->
-            <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="profileForm.name" ng-maxlength="50" required>  
+            <input type="text" populate-names="['surname:1','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="profileForm.name" ng-maxlength="50" required>  
             <!-- Also, if profile.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
             and/or maxlength) -->
             <span class="help-block has-error" ng-if="profile.name.$dirty">
@@ -79,6 +91,34 @@
             </span>
           </div>
   
+          <!-- S U R N A M E -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':profile.surname.$invalid &&
+                                profile.surname.$dirty}">
+            <label>* Surname</label>  
+            <!-- For this input field make it required, and have a max length of 50 -->
+            <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="profileForm.surname" ng-maxlength="50" required>  
+            <span class="help-block has-error" ng-if="profile.surname.$dirty">
+              <span ng-show="profile.surname.$error.required">Surname is required.</span>
+              <span ng-show="profile.surname.$error.maxlength">The surname cannot be more than 50 characters.</span>
+            </span>
+          </div>
+          
+           <!-- F I R S T  N A M E -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':profile.firstName.$invalid &&
+                                profile.firstName.$dirty}">
+            <label>* First name</label>  
+            <!-- For this input field make it required, and have a max length of 50 -->
+            <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="profileForm.firstName" ng-maxlength="50" required>  
+            <span class="help-block has-error" ng-if="profile.firstname.$dirty">
+              <span ng-show="profile.firstname.$error.required">First name is required.</span>
+              <span ng-show="profile.firstname.$error.maxlength">The first name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+  
           <!-- L O D G E -->
   
           <div class="control-group form-group col-xs-10 col-md-6"
@@ -98,10 +138,10 @@
             ng-class="{'has-error':profile.lodgeNo.$invalid &&
                                   profile.lodgeNo.$dirty}">
             <label>* Lodge number</label>
-            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodge number" ng-model="profileForm.lodgeNo" ng-maxlength="5" >
-            <span class="help-block has-error" ng-if="profile.lodgeNo.$dirty">
-              <span ng-show="profile.lodgeNo.$error.required">Lodge number is required.</span>
-              <span ng-show="profile.lodgeNo.$error.maxlength">The name cannot be more than 5 characters.</span>
+            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="profileForm.lodgeNo" ng-maxlength="5" >
+            <span class="help-block has-error" ng-if="profile.lodgeno.$dirty">
+              <span ng-show="profile.lodgeno.$error.required">Lodge number is required.</span>
+              <span ng-show="profile.lodgeno.$error.maxlength">The name cannot be more than 5 characters.</span>
             </span>
           </div>
           
@@ -126,6 +166,31 @@
             <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="profileForm.dietary" ng-maxlength="50" >
             <span class="help-block has-error" ng-if="profile.dietary.$dirty">
               <span ng-show="profile.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+            </span>
+          </div>
+
+           
+           <!-- V O  L O D G E -->
+  
+          <div class="control-group form-group col-xs-10"
+            ng-class="{'has-error':profile.volodge.$invalid &&
+                                  profile.volodge.$dirty}" ng-hide="!profileForm.isVO">
+            <label>VO lodge</label>
+            <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="profileForm.voLodge" ng-maxlength="50" >
+            <span class="help-block has-error" ng-if="profile.volodge.$dirty">
+              <span ng-show="profile.volodge.$error.maxlength">VO lodge name cannot be more than 50 characters.</span>
+            </span>
+          </div>
+  
+          <!-- V O  L O D G E  N U M B E R-->
+  
+          <div class="control-group form-group col-xs-6 col-md-4"
+            ng-class="{'has-error':profile.lodgeNo.$invalid &&
+                                  profile.lodgeNo.$dirty}" ng-hide="!profileForm.isVO">
+            <label>VO lodge number</label>
+            <input type="number" class="form-control"  name="volodgeno" ng-model="profileForm.voLodgeNo" ng-maxlength="5" >
+            <span class="help-block has-error" ng-if="profile.lodgeno.$dirty">
+              <span ng-show="profile.volodgeno.$error.maxlength">The name cannot be more than 5 characters.</span>
             </span>
           </div>
   
@@ -208,17 +273,16 @@
     <script src="/js/dependencies/compareTo.module.js"></script>
     <script src="/js/dependencies/forMobileIE.js"></script>
     <script src="/js/dependencies/ui-bootstrap-tpls-0.13.0.min.js"></script>
-    <script src="/js/public/PublicModule.js"></script>
-    <script src="/js/private/PrivateModule.js"></script>
-    <script src="/js/private/book/BookController.js"></script>
-    <script src="/js/private/dashboard/DashboardController.js"></script>
-    <script src="/js/private/events/EventDetailsController.js"></script>
-    <script src="/js/private/events/EventsController.js"></script>
-    <script src="/js/private/profile/ProfileController.js"></script>
-    <script src="/js/private/users/UsersController.js"></script>
+    <script src="/js/EventsModule.js"></script>
+    <script src="/js/private/BookController.js"></script>
+    <script src="/js/private/DashboardController.js"></script>
+    <script src="/js/private/EventDetailsController.js"></script>
+    <script src="/js/private/EventsController.js"></script>
+    <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
-    <script src="/js/public/reminder/ResetController.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

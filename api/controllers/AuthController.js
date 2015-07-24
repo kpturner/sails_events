@@ -242,27 +242,19 @@ var AuthController = {
 		  	// If session refers to a user who no longer exists, still allow logout.
 		  	if (!currentUser) {
 		    	sails.log.verbose('Session refers to a user who no longer exists.');
-				req.session.authenticated=false;
+				  req.session.authenticated=false;
 		    	return res.backToHomePage();
 		  	}
 		  
 		  	// Build the update JSON specifying only the deltas
 		  	var delta={};
-		  	if (req.param('name')!=currentUser.name)
-		  		delta.name=req.param('name')
-		    if (req.param('username')!=currentUser.username)
-		  		delta.username=req.param('username')
-		 	  if (req.param('lodge')!=currentUser.lodge)
-		  		delta.lodge=req.param('lodge')
-		  	if (req.param('lodgeNo')!=currentUser.lodgeNo)
-		  		delta.lodgeNo=req.param('lodgeNo')
-		  	if (req.param('rank')!=currentUser.rank)
-		  		delta.rank=req.param('rank')
-		  	if (req.param('dietary')!=currentUser.dietary)
-		  		delta.dietary=req.param('dietary')	 
-		  	if (req.param('isAdmin')!=currentUser.isAdmin)
-		  		delta.isAdmin=req.param('isAdmin')
-          
+        
+        for(var field in req.allParams()) {
+          if (!(req.param(field)==undefined) && req.param(field)!=currentUser[field])
+            delta[field]=req.param(field)
+        }
+        
+                 
         // Always treat the email as changed so the gravatar is updated after a social media sign-up
         delta.email=req.param('email')  
 				  
@@ -354,12 +346,7 @@ var AuthController = {
 						"profileChanged", {
     				      recipientName: updatedUser[0].name,
     				      senderName: "Events Management",
-    						  username: updatedUser[0].username,
-    						  email: updatedUser[0].email,
-    						  lodge: updatedUser[0].lodge,
-    						  lodgeNo: updatedUser[0].lodgeNo,
-    						  rank: updatedUser[0].rank,
-    						  dietary: updatedUser[0].dietary,
+    			        details: updatedUser[0]
 							  
 						    },
 						    {

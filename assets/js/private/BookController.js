@@ -1,4 +1,4 @@
-angular.module('PrivateModule').controller('BookController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('BookController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
 	
 	$scope.bookingForm = {
