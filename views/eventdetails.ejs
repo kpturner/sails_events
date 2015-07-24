@@ -273,7 +273,8 @@
           <span ng-show="!eventForm.loading" ng-hide="mode=='delete'">Save Details</span>
           <span ng-show="!eventForm.loading" ng-hide="mode!='delete'">Delete</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="eventForm.loading" ></span>
-          <span ng-show="eventForm.loading">Saving event details...</span>
+          <span ng-show="eventForm.loading && mode!='delete'">Saving event details...</span>
+          <span ng-show="eventForm.loading && mode=='delete'">Deleting event...</span>
         </button>
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
