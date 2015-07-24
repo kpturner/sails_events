@@ -9,7 +9,11 @@ var LinkedBooking = {
     booking: { model: 'Booking', required: true },
     
     // Preferred name
-    name: {
+    surname: {
+      type: 'string'
+    },
+    
+    firstName: {
       type: 'string'
     },
     

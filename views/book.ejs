@@ -176,15 +176,27 @@
             </div>
             <ng-form name="linkedBooking">
             
-              <!-- N A M E -->
+              <!-- S U R N A M E -->
               <div class="control-group form-group col-xs-10"
-                ng-class="{'has-error':linkedBookingForm.name.$invalid &&
-                                  linkedBooking.name.$dirty}">
-                <label>* Full name</label>  
-                <input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="linkedBookings[place].name" ng-maxlength="50" required >              
-                <span class="help-block has-error" ng-if="linkedBookingForm.name.$dirty">
-                  <span ng-show="linkedBookingForm.name.$error.required">Name is required.</span>
-                  <span ng-show="linkedBookingForm.name.$error.maxlength">The name cannot be more than 50 characters.</span>
+                ng-class="{'has-error':linkedBookingForm.surname.$invalid &&
+                                  linkedBooking.surname.$dirty}">
+                <label>* Surname</label>  
+                <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="linkedBookings[place].surname" ng-maxlength="50" required >              
+                <span class="help-block has-error" ng-if="linkedBookingForm.surname.$dirty">
+                  <span ng-show="linkedBookingForm.surname.$error.required">Surname is required.</span>
+                  <span ng-show="linkedBookingForm.surname.$error.maxlength">Surname cannot be more than 50 characters.</span>
+                </span>
+              </div>   
+              
+              <!-- F I R S T   N A M E -->
+              <div class="control-group form-group col-xs-10"
+                ng-class="{'has-error':linkedBookingForm.firstname.$invalid &&
+                                  linkedBooking.firstname.$dirty}">
+                <label>* First name</label>  
+                <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="linkedBookings[place].firstName" ng-maxlength="50" required >              
+                <span class="help-block has-error" ng-if="linkedBookingForm.firstname.$dirty">
+                  <span ng-show="linkedBookingForm.firstname.$error.required">First name is required.</span>
+                  <span ng-show="linkedBookingForm.firstname.$error.maxlength">First name cannot be more than 50 characters.</span>
                 </span>
               </div>   
               
@@ -193,9 +205,8 @@
                 ng-class="{'has-error':linkedBooking.lodge.$invalid &&
                                       linkedBooking.lodge.$dirty}">
                 <label>* Lodge name</label>
-                <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="linkedBookings[place].lodge" ng-maxlength="50" required>
+                <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="linkedBookings[place].lodge" ng-maxlength="50">
                 <span class="help-block has-error" ng-if="linkedBooking.lodge.$dirty">
-                  <span ng-show="linkedBooking.lodge.$error.required">Lodge name is required.</span>
                   <span ng-show="linkedBooking.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
                 </span>
               </div>
@@ -206,8 +217,7 @@
                                       linkedBooking.lodgeNo.$dirty}">
                 <label>* Lodge number</label>
                 <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="linkedBookings[place].lodgeNo" ng-maxlength="5" min="1">
-                <span class="help-block has-error" ng-if="linkedBooking.lodgeNo.$dirty">
-                  <span ng-show="linkedBooking.lodgeNo.$error.required">Lodge number is required.</span>
+                <span class="help-block has-error" ng-if="linkedBooking.lodgeNo.$dirty">                 
                   <span ng-show="linkedBooking.lodgeNo.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
                 </span>
               </div>
