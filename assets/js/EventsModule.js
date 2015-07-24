@@ -11,7 +11,7 @@ angular.module('EventsModule', ['ui.bootstrap', 'toastr', 'compareTo', 'akoenig.
 		})
 		.directive('populateNames',function(){
 			return function(scope, element, attrs) {
-		        element.bind("keydown keypress", function(event) {
+		        element.change(function() {
 					// Get the directive value and convert to array - then find the targest and 
 					// change them if they are blank
 					var splits=element.val().split(" ");
@@ -22,7 +22,7 @@ angular.module('EventsModule', ['ui.bootstrap', 'toastr', 'compareTo', 'akoenig.
 							var i=s[1];
 							var $this=$("[name="+s[0]+']');
 							if ($this.length>0) {
-								//if ($this.val().length==0) {
+								if ($this.val().length==0) {
 									//$this.val(splits[i])
 									var ngModel=$this.attr("ng-model");
 									var ng=ngModel.split(".");
@@ -36,7 +36,7 @@ angular.module('EventsModule', ['ui.bootstrap', 'toastr', 'compareTo', 'akoenig.
 										else
 											scopeObj=scopeObj[this.toString()]
 									})									
-								//}
+								}
 							}
 						})
 					}
