@@ -19,7 +19,8 @@
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
     window.SAILS_LOCALS = {
-      _csrf: "<%= _csrf %>"
+      _csrf: "<%= _csrf %>",
+       user: <%- JSON.stringify(res.locals.user) %>
     };
     
     </script>
@@ -27,20 +28,48 @@
   </head>
 
   <body ng-app="EventsModule" data-ng-controller="UsersController" ng-cloak>
-    
-                     
+
+    <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
+      <% include partials/private/navbar.ejs %>  
        
-      <% include partials/private/navbar.ejs %>     
-
-      <!-- USERS --> 
-      <h1>A page for admins to edit users will be shown here</h1>
+      <!-- PROFILE FORM --> 
+      <form ng-submit="filterUsers()" id="filter-form" name="filterform" 
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        <h2 class="form-signin-heading">User Maintenance</h2>
+        
+        <div class="row">
+  
+          <!-- F I L T E R -->
+           
+          <div class="control-group form-group col-xs-10">
+             
+            <input type="text" class="form-control" placeholder="key text to filter users" name="filter" ng-model="filterForm.filter">  
+          </div>                    
+         
+        </div>
+         
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading">
+          <span ng-show="!filterForm.loading">Filter users</span>
+          <span class="overlord-loading-spinner fa fa-spinner" ng-show="filterForm.loading" ></span>
+          <span ng-show="filterForm.loading">Filtering...</span>
+        </button>
+        </br> 
+           
+  
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      </form> 
+        
       
+       
+      <h4 class="hidden-md hidden-lg">Tap a user to edit</h4>  
+      <h4 class="hidden-xs hidden-sm">Click a user to edit</h4>   
+      <div deckgrid source="users" cardTemplate="templates/users.html" class="deckgrid"></div>
+     
+    
+      <% include partials/public/footer.ejs %>   
 
-    </div>  
-
-    <% include partials/public/footer.ejs %>   
-      
+    </div>
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery/jquery.js"></script>
@@ -57,10 +86,12 @@
     <script src="/js/private/EventDetailsController.js"></script>
     <script src="/js/private/EventsController.js"></script>
     <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UserDetailsController.js"></script>
     <script src="/js/private/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>
     <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
     <!--SCRIPTS END-->
+
   </body>
 </html>

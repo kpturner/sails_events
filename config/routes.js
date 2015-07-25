@@ -61,14 +61,17 @@ module.exports.routes = {
   'post /auth/passwordreset': 'AuthController.passwordReset',
   
   
+  // Users
+  'get /allusers/:filter?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional
+  'get /user/:action': 'UserController.prepareUser',
+  'post /updateuser/:action': 'UserController.updateUser',
+  'get /organisers': 'UserController.organisers',
+
   // Events
   'get /openevents': 'EventController.openEvents',
   'get /allevents/:filter?': 'EventController.allEvents',  // the ? in :filter? means that the filter part or the URL is optional
   'get /event/:action': 'EventController.prepareEvent',
-  'get /organisers': 'UserController.organisers',
   'post /updateevent/:action': 'EventController.updateEvent',
-
-
 
   /***************************************************************************
   *                                                                          *
