@@ -443,6 +443,8 @@ var AuthController = {
 	},
    
   	
+  
+    
 };
 
 module.exports = AuthController;

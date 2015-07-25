@@ -63,7 +63,7 @@ module.exports.routes = {
   
   // Users
   'get /allusers/:filter?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional
-  'get /user/:action': 'UserController.prepareUser',
+  'get /usermaint/:action': 'UserController.prepareUser',
   'post /updateuser/:action': 'UserController.updateUser',
   'get /organisers': 'UserController.organisers',
 

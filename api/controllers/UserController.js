@@ -103,14 +103,14 @@ module.exports = {
 				// Send the details
 				return res.view("userdetails",{
 					mode:mode,
-					user:user
+					userDetails:user
 				})	
 			})	
 		} 
 		else {
 			return res.view("userdetails",{
 				mode:mode,
-				user:{}
+				userDetails:{}
 			})	
 		}	
 	},
