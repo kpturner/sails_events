@@ -136,11 +136,11 @@ module.exports = {
 					user[0].dietary=""
 				if (user[0].rank==null)
 					user[0].rank=""
-				if (user[0].isVO==null)
+				if (!user[0].isVO)
 					user[0].isVO=false
-				if (user[0].isAdmin==null)
+				if (!user[0].isAdmin)
 					user[0].isAdmin=false
-				if (user[0].isOrganiser==null)
+				if (!user[0].isOrganiser)
 					user[0].isOrganiser=false
 				// Send confirmation email
 				sails.hooks.email.send(
@@ -175,7 +175,9 @@ module.exports = {
 						if (err) {
 							return res.negotiate(err)
 						}
-						return res.ok();
+						Passport.destroy({user:userId}).exec(function(err){
+							return res.ok();	
+						})						
 					})
 				})				
 				

@@ -341,11 +341,11 @@ var AuthController = {
             updatedUser[0].dietary=""
           if (updatedUser[0].rank==null)
             updatedUser[0].rank=""
-          if (updateUser[0].isVO==null)
-					 updateUser[0].isVO=false
-				  if (updateUser[0].isAdmin==null)
+          if (!updatedUser[0].isVO)
+					 updatedUser[0].isVO=false
+				  if (!updatedUser[0].isAdmin)
 					 updatedUser[0].isAdmin=false
-				  if (updatedUser[0].isOrganiser==null)
+				  if (!updatedUser[0].isOrganiser)
 					 updatedUser[0].isOrganiser=false  
           // Send confirmation email
 					sails.hooks.email.send(

@@ -9,8 +9,8 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	$scope.userForm=SAILS_LOCALS.userDetails;
 	
 	// Convert lodge no to numeric
-	$scope.userForm.lodgeNo = parseInt($scope.user.lodgeNo); 
-	$scope.userForm.voLodgeNo = parseInt($scope.user.voLodgeNo); 
+	$scope.userForm.lodgeNo = parseInt($scope.userDetails.lodgeNo); 
+	$scope.userForm.voLodgeNo = parseInt($scope.userDetails.voLodgeNo); 
 	// Set the confirm email
 	$scope.userForm.confirmemail=$scope.userForm.email; 
 	
