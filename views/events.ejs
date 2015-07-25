@@ -28,7 +28,7 @@
       <% include partials/private/navbar.ejs %>  
        
       <!-- PROFILE FORM --> 
-      <form ng-submit="filterEvents()" id="filter-form" name="filter" 
+      <form ng-submit="filterEvents()" id="filter-form" name="filterform" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h2 class="form-signin-heading">Events Maintenance</h2>
         
@@ -43,7 +43,7 @@
          
         </div>
          
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="filterForm.loading">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading">
           <span ng-show="!filterForm.loading">Filter events</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
