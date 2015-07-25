@@ -341,6 +341,12 @@ var AuthController = {
             updatedUser[0].dietary=""
           if (updatedUser[0].rank==null)
             updatedUser[0].rank=""
+          if (updateUser[0].isVO==null)
+					 updateUser[0].isVO=false
+				  if (updateUser[0].isAdmin==null)
+					 updatedUser[0].isAdmin=false
+				  if (updatedUser[0].isOrganiser==null)
+					 updatedUser[0].isOrganiser=false  
           // Send confirmation email
 					sails.hooks.email.send(
 						"profileChanged", {

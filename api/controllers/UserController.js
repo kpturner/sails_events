@@ -131,6 +131,31 @@ module.exports = {
 				if (err) {
 					return res.negotiate(err)
 				}
+				// Success
+				if (user[0].dietary==null)
+					user[0].dietary=""
+				if (user[0].rank==null)
+					user[0].rank=""
+				if (user[0].isVO==null)
+					user[0].isVO=false
+				if (user[0].isAdmin==null)
+					user[0].isAdmin=false
+				if (user[0].isOrganiser==null)
+					user[0].isOrganiser=false
+				// Send confirmation email
+				sails.hooks.email.send(
+					"profileChanged", {
+				      recipientName: user[0].name,
+				      senderName: "Events Management",
+			        details: user[0]
+						  
+					    },
+					    {
+					      to:user[0].email,
+					      subject: "Events Management - Your details have been changed by the Administrator"
+					    },
+					    function(err) {if (err) console.log(err);}
+				   )     
 				return res.ok();	
 			})
 		}
