@@ -19,12 +19,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 		
 	// Enable a repeater for additional attendees
-	$scope.linkedBookings=[];
-	$scope.linkedBookingsArr=[];
+	$scope.linkedbookings=[];
+	$scope.linkedbookingsArr=[];
 	$scope.makeArray = function(){
-		$scope.linkedBookingsArr.length=0;
+		$scope.linkedbookingsArr.length=0;
 		for (var i=0;i<(parseInt($scope.bookingForm.places)-1);i++) {
-			$scope.linkedBookingsArr.push(i)
+			$scope.linkedbookingsArr.push(i)
 		} 
 	}
 	
@@ -55,7 +55,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			$scope.linkedBookings=[]
 		}
 		else {
-			$scope.linkedBookings=$.grep($scope.linkedBookings,function(obj,n){
+			$scope.linkedbookings=$.grep($scope.linkedbookings,function(obj,n){
 				return (n<=($scope.bookingForm.places-2))
 			})	
 		}	
@@ -72,7 +72,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			email: $scope.bookingForm.email,
 			info: $scope.bookingForm.info,
 			places: $scope.bookingForm.places,
-			linkedBookings: $scope.linkedBookings
+			linkedBookings: $scope.linkedbookings
 		})
 		.then(function onSuccess(sailsResponse){			 
 			toastr.success("Your booking was successful")

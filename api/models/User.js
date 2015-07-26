@@ -53,6 +53,11 @@ var User = {
       type: 'email', 
       unique: true
     },
+    
+    // Contact number
+    phone: {
+      type: 'string'
+    },
 
     // Administrator?
     isAdmin: {

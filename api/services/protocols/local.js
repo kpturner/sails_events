@@ -27,10 +27,13 @@ exports.register = function (req, res, next) {
   
   var Gravatar = require('machinepack-gravatar');
   
+  var user=req.param('user');
+  
   // Build the URL of a gravatar image for a particular email address.
 	Gravatar.getImageUrl({
-		emailAddress: req.param('email'),
-		gravatarSize: 400,
+		//emailAddress: req.param('email'),
+		emailAddress:user.email,
+    gravatarSize: 400,
 		rating: 'g',
 		useHttps: true,
 	}).exec({
@@ -38,41 +41,47 @@ exports.register = function (req, res, next) {
 						return res.negotiate(err)
 			},
       success: function(gravatarUrl) {
-        var name          = req.param('name')
-          , email         = req.param('email')
-          , username      = req.param('username')
-          , password      = req.param('password')
-          , lodge         = req.param('lodge')
-          , lodgeNo       = req.param('lodgeNo')
-          , rank          = req.param('rank')
-          , dietary       = req.param('dietary')
-          , email         = req.param('email')
-          , surname       = req.param('surname')
-          , firstName     = req.param('firstName')
-          , isVO          = req.param('isVO')
-          , voLodge       = req.param('voLodge')
-          , voLodgeNo     = req.param('voLodgeNo')
-          , authProvider  = 'local'
-          , lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ')
-          , gravatarUrl   = gravatarUrl;
+        //var name          = req.param('name')
+        //  , email         = req.param('email')
+        //  , username      = req.param('username')
+        //  , password      = req.param('password')
+        //  , lodge         = req.param('lodge')
+        //  , lodgeNo       = req.param('lodgeNo')
+        //  , rank          = req.param('rank')
+        //  , dietary       = req.param('dietary')
+        //  , email         = req.param('email')
+        //  , surname       = req.param('surname')
+        //  , firstName     = req.param('firstName')
+        //  , isVO          = req.param('isVO')
+        //  , voLodge       = req.param('voLodge')
+        //  , voLodgeNo     = req.param('voLodgeNo')
+        //  , authProvider  = 'local'
+        //  , lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ')
+        //  , gravatarUrl   = gravatarUrl;
+        
+          user.authProvider  = 'local';
+          user.lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ');
+          user.gravatarUrl   = gravatarUrl;
 
-          User.create({
-							name:  				name,
-							username:  		username,
-							lodge:				lodge,
-							lodgeNo:			lodgeNo,
-							rank:				  rank,
-							dietary:			dietary,
-							email:				email,
-              surname:      surname,
-              firstName:    firstName,
-              isVO          :isVO,
-              voLodge:      voLodge,
-              voLodgeNo:    voLodgeNo,
-              authProvider: authProvider,
-							lastLoggedIn: lastLoggedIn,
-							gravatarUrl:	gravatarUrl
-						},function(err, newUser) {
+          //User.create({
+					//		name:  				name,
+					//		username:  		username,
+					//		lodge:				lodge,
+					//		lodgeNo:			lodgeNo,
+					//		rank:				  rank,
+					//		dietary:			dietary,
+					//		email:				email,
+          //    surname:      surname,
+          //    firstName:    firstName,
+          //    isVO          :isVO,
+          //    voLodge:      voLodge,
+          //    voLodgeNo:    voLodgeNo,
+          //    authProvider: authProvider,
+				  //  	lastLoggedIn: lastLoggedIn,
+					//		gravatarUrl:	gravatarUrl
+					//	},function(err, newUser) {
+          User.create(user,
+            function(err, newUser) {
                 if (err) {
                     // If this is a uniqueness error about the email attribute,
 				            // send back an easily parseable status code.
@@ -94,7 +103,7 @@ exports.register = function (req, res, next) {
                 var token = crypto.randomBytes(48).toString('base64'); 
                 Passport.create({
                     protocol    : 'local'
-                  , password    : password
+                  , password    : user.password
                   , user        : newUser.id
                   , accessToken : token
                   }, function (err, passport) {
@@ -114,6 +123,8 @@ exports.register = function (req, res, next) {
                       newUser.dietary=""
                     if (newUser.rank==null)
                       newUser.rank=""
+                    if (newUser.phone==null)
+                      newUser.phone=""
               
                     // Send confirmation email
       							sails.hooks.email.send(

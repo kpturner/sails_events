@@ -34,9 +34,9 @@ module.exports = {
 					
 				// Get the data for the event and the user and then navigate to the booking view
 				if (req.wantsJSON)
-					return res.json(event)
+					return res.json({model:'booking'});
 				else
-					return res.view("book")		
+					return res.view("book",{model:'booking'});		
 			})
 			
 			

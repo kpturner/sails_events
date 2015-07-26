@@ -81,6 +81,7 @@ var AuthController = {
    */
   register: function (req, res) {
     res.view({
+      model: 'signup',
       errors: req.flash('error')
     });
   },
@@ -134,7 +135,7 @@ var AuthController = {
 
       switch (action) {
         case 'register':
-          res.redirect('/register');
+          res.redirect('/register',{model:'signup'});
           break;
         case 'disconnect':
           res.redirect('back');
@@ -190,6 +191,7 @@ var AuthController = {
 	*/
   profile: function(req, res) {
     res.view('profile',{
+      model: 'profile',
       errors: req.flash('error')
     });  
   }, 
@@ -249,14 +251,15 @@ var AuthController = {
 		  	// Build the update JSON specifying only the deltas
 		  	var delta={};
         
-        for(var field in req.allParams()) {
-          if (!(req.param(field)==undefined) && req.param(field)!=currentUser[field])
-            delta[field]=req.param(field)
+        var profile=req.param("profile");
+        for(var field in profile) {
+          if (!(profile[field]==undefined) && profile[field]!=currentUser[field])
+            delta[field]=profile[field];
         }
         
                  
         // Always treat the email as changed so the gravatar is updated after a social media sign-up
-        delta.email=req.param('email')  
+        delta.email=profile.email;  
 				  
 			var handleDelta=function(req,delta){
 				if (delta.email) {					 
@@ -341,6 +344,8 @@ var AuthController = {
             updatedUser[0].dietary=""
           if (updatedUser[0].rank==null)
             updatedUser[0].rank=""
+          if (updatedUser[0].phone==null)
+            updatedUser[0].phone=""
           if (!updatedUser[0].isVO)
 					 updatedUser[0].isVO=false
 				  if (!updatedUser[0].isAdmin)

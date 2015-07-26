@@ -91,191 +91,21 @@
              </label>
            </div>
   
-          <!-- N A M E -->
-  
-          <!-- checking whether the form "signup" with the "name" property is both $invalid AND $dirty.  If it is
-          insert the "has-error" class on the input field (i.e. insert a red border around the input field)
-          -->
-          <div class="control-group form-group col-xs-10"
-          ng-class="{'has-error':signup.name.$invalid &&
-                                signup.name.$dirty}">
-            <label>* Your full name</label>
-  
-            <!-- For this input field make it required, and have a max length of 25 -->
-            <input type="text" populate-names="['surname:1','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="signupForm.name" ng-maxlength="50" required>
-  
-            <!-- Also, if signup.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
-            and/or maxlength) -->
-            <span class="help-block has-error" ng-if="signup.name.$dirty">
-              <span ng-show="signup.name.$error.required">Name is required.</span>
-              <span ng-show="signup.name.$error.maxlength">The name cannot be more than 50 characters.</span>
-            </span>
-          </div>
-          
-          <!-- U S E R  N A M E (alternative for logging in) -->
-  
-          <!-- checking whether the form "signup" with the "name" property is both $invalid AND $dirty.  If it is
-          insert the "has-error" class on the input field (i.e. insert a red border around the input field)
-          -->
-          <div class="control-group form-group col-xs-10"
-          ng-class="{'has-error':signup.username.$invalid &&
-                                signup.username.$dirty}">
-            <label>* User name (for logging in)</label>
-  
-            <!-- For this input field make it required, and have a max length of 25 -->
-            <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="signupForm.username" ng-maxlength="50" required>
-  
-            <!-- Also, if signup.username.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
-            and/or maxlength) -->
-            <span class="help-block has-error" ng-if="signup.username.$dirty">
-              <span ng-show="signup.username.$error.required">User name is required.</span>
-              <span ng-show="signup.username.$error.maxlength">The user name cannot be more than 50 characters.</span>
-            </span>
-          </div>
-          
-          <!-- S U R N A M E -->
-  
-          <div class="control-group form-group col-xs-10"
-            ng-class="{'has-error':signup.surname.$invalid &&
-                                signup.surname.$dirty}">
-            <label>* Surname</label>  
-            <!-- For this input field make it required, and have a max length of 50 -->
-            <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="signupForm.surname" ng-maxlength="50" required>  
-            <span class="help-block has-error" ng-if="signup.surname.$dirty">
-              <span ng-show="signup.surname.$error.required">Surname is required.</span>
-              <span ng-show="signup.surname.$error.maxlength">The surname cannot be more than 50 characters.</span>
-            </span>
-          </div>
-          
-           <!-- F I R S T  N A M E -->
-  
-          <div class="control-group form-group col-xs-10"
-            ng-class="{'has-error':signup.firstName.$invalid &&
-                                signup.firstName.$dirty}">
-            <label>* First name</label>  
-            <!-- For this input field make it required, and have a max length of 50 -->
-            <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="signupForm.firstName" ng-maxlength="50" required>  
-            <span class="help-block has-error" ng-if="signup.firstname.$dirty">
-              <span ng-show="signup.firstname.$error.required">First name is required.</span>
-              <span ng-show="signup.firstname.$error.maxlength">The first name cannot be more than 50 characters.</span>
-            </span>
-          </div>
-  
-          <!-- L O D G E -->
-  
-          <div class="control-group form-group col-xs-10 col-md-6"
-            ng-class="{'has-error':signup.lodge.$invalid &&
-                                  signup.lodge.$dirty}">
-            <label>* Your lodge name</label>
-            <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="signupForm.lodge" ng-maxlength="50" required>
-            <span class="help-block has-error" ng-if="signup.lodge.$dirty">
-              <span ng-show="signup.lodge.$error.required">Lodge name is required.</span>
-              <span ng-show="signup.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
-            </span>
-          </div>
-          
-          <!-- L O D G E  N U M B E R-->
-  
-          <div class="control-group form-group col-xs-6 col-md-4"
-            ng-class="{'has-error':signup.lodgeNo.$invalid &&
-                                  signup.lodgeNo.$dirty}">
-            <label>* Your lodge number</label>
-            <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="signupForm.lodgeNo" ng-maxlength="5" required min="1">
-            <span class="help-block has-error" ng-if="signup.lodgeNo.$dirty">
-              <span ng-show="signup.lodgeNo.$error.required">Lodge number is required.</span>
-              <span ng-show="signup.lodgeNo.$error.maxlength">The name cannot be more than 5 characters.</span>
-            </span>
-          </div>
-          
-           <!-- R A N K -->
-  
-          <div class="control-group form-group col-xs-10"
-            ng-class="{'has-error':signup.rank.$invalid &&
-                                  signup.rank.$dirty}">
-            <label>Your rank</label>
-            <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="signupForm.rank" ng-maxlength="100" >
-            <span class="help-block has-error" ng-if="signup.rank.$dirty">
-              <span ng-show="signup.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
-            </span>
-          </div>
-  
-          <!-- D I E T A R Y -->
-  
-          <div class="control-group form-group col-xs-10"
-            ng-class="{'has-error':signup.dietary.$invalid &&
-                                  signup.dietary.$dirty}">
-            <label>Your dietary requirements</label>
-            <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="signupForm.dietary" ng-maxlength="50" >
-            <span class="help-block has-error" ng-if="signup.dietary.$dirty">
-              <span ng-show="signup.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
-            </span>
-          </div>
-  
-                     
-           <!-- V O  L O D G E -->
-  
-          <div class="control-group form-group col-xs-10"
-            ng-class="{'has-error':signup.volodge.$invalid &&
-                                  signup.volodge.$dirty}" ng-hide="!signupForm.isVO">
-            <label>VO lodge</label>
-            <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="signupForm.voLodge" ng-maxlength="50" >
-            <span class="help-block has-error" ng-if="signup.volodge.$dirty">
-              <span ng-show="signup.volodge.$error.maxlength">VO lodge name cannot be more than 50 characters.</span>
-            </span>
-          </div>
-  
-          <!-- V O  L O D G E  N U M B E R-->
-  
-          <div class="control-group form-group col-xs-6 col-md-4"
-            ng-class="{'has-error':signup.lodgeNo.$invalid &&
-                                  signup.lodgeNo.$dirty}" ng-hide="!signupForm.isVO">
-            <label>VO lodge number</label>
-            <input type="number" class="form-control"  name="volodgeno" ng-model="signupForm.voLodgeNo" ng-maxlength="5" >
-            <span class="help-block has-error" ng-if="signup.lodgeno.$dirty">
-              <span ng-show="signup.volodgeno.$error.maxlength">The name cannot be more than 5 characters.</span>
-            </span>
-          </div>
-  
-          <!-- E M A I L -->
-  
-          <div class="control-group form-group col-xs-10"
-          ng-class="{'has-error':signup.email.$invalid &&
-                                signup.email.$dirty}">
-            <label>* Your email address</label>
-            <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="signupForm.email" required compare-to="signupForm.confirmemail">
-            <span class="help-block has-error" ng-if="signup.email.$dirty">
-              <span ng-show="signup.email.$error.required">Email address is required.</span>
-              <span ng-show="signup.email.$error.email">Not a valid email address.</span>
-            </span>
-          </div>
-          
-           <!-- C O N F I R M  E M A I L -->
-  
-          <div class="control-group form-group col-xs-10"
-          ng-class="{'has-error':signup.confirmemail.$invalid &&
-                                signup.confirmemail.$dirty}">
-            <label>Re-enter your email address</label>
-            <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="signupForm.confirmemail" required >
-            <span class="help-block has-error" ng-if="signup.confirmemail.$dirty">
-              <span ng-show="signup.email.$error.compareTo">Email address must match.</span>
-              <span ng-show="signup.confirmemail.$error.required">Confirmation email address is required.</span>
-              <span ng-show="signup.confirmemail.$error.email">Not a valid email address.</span>
-            </span>
-          </div>
-  
+          <% include ../partials/userDetails.ejs %>    
+            
           <!-- P A S S W O R D -->
   
           <div class="control-group form-group col-xs-7"
           ng-class="{'has-error':signup.password.$invalid &&
                                 signup.password.$dirty}">
             <label>* Choose a password</label>
-            <!-- Added the compareTo directive that compares the passowrds -->
-            <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="signupForm.password" id="password" required ng-minlength="8" compare-to="signupForm.confirmPassword" >
+            <!-- Added the compareTo directive that compares the passwords -->
+            <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="signupForm.password" id="password" ng-minlength="8" compare-to="signupForm.confirmPassword" >
             <span class="help-block has-error" ng-if="signup.password.$dirty">
               <span ng-show="signup.password.$error.required">Password is required.</span>
               <span ng-show="signup.password.$error.minlength">Password must be at least 8 characters.</span>
             </span>
-          </div>
+          </div>   
   
           <!-- C O N F I R M  P A S S W O R D -->
   
@@ -291,6 +121,7 @@
   
         <br/>
   
+          
         <!-- Disable signup button until the form has no errors -->
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="signup.$invalid || signupForm.loading">
           <span ng-show="!signupForm.loading">Create Account</span>

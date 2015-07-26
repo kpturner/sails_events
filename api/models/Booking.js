@@ -17,7 +17,7 @@ module.exports = {
       model: 'User', 
       required: true 
     },
-
+       
     // Which event?
     event: {
       model: 'Event',
@@ -31,11 +31,13 @@ module.exports = {
           
     // Total cost
     cost: {
-      type: 'float'
+      type: 'float',
+      size: 15.2 // Decimal
     },
     
     amountPaid: {
-      type: 'float'
+      type: 'float',      
+      size: 15.2 // Decimal
     },
     
     paid: {

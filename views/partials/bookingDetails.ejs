@@ -1,0 +1,198 @@
+<!DOCTYPE html>   
+
+<!-- N A M E -->
+  
+<!-- checking whether the form "<%-model%>" with the "name" property is both $invalid AND $dirty.  If it is
+insert the "has-error" class on the input field (i.e. insert a red border around the input field)
+-->
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-model%>.name.$invalid &&
+                    <%-model%>.name.$dirty}">
+<label>* Full name</label>  
+<!-- For this input field make it required, and have a max length of 50 -->
+<input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="<%-model%>Form.name" ng-maxlength="50" required>  
+<!-- Also, if <%-model%>.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+and/or maxlength) -->
+<span class="help-block has-error" ng-if="<%-model%>.name.$dirty">
+  <span ng-show="<%-model%>.name.$error.required">Name is required.</span>
+  <span ng-show="<%-model%>.name.$error.maxlength">The name cannot be more than 50 characters.</span>
+</span>
+</div>
+
+
+<!-- L O D G E -->
+
+<div class="control-group form-group col-xs-10 col-md-6"
+ng-class="{'has-error':<%-model%>.lodge.$invalid &&
+                      <%-model%>.lodge.$dirty}">
+<label>* Lodge name</label>
+<input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-model%>Form.lodge" ng-maxlength="50" required>
+<span class="help-block has-error" ng-if="<%-model%>.lodge.$dirty">
+  <span ng-show="<%-model%>.lodge.$error.required">Lodge name is required.</span>
+  <span ng-show="<%-model%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
+</span>
+</div>
+
+<!-- L O D G E  N U M B E R-->
+
+<div class="control-group form-group col-xs-6 col-md-4"
+ng-class="{'has-error':<%-model%>.lodgeNo.$invalid &&
+                      <%-model%>.lodgeNo.$dirty}">
+<label>* Lodge number</label>
+<input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-model%>Form.lodgeNo" ng-maxlength="5" min="1">
+<span class="help-block has-error" ng-if="<%-model%>.lodgeNo.$dirty">
+  <span ng-show="<%-model%>.lodgeNo.$error.required">Lodge number is required.</span>
+  <span ng-show="<%-model%>.lodgeNo.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
+</span>
+</div>
+
+<!-- R A N K -->
+
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-model%>.rank.$invalid &&
+                      <%-model%>.rank.$dirty}">
+<label>Rank</label>
+<input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="<%-model%>Form.rank" ng-maxlength="100" >
+<span class="help-block has-error" ng-if="<%-model%>.rank.$dirty">
+  <span ng-show="<%-model%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
+</span>
+</div>
+
+<!-- D I E T A R Y -->
+
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-model%>.dietary.$invalid &&
+                      <%-model%>.dietary.$dirty}">
+<label>Dietary requirements</label>
+<input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="<%-model%>Form.dietary" ng-maxlength="50" >
+<span class="help-block has-error" ng-if="<%-model%>.dietary.$dirty">
+  <span ng-show="<%-model%>.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+</span>
+</div>
+
+<!-- E M A I L -->
+
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-model%>.email.$invalid &&
+                    <%-model%>.email.$dirty}">
+<label>* Email address</label>
+<input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-model%>Form.email" compare-to="<%-model%>Form.confirmemail" required>
+<span class="help-block has-error" ng-if="<%-model%>.email.$dirty">
+  <span ng-show="<%-model%>.email.$error.required">Email address is required.</span>
+  <span ng-show="<%-model%>.email.$error.email">Not a valid email address.</span>
+</span>
+</div>
+
+<!-- C O N F I R M  E M A I L -->
+
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
+                    <%-model%>.confirmemail.$dirty}">
+<label>Re-enter your email address</label>
+<input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-model%>Form.confirmemail" required >
+<span class="help-block has-error" ng-if="<%-model%>.confirmemail.$dirty">
+  <span ng-show="<%-model%>.email.$error.compareTo">Email address must match.</span>
+  <span ng-show="<%-model%>.confirmemail.$error.required">Confirmation email address is required.</span>
+  <span ng-show="<%-model%>.confirmemail.$error.email">Not a valid email address.</span>
+</span>
+</div>
+
+<!-- A D D I T I O N A L  I N F O -->
+<div class="control-group form-group col-xs-10">
+<label>Any additional info</label>
+<textarea class="form-control" placeholder="additional info" name="info" ng-model="<%-model%>Form.info" ></textarea>            
+</div>
+
+<!-- P L A C E S-->
+
+<div class="control-group form-group col-xs-6 col-md-4"
+ng-class="{'has-error':<%-model%>.places.$invalid &&
+                      <%-model%>.places.$dirty}">
+<label>* Places</label>
+<input type="number" class="form-control" placeholder="places required" name="places" ng-model="<%-model%>Form.places" min="1" max="{{placesMax}}"
+  ng-change="makeArray()"  >
+<span class="help-block has-error" ng-if="<%-model%>.places.$dirty">
+  <span ng-show="<%-model%>.places.$error.required">Number of places is required.</span>
+  <span ng-show="<%-model%>.places.$error.min">Number of places cannot be less than 1.</span>
+  <span ng-show="<%-model%>.places.$error.max">Number of places cannot exceed {{placesMax}}.</span>
+</span>
+</div>
+
+<!-- A D D I T I O N A L   A T T E N D E E S -->
+<div ng-repeat="place in linked<%-model%>sArr | limitTo:<%-model%>Form.places-1">
+	<div class="control-group form-group col-xs-10">
+	  <h4>Additional attendee {{place+1}}</h4>  
+	</div>
+	<ng-form name="linked<%-model%>">
+	
+	  <!-- S U R N A M E -->
+	  <div class="control-group form-group col-xs-10"
+	    ng-class="{'has-error':linked<%-model%>Form.surname.$invalid &&
+	                      linked<%-model%>.surname.$dirty}">
+	    <label>* Surname</label>  
+	    <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="linked<%-model%>s[place].surname" ng-maxlength="50" required >              
+	    <span class="help-block has-error" ng-if="linked<%-model%>Form.surname.$dirty">
+	      <span ng-show="linked<%-model%>Form.surname.$error.required">Surname is required.</span>
+	      <span ng-show="linked<%-model%>Form.surname.$error.maxlength">Surname cannot be more than 50 characters.</span>
+	    </span>
+	  </div>   
+	  
+	  <!-- F I R S T   N A M E -->
+	  <div class="control-group form-group col-xs-10"
+	    ng-class="{'has-error':linked<%-model%>Form.firstname.$invalid &&
+	                      linked<%-model%>.firstname.$dirty}">
+	    <label>* First name</label>  
+	    <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="linked<%-model%>s[place].firstName" ng-maxlength="50" required >              
+	    <span class="help-block has-error" ng-if="linked<%-model%>Form.firstname.$dirty">
+	      <span ng-show="linked<%-model%>Form.firstname.$error.required">First name is required.</span>
+	      <span ng-show="linked<%-model%>Form.firstname.$error.maxlength">First name cannot be more than 50 characters.</span>
+	    </span>
+	  </div>   
+	  
+	  <!-- L O D G E -->
+	  <div class="control-group form-group col-xs-10 col-md-6"
+	    ng-class="{'has-error':linked<%-model%>.lodge.$invalid &&
+	                          linked<%-model%>.lodge.$dirty}">
+	    <label>Lodge name</label>
+	    <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="linked<%-model%>s[place].lodge" ng-maxlength="50">
+	    <span class="help-block has-error" ng-if="linked<%-model%>.lodge.$dirty">
+	      <span ng-show="linked<%-model%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
+	    </span>
+	  </div>
+	  
+	  <!-- L O D G E  N U M B E R-->
+	  <div class="control-group form-group col-xs-6 col-md-4"
+	    ng-class="{'has-error':linked<%-model%>.lodgeNo.$invalid &&
+	                          linked<%-model%>.lodgeNo.$dirty}">
+	    <label>Lodge number</label>
+	    <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="linked<%-model%>s[place].lodgeNo" ng-maxlength="5" min="1">
+	    <span class="help-block has-error" ng-if="linked<%-model%>.lodgeNo.$dirty">                 
+	      <span ng-show="linked<%-model%>.lodgeNo.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
+	    </span>
+	  </div>
+	  
+	   <!-- R A N K -->
+	  <div class="control-group form-group col-xs-10"
+	    ng-class="{'has-error':linked<%-model%>.rank.$invalid &&
+	                          linked<%-model%>.rank.$dirty}">
+	    <label>Rank</label>
+	    <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="linked<%-model%>s[place].rank" ng-maxlength="100" >
+	    <span class="help-block has-error" ng-if="linked<%-model%>.rank.$dirty">
+	      <span ng-show="linked<%-model%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
+	    </span>
+	  </div>
+	
+	  <!-- D I E T A R Y -->
+	  <div class="control-group form-group col-xs-10"
+	    ng-class="{'has-error':linked<%-model%>.dietary.$invalid &&
+	                          linked<%-model%>.dietary.$dirty}">
+	    <label>Dietary requirements</label>
+	    <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="linked<%-model%>s[place].dietary" ng-maxlength="50" >
+	    <span class="help-block has-error" ng-if="linked<%-model%>.dietary.$dirty">
+	      <span ng-show="linked<%-model%>.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+	    </span>
+	  </div>  
+	
+	</ng-form>  
+
+</div>  

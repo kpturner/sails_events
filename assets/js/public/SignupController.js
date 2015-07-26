@@ -8,19 +8,20 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		$scope.signupForm.loading=true;
 		// Submit request to Sails.
 		$http.post('/auth/local/register', {
-			name: $scope.signupForm.name,
-			username: $scope.signupForm.username,
-			lodge: $scope.signupForm.lodge,
-			lodgeNo: $scope.signupForm.lodgeNo,
-			rank: $scope.signupForm.rank,
-			dietary: $scope.signupForm.dietary,
-			isVO: $scope.signupForm.isVO,
-			voLodge: $scope.signupForm.voLodge,
-			voLodgeNo: $scope.signupForm.voLodgeNo,
-			email: $scope.signupForm.email,
-			password: $scope.signupForm.password,
-			surname: $scope.signupForm.surname,
-			firstName: $scope.signupForm.firstName,
+			user: $scope.signupForm
+			//name: $scope.signupForm.name,
+			//username: $scope.signupForm.username,
+			//lodge: $scope.signupForm.lodge,
+			//lodgeNo: $scope.signupForm.lodgeNo,
+			//rank: $scope.signupForm.rank,
+			//dietary: $scope.signupForm.dietary,
+			//isVO: $scope.signupForm.isVO,
+			//voLodge: $scope.signupForm.voLodge,
+			//voLodgeNo: $scope.signupForm.voLodgeNo,
+			//email: $scope.signupForm.email,
+			//password: $scope.signupForm.password,
+			//surname: $scope.signupForm.surname,
+			//firstName: $scope.signupForm.firstName,
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/';

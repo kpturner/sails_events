@@ -44,20 +44,22 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		$scope.profileForm.loading=true;
 		// Submit request to Sails.
 		$http.post('/updateprofile', {
-			name: $scope.profileForm.name,
-			username: $scope.profileForm.username,
-			lodge: $scope.profileForm.lodge,
-			lodgeNo: $scope.profileForm.lodgeNo,
-			rank: $scope.profileForm.rank,
-			dietary: $scope.profileForm.dietary,
-			email: $scope.profileForm.email,
-			isAdmin: $scope.profileForm.isAdmin,
-			isVO: $scope.profileForm.isVO,
-			voLodge: $scope.profileForm.voLodge,
-			voLodgeNo: $scope.profileForm.voLodgeNo,
-			password: $scope.profileForm.password,
-			surname: $scope.profileForm.surname,
-			firstName: $scope.profileForm.firstName,
+			profile: $scope.profileForm
+			//name: $scope.profileForm.name,
+			//username: $scope.profileForm.username,
+			//lodge: $scope.profileForm.lodge,
+			//lodgeNo: $scope.profileForm.lodgeNo,
+			//rank: $scope.profileForm.rank,
+			//dietary: $scope.profileForm.dietary,
+			//email: $scope.profileForm.email,
+			//isAdmin: $scope.profileForm.isAdmin,
+			//isVO: $scope.profileForm.isVO,
+			//voLodge: $scope.profileForm.voLodge,
+			//voLodgeNo: $scope.profileForm.voLodgeNo,
+			//password: $scope.profileForm.password,
+			//surname: $scope.profileForm.surname,
+			//firstName: $scope.profileForm.firstName,
+			//phone: $scope.profileForm.phone,
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/';

@@ -103,6 +103,7 @@ module.exports = {
 				// Send the details
 				return res.view("userdetails",{
 					mode:mode,
+					model:'user',
 					userDetails:user
 				})	
 			})	
@@ -110,6 +111,7 @@ module.exports = {
 		else {
 			return res.view("userdetails",{
 				mode:mode,
+				model:'user',
 				userDetails:{}
 			})	
 		}	
@@ -136,6 +138,8 @@ module.exports = {
 					user[0].dietary=""
 				if (user[0].rank==null)
 					user[0].rank=""
+				if (user[0].phone==null)
+					user[0].phone=""
 				if (!user[0].isVO)
 					user[0].isVO=false
 				if (!user[0].isAdmin)
