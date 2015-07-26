@@ -43,7 +43,7 @@
         <h2 class="form-signin-heading">Booking for {{event.name}}</h2>
         <h3>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h3>
         <h3>{{event.venue}}<h3>
-        <h4>Price per place: £{{event.price}}</h4>
+        <h4>Price per place: £{{event.price.toFixed(2)}}</h4>
         <h4>Places remaining: {{event.capacity}}</h4>  
         <h4>Organiser: {{event.organiser.name}} (<a href="mailto:{{event.organiser.email}}" target="_top">{{event.organiser.email}}</a>)</h4>     
         <h3 ng-hide="event.capacity>0">THIS EVENT IS FULLY BOOKED</h3>        
