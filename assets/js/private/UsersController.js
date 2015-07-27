@@ -2,25 +2,28 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 
 	// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
-
+		 
 		$scope.filterForm = {
-			loading: false
+			loading: false,
+			filter:SAILS_LOCALS.filter
 		}
 
 		// Get the users
-		$http.get('/allusers/').success(function(data, status) {
-			if (typeof data == 'object') {
-				$scope.users = data;					
-			}
-			else {
+		$http.get('/allusers/'+$scope.filterForm.filter)
+			.success(function(data, status) {
+				if (typeof data == 'object') {
+					$scope.users = data;					
+				}
+				else {
+					window.location = '/';
+				}
+			}).
+			error(function(data, status, headers, config) {
+		   		// called asynchronously if an error occurs
+		    	// or server returns response with an error status.
 				window.location = '/';
-			}
-		}).
-		error(function(data, status, headers, config) {
-	   		// called asynchronously if an error occurs
-	    	// or server returns response with an error status.
-			window.location = '/';
-	  	});
+		  	}
+		);
 		  
 		/**
 		 * Filter users

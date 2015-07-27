@@ -18,28 +18,51 @@ module.exports = {
 			if (err) {
 				return res.negotiate(err);
 			}
-				
 			
-			// Now we have to adjust capacity by the number of places booked so far
-			var places=0;
-			Booking.find({event:eventId}).exec(function(err,bookings){
-				if (!err) {
-					bookings.forEach(function(booking,index){
-						places+=booking.places
-					})	
+			// Private function to process the initiation
+			var initiateBooking=function(existingBooking){
+				// Now we have to adjust capacity by the number of places booked so far
+				var places=0;
+				var criteria={};
+				criteria.event=eventId;
+				if (existingBooking) {
+					criteria.booking={"!=":existingBooking.id} // Exclude the existing booking details from the calcs
 				}
+				Booking.find(criteria).exec(function(err,bookings){
+					if (!err) {
+						bookings.forEach(function(booking,index){
+							places+=booking.places
+						})	
+					}
+				
+					res.locals.event=event;
+					res.locals.event.capacity-=places;
+					res.locals.booking=existingBooking;
+						
+					// Get the data for the event and the user and then navigate to the booking view
+					if (req.wantsJSON)
+						return res.json({
+								model:'booking'
+							});
+					else
+						return res.view("book",{
+								model:'booking'
+							});		
+				})	
+			}
+				
+			// Has the user already made this booking?  If multiple bookings are allowed, we don't care (treat it as a new booking)
+			if (!sails.config.events.multipleBookings) {
+				Booking.findOne({user:req.user.id}).exec(function(err, existingBooking) {
+					// if there is already a booking for this user the called function will get it, otherwise it will get nada
+					initiateBooking(existingBooking);	
+				})
+			}
+			else {
+				initiateBooking();
+			}
 			
-				res.locals.event=event;
-				res.locals.event.capacity-=places;
-					
-				// Get the data for the event and the user and then navigate to the booking view
-				if (req.wantsJSON)
-					return res.json({model:'booking'});
-				else
-					return res.view("book",{model:'booking'});		
-			})
-			
-			
+				
 			
 		})		
 		
@@ -51,7 +74,8 @@ module.exports = {
 	makeBooking:function(req, res) {
 		
 		var eventId=req.param("eventid");
-		 
+		var bookingId=req.param("bookingId");		
+				 
 		Event.findOne(eventId).populate("organiser").exec(function(err,event){
 			if (err) {
 				return res.negotiate(err);
@@ -79,7 +103,12 @@ module.exports = {
 					
 					// Before making the booking, make doubly sure we have capacity
 					var places=0;
-					Booking.find({event:eventId}).exec(function(err,bookings){
+					var criteria={};
+					criteria.event=eventId;
+					if (bookingId) {
+						criteria.booking={"!=":bookingId} // Exclude the existing booking details from the calcs
+					}
+					Booking.find(criteria).exec(function(err,bookings){
 						if (!err) {
 							bookings.forEach(function(booking,index){
 								places+=booking.places
@@ -90,82 +119,98 @@ module.exports = {
 						// Capacity must exceed (at least) places requested 
 						if (event.capacity>=req.param("places")) {
 						
-							var booking={};
-							booking.user=res.locals.user.id;
-							booking.event=eventId;
-							booking.info=req.param("info");
-							if (req.param("places")) {
-								booking.places=req.param("places")
+							// Private function to process booking
+							var processBooking=function(){
+								var booking={};
+								booking.user=res.locals.user.id;
+								booking.event=eventId;
+								booking.info=req.param("info");
+								if (req.param("places")) {
+									booking.places=req.param("places")
+								}
+								else {
+									booking.places=1
+								}
+			      				booking.cost=booking.places*event.price;
+								booking.amountPaid=0;
+								
+								Booking.create(booking,function(err, booking){
+									if (err) {
+										return res.negotiate(err);
+									}
+															
+									// Create linked bookings
+									if (linkedBookings) {
+										linkedBookings.forEach(function(linkedBooking,index){
+											linkedBooking.booking=booking.id;
+											if (!linkedBooking.rank)
+												linkedBooking.rank=""
+											if (!linkedBooking.dietary)
+												linkedBooking.dietary=""
+											LinkedBooking.create(linkedBooking).exec(function(err,lb){
+												if (err)
+													console.log(err)	
+											})
+										})
+									}
+			 						
+									// Send confirmation email
+									if (res.locals.user.dietary==null)
+					                	res.locals.user.dietary=""
+					                if (res.locals.user.rank==null)
+					                	res.locals.user.rank=""
+									
+									var formattedDate=event.date.toString();
+									formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"))
+									
+									sails.hooks.email.send(
+										"bookingConfirmation",
+									    {
+									      recipientName: res.locals.user.name,
+									      senderName: "Events Management",
+										  		eventName: event.name,
+												eventDate: formattedDate,
+												eventTime: event.time,
+												eventVenue: event.venue,
+												eventBlurb: event.blurb,
+												eventMenu: event.menu,
+												eventDressCode: event.dressCode,
+											  	email: res.locals.user.email,
+											  	lodge: res.locals.user.lodge,
+											  	lodgeNo: res.locals.user.lodgeNo,
+											  	rank: res.locals.user.rank,
+											  	dietary: res.locals.user.dietary,
+											  	bookingRef: event.code+"/"+booking.id.toString(),
+												info: booking.info,  
+												places: booking.places,
+												linkedBookings: linkedBookings,
+												paymentDetails: event.paymentDetails
+									    },
+									    {
+									      to: res.locals.user.email,
+										  cc: event.organiser.email,
+									      subject: "Event booking confirmation"
+									    },
+									    function(err) {if (err) console.log(err);}
+									   )    		
+									
+									// Get the data for the event and the user and then navigate to the booking view
+									return res.ok();
+								})
+							}
+						
+							// If we have an existing booking, zap it before making the new booking
+							if (bookingId) {
+								Booking.destroy(bookingId,function(err){
+									LinkedBooking.destroy(bookingId,function(err){
+										processBooking();
+									})
+								})
 							}
 							else {
-								booking.places=1
+								processBooking();
 							}
-		      				booking.cost=booking.places*event.price;
-							booking.amountPaid=0;
 							
-							Booking.create(booking,function(err, booking){
-								if (err) {
-									return res.negotiate(err);
-								}
-														
-								// Create linked bookings
-								if (linkedBookings) {
-									linkedBookings.forEach(function(linkedBooking,index){
-										linkedBooking.booking=booking.id;
-										if (!linkedBooking.rank)
-											linkedBooking.rank=""
-										if (!linkedBooking.dietary)
-											linkedBooking.dietary=""
-										LinkedBooking.create(linkedBooking).exec(function(err,lb){
-											if (err)
-												console.log(err)	
-										})
-									})
-								}
-		 						
-								// Send confirmation email
-								if (res.locals.user.dietary==null)
-				                	res.locals.user.dietary=""
-				                if (res.locals.user.rank==null)
-				                	res.locals.user.rank=""
-								
-								var formattedDate=event.date.toString();
-								formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"))
-								
-								sails.hooks.email.send(
-									"bookingConfirmation",
-								    {
-								      recipientName: res.locals.user.name,
-								      senderName: "Events Management",
-									  		eventName: event.name,
-											eventDate: formattedDate,
-											eventTime: event.time,
-											eventVenue: event.venue,
-											eventBlurb: event.blurb,
-											eventMenu: event.menu,
-											eventDressCode: event.dressCode,
-										  	email: res.locals.user.email,
-										  	lodge: res.locals.user.lodge,
-										  	lodgeNo: res.locals.user.lodgeNo,
-										  	rank: res.locals.user.rank,
-										  	dietary: res.locals.user.dietary,
-										  	bookingRef: event.code+"/"+booking.id.toString(),
-											info: booking.info,  
-											places: booking.places,
-											linkedBookings: linkedBookings,
-											paymentDetails: event.paymentDetails
-								    },
-								    {
-								      to: res.locals.user.email,
-									  cc: event.organiser.email,
-								      subject: "Event booking confirmation"
-								    },
-								    function(err) {if (err) console.log(err);}
-								   )    		
-								
-								// Get the data for the event and the user and then navigate to the booking view
-								return res.ok();
-							})
 							
 						}
 						else {

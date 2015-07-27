@@ -9,24 +9,46 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Initialise "user" in the scope with the data set in the view script 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.event=SAILS_LOCALS.event;
-	$scope.bookingForm = $scope.user;
-	$scope.bookingForm.places=1;
-	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
-	// Convert lodge no to numeric
-	$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
-	// Initialise confirmation email
-	$scope.bookingForm.confirmemail = $scope.bookingForm.email;
-
-		
+	
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
 	$scope.linkedbookingsArr=[];
+	
+	// makeArray is called every time the number of places changes
 	$scope.makeArray = function(){
 		$scope.linkedbookingsArr.length=0;
 		for (var i=0;i<(parseInt($scope.bookingForm.places)-1);i++) {
 			$scope.linkedbookingsArr.push(i)
 		} 
 	}
+	
+	// Do we have an existing booking to edit?
+	$scope.bookingForm = $scope.user;
+	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
+	// Convert lodge no to numeric
+	$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
+	// Initialise confirmation email
+	$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
+	if (SAILS_LOCALS.booking.id) {
+		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
+		$scope.makeArray();
+		// Get linked booking info
+		if (SAILS_LOCALS.booking.places>1) {
+			$http.get("/linkedbooking/"+SAILS_LOCALS.booking.id).success(function(data, status) {
+				if (typeof data == 'object') {
+					$scope.linkedbookings=data;	 			
+				}				
+			}).
+			error(function(data, status, headers, config) {
+		   		console.log("Error retrieving linked bookings for booking "+SAILS_LOCALS.booking.id)
+		  	});
+			
+		}
+	}
+	else {
+		$scope.bookingForm.places=1;		
+	}
+
 	
 	/**
 	 * Test if the details are complete on the booking

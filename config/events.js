@@ -11,6 +11,9 @@
 module.exports.events = {
 
 	// Admins can be a single string or an array, each representing a user name or email address
-	// admins: ['user']
+	// admins: ['user'],
+	
+	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
+	multipleBookings: false,
 	
 };

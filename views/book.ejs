@@ -21,7 +21,8 @@
     window.SAILS_LOCALS = {
       _csrf: "<%= _csrf %>",
       user: <%- JSON.stringify(res.locals.user) %>,
-      event: <%- JSON.stringify(res.locals.event) %>
+      event: <%- JSON.stringify(res.locals.event) %>,
+      booking: <%- (res.locals.booking)?JSON.stringify(res.locals.booking):"{}" %>,
     };
     
     </script>

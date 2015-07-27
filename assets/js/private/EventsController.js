@@ -4,23 +4,27 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 		$scope.user=SAILS_LOCALS.user;
 
 		$scope.filterForm = {
-			loading: false
+			loading: false,
+			filter:SAILS_LOCALS.filter
 		}
 
+		
 		// Get the events
-		$http.get('/allevents/').success(function(data, status) {
-			if (typeof data == 'object') {
-				$scope.events = data;					
-			}
-			else {
+		$http.get('/allevents/'+$scope.filterForm.filter)
+			.success(function(data, status) {
+				if (typeof data == 'object') {
+					$scope.events = data;					
+				}
+				else {
+					window.location = '/';
+				}
+			}).
+			error(function(data, status, headers, config) {
+		   		// called asynchronously if an error occurs
+		    	// or server returns response with an error status.
 				window.location = '/';
-			}
-		}).
-		error(function(data, status, headers, config) {
-	   		// called asynchronously if an error occurs
-	    	// or server returns response with an error status.
-			window.location = '/';
-	  	});
+		  	}
+		);
 		  
 		/**
 		 * Filter events
