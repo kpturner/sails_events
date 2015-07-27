@@ -205,6 +205,7 @@ var AuthController = {
 	*/
   users: function(req, res) {
     res.view('users',{
+      filter: req.session.userFilter,
       errors: req.flash('error')
     });  
   }, 
@@ -218,6 +219,7 @@ var AuthController = {
 	*/
   events: function(req, res) {
     res.view('events',{
+      filter: req.session.eventFilter,
       errors: req.flash('error')
     });  
   }, 

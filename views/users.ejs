@@ -20,7 +20,8 @@
     <script type="text/javascript">
     window.SAILS_LOCALS = {
       _csrf: "<%= _csrf %>",
-       user: <%- JSON.stringify(res.locals.user) %>
+       user: <%- JSON.stringify(res.locals.user) %>,
+       filter: <%- res.filter %>
     };
     
     </script>

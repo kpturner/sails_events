@@ -56,6 +56,7 @@ module.exports = {
 	allEvents: function (req, res) {
 		
 		var filter=req.param('filter');
+		req.session.eventFilter=filter;
 						
 		var where = {};
 		

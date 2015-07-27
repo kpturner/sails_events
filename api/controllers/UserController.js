@@ -41,6 +41,7 @@ module.exports = {
 	allUsers: function (req, res) {
 		
 		var filter=req.param('filter');
+		req.session.userFilter=filter;
 						
 		var where = {};
 		
