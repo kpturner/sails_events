@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <p>THIS IS JUST A DEMO - YOU HAVE NOT REALLY BOOKED IN TO THIS EVENT</p>
 
 <p>Dear <%=recipientName%>,</p>
 
-<p>This is a courtesy email to confirm your booking:</p>
+<p>This is a courtesy email to confirm your booking<%-updated%>:</p>
  
 
 <p>
@@ -27,7 +28,8 @@
 	  <br><b>Additional places</b></br>	
       <% linkedBookings.forEach(function (linkedBooking,place) { %>
 	  	<p><i>Additional attendee <%=place+1%></i></p>
-        <br>Name: <%=linkedBooking.name%>
+        <br>Surname: <%=linkedBooking.surname%>
+		<br>First name: <%=linkedBooking.firstName%>
 		<br>Lodge: <%=linkedBooking.lodge%>
 		<br>Lodge no: <%=linkedBooking.lodgeNo%>
 		<br>Rank: <%=linkedBooking.rank%>

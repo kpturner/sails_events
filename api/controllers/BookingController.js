@@ -20,13 +20,13 @@ module.exports = {
 			}
 			
 			// Private function to process the initiation
-			var initiateBooking=function(existingBooking){
+			var initialiseBooking=function(existingBooking){
 				// Now we have to adjust capacity by the number of places booked so far
 				var places=0;
 				var criteria={};
 				criteria.event=eventId;
 				if (existingBooking) {
-					criteria.booking={"!=":existingBooking.id} // Exclude the existing booking details from the calcs
+					criteria.id={"!":existingBooking.id} // Exclude the existing booking details from the calcs
 				}
 				Booking.find(criteria).exec(function(err,bookings){
 					if (!err) {
@@ -53,13 +53,16 @@ module.exports = {
 				
 			// Has the user already made this booking?  If multiple bookings are allowed, we don't care (treat it as a new booking)
 			if (!sails.config.events.multipleBookings) {
-				Booking.findOne({user:req.user.id}).exec(function(err, existingBooking) {
+				Booking.findOne({
+									event: eventId,
+									user:req.user.id
+								}).exec(function(err, existingBooking) {
 					// if there is already a booking for this user the called function will get it, otherwise it will get nada
-					initiateBooking(existingBooking);	
+					initialiseBooking(existingBooking);	
 				})
 			}
 			else {
-				initiateBooking();
+				initialiseBooking();
 			}
 			
 				
@@ -106,7 +109,7 @@ module.exports = {
 					var criteria={};
 					criteria.event=eventId;
 					if (bookingId) {
-						criteria.booking={"!=":bookingId} // Exclude the existing booking details from the calcs
+						criteria.id={"!":bookingId} // Exclude the existing booking details from the calcs
 					}
 					Booking.find(criteria).exec(function(err,bookings){
 						if (!err) {
@@ -147,6 +150,10 @@ module.exports = {
 												linkedBooking.rank=""
 											if (!linkedBooking.dietary)
 												linkedBooking.dietary=""
+											if (!linkedBooking.lodge)
+												linkedBooking.lodge=""
+											if (!linkedBooking.lodgeNo)
+												linkedBooking.lodgeNo=""
 											LinkedBooking.create(linkedBooking).exec(function(err,lb){
 												if (err)
 													console.log(err)	
@@ -159,16 +166,21 @@ module.exports = {
 					                	res.locals.user.dietary=""
 					                if (res.locals.user.rank==null)
 					                	res.locals.user.rank=""
+									 
 									
 									var formattedDate=event.date.toString();
-									formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"))
+									formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+									var updated="";
+									if (bookingId)
+										updated=' has been updated'
 									
 									sails.hooks.email.send(
 										"bookingConfirmation",
 									    {
 									      recipientName: res.locals.user.name,
 									      senderName: "Events Management",
-										  		eventName: event.name,
+										  		updated: updated,
+												eventName: event.name,
 												eventDate: formattedDate,
 												eventTime: event.time,
 												eventVenue: event.venue,
@@ -202,7 +214,7 @@ module.exports = {
 							// If we have an existing booking, zap it before making the new booking
 							if (bookingId) {
 								Booking.destroy(bookingId,function(err){
-									LinkedBooking.destroy(bookingId,function(err){
+									LinkedBooking.destroy({booking:bookingId},function(err){
 										processBooking();
 									})
 								})
@@ -225,5 +237,17 @@ module.exports = {
 		})		
 		
 	},
+	
+	
+	/**
+	 * Validate additional bookings in case they are duplicates
+	 * 
+	 */
+	validateAdditions: function(req, res) {
+		// TODO
+		return res.json({data:[{a:"b"}]})
+	},
+	
+	
 };
 

@@ -1,4 +1,4 @@
-angular.module('EventsModule', ['ui.bootstrap', 'toastr', 'compareTo', 'akoenig.deckgrid'])
+angular.module('EventsModule', ['ngDialog', 'ui.bootstrap', 'toastr', 'compareTo', 'akoenig.deckgrid'])
 		.directive('disableContents', function() {
 		    return {
 		        compile: function(tElem, tAttrs) {

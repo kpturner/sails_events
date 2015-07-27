@@ -60,6 +60,7 @@ module.exports.routes = {
   'get /reset': {view:'reset'},
   'post /auth/passwordreset': 'AuthController.passwordReset',
   'get /linkedbooking/:bookingid': 'LinkedBookingController.linkedBookings',
+  'post /validateadditions': 'BookingController.validateAdditions',
   
   
   // Users

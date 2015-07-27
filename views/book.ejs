@@ -14,6 +14,13 @@
     <link rel="stylesheet" href="/styles/events.css">
     <link rel="stylesheet" href="/styles/forMobileIE.css">
     <link rel="stylesheet" href="/styles/importer.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/myth/ngDialog-theme-default.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/myth/ngDialog-theme-plain.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/myth/ngDialog.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog-custom-width.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog-theme-default.min.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog-theme-plain.min.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog.min.css">
     <!--STYLES END-->
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
@@ -47,9 +54,11 @@
         <h4>Price per place: £{{event.price.toFixed(2)}}</h4>
         <h4>Places remaining: {{event.capacity}}</h4>  
         <h4>Organiser: {{event.organiser.name}} (<a href="mailto:{{event.organiser.email}}" target="_top">{{event.organiser.email}}</a>)</h4>     
-        <h3 ng-hide="event.capacity>0">THIS EVENT IS FULLY BOOKED</h3>        
+        <h3 ng-hide="event.capacity>0">THIS EVENT IS FULLY BOOKED</h3>     
+        <h3 ng-hide="!existingBooking">YOU HAVE ALREADY BOOKED IN {{paidMsg}}</h3> 
+        <h4 ng-hide="!paid"><i>Please contact the organiser to make changes</i></h4>       
         <h5 ng-hide="event.capacity<=0">Items marked with * are mandatory</h5>  
-        <div class="row" ng-hide="event.capacity<=0">
+        <div class="row" ng-hide="event.capacity<=0" disable-contents="paid">  <!-- disable-contents is a custom directive I have added to EventsModule -->
            
            <% include partials/bookingDetails.ejs %>  
           
@@ -58,10 +67,12 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="booking.$invalid || !detailsComplete() || bookingForm.loading">
-          <span ng-show="!bookingForm.loading">Book Now</span>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="booking.$invalid || !detailsComplete() || bookingForm.loading || paid">
+          <span ng-show="!bookingForm.loading && !existingBooking">Book Now</span>
+          <span ng-show="!bookingForm.loading && existingBooking">Update booking</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="bookingForm.loading" ></span>
-          <span ng-show="bookingForm.loading">Making your booking...</span>
+          <span ng-show="bookingForm.loading && !existingBooking">Making your booking...</span>
+          <span ng-show="bookingForm.loading && existingBooking">Updating your booking...</span>
         </button>
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
@@ -80,6 +91,7 @@
     <script src="/js/dependencies/angular-toastr.js"></script>
     <script src="/js/dependencies/compareTo.module.js"></script>
     <script src="/js/dependencies/forMobileIE.js"></script>
+    <script src="/js/dependencies/ngDialog.min.js"></script>
     <script src="/js/dependencies/ui-bootstrap-tpls-0.13.0.min.js"></script>
     <script src="/js/EventsModule.js"></script>
     <script src="/js/private/BookController.js"></script>
