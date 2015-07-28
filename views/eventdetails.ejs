@@ -46,7 +46,7 @@
       <!-- EVENT FORM --> 
       <form ng-submit="submitEventForm()" id="profile-form" name="event" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h2 class="form-signin-heading">Event - <%=mode%></h2>
+        <h3 class="form-signin-heading">Event - <%=mode%></h3>
         <h5>Items marked with * are mandatory</h5>
         
         <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->

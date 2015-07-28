@@ -13,7 +13,7 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 		$http.get('/allevents/'+$scope.filterForm.filter)
 			.success(function(data, status) {
 				if (typeof data == 'object') {
-					$scope.events = data;					
+					$scope.events = data; 
 				}
 				else {
 					window.location = '/';

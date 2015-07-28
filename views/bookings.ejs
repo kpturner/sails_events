@@ -44,10 +44,17 @@
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %>  
        
-      <!-- PROFILE FORM --> 
+      <!--BOOKING FORM --> 
       <form ng-submit="filterBookings()" id="filter-form" name="filterform" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h2 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings</h2>
+        <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings <span ng-show="eventBookings">for {{event.name}}</span></h3>
+        
+        <div ng-show="eventBookings">
+          <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
+          <h4>{{event.venue}}<h4>
+          <h5>Places remaining: {{event.capacity}}</h5>  
+          <h5>Organiser: {{event.organiser.name}} (<a href="mailto:{{event.organiser.email}}" target="_top">{{event.organiser.email}}</a>)</h5>     
+        </div>
         
         <div class="row">
   
@@ -74,15 +81,13 @@
       
        
       <h4 class="hidden-md hidden-lg">Tap a booking to edit</h4>  
-      <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>   
+      <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>  
+            
       <% if (myBookings) {%> 
-      <div deckgrid source="bookings" cardTemplate="templates/myBookings.html" class="deckgrid"></div>
+      <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div> 
       <% } %>
       <% if (eventBookings) {%> 
-       <div ng-repeat="booking in bookings">
-    	   <label>{{booking.user.surname}}, {{booking.user.firstName}}</label>  
-       </div>  
-      <div deckgrid source="bookings" cardTemplate="templates/eventBookings.html" class="deckgrid"></div>
+      <div deckgrid source="bookings" cardTemplate="/templates/eventBookings.html" class="deckgrid"></div> 
       <% } %>
      
     

@@ -26,6 +26,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Do we have an existing booking to edit?
 	$scope.existingBooking=false;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
+	$scope.eventBookings=SAILS_LOCALS.eventBookings;
 	$scope.bookingForm = $scope.user;
 	$scope.paidMsg="";
 	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
@@ -38,6 +39,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.paid=SAILS_LOCALS.booking.paid;
 		if ($scope.paid)
 			$scope.paidMsg=" AND PAID"
+		$scope.bookingForm.cost = SAILS_LOCALS.booking.cost;
+		$scope.bookingForm.paid = SAILS_LOCALS.booking.paid;
+		$scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;
+		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
 		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
 		$scope.makeArray();
 		// Get linked booking info
@@ -120,7 +125,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						$scope.duplicates=sailsResponse.data;
 						// Give the user the chance to pull out
 						var opts={
-							template:"templates/bookingDialog.html",
+							template:"/templates/bookingDialog.html",
 						 	className: 'ngdialog-theme-default',
 							scope: $scope
 						};
@@ -156,28 +161,55 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		
 		if ($scope.mode=="delete") {
 			// The only "mode" is delete
-			$http.post('/updatebooking/'+$scope.mode, {
-				bookingid: SAILS_LOCALS.booking.id			 
-			})
-			.then(function onSuccess(sailsResponse){
-				toastr.success("You have successfully cancelled your booking")	
-				setTimeout(function(){
-					if ($scope.myBookings)
-						window.location='/mybookings'
-					else
-						window.location = '/'	
-				},2000)				
-			})
-			.catch(function onError(sailsResponse){
-	
-				// Handle known error type(s).
-				toastr.error(sailsResponse.data, 'Error');
-				$scope.bookingForm.loading = false;
-	
-			})
-			.finally(function eitherWay(){
-				//$scope.bookingForm.loading = false;
-			})
+			var cancelBooking=function(){
+				$http.post('/updatebooking/'+$scope.mode, {
+					bookingid: SAILS_LOCALS.booking.id			 
+				})
+				.then(function onSuccess(sailsResponse){
+					toastr.success("You have successfully cancelled your booking")	
+					setTimeout(function(){
+						if ($scope.myBookings)
+							window.location='/mybookings'
+						else if ($scope.eventBookings)
+							window.location='/eventbookings?eventid='+$scope.event.id;
+						else
+							window.location = '/'	
+					},1000)				
+				})
+				.catch(function onError(sailsResponse){
+		
+					// Handle known error type(s).
+					toastr.error(sailsResponse.data, 'Error');
+					$scope.bookingForm.loading = false;
+		
+				})
+				.finally(function eitherWay(){
+					//$scope.bookingForm.loading = false;
+				})
+			}
+			
+			// If we are cancelling a paid up booking, seek confirmation
+			if ($scope.bookingForm.paid) {
+				var opts={
+					template:"/templates/bookingCancellationConfirmation.html",
+				 	className: 'ngdialog-theme-default',
+					scope: $scope
+				};
+				// Pop the dialog
+				ngDialog.openConfirm(opts)
+					.then(function (value) {
+						// Continue with booking
+	                    cancelBooking()
+	                }, function (reason) {
+						// They bottled it
+	                    $scope.bookingForm.loading = false;
+	                });	
+			}
+			else {
+				cancelBooking();
+			}			
+			
+			
 		}
 		else {
 			// Normal booking creation/update			 
@@ -190,6 +222,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				dietary: $scope.bookingForm.dietary,
 				email: $scope.bookingForm.email,
 				info: $scope.bookingForm.info,
+				paid: $scope.bookingForm.paid,
+				amountPaid: $scope.bookingForm.amountPaid,
 				places: $scope.bookingForm.places,
 				linkedBookings: $scope.linkedbookings,
 				bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
@@ -205,9 +239,11 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				setTimeout(function(){
 					if ($scope.myBookings)
 						window.location='/mybookings'
+					else if ($scope.eventBookings)
+						window.location='/eventbookings?eventid='+$scope.event.id;
 					else
 						window.location = '/'
-				},2000);
+				},1000);
 			})
 			.catch(function onError(sailsResponse){			 
 				// Handle known error type(s).

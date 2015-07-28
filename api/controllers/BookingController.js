@@ -35,7 +35,7 @@ module.exports = {
 	eventBookings: function(req, res) {
 		req.session.myBookings=false;
 		req.session.eventBookings=true;
-		Event.findOne(req.param("eventid")).exec(function(err,event){
+		Event.findOne(req.param("eventid")).populate("organiser").exec(function(err,event){
 			res.locals.event=event;
 			res.view('bookings',{			
 			  filter: req.session.bookingFilter,
@@ -59,6 +59,7 @@ module.exports = {
 		if (action)
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
 		var myBookings=(req.param("mybookings"))?true:false;
+		var eventBookings=(req.param("eventbookings"))?true:false;
 			
 		// Private function to process the initiation
 		var initialiseBooking=function(event,existingBooking){
@@ -80,6 +81,7 @@ module.exports = {
 				res.locals.event.capacity-=places;
 				res.locals.booking=existingBooking;
 				res.locals.myBookings=myBookings;
+				res.locals.eventBookings=eventBookings;
 					
 				// Get the data for the event and the user and then navigate to the booking view
 				if (req.wantsJSON)
@@ -198,7 +200,17 @@ module.exports = {
 									booking.places=1
 								}
 			      				booking.cost=booking.places*event.price;
-								booking.amountPaid=0;
+								booking.dietary=user.dietary;
+								
+								if(req.session.eventBookings) {
+									booking.amountPaid=req.param("amountPaid");
+									booking.paid=req.param("paid");	
+								}
+								else {
+									booking.amountPaid=0;
+									booking.paid=false;	
+								}
+								
 								
 								Booking.create(booking,function(err, booking){
 									if (err) {
@@ -354,14 +366,10 @@ module.exports = {
 		
 		var filter=req.param('filter');
 		req.session.bookingFilter=filter;
-		var myBookings=(req.param('mybookings')=='1');
-						
+								
 		var where = {};
-		
-		if (myBookings) {
-			where.user=req.user.id;
-		}
-		
+		where.user=req.user.id;
+				
 		if (filter && filter.length>0) {
 			where.or= 	[
 							{event:{name: {contains: filter}}},

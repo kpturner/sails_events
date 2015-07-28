@@ -31,6 +31,7 @@
       event: <%- JSON.stringify(res.locals.event) %>,
       booking: <%- (res.locals.booking)?JSON.stringify(res.locals.booking):"{}" %>,
       myBookings: <%- res.locals.myBookings %>,
+      eventBookings: <%- res.locals.eventBookings %>,
       mode: "<%= mode.toLowerCase() %>",
     };
     
@@ -50,19 +51,19 @@
       <!-- BOOKING FORM --> 
       <form ng-submit="submitBookingForm()" id="booking-up-form" name="booking" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h2 class="form-signin-heading">Booking for {{event.name}}</h2>
-        <h3>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h3>
-        <h3>{{event.venue}}<h3>
-        <h4>Price per place: £{{event.price.toFixed(2)}}</h4>
-        <h4>Places remaining: {{event.capacity}}</h4>  
-        <h4>Organiser: {{event.organiser.name}} (<a href="mailto:{{event.organiser.email}}" target="_top">{{event.organiser.email}}</a>)</h4>     
+        <h3 class="form-signin-heading">Booking for {{event.name}}</h3>
+        <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
+        <h4>{{event.venue}}<h4>
+        <h5>Price per place: £{{event.price.toFixed(2)}}</h5>
+        <h5>Places remaining: {{event.capacity}}</h5>  
+        <h5>Organiser: {{event.organiser.name}} (<a href="mailto:{{event.organiser.email}}" target="_top">{{event.organiser.email}}</a>)</h5>     
         <h3 ng-hide="event.capacity>0">THIS EVENT IS FULLY BOOKED</h3>     
-        <h3 ng-hide="!existingBooking || myBookings">YOU HAVE ALREADY BOOKED IN {{paidMsg}}</h3> 
+        <h3 ng-hide="eventBookings || !existingBooking || myBookings">YOU HAVE ALREADY BOOKED IN {{paidMsg}}</h3> 
         <h3 ng-show="myBookings && paid">YOU HAVE ALREADY PAID FOR THIS BOOKING</h3> 
-        <h4 ng-show="paid && mode!='delete'"><i>Please contact the organiser to make changes</i></h4>      
-        <h4 ng-show="paid && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>       
+        <h4 ng-show="!eventBookings && paid && mode!='delete'"><i>Please contact the organiser to make changes</i></h4>      
+        <h4 ng-show="!eventBookings && paid && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>       
         <h5 ng-hide="event.capacity<=0">Items marked with * are mandatory</h5>  
-        <div class="row" ng-hide="event.capacity<=0 && !myBookings" disable-contents="paid || mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->
+        <div class="row" ng-hide="event.capacity<=0 && !myBookings && !eventBookings" disable-contents="(!eventBookings && paid) || mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->
            
            <% include partials/bookingDetails.ejs %>  
           
@@ -71,7 +72,7 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="booking.$invalid || !detailsComplete() || bookingForm.loading || paid">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="booking.$invalid || !detailsComplete() || bookingForm.loading || (!eventBookings && paid)">
           <span ng-show="!bookingForm.loading && mode=='delete'">Cancel booking</span>
           <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete'">Book now</span>
           <span ng-show="!bookingForm.loading && existingBooking && mode!='delete'">Update booking</span>

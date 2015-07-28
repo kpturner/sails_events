@@ -24,6 +24,11 @@ module.exports = {
       required: true
     },    
       
+    // The user's dietary requirements
+    dietary: {
+      type: 'string'
+    },  
+      
     // Places booked
     places: {
       type: 'integer'

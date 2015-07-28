@@ -24,7 +24,12 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$http.get(route)
 			.success(function(data, status) {
 				if (typeof data == 'object') {
-					$scope.bookings = data;					
+					$scope.bookings = data;
+					// Calculate capacity 
+					$scope.bookings.forEach(function(b,i){
+						$scope.event.capacity-=b.places;
+					})
+					 				
 				}
 				else {
 					window.location = '/';

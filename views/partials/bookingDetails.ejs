@@ -1,5 +1,32 @@
 <!DOCTYPE html>   
 
+<!-- C O S T -->           
+<div class="control-group form-group col-md-5">
+    <label>Cost</label>       
+    <input type="number" class="form-control" placeholder="e.g. 20.00" name="cost" ng-model="<%-model%>Form.cost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" readonly></input>
+   
+</div>
+
+<!-- A M O U N T  P A I D --> 
+<div class="control-group form-group col-md-5"
+  ng-class="{'has-error':event.paid.$invalid &&
+                        event.paid.$dirty}">
+  <label>Amount paid</label>       
+    <input type="number" class="form-control" placeholder="e.g. 20.00" name="amountpaid" ng-model="<%-model%>Form.amountPaid" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-disabled="!eventBookings"></input>
+   
+</div>      
+
+ 
+<!-- P A I D ? -->
+<div class="control-group form-group col-md-5"
+  ng-class="{'has-error':event.paid.$invalid &&
+                        event.paid.$dirty}">
+   <label>
+    <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="!eventBookings"></input>
+    &nbsp;Fully paid?
+   </label>
+</div>           
+
 <!-- N A M E -->
   
 <!-- checking whether the form "<%-model%>" with the "name" property is both $invalid AND $dirty.  If it is
@@ -124,7 +151,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	  <h4>Additional attendee {{place+1}}</h4>  
 	</div>
 	<ng-form name="linked<%-model%>">
-	
+        	
 	  <!-- S U R N A M E -->
 	  <div class="control-group form-group col-xs-10"
 	    ng-class="{'has-error':linked<%-model%>Form.surname.$invalid &&
