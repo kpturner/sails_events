@@ -9,12 +9,18 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			
 		}
 		
-		$scope.myBookings = SAILS_LOCALS.myBookings
+		$scope.myBookings 	= SAILS_LOCALS.myBookings;
+		$scope.eventBookings= SAILS_LOCALS.eventBookings;
+		$scope.event 		= SAILS_LOCALS.event;
 
 		// Get the bookings
-		var route='/allbookings/'+$scope.filterForm.filter;
-		if (SAILS_LOCALS.myBookings)
-			route+='?mybookings=1'
+		var route;
+		if (SAILS_LOCALS.myBookings) {
+			route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1'
+		}
+		else {
+			route='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id;
+		}	
 		$http.get(route)
 			.success(function(data, status) {
 				if (typeof data == 'object') {
@@ -37,9 +43,13 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.filterBookings = function(){
 			$scope.filterForm.loading=true;
 			// Submit request to Sails.
-			var route='/allbookings/'+$scope.filterForm.filter;	
-			if (SAILS_LOCALS.myBookings)
-				route+='?mybookings=1'
+			var route;
+			if (SAILS_LOCALS.myBookings) {
+				route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1'
+			}
+			else {
+				route='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id;
+			}	
 			$http.get(route)
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {

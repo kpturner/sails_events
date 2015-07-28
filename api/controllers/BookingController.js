@@ -16,11 +16,34 @@ module.exports = {
 	 */
 	myBookings: function(req, res) {
 		req.session.myBookings=true;
+		req.session.eventBookings=false;
+		res.locals.event={};
 		res.view('bookings',{			
 		  filter: req.session.bookingFilter,
 		  myBookings: true,
+		  eventBookings: false,
 		  errors: req.flash('error')
 		});  
+	}, 
+	
+	/**
+	 * Event bookings
+	 *
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	eventBookings: function(req, res) {
+		req.session.myBookings=false;
+		req.session.eventBookings=true;
+		Event.findOne(req.param("eventid")).exec(function(err,event){
+			res.locals.event=event;
+			res.view('bookings',{			
+			  filter: req.session.bookingFilter,
+			  myBookings: false,
+			  eventBookings: true,
+			  errors: req.flash('error')
+			});  	
+		})		
 	}, 
 	
 	
@@ -322,12 +345,12 @@ module.exports = {
 	},
 	
 	/**
-	 * Get all bookings  
+	 * Get all my bookings  
      * 
 	 * @param {Object} req
 	 * @param {Object} res
 	 */
-	allBookings: function (req, res) {
+	allMyBookings: function (req, res) {
 		
 		var filter=req.param('filter');
 		req.session.bookingFilter=filter;
@@ -342,7 +365,8 @@ module.exports = {
 		if (filter && filter.length>0) {
 			where.or= 	[
 							{event:{name: {contains: filter}}},
-					
+							{event:{venue: {contains: filter}}},
+							{event:{blurb: {contains: filter}}},
 						]
 			
 		}
@@ -357,6 +381,58 @@ module.exports = {
 						}
 					}
 			).populate('event').exec(
+			function(err, bookings){
+				if (err) {
+					sails.log.verbose('Error occurred trying to retrieve bookings.');
+					return res.negotiate(err);
+			  	}	
+			
+			  	// If session refers to a user who no longer exists, still allow logout.
+			  	if (!bookings) {
+			    	return res.json({});
+			  	}
+				  
+				return res.json(bookings);  
+			}
+		)
+			
+	},
+	
+	/**
+	 * Get all event bookings  
+     * 
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	allEventBookings: function (req, res) {
+		
+		var filter=req.param('filter');
+		req.session.bookingFilter=filter;
+								
+		var where = {};
+		where.event=req.param("eventid");
+				
+		if (filter && filter.length>0) {
+			where.or= 	[
+							{user:{surname: {contains: filter}}},
+							{user:{firstName: {contains: filter}}},
+							{user:{lodge: {contains: filter}}},
+							{user:{lodgeNo: {contains: filter}}},
+							
+						]
+			
+		}
+										
+		Booking.find({
+						where: where,
+						sort: {
+								user: {
+									surname:1,
+									firstName:1
+								}		
+						}
+					}
+			).populate('user').exec(
 			function(err, bookings){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve bookings.');

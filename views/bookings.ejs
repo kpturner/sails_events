@@ -28,8 +28,10 @@
     window.SAILS_LOCALS = {
       _csrf: "<%= _csrf %>",
        user: <%- JSON.stringify(res.locals.user) %>,
+       event: <%- JSON.stringify(res.locals.event) %>,
        filter: "<%- filter %>",
        myBookings: <%- myBookings %>,
+       eventBookings: <%- eventBookings %>,
     };
     
     </script>
@@ -45,7 +47,7 @@
       <!-- PROFILE FORM --> 
       <form ng-submit="filterBookings()" id="filter-form" name="filterform" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h2 class="form-signin-heading"><span ng-hide="!myBookings">My </span>Bookings</h2>
+        <h2 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings</h2>
         
         <div class="row">
   
@@ -73,7 +75,15 @@
        
       <h4 class="hidden-md hidden-lg">Tap a booking to edit</h4>  
       <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>   
-      <div deckgrid source="bookings" cardTemplate="templates/bookings.html" class="deckgrid"></div>
+      <% if (myBookings) {%> 
+      <div deckgrid source="bookings" cardTemplate="templates/myBookings.html" class="deckgrid"></div>
+      <% } %>
+      <% if (eventBookings) {%> 
+       <div ng-repeat="booking in bookings">
+    	   <label>{{booking.user.surname}}, {{booking.user.firstName}}</label>  
+       </div>  
+      <div deckgrid source="bookings" cardTemplate="templates/eventBookings.html" class="deckgrid"></div>
+      <% } %>
      
     
       <% include partials/public/footer.ejs %>   
