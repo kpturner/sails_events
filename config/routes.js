@@ -39,6 +39,7 @@ module.exports.routes = {
 
   // Passport control
   'get /homepage': 'AuthController.homepage',
+  'get /dashboard': 'AuthController.dashboard',
   'get /logout': 'AuthController.logout',
   'get /register': 'AuthController.register',
 
@@ -50,26 +51,32 @@ module.exports.routes = {
 
   // Normal processing
   'get /': 'PageController.validateRequest',
+  
+  // Profiles
   'get /profile': 'AuthController.profile',
   'post /updateprofile': 'AuthController.updateProfile',
-  'get /users': 'AuthController.users',
-  'get /events': 'AuthController.events',
-  'get /booking' : 'BookingController.prepareBooking',
-  'post /reevaluateevent' : 'BookingController.prepareBooking',
-  'post /makebooking': 'BookingController.makeBooking',
   'get /reset': {view:'reset'},
   'post /auth/passwordreset': 'AuthController.passwordReset',
+    
+  // Bookings
+  'get /booking' : 'BookingController.prepareBooking',
+  'get /booking/:action': 'BookingController.prepareBooking',
+  'get /mybookings': 'BookingController.myBookings',
+  'get /allbookings/:filter?': 'BookingController.allBookings',  // the ? in :filter? means that the filter part or the URL is optional
+  'post /reevaluateevent' : 'BookingController.prepareBooking',  
+  'post /makebooking': 'BookingController.makeBooking',
   'get /linkedbooking/:bookingid': 'LinkedBookingController.linkedBookings',
   'post /validateadditions': 'BookingController.validateAdditions',
   
-  
   // Users
+  'get /users': 'UserController.users',
   'get /allusers/:filter?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional
   'get /usermaint/:action': 'UserController.prepareUser',
   'post /updateuser/:action': 'UserController.updateUser',
   'get /organisers': 'UserController.organisers',
 
   // Events
+  'get /events': 'EventController.events',
   'get /openevents': 'EventController.openEvents',
   'get /allevents/:filter?': 'EventController.allEvents',  // the ? in :filter? means that the filter part or the URL is optional
   'get /event/:action': 'EventController.prepareEvent',

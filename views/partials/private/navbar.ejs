@@ -9,7 +9,7 @@
   <span class="icon-bar"></span>
   </button>
   <!-- This is the brand on the left-hand side. -->
-  <a class="navbar-brand" href="/#"> Home</a>
+  <a class="navbar-brand" href="/dashboard"> All Events</a>
   <!-- This is what is the above collapse button points to when the mark-up below is collapsed -->
   <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
     <div class="nav navbar-nav navbar-right navbar-form btn-toolbar">
@@ -24,6 +24,10 @@
           <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-hide="!user.isAdmin" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Users</span>
           </button>
+          
+          <button type="button" class="btn btn-success" onclick="window.location='/mybookings'" ng-class="{'nav-btn-space':!navCollapsed}">
+            <span>My bookings</span>
+          </button>   
       
           <button type="button" class="btn btn-success" onclick="window.location='/profile'" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Edit profile</span>

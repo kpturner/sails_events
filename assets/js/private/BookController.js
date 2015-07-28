@@ -24,6 +24,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	
 	// Do we have an existing booking to edit?
 	$scope.existingBooking=false;
+	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.bookingForm = $scope.user;
 	$scope.paidMsg="";
 	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
@@ -164,7 +165,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		.then(function onSuccess(sailsResponse){			 
 			toastr.success("Your booking was successful")
 			setTimeout(function(){
-				window.location = '/'
+				if ($scope.myBookings)
+					window.location='/mybookings'
+				else
+					window.location = '/'
 			},1000);
 		})
 		.catch(function onError(sailsResponse){			 

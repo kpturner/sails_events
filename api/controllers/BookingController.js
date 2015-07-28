@@ -7,13 +7,31 @@
 
 module.exports = {
 	
+		  
+	/**
+	 * My bookings
+	 *
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	myBookings: function(req, res) {
+		req.session.myBookings=true;
+		res.view('bookings',{			
+		  filter: req.session.bookingFilter,
+		  myBookings: true,
+		  errors: req.flash('error')
+		});  
+	}, 
+	
+	
 	/**
 	 * Prepare data for booking
 	 */	
 	prepareBooking:function(req, res) {
 		
 		var eventId=req.param("eventid");
-		 
+		var myBookings=(req.param("mybookings"))?true:false;
+				 
 		Event.findOne(eventId).populate('organiser').exec(function(err,event){
 			if (err) {
 				return res.negotiate(err);
@@ -38,6 +56,7 @@ module.exports = {
 					res.locals.event=event;
 					res.locals.event.capacity-=places;
 					res.locals.booking=existingBooking;
+					res.locals.myBookings=myBookings;
 						
 					// Get the data for the event and the user and then navigate to the booking view
 					if (req.wantsJSON)
@@ -261,24 +280,78 @@ module.exports = {
 					console.log(err)
 				}
 				// Traverse the bookings and analyse each additional booking
-				bookings.forEach(function(booking,b){
-					booking.additions.forEach(function(lb,l){
-						// Possible duplicate?
-						linkedBookings.forEach(function(ob,m){
-							if (
-									lb.surname.toLowerCase()==ob.surname.toLowerCase()
-								&&	lb.firstName.toLowerCase()==ob.firstName.toLowerCase()	
-							) {
-									duplicates.push(ob)
-							}	
-						})						
-					})
-				})
+				if (bookings) {
+					bookings.forEach(function(booking,b){
+						booking.additions.forEach(function(lb,l){
+							// Possible duplicate?
+							linkedBookings.forEach(function(ob,m){
+								if (
+										lb.surname.toLowerCase()==ob.surname.toLowerCase()
+									&&	lb.firstName.toLowerCase()==ob.firstName.toLowerCase()	
+								) {
+										duplicates.push(ob)
+								}	
+							})						
+						})
+					})	
+				}				
 				return res.json(duplicates)
 			}) 
 		
 	},
 	
+	/**
+	 * Get all bookings  
+     * 
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	allBookings: function (req, res) {
+		
+		var filter=req.param('filter');
+		req.session.bookingFilter=filter;
+		var myBookings=(req.param('mybookings')=='1');
+						
+		var where = {};
+		
+		if (myBookings) {
+			where.user=req.user.id;
+		}
+		
+		if (filter && filter.length>0) {
+			where.or= 	[
+							{event:{name: {contains: filter}}},
+					
+						]
+			
+		}
+										
+		Booking.find({
+						where: where,
+						sort: {
+								event: {
+									date:2,
+									time:2
+								}		
+						}
+					}
+			).populate('event').exec(
+			function(err, bookings){
+				if (err) {
+					sails.log.verbose('Error occurred trying to retrieve bookings.');
+					return res.negotiate(err);
+			  	}	
+			
+			  	// If session refers to a user who no longer exists, still allow logout.
+			  	if (!bookings) {
+			    	return res.json({});
+			  	}
+				  
+				return res.json(bookings);  
+			}
+		)
+			
+	},
 	
 };
 

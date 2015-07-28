@@ -7,6 +7,18 @@
 
 module.exports = {
 	
+	/**
+	 * Events
+	 *
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	events: function(req, res) {
+		res.view('events',{
+		  filter: req.session.eventFilter,
+		  errors: req.flash('error')
+		});  
+	}, 
 	 
 	/**
 	 * Get open events

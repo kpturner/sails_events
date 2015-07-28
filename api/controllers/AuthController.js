@@ -85,6 +85,18 @@ var AuthController = {
       errors: req.flash('error')
     });
   },
+  
+  /**
+   * Dashboard
+   *
+   * @param {Object} req
+   * @param {Object} res
+   */
+  dashboard: function (req, res) {
+    
+    res.view('dashboard');
+  
+  },
 
   /**
    * Create a third-party authentication endpoint
@@ -195,34 +207,7 @@ var AuthController = {
       errors: req.flash('error')
     });  
   }, 
-  
-  
-  /**
-	 * Edit profile
-   *
-   * @param {Object} req
-   * @param {Object} res
-	*/
-  users: function(req, res) {
-    res.view('users',{
-      filter: req.session.userFilter,
-      errors: req.flash('error')
-    });  
-  }, 
-  
-  
-  /**
-	 * Edit profile
-   *
-   * @param {Object} req
-   * @param {Object} res
-	*/
-  events: function(req, res) {
-    res.view('events',{
-      filter: req.session.eventFilter,
-      errors: req.flash('error')
-    });  
-  }, 
+   
   
   /**
 	 * Update profile

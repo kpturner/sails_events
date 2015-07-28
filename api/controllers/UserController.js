@@ -8,6 +8,20 @@
 module.exports = {
 	
 	/**
+	 * Users
+	 *
+	 * @param {Object} req
+	 * @param {Object} res
+	*/
+	users: function(req, res) {
+		res.view('users',{
+		  filter: req.session.userFilter,
+		  errors: req.flash('error')
+		});  
+	}, 
+	
+	
+	/**
 	 * Get organisers in name order
 	 */	
 	organisers:function(req, res) {

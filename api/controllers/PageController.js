@@ -42,12 +42,12 @@ module.exports = {
   					&& ( !user.username || user.username.length==0 )
   				)
   		) {
-  			 return res.view('profile',{model:'profile'}); 
+         return res.view('profile',{model:'profile'}); 
   		}
       
-      //console.log("return res.view('dashboard');")
+      // Default home location
       return res.view('dashboard');
-
+      
     });
   },
 };
