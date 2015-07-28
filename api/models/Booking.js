@@ -49,8 +49,8 @@ module.exports = {
       type: 'text'
     },
     
-    // linked bookings
-    linkBookings : { 
+    // Additional linked bookings
+    additions : { 
       collection: 'LinkedBooking', via: 'booking' 
     },
 

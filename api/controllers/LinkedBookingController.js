@@ -13,7 +13,7 @@ module.exports = {
 	linkedBookings:function(req, res) {
 		
 		var bookingId=req.param("bookingid");
-		 
+		
 		LinkedBooking.find({booking:bookingId}).exec(function(err,linkedBookings){
 			if (err) {
 				return res.negotiate(err);

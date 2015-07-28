@@ -42,7 +42,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		if (SAILS_LOCALS.booking.places>1) {
 			$http.get("/linkedbooking/"+SAILS_LOCALS.booking.id).success(function(data, status) {
 				if (typeof data == 'object') {
-					$scope.linkedbookings=data;	 			
+					$scope.linkedbookings=data;	 	
+					$scope.linkedbookings.forEach(function(v,i){
+						$scope.linkedbookings[i].lodgeNo=parseInt($scope.linkedbookings[i].lodgeNo)
+					})		
 				}				
 			}).
 			error(function(data, status, headers, config) {
@@ -98,7 +101,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}	
 		else {
 			$http.post("/validateadditions",{
-				eventid: $scope.event.id,	
+				eventId: $scope.event.id,	
 				linkedBookings: $scope.linkedbookings,
 				bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 			})
@@ -108,13 +111,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					$scope.proceed()
 				}
 				else {
+					$scope.duplicates=sailsResponse.data;
 					// Give the user the chance to pull out
 					var opts={
 						template:"templates/bookingDialog.html",
 					 	className: 'ngdialog-theme-default',
 						scope: $scope
 					};
-					//setTimeout(function(){ngDialog.openConfirm(opts)},0);
+					// Pop the dialog
 					ngDialog.openConfirm(opts)
 						.then(function (value) {
 							// Continue with booking

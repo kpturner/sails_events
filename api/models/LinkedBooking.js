@@ -4,9 +4,14 @@
  *
  */
 var LinkedBooking = {
+  
+  schema: true,
+  
   attributes: {
     
-    booking: { model: 'Booking', required: true },
+    booking:{
+        model:'booking'
+    },
     
     // Preferred name
     surname: {

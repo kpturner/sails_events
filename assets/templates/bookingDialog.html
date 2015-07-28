@@ -3,8 +3,8 @@
     <p>A name check shows that one or more of your additional attendees may already be booked in. <i>Please check</i>.</p>
     <p>Click 'Continue' to book anyway, or 'Cancel' to change your booking.</p>    
     <h4>Possible duplicates</h4>
-    <div ng-repeat="place in linkedbookingsArr | limitTo:bookingForm.places-1">
-    	<label>{{linkedbookings[place].surname}}, {{linkedbookings[place].firstName}}</label>  
+    <div ng-repeat="duplicate in duplicates">
+    	<label>{{duplicate.surname}}, {{duplicate.firstName}}</label>  
     </div> 
 </div>
 <div class="ngdialog-buttons">

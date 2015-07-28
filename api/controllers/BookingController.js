@@ -244,8 +244,39 @@ module.exports = {
 	 * 
 	 */
 	validateAdditions: function(req, res) {
-		// TODO
-		return res.json({data:[{a:"b"}]})
+		
+		var bookingId=req.param("bookingId")
+		var linkedBookings=req.param("linkedBookings");
+		var eventId=req.param("eventId")
+		 
+		// Now we want a list of additional bookings that are recorded against this
+		// event, excluding those from this particular booking
+		var duplicates=[];
+		Booking.find({
+				event: eventId,
+				id: {"!":bookingId}
+			}).populate("additions")
+			.exec(function(err,bookings){
+				if (err) {
+					console.log(err)
+				}
+				// Traverse the bookings and analyse each additional booking
+				bookings.forEach(function(booking,b){
+					booking.additions.forEach(function(lb,l){
+						// Possible duplicate?
+						linkedBookings.forEach(function(ob,m){
+							if (
+									lb.surname.toLowerCase()==ob.surname.toLowerCase()
+								&&	lb.firstName.toLowerCase()==ob.firstName.toLowerCase()	
+							) {
+									duplicates.push(ob)
+							}	
+						})						
+					})
+				})
+				return res.json(duplicates)
+			}) 
+		
 	},
 	
 	
