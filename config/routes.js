@@ -67,6 +67,7 @@ module.exports.routes = {
   'post /makebooking': 'BookingController.makeBooking',
   'get /linkedbooking/:bookingid': 'LinkedBookingController.linkedBookings',
   'post /validateadditions': 'BookingController.validateAdditions',
+  'post /updatebooking/:action': 'BookingController.updateBooking',
   
   // Users
   'get /users': 'UserController.users',

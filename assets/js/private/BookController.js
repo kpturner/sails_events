@@ -9,6 +9,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Initialise "user" in the scope with the data set in the view script 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.event=SAILS_LOCALS.event;
+	$scope.mode=SAILS_LOCALS.mode;
 	
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
@@ -83,60 +84,65 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		
 		$scope.bookingForm.loading=true;
 		
-		// Remove items from the linkedBookings that are beyond the number of places
-		if ($scope.bookingForm.places<2) {
-			$scope.linkedBookings=[]
+		if ($scope.mode=="delete") {
+			$scope.proceed();
 		}
 		else {
-			$scope.linkedbookings=$.grep($scope.linkedbookings,function(obj,n){
-				return (n<=($scope.bookingForm.places-2))
-			})	
-		}	
-		
-		
-		
-		// If we have additional linked bookings, do a quick check that that are not
-		// potentially double booked before proceeding
-		if ($scope.bookingForm.places<2) {
-			$scope.proceed()
-		}	
-		else {
-			$http.post("/validateadditions",{
-				eventId: $scope.event.id,	
-				linkedBookings: $scope.linkedbookings,
-				bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
-			})
-			.then(function onSuccess(sailsResponse){			 
-				if (sailsResponse.data.length==0) {
-					// No potential problems
-					$scope.proceed()
-				}
-				else {
-					$scope.duplicates=sailsResponse.data;
-					// Give the user the chance to pull out
-					var opts={
-						template:"templates/bookingDialog.html",
-					 	className: 'ngdialog-theme-default',
-						scope: $scope
-					};
-					// Pop the dialog
-					ngDialog.openConfirm(opts)
-						.then(function (value) {
-							// Continue with booking
-		                    $scope.proceed()
-		                }, function (reason) {
-							// They bottled it
-		                    $scope.bookingForm.loading = false;
-		                });
-						
-				}
-			})
-			.catch(function onError(sailsResponse){			 
-				// Cannot do much here
-			})
-			.finally(function eitherWay(){
-				// Nothing to do
-			})
+			// Remove items from the linkedBookings that are beyond the number of places
+			if ($scope.bookingForm.places<2) {
+				$scope.linkedBookings=[]
+			}
+			else {
+				$scope.linkedbookings=$.grep($scope.linkedbookings,function(obj,n){
+					return (n<=($scope.bookingForm.places-2))
+				})	
+			}	
+			
+			
+			
+			// If we have additional linked bookings, do a quick check that that are not
+			// potentially double booked before proceeding
+			if ($scope.bookingForm.places<2) {
+				$scope.proceed()
+			}	
+			else {
+				$http.post("/validateadditions",{
+					eventId: $scope.event.id,	
+					linkedBookings: $scope.linkedbookings,
+					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
+				})
+				.then(function onSuccess(sailsResponse){			 
+					if (sailsResponse.data.length==0) {
+						// No potential problems
+						$scope.proceed()
+					}
+					else {
+						$scope.duplicates=sailsResponse.data;
+						// Give the user the chance to pull out
+						var opts={
+							template:"templates/bookingDialog.html",
+						 	className: 'ngdialog-theme-default',
+							scope: $scope
+						};
+						// Pop the dialog
+						ngDialog.openConfirm(opts)
+							.then(function (value) {
+								// Continue with booking
+			                    $scope.proceed()
+			                }, function (reason) {
+								// They bottled it
+			                    $scope.bookingForm.loading = false;
+			                });
+							
+					}
+				})
+				.catch(function onError(sailsResponse){			 
+					// Cannot do much here
+				})
+				.finally(function eitherWay(){
+					// Nothing to do
+				})
+			}	
 		}
 		
 	}
@@ -147,43 +153,77 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	 */
 	 // Private function to proceed with booking
 	$scope.proceed=function(){
-						
-		// Submit request to Sails.
-		$http.post('/makebooking', {
-			eventid: $scope.event.id,	
-			name: $scope.bookingForm.name,
-			lodge: $scope.bookingForm.lodge,
-			lodgeNo: $scope.bookingForm.lodgeNo,
-			rank: $scope.bookingForm.rank,
-			dietary: $scope.bookingForm.dietary,
-			email: $scope.bookingForm.email,
-			info: $scope.bookingForm.info,
-			places: $scope.bookingForm.places,
-			linkedBookings: $scope.linkedbookings,
-			bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
-		})
-		.then(function onSuccess(sailsResponse){			 
-			toastr.success("Your booking was successful")
-			setTimeout(function(){
-				if ($scope.myBookings)
-					window.location='/mybookings'
-				else
-					window.location = '/'
-			},1000);
-		})
-		.catch(function onError(sailsResponse){			 
-			// Handle known error type(s).
-			toastr.error(sailsResponse.data, 'Error');
-			$scope.bookingForm.loading = false;
-			// Re-evaluate the capacity
-			$http.post('/reevaluateevent',{eventid:$scope.event.id})
-				.then(function onSuccess(sailsResponse){
-					$scope.event=sailsResponse.data
-				})
-		})
-		.finally(function eitherWay(){
-			//$scope.bookingForm.loading = false;
-		})
+		
+		if ($scope.mode=="delete") {
+			// The only "mode" is delete
+			$http.post('/updatebooking/'+$scope.mode, {
+				bookingid: SAILS_LOCALS.booking.id			 
+			})
+			.then(function onSuccess(sailsResponse){
+				toastr.success("You have successfully cancelled your booking")	
+				setTimeout(function(){
+					if ($scope.myBookings)
+						window.location='/mybookings'
+					else
+						window.location = '/'	
+				},2000)				
+			})
+			.catch(function onError(sailsResponse){
+	
+				// Handle known error type(s).
+				toastr.error(sailsResponse.data, 'Error');
+				$scope.bookingForm.loading = false;
+	
+			})
+			.finally(function eitherWay(){
+				//$scope.bookingForm.loading = false;
+			})
+		}
+		else {
+			// Normal booking creation/update			 
+			$http.post('/makebooking', {
+				eventid: $scope.event.id,	
+				name: $scope.bookingForm.name,
+				lodge: $scope.bookingForm.lodge,
+				lodgeNo: $scope.bookingForm.lodgeNo,
+				rank: $scope.bookingForm.rank,
+				dietary: $scope.bookingForm.dietary,
+				email: $scope.bookingForm.email,
+				info: $scope.bookingForm.info,
+				places: $scope.bookingForm.places,
+				linkedBookings: $scope.linkedbookings,
+				bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
+			})
+			.then(function onSuccess(sailsResponse){	
+				if (SAILS_LOCALS.booking.id)	{
+					// An update rather than a new booking
+					toastr.success("Your booking has been updated successfully")	
+				}
+				else {
+					toastr.success("Your booking was successful")	
+				}				
+				setTimeout(function(){
+					if ($scope.myBookings)
+						window.location='/mybookings'
+					else
+						window.location = '/'
+				},2000);
+			})
+			.catch(function onError(sailsResponse){			 
+				// Handle known error type(s).
+				toastr.error(sailsResponse.data, 'Error');
+				$scope.bookingForm.loading = false;
+				// Re-evaluate the capacity
+				$http.post('/reevaluateevent',{eventid:$scope.event.id})
+					.then(function onSuccess(sailsResponse){
+						$scope.event=sailsResponse.data
+					})
+			})
+			.finally(function eitherWay(){
+				//$scope.bookingForm.loading = false;
+			})
+		}				
+		
 	}
 
 }])

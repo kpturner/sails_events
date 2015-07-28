@@ -30,63 +30,84 @@ module.exports = {
 	prepareBooking:function(req, res) {
 		
 		var eventId=req.param("eventid");
+		var bookingId=req.param("bookingid");
+		var action=req.param("action");
+		var mode="edit";
+		if (action)
+			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
 		var myBookings=(req.param("mybookings"))?true:false;
-				 
-		Event.findOne(eventId).populate('organiser').exec(function(err,event){
-			if (err) {
-				return res.negotiate(err);
-			}
 			
-			// Private function to process the initiation
-			var initialiseBooking=function(existingBooking){
-				// Now we have to adjust capacity by the number of places booked so far
-				var places=0;
-				var criteria={};
-				criteria.event=eventId;
-				if (existingBooking) {
-					criteria.id={"!":existingBooking.id} // Exclude the existing booking details from the calcs
+		// Private function to process the initiation
+		var initialiseBooking=function(event,existingBooking){
+			// Now we have to adjust capacity by the number of places booked so far
+			var places=0;
+			var criteria={};
+			criteria.event=event.id;
+			if (existingBooking) {
+				criteria.id={"!":existingBooking.id} // Exclude the existing booking details from the calcs
+			}
+			Booking.find(criteria).exec(function(err,bookings){
+				if (!err) {
+					bookings.forEach(function(booking,index){
+						places+=booking.places
+					})	
 				}
-				Booking.find(criteria).exec(function(err,bookings){
-					if (!err) {
-						bookings.forEach(function(booking,index){
-							places+=booking.places
-						})	
-					}
-				
-					res.locals.event=event;
-					res.locals.event.capacity-=places;
-					res.locals.booking=existingBooking;
-					res.locals.myBookings=myBookings;
-						
-					// Get the data for the event and the user and then navigate to the booking view
-					if (req.wantsJSON)
-						return res.json({
-								model:'booking'
-							});
-					else
-						return res.view("book",{
-								model:'booking'
-							});		
-				})	
-			}
-				
-			// Has the user already made this booking?  If multiple bookings are allowed, we don't care (treat it as a new booking)
-			if (!sails.config.events.multipleBookings) {
-				Booking.findOne({
-									event: eventId,
-									user:req.user.id
-								}).exec(function(err, existingBooking) {
-					// if there is already a booking for this user the called function will get it, otherwise it will get nada
-					initialiseBooking(existingBooking);	
-				})
-			}
-			else {
-				initialiseBooking();
-			}
 			
-				
+				res.locals.event=event;
+				res.locals.event.capacity-=places;
+				res.locals.booking=existingBooking;
+				res.locals.myBookings=myBookings;
+					
+				// Get the data for the event and the user and then navigate to the booking view
+				if (req.wantsJSON)
+					return res.json({
+							model:'booking',
+							mode: mode
+						});
+				else
+					return res.view("book",{
+							model:'booking',
+							mode: mode
+						});		
+			})	
+		}	
 			
-		})		
+		// If we have a booking id then we are editing the booking from either MyBookings or the admin booking maintenance
+		// as opposed to the public dashboard
+		if (bookingId) {
+			Booking.findOne(bookingId).exec(function(err, existingBooking) {
+				if (err) {
+					return res.genericErrorResponse('470','This booking no longer exists!')
+				}
+				else {
+					Event.findOne(existingBooking.event).populate("organiser").exec(function(err,event){
+						initialiseBooking(event,existingBooking);			
+					})					
+				}					
+			})
+		}	
+		else {	
+			Event.findOne(eventId).populate('organiser').exec(function(err,event){
+				if (err) {
+					return res.negotiate(err);
+				}					
+				
+				// Has the user already made this booking?  If multiple bookings are allowed, we don't care (treat it as a new booking)
+				if (!sails.config.events.multipleBookings) {
+					Booking.findOne({
+										event: eventId,
+										user:req.user.id
+									}).exec(function(err, existingBooking) {
+						// if there is already a booking for this user the called function will get it, otherwise it will get nada
+						initialiseBooking(event,existingBooking);	
+					})
+				}
+				else {
+					initialiseBooking(event);
+				}				
+				
+			})					
+		}	
 		
 	},
 	
@@ -180,18 +201,17 @@ module.exports = {
 										})
 									}
 			 						
-									// Send confirmation email
-									if (res.locals.user.dietary==null)
-					                	res.locals.user.dietary=""
-					                if (res.locals.user.rank==null)
-					                	res.locals.user.rank=""
-									 
+																	 
 									
 									var formattedDate=event.date.toString();
 									formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
-									var updated="";
-									if (bookingId)
-										updated=' has been updated'
+									var updated = "";
+									var subject = "Event booking confirmation";
+									if (bookingId) {
+										updated=' has been updated';
+										subject='Event booking update confirmation'
+									}
+										
 									
 									sails.hooks.email.send(
 										"bookingConfirmation",
@@ -203,16 +223,16 @@ module.exports = {
 												eventDate: formattedDate,
 												eventTime: event.time,
 												eventVenue: event.venue,
-												eventBlurb: event.blurb,
-												eventMenu: event.menu,
-												eventDressCode: event.dressCode,
+												eventBlurb: event.blurb || "",
+												eventMenu: event.menu || "",
+												eventDressCode: event.dressCode || "",
 											  	email: res.locals.user.email,
 											  	lodge: res.locals.user.lodge,
 											  	lodgeNo: res.locals.user.lodgeNo,
-											  	rank: res.locals.user.rank,
-											  	dietary: res.locals.user.dietary,
+											  	rank: res.locals.user.rank || "",
+											  	dietary: res.locals.user.dietary || "",
 											  	bookingRef: event.code+"/"+booking.id.toString(),
-												info: booking.info,  
+												info: booking.info || "",  
 												places: booking.places,
 												linkedBookings: linkedBookings,
 												paymentDetails: event.paymentDetails
@@ -220,7 +240,7 @@ module.exports = {
 									    {
 									      to: res.locals.user.email,
 										  cc: event.organiser.email,
-									      subject: "Event booking confirmation"
+									      subject: subject
 									    },
 									    function(err) {if (err) console.log(err);}
 									   )    		
@@ -267,14 +287,15 @@ module.exports = {
 		var bookingId=req.param("bookingId")
 		var linkedBookings=req.param("linkedBookings");
 		var eventId=req.param("eventId")
-		 
+		var where = {};
+		where.event=eventId;
+		if (bookingId) {
+			where.id={"!":bookingId}
+		} 
 		// Now we want a list of additional bookings that are recorded against this
 		// event, excluding those from this particular booking
 		var duplicates=[];
-		Booking.find({
-				event: eventId,
-				id: {"!":bookingId}
-			}).populate("additions")
+		Booking.find(where).populate("additions")
 			.exec(function(err,bookings){
 				if (err) {
 					console.log(err)
@@ -352,6 +373,103 @@ module.exports = {
 		)
 			
 	},
+	
+	/**
+	 * Update booking (delete)
+	 */	
+	updateBooking: function(req, res) {
+		
+		// The only supported action is "delete" as the rest of booking maintenance is done via
+		// the "makeBooking" function.  However, we will stickl to our naming convention rather
+		// in case that changes
+		var action=req.param("action");
+		var bookingId=req.param("bookingid"); 
+		
+		// Get all the information first (for the email)
+		Booking.findOne(bookingId).populate("event").populate("additions").exec(function(err,booking){
+			if (err) {
+				return res.genericErrorResponse('470','This booking no longer exists!')
+			}
+			
+			// Create linked bookings
+			var linkedBookings=booking.additions;
+			if (linkedBookings) {
+				linkedBookings.forEach(function(linkedBooking,index){
+					if (!linkedBooking.rank)
+						linkedBooking.rank=""
+					if (!linkedBooking.dietary)
+						linkedBooking.dietary=""
+					if (!linkedBooking.lodge)
+						linkedBooking.lodge=""
+					if (!linkedBooking.lodgeNo)
+						linkedBooking.lodgeNo=""					
+				})
+			}
+						
+			var formattedDate=booking.event.date.toString();
+						formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+						var updated="";
+			
+			// Decide what to do based on the action
+			if (action=="edit") {
+				// Not supported
+			}
+			else if (action=="delete") {			
+				 
+				// Carry on and delete it
+				Booking.destroy(bookingId).exec(function(err){
+					if (err) {
+						return res.negotiate(err)
+					}
+					LinkedBooking.destroy({booking:bookingId}).exec(function(err){
+												
+						if (bookingId)
+							updated=' has been cancelled'
+						
+						sails.hooks.email.send(
+								"bookingConfirmation",
+							    {
+							      recipientName: res.locals.user.name,
+							      senderName: "Events Management",
+								  		updated: updated,
+										eventName: booking.event.name,
+										eventDate: formattedDate,
+										eventTime: booking.event.time,
+										eventVenue: booking.event.venue,
+										eventBlurb: booking.event.blurb || "",
+										eventMenu: booking.event.menu || "",
+										eventDressCode: booking.event.dressCode || "",
+									  	email: res.locals.user.email,
+									  	lodge: res.locals.user.lodge,
+									  	lodgeNo: res.locals.user.lodgeNo,
+									  	rank: res.locals.user.rank || "",
+									  	dietary: res.locals.user.dietary || "",
+									  	bookingRef: booking.event.code+"/"+booking.id.toString(),
+										info: booking.info || "",  
+										places: booking.places,
+										linkedBookings: linkedBookings,
+										paymentDetails: booking.event.paymentDetails
+							    },
+							    {
+							      to: res.locals.user.email,
+								  cc: booking.event.organiser.email,
+							      subject: "Event booking cancellation confirmation"
+							    },
+							    function(err) {if (err) console.log(err);}
+						   	)    		
+							
+							return res.ok();	
+					})						
+				})
+					 
+			}
+			else if (action=="copy" || action=="create") {
+				// Not supported
+			}
+			
+		})	
+		
+	}
 	
 };
 
