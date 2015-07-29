@@ -27,13 +27,23 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.existingBooking=false;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
-	$scope.bookingForm = $scope.user;
-	$scope.paidMsg="";
-	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
-	// Convert lodge no to numeric
-	$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
-	// Initialise confirmation email
-	$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
+	if ($scope.mode!="create") {
+		if (SAILS_LOCALS.booking.id) {
+			$scope.bookingForm = SAILS_LOCALS.booking.user;	
+		}
+		else {
+			$scope.bookingForm = $scope.user;	
+		}		
+		$scope.paidMsg="";
+		$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
+		// Convert lodge no to numeric
+		$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
+		// Initialise confirmation email
+		$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
+	}		
+
+	// If we are in "create" mode we should be safe to assume that there
+	// will be no existing booking details
 	if (SAILS_LOCALS.booking.id) {
 		$scope.existingBooking=true;
 		$scope.paid=SAILS_LOCALS.booking.paid;
@@ -160,7 +170,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.proceed=function(){
 		
 		if ($scope.mode=="delete") {
-			// The only "mode" is delete
+			// The only "mode" we care about is delete, since "create" is handled as a normal booking
 			var cancelBooking=function(){
 				$http.post('/updatebooking/'+$scope.mode, {
 					bookingid: SAILS_LOCALS.booking.id			 
@@ -212,52 +222,97 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			
 		}
 		else {
-			// Normal booking creation/update			 
-			$http.post('/makebooking', {
-				eventid: $scope.event.id,	
-				name: $scope.bookingForm.name,
-				lodge: $scope.bookingForm.lodge,
-				lodgeNo: $scope.bookingForm.lodgeNo,
-				rank: $scope.bookingForm.rank,
-				dietary: $scope.bookingForm.dietary,
-				email: $scope.bookingForm.email,
-				info: $scope.bookingForm.info,
-				paid: $scope.bookingForm.paid,
-				amountPaid: $scope.bookingForm.amountPaid,
-				places: $scope.bookingForm.places,
-				linkedBookings: $scope.linkedbookings,
-				bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
-			})
-			.then(function onSuccess(sailsResponse){	
-				if (SAILS_LOCALS.booking.id)	{
-					// An update rather than a new booking
-					toastr.success("Your booking has been updated successfully")	
-				}
-				else {
-					toastr.success("Your booking was successful")	
-				}				
-				setTimeout(function(){
-					if ($scope.myBookings)
-						window.location='/mybookings'
-					else if ($scope.eventBookings)
-						window.location='/eventbookings?eventid='+$scope.event.id;
-					else
-						window.location = '/'
-				},1000);
-			})
-			.catch(function onError(sailsResponse){			 
-				// Handle known error type(s).
-				toastr.error(sailsResponse.data, 'Error');
-				$scope.bookingForm.loading = false;
-				// Re-evaluate the capacity
-				$http.post('/reevaluateevent',{eventid:$scope.event.id})
-					.then(function onSuccess(sailsResponse){
-						$scope.event=sailsResponse.data
-					})
-			})
-			.finally(function eitherWay(){
-				//$scope.bookingForm.loading = false;
-			})
+						
+			/**
+			 * Private function to make the booking
+			 */	
+			var makeBooking=function(route){
+				$http.post(route, {
+					eventid: $scope.event.id,	
+					name: $scope.bookingForm.name,
+					surname: $scope.bookingForm.surname,
+					firstName: $scope.bookingForm.firstName,
+					lodge: $scope.bookingForm.lodge,
+					lodgeNo: $scope.bookingForm.lodgeNo,
+					rank: $scope.bookingForm.rank,
+					dietary: $scope.bookingForm.dietary,
+					email: $scope.bookingForm.email,
+					info: $scope.bookingForm.info,
+					paid: $scope.bookingForm.paid,
+					amountPaid: $scope.bookingForm.amountPaid,
+					places: $scope.bookingForm.places,
+					linkedBookings: $scope.linkedbookings,
+					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
+				})
+				.then(function onSuccess(sailsResponse){	
+					if (SAILS_LOCALS.booking.id)	{
+						// An update rather than a new booking
+						toastr.success("Your booking has been updated successfully")	
+					}
+					else {
+						toastr.success("Your booking was successful")	
+					}				
+					setTimeout(function(){
+						if ($scope.myBookings)
+							window.location='/mybookings'
+						else if ($scope.eventBookings)
+							window.location='/eventbookings?eventid='+$scope.event.id;
+						else
+							window.location = '/'
+					},1000);
+				})
+				.catch(function onError(sailsResponse){			 
+					// Handle known error type(s).
+					toastr.error(sailsResponse.data, 'Error');
+					$scope.bookingForm.loading = false;
+					// Re-evaluate the capacity
+					$http.post('/reevaluateevent',{eventid:$scope.event.id})
+						.then(function onSuccess(sailsResponse){
+							$scope.event=sailsResponse.data
+						})
+				})
+				.finally(function eitherWay(){
+					//$scope.bookingForm.loading = false;
+				})
+			}
+			/*****************************************************************/
+			
+			// Normal booking creation/update	
+			var route='/makebooking';
+			if ($scope.mode=="create") {
+				route+='/create';
+				// Check the email address being used and, if it is already in use, warn the user
+				// before proceeding
+				$http.get("/user?email="+$scope.bookingForm.email)
+					.then(function(sailsResponse){
+						if (sailsResponse.data.length>0) {
+							$scope.duplicateUser=sailsResponse.data[0];
+							var opts={
+								template:"/templates/duplicateBookingUser.html",
+							 	className: 'ngdialog-theme-default',
+								scope: $scope
+							};
+							// Pop the dialog
+							ngDialog.openConfirm(opts)
+								.then(function (value) {
+									// Continue with booking
+									angular.forEach($scope.duplicateUser,function(value,key){
+										$scope.bookingForm[key]=$scope.duplicateUser[key]	
+									})									
+									makeBooking(route);
+				                }, function (reason) {
+									// They bottled it
+				                    $scope.bookingForm.loading = false;
+				                });	
+						}
+						else 
+							makeBooking(route);
+					})	
+			}
+			else {
+				makeBooking(route);
+			}			 
+			
 		}				
 		
 	}

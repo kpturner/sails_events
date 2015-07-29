@@ -1,7 +1,7 @@
 <!DOCTYPE html>   
 
 <!-- C O S T -->           
-<div class="control-group form-group col-md-5">
+<div class="control-group form-group col-md-5" ng-hide="mode=='create'">
     <label>Cost</label>       
     <input type="number" class="form-control" placeholder="e.g. 20.00" name="cost" ng-model="<%-model%>Form.cost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" readonly></input>
    
@@ -10,7 +10,7 @@
 <!-- A M O U N T  P A I D --> 
 <div class="control-group form-group col-md-5"
   ng-class="{'has-error':event.paid.$invalid &&
-                        event.paid.$dirty}">
+                        event.paid.$dirty}" ng-hide="mode=='create'">
   <label>Amount paid</label>       
     <input type="number" class="form-control" placeholder="e.g. 20.00" name="amountpaid" ng-model="<%-model%>Form.amountPaid" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-disabled="!eventBookings"></input>
    
@@ -20,7 +20,7 @@
 <!-- P A I D ? -->
 <div class="control-group form-group col-md-5"
   ng-class="{'has-error':event.paid.$invalid &&
-                        event.paid.$dirty}">
+                        event.paid.$dirty}" ng-hide="mode=='create'">
    <label>
     <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="!eventBookings"></input>
     &nbsp;Fully paid?
@@ -37,7 +37,7 @@ ng-class="{'has-error':<%-model%>.name.$invalid &&
                     <%-model%>.name.$dirty}">
 <label>* Full name</label>  
 <!-- For this input field make it required, and have a max length of 50 -->
-<input type="text" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="<%-model%>Form.name" ng-maxlength="50" required>  
+<input type="text" populate-names="['surname:1','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="<%-model%>Form.name" ng-maxlength="50" required>  
 <!-- Also, if <%-model%>.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
 and/or maxlength) -->
 <span class="help-block has-error" ng-if="<%-model%>.name.$dirty">
@@ -46,6 +46,33 @@ and/or maxlength) -->
 </span>
 </div>
 
+<!-- S U R N A M E -->
+
+<div class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-model%>.surname.$invalid &&
+                      <%-model%>.surname.$dirty}">
+  <label>* Surname</label>  
+  <!-- For this input field make it required, and have a max length of 50 -->
+  <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="<%-model%>Form.surname" ng-maxlength="50" required>  
+  <span class="help-block has-error" ng-if="<%-model%>.surname.$dirty">
+    <span ng-show="<%-model%>.surname.$error.required">Surname is required.</span>
+    <span ng-show="<%-model%>.surname.$error.maxlength">The surname cannot be more than 50 characters.</span>
+  </span>
+</div>
+
+ <!-- F I R S T  N A M E -->
+
+<div class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-model%>.firstName.$invalid &&
+                      <%-model%>.firstName.$dirty}">
+  <label>* First name</label>  
+  <!-- For this input field make it required, and have a max length of 50 -->
+  <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="<%-model%>Form.firstName" ng-maxlength="50" required>  
+  <span class="help-block has-error" ng-if="<%-model%>.firstname.$dirty">
+    <span ng-show="<%-model%>.firstname.$error.required">First name is required.</span>
+    <span ng-show="<%-model%>.firstname.$error.maxlength">The first name cannot be more than 50 characters.</span>
+  </span>
+</div>
 
 <!-- L O D G E -->
 
@@ -115,7 +142,8 @@ ng-class="{'has-error':<%-model%>.email.$invalid &&
 <div class="control-group form-group col-xs-10"
 ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
                     <%-model%>.confirmemail.$dirty}">
-<label>Re-enter your email address</label>
+<label ng-hide="mode=='create'">Re-enter your email address</label>
+<label ng-show="mode=='create'">Re-enter the email address</label>
 <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-model%>Form.confirmemail" required >
 <span class="help-block has-error" ng-if="<%-model%>.confirmemail.$dirty">
   <span ng-show="<%-model%>.email.$error.compareTo">Email address must match.</span>

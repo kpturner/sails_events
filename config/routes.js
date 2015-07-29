@@ -67,6 +67,7 @@ module.exports.routes = {
   'get /alleventbookings/:filter?': 'BookingController.allEventBookings',
   'post /reevaluateevent' : 'BookingController.prepareBooking',  
   'post /makebooking': 'BookingController.makeBooking',
+  'post /makebooking/:action': 'BookingController.makeBooking',
   'get /linkedbooking/:bookingid': 'LinkedBookingController.linkedBookings',
   'post /validateadditions': 'BookingController.validateAdditions',
   'post /updatebooking/:action': 'BookingController.updateBooking',

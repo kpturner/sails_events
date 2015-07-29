@@ -1,0 +1,10 @@
+<div class="ngdialog-message">
+    <h3>WARNING</h3>
+    <p>Your are making a booking with an email address that is already registered for a person by the name of <b>{{duplicateUser.name}}</b>.</p>
+    <p>Click 'Continue' to complete the booking for this person, or 'Cancel' to abandon this request.</p>    
+    
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Continue</button>
+</div>

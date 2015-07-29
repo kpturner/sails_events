@@ -126,6 +126,20 @@ passport.connect = function (req, query, profile, next) {
       // Action:   Create a new user and assign them a passport.
       if (!passport) {
         User.create(user, function (err, user) {
+          
+          var createPassport=function(next,user){             
+              query.user = user.id;
+  
+              Passport.create(query, function (err, passport) {
+                // If a passport wasn't created, bail out
+                if (err) {
+                  return next(err);
+                }
+    
+                next(err, user);
+              });                  
+          }
+          
           if (err) {
             if (err.code === 'E_VALIDATION') {
               if (err.invalidAttributes.email) {
@@ -133,7 +147,18 @@ passport.connect = function (req, query, profile, next) {
                 User.findOne({
                   email: profile.emails[0].value  
                 },function(err, already){
-                  if (already.authProvider=="twitter")
+                  var ok=false;
+                  if (already.authProvider=="dummy") {
+                    // This is OK.  A dummy user with this email address was created for bookings before
+                    // they attempted to sign-up. Use this and carry on with passport sign-up
+                    ok=true;
+                    user=already;
+                    user.authProvider=provider;
+                    User.update(user.id,user).exec(function(){
+                      return createPassport(next,user);  
+                    });                    
+                  }
+                  else if (already.authProvider=="twitter")
                     req.flash('error', 'Error.Passport.Email.Exists.Twitter');
                   else if (already.authProvider=="facebook")
                     req.flash('error', 'Error.Passport.Email.Exists.Facebook');
@@ -141,7 +166,7 @@ passport.connect = function (req, query, profile, next) {
                     req.flash('error', 'Error.Passport.Email.Exists.Google');
                   else
                     req.flash('error', 'Error.Passport.Email.Exists');
-                  return next(err)
+                  if (!ok) return next(err)
                 })               
               }
               else {
@@ -154,20 +179,9 @@ passport.connect = function (req, query, profile, next) {
             }
            
           }
-
           if (user) {
-            query.user = user.id;
-
-            Passport.create(query, function (err, passport) {
-              // If a passport wasn't created, bail out
-              if (err) {
-                return next(err);
-              }
-  
-              next(err, user);
-            });  
+            createPassport(next, user);
           }
-          
         });
       }
       // Scenario: An existing user is trying to log in using an already

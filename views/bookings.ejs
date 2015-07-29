@@ -72,6 +72,11 @@
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="createNewBooking()" ng-disabled="newBooking" ng-show="eventBookings">
+          <span ng-show="!newBooking">Create booking</span>
+          <span class="overlord-loading-spinner fa fa-spinner" ng-show="newBooking" ></span>
+          <span ng-show="newBooking">Please wait...</span>
+        </button>
         </br> 
            
   

@@ -75,12 +75,18 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 					$scope.filterForm.loading = false;
 				})
 		}
-
+		
+		
 		/**
-		 * Navigate to editor
+		 * Create new booking
+		 * @param {Integer} eventId 
 		 */
-		$scope.navigate = function(action,bookingId) {
-			$document.location("/booking/"+action+"?bookingid="+bookingId)
+		$scope.createNewBooking = function(eventId) {
+			$scope.newBooking=true;
+			var eventId=(eventId)?eventId:$scope.event.id;
+			window.location="/booking/create/?eventid="+eventId+'&eventbookings=true';
 		}
+
+		 
 
 }])
