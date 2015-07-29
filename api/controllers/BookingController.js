@@ -344,7 +344,16 @@ module.exports = {
 				})
 			}
 			else {
-				bookIt(res.locals.user.id);
+				if (bookingId) {
+					// Rebook for existing user
+					Booking.findOne(bookingId).exec(function(err,booking){
+						bookIt(booking.user);	
+					})
+				}
+				else {
+					// Book for current user
+					bookIt(res.locals.user.id);	
+				}				
 			}
 			
 					
