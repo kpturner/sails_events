@@ -2,8 +2,8 @@ angular.module('EventsModule', ['ngDialog', 'ui.bootstrap', 'toastr', 'compareTo
 		.directive('disableContents', function() {
 		    return {
 		        compile: function(tElem, tAttrs) {
-		            var inputs = tElem.find('input,select,textarea,button');
-		            inputs.attr('ng-disabled', tAttrs['disableContents']);
+		            var inputs = tElem.find('input,select,textarea,button');					
+		            inputs.not("[ng-disabled]").attr('ng-disabled', tAttrs['disableContents']);
 		            //for (var i = 0; i < inputs.length; i++) {
 		            //}
 		        }
