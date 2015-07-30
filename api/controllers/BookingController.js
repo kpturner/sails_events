@@ -109,6 +109,12 @@ module.exports = {
 					return res.genericErrorResponse('470','This booking no longer exists!')
 				}
 				else {
+					if (!existingBooking) {
+						return res.view('events',{
+								  filter: req.session.eventFilter,
+								  errors: req.flash('error')
+								});  
+					}
 					Event.findOne(existingBooking.event).populate("organiser").exec(function(err,event){
 						initialiseBooking(event,existingBooking);			
 					})					
