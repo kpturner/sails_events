@@ -446,6 +446,7 @@ module.exports = {
 							{event:{name: {contains: filter}}},
 							{event:{venue: {contains: filter}}},
 							{event:{blurb: {contains: filter}}},
+							{ref: {contains: filter}},
 						]
 			
 		}
@@ -503,7 +504,7 @@ module.exports = {
 							{user:{firstName: {contains: filter}}},
 							{user:{lodge: {contains: filter}}},
 							{user:{lodgeNo: {contains: filter}}},
-							
+							{ref: {contains: filter}},
 						]
 			
 		}

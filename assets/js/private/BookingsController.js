@@ -16,10 +16,10 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		// Get the bookings
 		var route;
 		if (SAILS_LOCALS.myBookings) {
-			route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1'			
+			route='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1'			
 		}
 		else {
-			route='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id;
+			route='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id;
 		}	
 		$scope.downloadUrl=route+'&download=1';
 		$http.get(route)
@@ -51,10 +51,10 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			// Submit request to Sails.
 			var route;
 			if (SAILS_LOCALS.myBookings) {
-				route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1'
+				route='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1'
 			}
 			else {
-				route='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id;
+				route='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id;
 			}	
 			$http.get(route)
 				.then(function onSuccess(sailsResponse){
@@ -93,10 +93,10 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		 */
 		$scope.filterChanged = function(){
 			if (SAILS_LOCALS.myBookings) {
-				$scope.downloadUrl='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1&download=1'
+				$scope.downloadUrl='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1&download=1'
 			}
 			else {
-				$scope.downloadUrl='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id+'&download=1';
+				$scope.downloadUrl='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id+'&download=1';
 			}	
 		}
 		
@@ -108,10 +108,10 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			// Submit request to Sails.
 			var route;
 			if (SAILS_LOCALS.myBookings) {
-				route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1&download=1'
+				route='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1&download=1'
 			}
 			else {
-				route='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id+'&download=1';
+				route='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id+'&download=1';
 			}	
 			$http.get(route)
 				.then(function onSuccess(sailsResponse){

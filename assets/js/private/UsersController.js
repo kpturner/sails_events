@@ -31,7 +31,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		$scope.filterUsers = function(){
 			$scope.filterForm.loading=true;
 			// Submit request to Sails.
-			$http.get('/allusers/'+$scope.filterForm.filter)
+			$http.get('/allusers/'+encodeURIComponent($scope.filterForm.filter))
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
 						$scope.users = sailsResponse.data;					

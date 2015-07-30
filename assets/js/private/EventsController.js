@@ -43,7 +43,7 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 		$scope.filterEvents = function(){
 			$scope.filterForm.loading=true;
 			// Submit request to Sails.
-			$http.get('/allevents/'+$scope.filterForm.filter)
+			$http.get('/allevents/'+encodeURIComponent($scope.filterForm.filter))
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
 						$scope.events = sailsResponse.data;					
