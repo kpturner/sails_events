@@ -62,7 +62,7 @@
            
           <div class="control-group form-group col-xs-10">
              
-            <input type="text" class="form-control" placeholder="key text to filter bookings" name="filter" ng-model="filterForm.filter">  
+            <input type="text" class="form-control" placeholder="key text to filter bookings" name="filter" ng-model="filterForm.filter" ng-change="filterChanged()">  
           </div>                    
          
         </div>
@@ -77,6 +77,11 @@
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="newBooking" ></span>
           <span ng-show="newBooking">Please wait...</span>
         </button>
+        <a class="btn-block" href="{{downloadUrl}}">
+          <button class="btn btn-primary btn-lg btn-block" type="button">
+             <span ng-show="!newBooking">Download bookings</span>
+          </button>  
+        </a>
         </br> 
            
   

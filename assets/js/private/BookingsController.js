@@ -12,15 +12,16 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.myBookings 	= SAILS_LOCALS.myBookings;
 		$scope.eventBookings= SAILS_LOCALS.eventBookings;
 		$scope.event 		= SAILS_LOCALS.event;
-
+		
 		// Get the bookings
 		var route;
 		if (SAILS_LOCALS.myBookings) {
-			route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1'
+			route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1'			
 		}
 		else {
 			route='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id;
 		}	
+		$scope.downloadUrl=route+'&download=1';
 		$http.get(route)
 			.success(function(data, status) {
 				if (typeof data == 'object') {
@@ -85,6 +86,52 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			$scope.newBooking=true;
 			var eventId=(eventId)?eventId:$scope.event.id;
 			window.location="/booking/create/?eventid="+eventId+'&eventbookings=true';
+		}
+		
+		/**
+		 * Called if the filter box changes
+		 */
+		$scope.filterChanged = function(){
+			if (SAILS_LOCALS.myBookings) {
+				$scope.downloadUrl='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1&download=1'
+			}
+			else {
+				$scope.downloadUrl='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id+'&download=1';
+			}	
+		}
+		
+		/**
+		 * Download bookings
+		 */  
+		$scope.downloadBookings = function(){
+			$scope.downloading=true;
+			// Submit request to Sails.
+			var route;
+			if (SAILS_LOCALS.myBookings) {
+				route='/allmybookings/'+$scope.filterForm.filter+'?mybookings=1&download=1'
+			}
+			else {
+				route='/alleventbookings/'+$scope.filterForm.filter+'?eventid='+$scope.event.id+'&download=1';
+			}	
+			$http.get(route)
+				.then(function onSuccess(sailsResponse){
+					if (typeof sailsResponse.data == 'object') {
+						$scope.bookings = sailsResponse.data;					
+					}
+					else {
+						window.location="/";
+					}
+				})
+				.catch(function onError(sailsResponse){
+		
+					// Handle known error type(s).
+					toastr.error(sailsResponse.data, 'Error');
+					
+		
+				})
+				.finally(function eitherWay(){
+					$scope.downloading = false;
+				})
 		}
 
 		 

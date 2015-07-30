@@ -5,8 +5,12 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var extend = require('node.extend');		
+
+
 module.exports = {
-	
+
+		
 		  
 	/**
 	 * My bookings
@@ -148,6 +152,7 @@ module.exports = {
 		var eventId=req.param("eventid");
 		var bookingId=req.param("bookingId");
 		var action=req.param("action");		
+		var bookingRef=null;
 				 
 		Event.findOne(eventId).populate("organiser").exec(function(err,event){
 			if (err) {
@@ -222,6 +227,9 @@ module.exports = {
 										booking.paid=false;	
 									}
 									
+									// Use pre-existing booking ref if it exists
+									if (bookingRef)
+										booking.ref=bookingRef;
 									
 									Booking.create(booking,function(err, booking){
 										if (err) {
@@ -247,6 +255,11 @@ module.exports = {
 											})
 										}
 				 						
+										// If we don't have a booking ref, create and update now
+										if (!bookingRef) {
+											bookingRef=event.code+"/"+booking.id.toString()
+											Booking.update(booking.id,{ref:bookingRef}).exec(function(){})
+										} 
 																		 
 										
 										var formattedDate=event.date.toString();
@@ -277,7 +290,7 @@ module.exports = {
 												  	lodgeNo: res.locals.user.lodgeNo,
 												  	rank: res.locals.user.rank || "",
 												  	dietary: res.locals.user.dietary || "",
-												  	bookingRef: event.code+"/"+booking.id.toString(),
+												  	bookingRef: bookingRef,
 													info: booking.info || "",  
 													places: booking.places,
 													linkedBookings: linkedBookings,
@@ -347,6 +360,7 @@ module.exports = {
 				if (bookingId) {
 					// Rebook for existing user
 					Booking.findOne(bookingId).exec(function(err,booking){
+						bookingRef=booking.ref;
 						bookIt(booking.user);	
 					})
 				}
@@ -416,6 +430,7 @@ module.exports = {
 		
 		var filter=req.param('filter');
 		req.session.bookingFilter=filter;
+		var download=req.param('download');
 								
 		var where = {};
 		where.user=req.user.id;
@@ -438,19 +453,23 @@ module.exports = {
 								}		
 						}
 					}
-			).populate('event').exec(
-			function(err, bookings){
+			).populate('event').populate('additions',{sort:{surname:1}}) 
+			.exec(function(err, bookings){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve bookings.');
 					return res.negotiate(err);
 			  	}	
-			
-			  	// If session refers to a user who no longer exists, still allow logout.
-			  	if (!bookings) {
-			    	return res.json({});
-			  	}
-				  
-				return res.json(bookings);  
+				if (download) {					
+					sails.controllers.booking.download(req, res, req.user.username, bookings, req.user);					
+				}
+				else {
+					// If session refers to a user who no longer exists, still allow logout.
+				  	if (!bookings) {
+				    	return res.json({});
+				  	}
+					  
+					return res.json(bookings);  	
+				}			  	
 			}
 		)
 			
@@ -464,8 +483,10 @@ module.exports = {
 	 */
 	allEventBookings: function (req, res) {
 		
+				
 		var filter=req.param('filter');
 		req.session.bookingFilter=filter;
+		var download=req.param('download');
 								
 		var where = {};
 		where.event=req.param("eventid");
@@ -490,19 +511,25 @@ module.exports = {
 								}		
 						}
 					}
-			).populate('user').exec(
-			function(err, bookings){
+			).populate('user').populate('additions',{sort:{surname:1}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
+			.exec(function(err, bookings){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve bookings.');
 					return res.negotiate(err);
-			  	}	
-			
-			  	// If session refers to a user who no longer exists, still allow logout.
-			  	if (!bookings) {
-			    	return res.json({});
-			  	}
-				  
-				return res.json(bookings);  
+			  	}			
+				if (download) {					
+					Event.findOne(req.param("eventid")).exec(function(err,event){
+						sails.controllers.booking.download(req, res, event.code, bookings);		
+					})									
+				}
+				else {
+					// If session refers to a user who no longer exists, still allow logout.
+				  	if (!bookings) {
+				    	return res.json({});
+				  	}
+					  
+					return res.json(bookings);  	
+				}			  	
 			}
 		)
 			
@@ -603,7 +630,135 @@ module.exports = {
 			
 		})	
 		
-	}
+	},
 	
+	/**
+	 * Download bookings
+	 */
+	 download: function(req, res, prefix, bookings, user) {
+	 	if (!bookings) {
+			bookings=[]
+		}
+		
+		// Create basic options
+		var options={};
+		options.filename=prefix+'_' + ((new Date().getTime().toString())) + '.csv';
+		//options.nested=true;
+		
+		// Build a custom JSON for the CSV
+		var data=[];
+		
+		bookings.forEach(function(booking,i){
+			if (user && !booking.user.surname) {
+				booking.user=user
+			}
+			var row={};
+			row.ref=booking.ref;
+			row.surname=booking.user.surname;
+			row.firstName=booking.user.firstName;
+			row.displayName=booking.user.name;
+			row.rank=booking.user.rank;
+			row.lodge=booking.user.lodge;
+			row.lodgeNo=booking.user.lodgeNo;
+			row.dietary=booking.dietary;
+			row.info=booking.info;
+			row.places=booking.places;
+			row.paid=booking.paid;
+			row.cost=booking.cost;
+			row.amountPaid=booking.amountPaid;							
+			data.push(row);
+			// Add additional places as rows also
+			booking.additions.forEach(function(addition,j){
+				var row={};
+				row.ref=booking.ref;
+				row.surname=addition.surname;
+				row.firstName=addition.firstName;
+				row.displayName=row.firstName+" "+row.surname;
+				row.rank=addition.rank;
+				row.lodge=addition.lodge;
+				row.lodgeNo=addition.lodgeNo;
+				row.dietary=addition.dietary;
+				data.push(row);
+			})
+		})
+		// Send CSV						
+		sails.controllers.booking.sendCsv(req, res, data, options)				
+	 },
+	
+	/**
+	 * Download CSV
+	 * https://gist.github.com/jeffskelton3/2b9fc748ec69205694dc
+	 */
+	sendCsv: function(req, res, data, optionsIn) {
+
+	  var sails = req._sails
+	  ,   options = extend({},optionsIn)
+	  ,   json2csv = require('json2csv')
+	  ,   fs = require('fs')
+	  ,   download_dir = '.tmp/downloads/'
+	  ,   filename = options && options.filename ? options.filename : 'file_' + ((new Date().getTime().toString())) + '.csv'
+	  ,   fullpath = download_dir + filename;
+	
+	  	
+	  sails.log.silly('res.csv() :: Sending 200 ("OK") response');
+	
+		
+	  //PUT THE DATA THROGH THE GAUNTLET...
+	
+	  if(!data){
+	    throw new Error('data cannot be null');
+	  }
+	
+	  if(!_.isArray(data)){
+	    throw new Error('data must be of type array');
+	  }
+	
+	  var columns = data.length ? _.keys(data[0]) : [];
+	
+	  // if we made it this far, send the file
+	
+	  // Set status code
+	  res.status(200);
+	
+	  options.data=data;
+	  options.fields=columns;
+	
+	  json2csv(options, function(err, csv) {
+	
+	    if (err) { throw err; }
+	
+	    //make the download dir if it doesnt exist
+	    fs.mkdir(download_dir, 0777, function(err){
+	      if(err){
+	        //we dont care if the directory already exists.
+	        if (err.code !== 'EEXIST'){
+	          throw err;
+	        }
+	      }
+	
+	      //create the csv file and upload it to our directory
+	      fs.writeFile(fullpath, csv, function(err) {
+	        if (err) throw err;
+	        sails.log.silly('file saved to ' + fullpath);
+	        res.download(fullpath, filename, function(err){
+	          if(err) {
+	            throw err;
+	            return;
+	          }
+	
+	          //delete the file after we are done with it.
+	          fs.unlink(fullpath);
+	
+	        });
+	      });
+	
+	    });
+	
+	
+	
+	  });
+	  
+	}
+	 
 };
 

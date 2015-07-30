@@ -25,7 +25,14 @@
     <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="!eventBookings"></input>
     &nbsp;Fully paid?
    </label>
-</div>           
+</div>  
+
+<!-- B O O K I N G   R E F -->
+  
+<div class="control-group form-group col-xs-10" ng-show="bookingForm.ref.length>0">
+  <label>Booking Reference</label>  
+  <input type="text" class="form-control" name="ref" ng-model="<%-model%>Form.ref" readonly>  
+</div>         
 
 <!-- N A M E -->
   

@@ -49,6 +49,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.paid=SAILS_LOCALS.booking.paid;
 		if ($scope.paid)
 			$scope.paidMsg=" AND PAID"
+		$scope.bookingForm.ref = SAILS_LOCALS.booking.ref;
 		$scope.bookingForm.cost = SAILS_LOCALS.booking.cost;
 		$scope.bookingForm.paid = SAILS_LOCALS.booking.paid;
 		$scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;

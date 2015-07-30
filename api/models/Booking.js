@@ -24,6 +24,11 @@ module.exports = {
       required: true
     },    
       
+    // Booking reference
+    ref:{
+      type: 'string' 
+    }, 
+      
     // The user's dietary requirements
     dietary: {
       type: 'string'
