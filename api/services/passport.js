@@ -200,7 +200,13 @@ passport.connect = function (req, query, profile, next) {
           }
 
           // Fetch the user associated with the Passport
-          User.findOne(passport.user.id, next);
+          if (!passport.user) {
+            passport.destroy();
+            return next();
+          }
+          else {
+            User.findOne(passport.user.id, next);
+          }          
         });
       }
     } else {

@@ -136,7 +136,7 @@ module.exports = {
 						Booking.findOne({
 											event: eventId,
 											user:req.user.id
-										}).exec(function(err, existingBooking) {
+										}).populate('user').exec(function(err, existingBooking) {
 							// if there is already a booking for this user the called function will get it, otherwise it will get nada
 							initialiseBooking(event,existingBooking);	
 						})
