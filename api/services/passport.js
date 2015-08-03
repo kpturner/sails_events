@@ -357,6 +357,34 @@ passport.loadStrategies = function () {
         self.use(new Strategy(self.protocols.bearer.authorize));
       }
 
+    } else if (key === 'rememberme') {
+      
+      // The remember me authentication strategy authenticates users using a token stored
+      // in a remember me cookie. The strategy requires a verify callback, which consumes 
+      // the token and calls done providing a user.
+
+      // The strategy also requires an issue callback, which issues a new token. 
+      // For security reasons, remember me tokens should be invalidated after being used. 
+      // The issue callback supplies a new token that will be stored in the cookie for next use.
+      
+      Strategy = strategies[key].strategy;
+      self.use(new Strategy(
+         function(token, done) {
+            Token.consume(token, function (err, user) {
+              if (err) { return done(err); }
+              if (!user) { return done(null, false); }
+              return done(null, user);
+            });
+          },
+          function(user, done) {
+            var token = utils.generateToken(64);
+            Token.save(token, { userId: user.id }, function(err) {
+              if (err) { return done(err); }
+              return done(null, token);
+            });
+          }
+      ));
+        
     } else {
       var protocol = strategies[key].protocol
         , callback = strategies[key].callback;

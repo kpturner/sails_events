@@ -21,7 +21,7 @@ var AuthController = {
 
     // Get a list of available providers for use in your templates.
     Object.keys(strategies).forEach(function (key) {
-      if (key === 'local') {
+      if (key === 'local' || key === 'rememberme') {
         return;
       }
 
