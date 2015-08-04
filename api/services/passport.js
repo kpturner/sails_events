@@ -257,7 +257,7 @@ passport.endpoint = function (req, res) {
   // Attach scope if it has been set in the config
   if (strategies[provider].hasOwnProperty('scope')) {
     options.scope = strategies[provider].scope;
-  }
+  } 
 
   // Redirect the user to the provider for authentication. When complete,
   // the provider will redirect the user back to the application at
@@ -370,7 +370,7 @@ passport.loadStrategies = function () {
       Strategy = strategies[key].strategy;
       self.use(new Strategy(
          function(token, done) {
-              console.log("verifying token")
+              //console.log("verifying token")
               Token.findOne(token).populate('user').exec(function(err, token){
                 if (err) { return done(err); }
                 if (!token) { return done(null, false); }
@@ -380,7 +380,7 @@ passport.loadStrategies = function () {
               })              
           },
           function(user, done) {
-              console.log("issuing new token")
+              //console.log("issuing new token")
               var crypto    = require('crypto');
               var token = crypto.randomBytes(64).toString('base64'); 
               Token.create({token:token, user: user.id }, function(err) {

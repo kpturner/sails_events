@@ -54,6 +54,11 @@ module.exports = {
       type: 'boolean'
     },
     
+    mop: {
+      type: 'string',
+      enum: ['Cheque', 'BACS', 'Cash', 'Paypal']
+    },
+    
     // Additional info
     info: {
       type: 'text'
@@ -63,6 +68,11 @@ module.exports = {
     additions : { 
       collection: 'LinkedBooking', via: 'booking' 
     },
+
+    // Booking date
+    bookingDate : {
+       type: 'date',
+    }
 
   }
 };

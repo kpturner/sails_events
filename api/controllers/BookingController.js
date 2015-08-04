@@ -86,6 +86,7 @@ module.exports = {
 				res.locals.booking=existingBooking;
 				res.locals.myBookings=myBookings;
 				res.locals.eventBookings=eventBookings;
+				res.locals.mops=sails.config.events.mops;
 					
 				// Get the data for the event and the user and then navigate to the booking view
 				if (req.wantsJSON)
@@ -159,6 +160,7 @@ module.exports = {
 		var bookingId=req.param("bookingId");
 		var action=req.param("action");		
 		var bookingRef=null;
+		var bookingDate=null;
 				 
 		Event.findOne(eventId).populate("organiser").exec(function(err,event){
 			if (err) {
@@ -226,16 +228,22 @@ module.exports = {
 									
 									if(req.session.eventBookings) {
 										booking.amountPaid=req.param("amountPaid");
-										booking.paid=req.param("paid");	
+										booking.paid=req.param("paid");
+										booking.mop=req.param("mop");	
 									}
 									else {
 										booking.amountPaid=0;
 										booking.paid=false;	
+										booking.mop=null;
 									}
 									
 									// Use pre-existing booking ref if it exists
 									if (bookingRef)
 										booking.ref=bookingRef;
+									if (bookingDate)
+										booking.bookingDate=bookingDate;
+									else
+										booking.bookingDate=new Date();
 									
 									Booking.create(booking,function(err, booking){
 										if (err) {
@@ -267,18 +275,30 @@ module.exports = {
 											Booking.update(booking.id,{ref:bookingRef}).exec(function(){})
 										} 
 																		 
+																		
 										
-										var formattedDate=event.date.toString();
-										formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
-										var updated = "";
-										var subject = "Event booking confirmation";
-										if (bookingId) {
-											updated=' has been updated';
-											subject='Event booking update confirmation'
-										}
+										// If this is the user making a booking, send them a confirmation email	
+										if(!req.session.eventBookings) {
+											var formattedDate=event.date.toString();
+											formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
 											
-										
-										sails.hooks.email.send(
+											// Booking payment deadline
+											var deadline="N/A";
+											if (event.grace && event.grace>0 && !booking.paid) {
+												var dl=new Date(booking.bookingDate);
+												dl.setDate(dl.getDate()+event.grace);
+												dl=dl.toString();
+												deadline=dl.substr(0,dl.indexOf(":")-2);
+												 
+											}
+											
+											var updated = "";
+											var subject = "Event booking confirmation";
+											if (bookingId) {
+												updated=' has been updated';
+												subject='Event booking update confirmation'
+											}	
+											sails.hooks.email.send(
 											"bookingConfirmation",
 										    {
 										      recipientName: res.locals.user.name,
@@ -300,7 +320,8 @@ module.exports = {
 													info: booking.info || "",  
 													places: booking.places,
 													linkedBookings: linkedBookings,
-													paymentDetails: event.paymentDetails
+													paymentDetails: event.paymentDetails,
+													deadline: deadline,
 										    },
 										    {
 										      to: res.locals.user.email,
@@ -309,6 +330,8 @@ module.exports = {
 										    },
 										    function(err) {if (err) console.log(err);}
 										   )    		
+										
+										}	
 										
 										// Get the data for the event and the user and then navigate to the booking view
 										return res.ok();
@@ -448,7 +471,13 @@ module.exports = {
 							{event:{blurb: {contains: filter}}},
 							{ref: {contains: filter}},
 						]
-			
+			if (filter.toLowerCase()=="paid") {
+				where.or.push({paid:true})
+			}
+			if (filter.toLowerCase()=="unpaid" || filter.toLowerCase()=="late") {
+				where.or.push({paid:false});
+				where.or.push({paid:null})
+			}
 		}
 										
 		Booking.find({
@@ -466,6 +495,12 @@ module.exports = {
 					sails.log.verbose('Error occurred trying to retrieve bookings.');
 					return res.negotiate(err);
 			  	}	
+				  
+				// If we only want late bookings, filter the list
+				if (filter && filter.toLowerCase()=="late") {
+					bookings=sails.controllers.booking.filterLate(bookings);
+				}  
+				  
 				if (download) {					
 					sails.controllers.booking.download(req, res, req.user.username, bookings, req.user);					
 				}
@@ -506,40 +541,90 @@ module.exports = {
 							{user:{lodgeNo: {contains: filter}}},
 							{ref: {contains: filter}},
 						]
-			
-		}
-										
-		Booking.find({
-						where: where,
-						sort: {
-								user: {
-									surname:1,
-									firstName:1
-								}		
-						}
-					}
-			).populate('user').populate('additions',{sort:{surname:1}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
-			.exec(function(err, bookings){
-				if (err) {
-					sails.log.verbose('Error occurred trying to retrieve bookings.');
-					return res.negotiate(err);
-			  	}			
-				if (download) {					
-					Event.findOne(req.param("eventid")).exec(function(err,event){
-						sails.controllers.booking.download(req, res, event.code, bookings);		
-					})									
-				}
-				else {
-					// If session refers to a user who no longer exists, still allow logout.
-				  	if (!bookings) {
-				    	return res.json({});
-				  	}
-					  
-					return res.json(bookings);  	
-				}			  	
+			if (filter.toLowerCase()=="paid") {
+				where.or.push({paid:true})
 			}
-		)
+			if (filter.toLowerCase()=="unpaid" || filter.toLowerCase()=="late") {
+				where.or.push({paid:false});
+				where.or.push({paid:null})
+			}
+		}
 			
+		var getBookings=function(req, res, grace) {
+			Booking.find({
+							where: where,
+							sort: {
+									user: {
+										surname:1,
+										firstName:1
+									}		
+							}
+						}
+				).populate('user').populate('additions',{sort:{surname:1}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
+				.exec(function(err, bookings){
+					if (err) {
+						sails.log.verbose('Error occurred trying to retrieve bookings.');
+						return res.negotiate(err);
+				  	}	
+									 
+					// If we only want late bookings, filter the list
+					if (filter && filter.toLowerCase()=="late") {
+						bookings=sails.controllers.booking.filterLate(bookings,grace);
+					}    
+					  		
+					if (download) {					
+						Event.findOne(req.param("eventid")).exec(function(err,event){
+							sails.controllers.booking.download(req, res, event.code, bookings);		
+						})									
+					}
+					else {
+						// If session refers to a user who no longer exists, still allow logout.
+					  	if (!bookings) {
+					    	return res.json({});
+					  	}
+						  
+						return res.json(bookings);  	
+					}			  	
+				})
+		}	
+		
+		// Do we need to filter late bookings?
+		if (filter && filter.toLowerCase()=="late") {
+			// We need to know the grace period from the event
+			Event.findOne(req.param("eventid")).exec(function(err,event){
+				if (err) {
+					sails.log.error(err);
+					return res.json({});
+				}
+				getBookings(req,res,event.grace)
+			})
+		}
+		else {
+			getBookings(req,res)
+		}									
+		
+			
+	},
+	
+	/**
+	 * Filter bookings so that we only have those that are late in paying
+	 */
+	filterLate: function(bookings,grace) {
+		var bookingsOut=[];
+		bookings.forEach(function(booking,i){
+			// Calculate the deadline date
+			var g=(grace)?grace:booking.event.grace;
+			if (g>0 && booking.bookingDate) {
+				var dl=new Date(booking.bookingDate);
+				dl.setDate(dl.getDate()+g);
+				//console.log(dl)
+				if (new Date()>dl) {
+					//console.log("late")
+					bookingsOut.push(booking)
+				}	
+			}					
+		})		
+		return bookingsOut;
 	},
 	
 	/**
@@ -577,6 +662,16 @@ module.exports = {
 			var formattedDate=booking.event.date.toString();
 						formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
 						var updated="";
+						
+			// Booking payment deadline
+			var deadline="N/A";
+			if (booking.event.grace && booking.event.grace>0 && !booking.paid) {
+				var dl=new Date(booking.bookingDate);
+				dl.setDate(dl.getDate()+booking.event.grace);
+				dl=dl.toString();
+				deadline=dl.substr(0,dl.indexOf(":")-2);
+				 
+			}
 			
 			// Decide what to do based on the action
 			if (action=="edit") {
@@ -616,7 +711,8 @@ module.exports = {
 										info: booking.info || "",  
 										places: booking.places,
 										linkedBookings: linkedBookings,
-										paymentDetails: booking.event.paymentDetails
+										paymentDetails: booking.event.paymentDetails,
+										deadline: deadline
 							    },
 							    {
 							      to: res.locals.user.email,

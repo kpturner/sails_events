@@ -103,7 +103,7 @@ exports.register = function (req, res, next) {
     							      senderName: "Events Management",
                         details: newUser,        								 
       								  //domain:	sails.config.events.domain,
-                        domain:	sails.getBaseUrl(),
+                        domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
       							    },
       							    {
       							      to: newUser.email,
@@ -281,7 +281,10 @@ exports.login = function (req, identifier, password, next) {
         });
       }
       else {
-        req.flash('error', 'Error.Passport.Password.NotSet');
+        if (user.authProvider=="dummy")
+          req.flash('error', 'Error.Passport.Signup');
+        else
+          req.flash('error', 'Error.Passport.Password.NotSet');
         return next(null, false);
       }
     });

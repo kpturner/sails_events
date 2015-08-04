@@ -99,7 +99,12 @@ module.exports = {
     
     paymentDetails: {
       type: 'text'
-    }
+    },
+    
+    // Number of days grace the bookee has to make payment
+    grace: {
+      type: 'integer'
+    },
     
   }
 };

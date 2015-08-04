@@ -23,6 +23,18 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		} 
 	}
 	
+	// Build a list of MOPs from the config for the MOP dropdown
+	$scope.mops=[];
+	$.each(SAILS_LOCALS.mops, function(){
+		var mop=this.toString();
+		var mopObj={};
+		mopObj.id=mop;
+		mopObj.name=mop;
+		$scope.mops.push(mopObj);
+	});
+	$scope.mops=SAILS_LOCALS.mops;
+	 
+	
 	// Do we have an existing booking to edit?
 	$scope.existingBooking=false;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
@@ -52,6 +64,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.ref = SAILS_LOCALS.booking.ref;
 		$scope.bookingForm.cost = SAILS_LOCALS.booking.cost;
 		$scope.bookingForm.paid = SAILS_LOCALS.booking.paid;
+		$scope.bookingForm.mop = SAILS_LOCALS.booking.mop;
 		$scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;
 		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
 		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
@@ -240,6 +253,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					email: $scope.bookingForm.email,
 					info: $scope.bookingForm.info,
 					paid: $scope.bookingForm.paid,
+					mop: $scope.bookingForm.mop,
 					amountPaid: $scope.bookingForm.amountPaid,
 					places: $scope.bookingForm.places,
 					linkedBookings: $scope.linkedbookings,

@@ -262,13 +262,20 @@
            
             <!-- I N S T A N T  P A Y M E N T  ? -->
   
-            <div class="control-group form-group col-md-7"
+            <div style="display:none" class="control-group form-group col-md-7"
               ng-class="{'has-error':event.instantPayment.$invalid &&
                                     event.instantPayment.$dirty}">
                <label>
                 <input type="checkbox" class="bigcheckbox" name="instantpayment" ng-model="eventForm.instantPayment" ></input>
                 &nbsp;Instant payment required?
                </label>
+             </div>
+             
+             <!-- G R A C E   P E R I O D -->
+  
+            <div class="control-group form-group col-md-7">
+                <label>Grace period for payment (days)</label>       
+                <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace"></input>
              </div>
          
         </div>

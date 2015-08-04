@@ -27,6 +27,16 @@
    </label>
 </div>  
 
+ <!-- M E T H O D  O F  P A Y M E N T -->
+<div class="control-group form-group col-md-5"
+  ng-class="{'has-error':event.mop.$invalid &&
+                        event.mop.$dirty}" ng-hide="mode=='create' || !eventBookings">
+  <label>Method of Payment</label>  
+  <select class="form-control" placeholder="e.g. BACS" name="mop" ng-options="mop for mop in mops" ng-model="<%-model%>Form.mop">
+    <option value="">-- choose mop --</option>
+  </select>
+</div>
+
 <!-- B O O K I N G   R E F -->
   
 <div class="control-group form-group col-xs-10" ng-show="bookingForm.ref.length>0">

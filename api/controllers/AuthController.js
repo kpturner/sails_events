@@ -7,7 +7,20 @@
  */
 var AuthController = {
       
-  
+  /**
+   * Reset authentication.  Basically removes any additional user information
+   * that req.logout() does not cater for
+   */
+   resetAuth: function(req, res) {
+      // Mark the user as logged out for auth purposes
+      req.session.authenticated = false;
+      
+      // Clear remember me cookie if we are going straight to the homepage, otherwise
+      // the remember-me strategy will override any attempt to log back on with a 
+      // passport instead of a local user.
+      res.clearCookie('remember_me');
+   },
+
 
   /**
    * Render the home page
@@ -34,6 +47,12 @@ var AuthController = {
       };
     });
 
+    // Clear the user out of the session also
+    req.logout();
+
+    // Reset authentication 
+    AuthController.resetAuth(req, res);    
+    
     // Render the `auth/login.ext` view
     res.view('homepage',{
       providers : providers
@@ -58,11 +77,8 @@ var AuthController = {
   logout: function (req, res) {
     req.logout();
     
-    // mark the user as logged out for auth purposes
-    req.session.authenticated = false;
-    
-    // Clear remember me cookie
-    res.clearCookie('remember_me');
+    // Reset authentication 
+    AuthController.resetAuth(req, res);    
     
     res.redirect('/');
   },
@@ -97,6 +113,7 @@ var AuthController = {
    */
   dashboard: function (req, res) {
     
+    req.session.eventBookings=false;
     res.view('dashboard');
   
   },
@@ -191,7 +208,7 @@ var AuthController = {
               var token = crypto.randomBytes(64).toString('base64'); 
               Token.create({token:token, user: user.id }, function(err) {
                 if (err) { return next(err); }
-                res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
+                res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: sails.config.passport.rememberme.maxAge }); // 7 days
                 // Upon successful login, send the user to the homepage were req.user
                 // will be available.
                 res.redirect('/');
@@ -382,7 +399,8 @@ var AuthController = {
 					if (req.param('password')) {
 						// Wipe out the session (log out)
 						req.logout();
-						req.session.authenticated=false;						  
+						// Reset authentication 
+            AuthController.resetAuth(req, res);  
 						// Either send a 200 OK or redirect to the home page
 						return res.backToHomePage();
 					}

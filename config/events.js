@@ -16,4 +16,10 @@ module.exports.events = {
 	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
 	multipleBookings: false,
 	
+	// Methods of payment
+	mops: ['Cheque', 'BACS', 'Cash', 'Paypal'],
+	
+	// Domain (for signup email confirmations)
+	domain: "http://squareevents.org",
+	
 };
