@@ -20,7 +20,7 @@ module.exports.passport = {
   },
 
   rememberme : {
-    strategy: require('passport-remember-me').Strategy
+    strategy: require('passport-remember-me').Strategy    
   },
 
   //bearer: {

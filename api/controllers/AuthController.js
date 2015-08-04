@@ -61,6 +61,9 @@ var AuthController = {
     // mark the user as logged out for auth purposes
     req.session.authenticated = false;
     
+    // Clear remember me cookie
+    res.clearCookie('remember_me');
+    
     res.redirect('/');
   },
 
@@ -175,12 +178,34 @@ var AuthController = {
           var delta={};
           delta.lastLoggedIn=new Date().toISOString().slice(0, 19).replace('T', ' ');
           User.update(user.id,delta).exec(function(){});  
+          // Upon successful login, send the user to the homepage were req.user
+          // will be available.
+          res.redirect('/');
         }           
-           
+        else {
+          // Was "Remember me" selected?
+          if (req.param("rememberme")) {
+            var crypto    = require('crypto');
+            // Destroy existing tokens for user
+            Token.destroy({user:user.id},function(){
+              var token = crypto.randomBytes(64).toString('base64'); 
+              Token.create({token:token, user: user.id }, function(err) {
+                if (err) { return next(err); }
+                res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 }); // 7 days
+                // Upon successful login, send the user to the homepage were req.user
+                // will be available.
+                res.redirect('/');
+              });
+            });            
+          }
+          else {
+            // Upon successful login, send the user to the homepage were req.user
+            // will be available.
+            res.redirect('/');
+          }
+        }   
                 
-        // Upon successful login, send the user to the homepage were req.user
-        // will be available.
-        res.redirect('/');
+        
       });
     });
   },

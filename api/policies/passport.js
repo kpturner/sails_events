@@ -26,11 +26,18 @@ module.exports = function (req, res, next) {
   passport.initialize()(req, res, function () {
     // Use the built-in sessions
     passport.session()(req, res, function () {
-      // Allow the user.isAdmin boolean to be overridden by locals.js
-      if(req.user) req.user.isAdmin=Utility.isAdmin(req.user);
-      // Make the user available throughout the frontend      
-      res.locals.user = req.user;
-      next();
+      // try remember me
+      passport.authenticate('remember-me')(req, res, function(){
+        // Allow the user.isAdmin boolean to be overridden by locals.js
+        if(req.user) {
+          // Must be authenticated, so set the session flag (in case we got here from remember-me)
+          req.session.authenticated=true;
+          req.user.isAdmin=Utility.isAdmin(req.user);
+        }
+        // Make the user available throughout the frontend      
+        res.locals.user = req.user;
+        next(); 
+      });     
     });
   });
 };

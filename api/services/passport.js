@@ -370,15 +370,20 @@ passport.loadStrategies = function () {
       Strategy = strategies[key].strategy;
       self.use(new Strategy(
          function(token, done) {
-            Token.consume(token, function (err, user) {
-              if (err) { return done(err); }
-              if (!user) { return done(null, false); }
-              return done(null, user);
-            });
+              console.log("verifying token")
+              Token.findOne(token).populate('user').exec(function(err, token){
+                if (err) { return done(err); }
+                if (!token) { return done(null, false); }
+                if (!token.user) { return done(null, false); }
+                token.destroy();
+                return done(null, token.user);
+              })              
           },
           function(user, done) {
-            var token = utils.generateToken(64);
-            Token.save(token, { userId: user.id }, function(err) {
+              console.log("issuing new token")
+              var crypto    = require('crypto');
+              var token = crypto.randomBytes(64).toString('base64'); 
+              Token.create({token:token, user: user.id }, function(err) {
               if (err) { return done(err); }
               return done(null, token);
             });
