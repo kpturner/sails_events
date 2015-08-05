@@ -27,12 +27,14 @@ module.exports = {
       }
       else {        
         var admins=sails.config.events.admins;
-        if (Array.isArray(admins)) {
-          isAdmin=(admins.indexOf(user.username)>=0 || admins.indexOf(user.email)>=0)
-        }
-        else {
-          isAdmin=((user.username==admins || user.email==admins))
-        }
+        if (admins) {
+          if (Array.isArray(admins)) {
+            isAdmin=(admins.indexOf(user.username)>=0 || admins.indexOf(user.email)>=0)
+          }
+          else {
+            isAdmin=((user.username==admins || user.email==admins))
+          }  
+        }        
       }
     }
     return isAdmin 
