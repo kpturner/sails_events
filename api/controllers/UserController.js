@@ -165,13 +165,13 @@ module.exports = {
 				sails.hooks.email.send(
 					"profileChanged", {
 				      recipientName: user[0].name,
-				      senderName: "Events Management",
+				      senderName: sails.config.events.title,
 			        details: user[0]
 						  
 					    },
 					    {
 					      to:user[0].email,
-					      subject: "Events Management - Your details have been changed by the Administrator"
+					      subject: sails.config.events.title + " - Your details have been changed by the Administrator"
 					    },
 					    function(err) {if (err) console.log(err);}
 				   )     

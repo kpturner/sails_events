@@ -6,7 +6,7 @@
 
 module.exports = {
 
-  // Events management details
+  // Event management details
   events: {
      
   },
@@ -32,7 +32,7 @@ module.exports = {
         pass: "yyyyy"
       }
 	 },
-   from: 'Events Management <noreply@squareevents.org>', // sender address
+   from: sails.config.events.title + ' <noreply@squareevents.org>', // sender address
    testMode:  false 
   },
   

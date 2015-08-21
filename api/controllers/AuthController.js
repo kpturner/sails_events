@@ -385,13 +385,13 @@ var AuthController = {
 					sails.hooks.email.send(
 						"profileChanged", {
     				      recipientName: updatedUser[0].name,
-    				      senderName: "Events Management",
+    				      senderName: "Event Management",
     			        details: updatedUser[0]
 							  
 						    },
 						    {
 						      to: updatedUser[0].email,
-						      subject: "Events Management - Profile updated confirmation"
+						      subject: "Event Management - Profile updated confirmation"
 						    },
 						    function(err) {if (err) console.log(err);}
 					   )     
@@ -435,13 +435,13 @@ var AuthController = {
   					sails.hooks.email.send(
   						"passwordReset", {
       				    recipientName: user.name,
-      				    senderName: "Events Management",
+      				    senderName: sails.config.events.title,
   				        newPassword: newPassword,
                   domain:	sails.getBaseUrl(),  							   
   					   },
   						 {
                   to: user.email,
-  						    subject: "Events Management - Password reset"
+  						    subject: sails.config.events.title + " - Password reset"
   						 },
   						    function(err) {if (err) console.log(err);}
   					   )             

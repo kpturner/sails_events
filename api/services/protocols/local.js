@@ -100,14 +100,14 @@ exports.register = function (req, res, next) {
     								"signupConfirmation",
     							    {
     							      recipientName: newUser.name,
-    							      senderName: "Events Management",
+    							      senderName: sails.config.events.title,
                         details: newUser,        								 
       								  //domain:	sails.config.events.domain,
                         domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
       							    },
       							    {
       							      to: newUser.email,
-      							      subject: "Welcome to Events Management"
+      							      subject: "Welcome to "+sails.config.events.title
       							    },
       							    function(err) {if (err) console.log(err);}
     							   )     

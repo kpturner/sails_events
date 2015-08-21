@@ -5,7 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-var extend = require('node.extend');		
+
 
 
 module.exports = {
@@ -302,7 +302,7 @@ module.exports = {
 											"bookingConfirmation",
 										    {
 										      recipientName: res.locals.user.name,
-										      senderName: "Events Management",
+										      senderName: sails.config.events.title,
 											  		updated: updated,
 													eventName: event.name,
 													eventDate: formattedDate,
@@ -693,7 +693,7 @@ module.exports = {
 								"bookingConfirmation",
 							    {
 							      recipientName: res.locals.user.name,
-							      senderName: "Events Management",
+							      senderName: sails.config.events.title,
 								  		updated: updated,
 										eventName: booking.event.name,
 										eventDate: formattedDate,
@@ -795,7 +795,7 @@ module.exports = {
 	sendCsv: function(req, res, data, optionsIn) {
 
 	  var sails = req._sails
-	  ,   options = extend({},optionsIn)
+	  ,   options = _.extend({},optionsIn)
 	  ,   json2csv = require('json2csv')
 	  ,   fs = require('fs')
 	  ,   download_dir = '.tmp/downloads/'
