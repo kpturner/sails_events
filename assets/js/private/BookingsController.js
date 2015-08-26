@@ -77,7 +77,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				})
 		}
 		
-		
+				
 		/**
 		 * Create new booking
 		 * @param {Integer} eventId 
@@ -103,6 +103,16 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		/**
 		 * Download bookings
 		 */  
+		$scope.downloadBookings = function(){
+		
+			window.location=$scope.downloadUrl;
+		
+		}	
+		
+		/**
+		 * Download bookings
+		 */  
+		/* 
 		$scope.downloadBookings = function(){
 			$scope.downloading=true;
 			// Submit request to Sails.
@@ -134,6 +144,6 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				})
 		}
 
-		 
+		*/ 
 
 }])

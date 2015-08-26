@@ -77,11 +77,11 @@
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="newBooking" ></span>
           <span ng-show="newBooking">Please wait...</span>
         </button>
-        <a class="btn-block" href="{{downloadUrl}}">
-          <button class="btn btn-primary btn-lg btn-block" type="button">
-             <span ng-show="!newBooking">Download bookings</span>
-          </button>  
-        </a>
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()">
+          <span ng-show="!newBooking">Download bookings</span>         
+        </button>  
+        
+        
         </br> 
            
   
