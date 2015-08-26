@@ -78,9 +78,9 @@ module.exports = {
     },
     
     // Visiting Officers only 
-    voOnly: {
-      type: 'boolean',
-    },
+    //voOnly: {
+    //  type: 'boolean',
+    //},
     
     price: {
       type: 'float',

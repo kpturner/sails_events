@@ -70,19 +70,19 @@ var User = {
     },
     
     // Visiting Officer?
-    isVO: {
-      type: 'boolean'
-    },
+    //isVO: {
+    //  type: 'boolean'
+    //},
     
     // VO Lodge
-    voLodge: {
-      type: 'string'
-    },
+    //voLodge: {
+    //  type: 'string'
+    //},
     
     // VO lodge number
-    voLodgeNo: {
-      type: 'string'
-    },
+    //voLodgeNo: {
+    //  type: 'string'
+    //},
     
     // Authentication provider (some redundancy here as we can get this from the passport, but takes
     // the additional I/O out of each request)
