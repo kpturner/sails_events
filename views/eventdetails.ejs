@@ -297,8 +297,8 @@
   
         <!-- Disable button until something has been edited and the form has no errors -->
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || eventForm.loading">
-          <span ng-show="!eventForm.loading" ng-hide="mode=='delete'">Save Details</span>
-          <span ng-show="!eventForm.loading" ng-hide="mode!='delete'">Delete</span>
+          <span ng-show="!eventForm.loading && mode!='delete'">Save Details</span>
+          <span ng-show="!eventForm.loading && mode=='delete'">Delete</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="eventForm.loading" ></span>
           <span ng-show="eventForm.loading && mode!='delete'">Saving event details...</span>
           <span ng-show="eventForm.loading && mode=='delete'">Deleting event...</span>
