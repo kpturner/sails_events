@@ -77,6 +77,7 @@ module.exports = {
       type: 'boolean',
     },
     
+        
     // Visiting Officers only 
     //voOnly: {
     //  type: 'boolean',
@@ -86,6 +87,11 @@ module.exports = {
       type: 'float',
       size: 15.2, // Decimal
       required: true
+    }, 
+         
+    minBookingPlaces: {
+      type: 'integer',
+      defaultsTo: 1
     },    
      
     maxBookingPlaces: {

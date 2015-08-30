@@ -176,6 +176,18 @@
               </span>
            </div>  
            
+           <!-- M I N I M U M   B O O K I N G   P L A C E S -->
+  
+          <div class="control-group form-group col-md-8"
+            ng-class="{'has-error':event.minbookingplaces.$invalid &&
+                                  event.minbookingplaces.$dirty}">
+              <label>* Minimum number of places per booking</label>       
+              <input type="number" class="form-control" placeholder="e.g. 1" name="minbookingplaces" ng-model="eventForm.minBookingPlaces" min="1" required></input>
+              <span class="help-block has-error" ng-if="event.event.minBookingPlaces.$dirty">
+                <span ng-show="event.minbookingplaces.$error.required">Minimum number of booking places is required.</span>
+                <span ng-show="event.minbookingplaces.$error.min">Minimum number of booking places must be greater than 0.</span>
+              </span>
+           </div>
                       
            <!-- M A X I M U M   B O O K I N G   P L A C E S -->
   

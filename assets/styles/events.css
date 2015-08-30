@@ -16,6 +16,17 @@
 	transform:scale(2, 2);
 }
 
+.navbar-inverse {
+	background-color:#17375E
+}
+
+.navbar-logo {
+  float: left;
+  height: 50px;
+  padding: 15px 0px 15px 15px;
+  font-size: 18px; 
+  line-height: 20px; 
+}
 
 .a-unstyled {  text-decoration: none}
 .a-unstyled:link {  text-decoration: none}

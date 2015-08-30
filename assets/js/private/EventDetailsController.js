@@ -46,6 +46,10 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		$scope.eventForm.date = null;
 	};
 	
+	// Minimum bookings
+	if ($scope.minBookingPlaces==0)
+		$scope.minBookingPlaces=1;
+	
 	// Disable weekend selection
 	$scope.disabled = function(date, mode) {
 		return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
@@ -83,6 +87,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			|| (!$scope.eventForm.date || $scope.eventForm.date.length==0)
 			|| (!$scope.eventForm.time || $scope.eventForm.time.length==0)
 			|| (!$scope.eventForm.price || isNaN($scope.eventForm.price))
+			|| (!$scope.eventForm.minBookingPlaces || isNaN($scope.eventForm.minBookingPlaces))
 			|| (!$scope.eventForm.maxBookingPlaces || isNaN($scope.eventForm.maxBookingPlaces))
 			|| (!$scope.eventForm.closingDate || $scope.eventForm.closingDate.length==0)	
 			|| (!$scope.eventForm.capacity || isNaN($scope.eventForm.capacity))

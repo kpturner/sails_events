@@ -48,6 +48,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}		
 		$scope.paidMsg="";
 		$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
+		$scope.placesMin=$scope.event.minBookingPlaces||1;
+		if ($scope.placesMin>$scope.placesMax)
+			$scope.placesMin=$scope.placesMax
 		// Convert lodge no to numeric
 		$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
 		// Initialise confirmation email
@@ -86,7 +89,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 	}
 	else {
-		$scope.bookingForm.places=1;		
+		$scope.bookingForm.places=$scope.placesMin;
+		if ($scope.bookingForm.places>1)
+			$scope.makeArray();		
 	}
 
 	
