@@ -33,7 +33,20 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	 */
 	$scope.detailsComplete = function() {
 		var complete=true;
-		 
+		if (   (!$scope.userdetailsForm.name || $scope.userdetailsForm.name.length==0)
+			|| (!$scope.userdetailsForm.lodge || $scope.userdetailsForm.lodge.length==0)
+			|| (!$scope.userdetailsForm.lodgeNo || isNaN($scope.userdetailsForm.lodgeNo))
+			|| (!$scope.userdetailsForm.email || $scope.userdetailsForm.email.length==0)
+			|| (!$scope.userdetailsForm.surname || $scope.userdetailsForm.surname.length==0)
+			|| (!$scope.userdetailsForm.firstName || $scope.userdetailsForm.firstName.length==0)
+			|| (($scope.userdetailsForm.authProvider=="local")
+					&& (   (!$scope.userdetailsForm.username || $scope.userdetailsForm.username.length==0)
+			//			|| (!$scope.userdetailsForm.password ||$scope.userdetailsForm.password.length==0)
+						)
+				)
+		) {
+			complete=false;
+		} 
 			
 		return complete;
 	}		
