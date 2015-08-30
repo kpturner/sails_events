@@ -24,6 +24,7 @@ module.exports = {
     // Code (for booking references)
     code : {
       type: 'string',
+      unique: true,
       required: true
     },
     

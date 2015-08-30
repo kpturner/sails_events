@@ -17,7 +17,7 @@ module.exports.events = {
 	title: "Provincial Events",
 	
 	// Homepage heading
-	heading: "Province of H&IOW",
+	heading: "Province of H&IoW",
 	
 	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
 	multipleBookings: false,

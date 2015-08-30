@@ -161,6 +161,13 @@ module.exports = {
 		if (action=="edit") {
 			Event.update(eventId,event).exec(function(err,event){
 				if (err) {
+					// If this is a uniqueness error about the code attribute,
+				    // send back an easily parseable status code.
+				    if (err.invalidAttributes && err.invalidAttributes.code && err.invalidAttributes.code[0]
+				      && err.invalidAttributes.code[0].rule === 'unique') {
+				       return res.genericErrorResponse(411,"Event code (for payment) is already in use");
+				    }
+					// Else unknown error
 					return res.negotiate(err)
 				}
 				return res.ok();	
@@ -186,6 +193,13 @@ module.exports = {
 			delete event.id;
 			Event.create(event).exec(function(err,event){
 				if (err) {
+					// If this is a uniqueness error about the code attribute,
+				    // send back an easily parseable status code.
+				    if (err.invalidAttributes && err.invalidAttributes.code && err.invalidAttributes.code[0]
+				      && err.invalidAttributes.code[0].rule === 'unique') {
+				       return res.genericErrorResponse(411,"Event code (for payment) is already in use");
+				    }
+					// Else unknown error
 					return res.negotiate(err)
 				}
 				return res.ok();	

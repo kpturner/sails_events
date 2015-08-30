@@ -100,7 +100,7 @@ var AuthController = {
    */
   register: function (req, res) {
     res.view({
-      model: 'signup',
+      form: 'signup',
       errors: req.flash('error')
     });
   },
@@ -167,7 +167,7 @@ var AuthController = {
 
       switch (action) {
         case 'register':
-          res.redirect('/register',{model:'signup'});
+          res.redirect('/register',{form:'signup'});
           break;
         case 'disconnect':
           res.redirect('back');
@@ -245,7 +245,7 @@ var AuthController = {
 	*/
   profile: function(req, res) {
     res.view('profile',{
-      model: 'profile',
+      form: 'profile',
       errors: req.flash('error')
     });  
   }, 
@@ -353,18 +353,18 @@ var AuthController = {
 				User.update(req.user.id,delta).exec(function afterwards(err, updatedUser){
 					if (err) {
 															
-						// If this is a uniqueness error about the email attribute,
+						  // If this is a uniqueness error about the email attribute,
 					    // send back an easily parseable status code.
 					    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
 					      && err.invalidAttributes.email[0].rule === 'unique') {
 					       return res.genericErrorResponse(409,"Email address is already in use");
 					    }
-						// If this is a uniqueness error about the username attribute,
-				        // send back an easily parseable status code.
-				        if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
+						  // If this is a uniqueness error about the username attribute,
+				      // send back an easily parseable status code.
+				      if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
 				          && err.invalidAttributes.username[0].rule === 'unique') {
 				          return res.genericErrorResponse(410,"User name is already in use");
-				        }
+				      }
 						// Otherwise, send back something reasonable as our error response.
 						 return res.negotiate(err);
 					}
@@ -476,10 +476,11 @@ var AuthController = {
            
               
           })          
-           
+          return res.ok();	 			   
         }
-        
-        return res.ok();	 			  
+        else {
+          return res.genericErrorResponse(412,"Email address is not registered in the database"); 		  
+        }        
 		});
 	},
    

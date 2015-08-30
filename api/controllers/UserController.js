@@ -118,7 +118,7 @@ module.exports = {
 				// Send the details
 				return res.view("userdetails",{
 					mode:mode,
-					model:'user',
+					form:'userdetails',
 					userDetails:user
 				})	
 			})	
@@ -126,7 +126,7 @@ module.exports = {
 		else {
 			return res.view("userdetails",{
 				mode:mode,
-				model:'user',
+				form:'userdetails',
 				userDetails:{}
 			})	
 		}	
@@ -146,6 +146,19 @@ module.exports = {
 		if (action=="edit") {
 			User.update(userId,user).exec(function(err,user){
 				if (err) {
+					// If this is a uniqueness error about the email attribute,
+				    // send back an easily parseable status code.
+				    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+				      && err.invalidAttributes.email[0].rule === 'unique') {
+				       return res.genericErrorResponse(409,"Email address is already in use");
+				    }
+					// If this is a uniqueness error about the username attribute,
+			      	// send back an easily parseable status code.
+			      	if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
+			          && err.invalidAttributes.username[0].rule === 'unique') {
+			          return res.genericErrorResponse(410,"User name is already in use");
+			      	}
+					// Else unknown error
 					return res.negotiate(err)
 				}
 				// Success
@@ -206,6 +219,19 @@ module.exports = {
 			delete user.id;
 			User.create(user).exec(function(err,user){
 				if (err) {
+					// If this is a uniqueness error about the email attribute,
+				    // send back an easily parseable status code.
+				    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+				      && err.invalidAttributes.email[0].rule === 'unique') {
+				       return res.genericErrorResponse(409,"Email address is already in use");
+				    }
+					// If this is a uniqueness error about the username attribute,
+			      	// send back an easily parseable status code.
+			      	if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
+			          && err.invalidAttributes.username[0].rule === 'unique') {
+			          return res.genericErrorResponse(410,"User name is already in use");
+			      	}
+					// Else unknown error
 					return res.negotiate(err)
 				}
 				return res.ok();	

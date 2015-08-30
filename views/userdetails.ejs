@@ -57,7 +57,7 @@
             ng-class="{'has-error':userdetails.isadmin.$invalid &&
                                   userdetails.isadmin.$dirty}">
              <label>
-              <input type="checkbox" class="bigcheckbox" name="isadmin" ng-model="userForm.isAdmin"></input>
+              <input type="checkbox" class="bigcheckbox" name="isadmin" ng-model="userdetailsForm.isAdmin"></input>
               &nbsp;System administrator?
              </label>
            </div>
@@ -68,7 +68,7 @@
             ng-class="{'has-error':userdetails.isorganiser.$invalid &&
                                   userdetails.isorganiser.$dirty}">
              <label>
-              <input type="checkbox" class="bigcheckbox" name="isorganiser" ng-model="userForm.isOrganiser"></input>
+              <input type="checkbox" class="bigcheckbox" name="isorganiser" ng-model="userdetailsForm.isOrganiser"></input>
               &nbsp;Event organiser?
              </label>
            </div> 
@@ -80,7 +80,7 @@
             ng-class="{'has-error':userdetails.isvo.$invalid &&
                                   userdetails.isvo.$dirty}">
              <label>
-              <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="userForm.isVO"></input>
+              <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="userdetailsForm.isVO"></input>
               &nbsp;Visiting Officer?
              </label>
            </div>
@@ -92,12 +92,12 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || userForm.loading">
-          <span ng-show="!userForm.loading" ng-hide="mode=='delete'">Save Details</span>
-          <span ng-show="!userForm.loading" ng-hide="mode!='delete'">Delete</span>
-          <span class="overlord-loading-spinner fa fa-spinner" ng-show="userForm.loading" ></span>
-          <span ng-show="userForm.loading && mode!='delete'">Saving user details...</span>
-          <span ng-show="userForm.loading && mode=='delete'">Deleting user...</span>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || userdetailsForm.loading">
+          <span ng-show="!userdetailsForm.loading" ng-hide="mode=='delete'">Save Details</span>
+          <span ng-show="!userdetailsForm.loading" ng-hide="mode!='delete'">Delete</span>
+          <span class="overlord-loading-spinner fa fa-spinner" ng-show="userdetailsForm.loading" ></span>
+          <span ng-show="userdetailsForm.loading && mode!='delete'">Saving user details...</span>
+          <span ng-show="userdetailsForm.loading && mode=='delete'">Deleting user...</span>
         </button>
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />

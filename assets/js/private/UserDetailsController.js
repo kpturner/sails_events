@@ -2,17 +2,17 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.mode=SAILS_LOCALS.mode;
-	$scope.userForm = {
+	$scope.userdetailsForm = {
 		loading: false
 	}
 
-	$scope.userForm=SAILS_LOCALS.userDetails;
+	$scope.userdetailsForm=SAILS_LOCALS.userDetails;
 	
 	// Convert lodge no to numeric
-	$scope.userForm.lodgeNo = parseInt($scope.userForm.lodgeNo); 
-	$scope.userForm.voLodgeNo = parseInt($scope.userForm.voLodgeNo); 
+	$scope.userdetailsForm.lodgeNo = parseInt($scope.userdetailsForm.lodgeNo); 
+	$scope.userdetailsForm.voLodgeNo = parseInt($scope.userdetailsForm.voLodgeNo); 
 	// Set the confirm email
-	$scope.userForm.confirmemail=$scope.userForm.email; 
+	$scope.userdetailsForm.confirmemail=$scope.userdetailsForm.email; 
 	
 	// Get a list of users in name order
 	$http.get("/organisers")
@@ -39,11 +39,11 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	}		
 	
 	$scope.submitUserForm = function(){
-		$scope.userForm.loading=true;
+		$scope.userdetailsForm.loading=true;
 						
 		// Submit request to Sails.
 		$http.post('/updateuser/'+$scope.mode, {
-			data: $scope.userForm			 
+			data: $scope.userdetailsForm			 
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/users';
@@ -55,7 +55,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 
 		})
 		.finally(function eitherWay(){
-			$scope.userForm.loading = false;
+			$scope.userdetailsForm.loading = false;
 		})
 	}
 
