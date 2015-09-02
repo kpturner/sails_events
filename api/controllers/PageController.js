@@ -42,7 +42,7 @@ module.exports = {
   					&& ( !user.username || user.username.length==0 )
   				)
   		) {
-         return res.view('profile',{model:'profile'}); 
+         return res.view('profile',{form:'profile'}); 
   		}
       
       // Default home location

@@ -20,6 +20,11 @@
 	background-color:#17375E
 }
 
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+  background-color: #17375E;
+}
+
 .navbar-logo {
   float: left;
   height: 50px;
