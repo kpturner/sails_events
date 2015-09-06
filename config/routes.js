@@ -65,6 +65,8 @@ module.exports.routes = {
   'get /allmybookings/:filter?': 'BookingController.allMyBookings',  // the ? in :filter? means that the filter part or the URL is optional
   'get /eventbookings': 'BookingController.eventBookings',
   'get /alleventbookings/:filter?': 'BookingController.allEventBookings',
+  'get /userbookings': 'BookingController.userBookings',
+  'get /alluserbookings/:filter?': 'BookingController.allUserBookings',
   'post /reevaluateevent' : 'BookingController.prepareBooking',  
   'post /makebooking': 'BookingController.makeBooking',
   'post /makebooking/:action': 'BookingController.makeBooking',

@@ -20,12 +20,15 @@ module.exports = {
 	 */
 	myBookings: function(req, res) {
 		req.session.myBookings=true;
+		req.session.userBookings=false;
 		req.session.eventBookings=false;
 		res.locals.event={};
+		res.locals.selectedUser={};
 		res.view('bookings',{			
 		  filter: req.session.bookingFilter,
 		  myBookings: true,
 		  eventBookings: false,
+		  userBookings: false,
 		  errors: req.flash('error')
 		});  
 	}, 
@@ -39,17 +42,45 @@ module.exports = {
 	eventBookings: function(req, res) {
 		req.session.myBookings=false;
 		req.session.eventBookings=true;
+		req.session.userBookings=false;
+		res.locals.selectedUser={};
 		Event.findOne(req.param("eventid")).populate("organiser").exec(function(err,event){
 			res.locals.event=event;
 			res.view('bookings',{			
 			  filter: req.session.bookingFilter,
 			  myBookings: false,
 			  eventBookings: true,
+			  userBookings: false,
 			  errors: req.flash('error')
 			});  	
 		})		
 	}, 
 	
+	/**
+	 * User bookings
+	 *
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	userBookings: function(req, res) {
+		req.session.myBookings=false;
+		req.session.eventBookings=false;
+		req.session.userBookings=true;
+		res.locals.event={};
+		User.findOne(req.param("userid")).exec(function(err,user){
+			if (err) {
+				return res.negotiate(err);
+			}
+			res.locals.selectedUser=user;
+			res.view('bookings',{			
+			  filter: req.session.bookingFilter,
+			  myBookings: false,
+			  eventBookings: false,
+			  userBookings: true,
+			  errors: req.flash('error')
+			});  	
+		})		
+	}, 
 	
 	/**
 	 * Prepare data for booking
@@ -64,6 +95,7 @@ module.exports = {
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
 		var myBookings=(req.param("mybookings"))?true:false;
 		var eventBookings=(req.param("eventbookings"))?true:false;
+		var userBookings=(req.param("userbookings"))?true:false;
 			
 		// Private function to process the initiation
 		var initialiseBooking=function(event,existingBooking){
@@ -86,6 +118,7 @@ module.exports = {
 				res.locals.booking=existingBooking;
 				res.locals.myBookings=myBookings;
 				res.locals.eventBookings=eventBookings;
+				res.locals.userBookings=userBookings;
 				res.locals.mops=sails.config.events.mops;
 					
 				// Get the data for the event and the user and then navigate to the booking view
@@ -487,12 +520,12 @@ module.exports = {
 						where: where,
 						sort: {
 								event: {
-									date:2,
-									time:2
+									date:'desc',
+									time:'desc'
 								}		
 						}
 					}
-			).populate('event').populate('additions',{sort:{surname:1}}) 
+			).populate('event').populate('additions',{sort:{surname:'asc'}}) 
 			.exec(function(err, bookings){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve bookings.');
@@ -558,12 +591,12 @@ module.exports = {
 							where: where,
 							sort: {
 									user: {
-										surname:1,
-										firstName:1
+										surname:'asc',
+										firstName:'asc'
 									}		
 							}
 						}
-				).populate('user').populate('additions',{sort:{surname:1}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
+				).populate('user').populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
 				.exec(function(err, bookings){
 					if (err) {
 						sails.log.verbose('Error occurred trying to retrieve bookings.');
@@ -606,6 +639,80 @@ module.exports = {
 			getBookings(req,res)
 		}									
 		
+			
+	},
+	
+	/**
+	 * Get all user bookings  
+     * 
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	allUserBookings: function (req, res) {
+		
+		var filter=req.param('filter');
+		req.session.bookingFilter=filter;
+		var download=req.param('download');
+								
+		User.findOne(req.param("userid")).exec(function(err,user){
+			if (err) {
+				sails.log.verbose('Error occurred trying to retrieve user.');
+				return res.negotiate(err);
+		  	}	
+			var where = {};
+			where.user=user.id;
+					
+			if (filter && filter.length>0) {
+				where.or= 	[
+								{event:{name: {contains: filter}}},
+								{event:{venue: {contains: filter}}},
+								{event:{blurb: {contains: filter}}},
+								{ref: {contains: filter}},
+							]
+				if (filter.toLowerCase()=="paid") {
+					where.or.push({paid:true})
+				}
+				if (filter.toLowerCase()=="unpaid" || filter.toLowerCase()=="late") {
+					where.or.push({paid:false});
+					where.or.push({paid:null})
+				}
+			}
+											
+			Booking.find({
+							where: where,
+							sort: {
+									event: {
+										date:'desc',
+										time:'desc'
+									}		
+							}
+						}
+				).populate('event').populate('additions',{sort:{surname:'asc'}}) 
+				.exec(function(err, bookings){
+					if (err) {
+						sails.log.verbose('Error occurred trying to retrieve bookings.');
+						return res.negotiate(err);
+				  	}	
+					  
+					// If we only want late bookings, filter the list
+					if (filter && filter.toLowerCase()=="late") {
+						bookings=sails.controllers.booking.filterLate(bookings);
+					}  
+					  
+					if (download) {					
+						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, bookings, user);					
+					}
+					else {
+						// If session refers to a user who no longer exists, still allow logout.
+					  	if (!bookings) {
+					    	return res.json({});
+					  	}
+						  
+						return res.json(bookings);  	
+					}			  	
+				}
+			)	  
+		})
 			
 	},
 	

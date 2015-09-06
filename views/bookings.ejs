@@ -29,9 +29,11 @@
       _csrf: "<%= _csrf %>",
        user: <%- JSON.stringify(res.locals.user) %>,
        event: <%- JSON.stringify(res.locals.event) %>,
+       selectedUser: <%- JSON.stringify(res.locals.selectedUser) %>,
        filter: "<%- filter %>",
        myBookings: <%- myBookings %>,
        eventBookings: <%- eventBookings %>,
+       userBookings: <%- userBookings %>,
     };
     
     </script>
@@ -47,7 +49,7 @@
       <!--BOOKING FORM --> 
       <form ng-submit="filterBookings()" id="filter-form" name="filterform" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings <span ng-show="eventBookings">for {{event.name}}</span></h3>
+        <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings <span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
         
         <div ng-show="eventBookings">
           <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
@@ -55,6 +57,7 @@
           <h5>Places remaining: {{event.capacity}}</h5>  
           <h5>Organiser: {{event.organiser.name}} (<a href="mailto:{{event.organiser.email}}" target="_top">{{event.organiser.email}}</a>)</h5>     
         </div>
+         
         
         <div class="row">
   
@@ -99,6 +102,9 @@
       <% if (eventBookings) {%> 
       <div deckgrid source="bookings" cardTemplate="/templates/eventBookings.html" class="deckgrid"></div> 
       <% } %>
+      <% if (userBookings) {%> 
+      <div deckgrid source="bookings" cardTemplate="/templates/userBookings.html" class="deckgrid"></div> 
+      <% } %>  
      
     
       <% include partials/public/footer.ejs %>   

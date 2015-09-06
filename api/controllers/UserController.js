@@ -78,8 +78,8 @@ module.exports = {
 		User.find({
 						where: where,
 						sort: {
-								surname:1,
-								firstName:1
+								surname:'asc',
+								firstName:'asc'
 						}
 					}
 			).exec(

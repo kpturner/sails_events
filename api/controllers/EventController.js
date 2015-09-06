@@ -36,8 +36,8 @@ module.exports = {
 								closingDate: { '>': today } 
 							}, 
 					sort: 	{
-								date:1,
-								time:1
+								date:'desc',
+								time:'desc'
 							}
 					})
 					.populate('organiser')
@@ -86,8 +86,8 @@ module.exports = {
 		Event.find({
 						where: where,
 						sort: {
-								date:2,
-								time:2
+								date:'desc',
+								time:'desc'
 						}
 					}
 			).populate('organiser').exec(

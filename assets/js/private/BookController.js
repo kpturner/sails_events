@@ -39,6 +39,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.existingBooking=false;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
+	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
+	$scope.placesMin=$scope.event.minBookingPlaces||1;
+	if ($scope.placesMin>$scope.placesMax)
+		$scope.placesMin=$scope.placesMax
 	if ($scope.mode!="create") {
 		if (SAILS_LOCALS.booking.id) {
 			$scope.bookingForm = SAILS_LOCALS.booking.user;	
@@ -47,10 +51,6 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			$scope.bookingForm = $scope.user;	
 		}		
 		$scope.paidMsg="";
-		$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;
-		$scope.placesMin=$scope.event.minBookingPlaces||1;
-		if ($scope.placesMin>$scope.placesMax)
-			$scope.placesMin=$scope.placesMax
 		// Convert lodge no to numeric
 		$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
 		// Initialise confirmation email
