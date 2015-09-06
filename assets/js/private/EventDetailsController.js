@@ -101,6 +101,9 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 	$scope.submitEventForm = function(){
 		$scope.eventForm.loading=true;
 						
+		if ($scope.maxBookingPlaces<$scope.minBookingPlaces)
+			$scope.maxBookingPlaces=$scope.minBookingPlaces;				
+						
 		// Submit request to Sails.
 		$http.post('/updateevent/'+$scope.mode, {
 			data: $scope.eventForm			 
