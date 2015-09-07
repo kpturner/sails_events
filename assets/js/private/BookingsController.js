@@ -92,8 +92,13 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		 */
 		$scope.createNewBooking = function(eventId) {
 			$scope.newBooking=true;
-			var eventId=(eventId)?eventId:$scope.event.id;
-			window.location="/booking/create/?eventid="+eventId+'&eventbookings=true';
+			if ($scope.userBookings) {
+				window.location="/booking/create/?userid="+$scope.selectedUser.id+'&userbookings=true';	
+			}
+			else {
+				var eventId=(eventId)?eventId:$scope.event.id;
+				window.location="/booking/create/?eventid="+eventId+'&eventbookings=true';	
+			}			
 		}
 		
 		/**

@@ -10,6 +10,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.event=SAILS_LOCALS.event;
 	$scope.mode=SAILS_LOCALS.mode;
+	$scope.selectedUserId=SAILS_LOCALS.selectedUserId; // Only populated when the administrator is making a booking on behalf of another user
 	
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
@@ -48,14 +49,35 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			$scope.bookingForm = SAILS_LOCALS.booking.user;	
 		}
 		else {
-			$scope.bookingForm = $scope.user;	
+			$scope.bookingForm = $scope.user;							
 		}		
 		$scope.paidMsg="";
 		// Convert lodge no to numeric
 		$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
 		// Initialise confirmation email
 		$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
-	}		
+	}	
+	else {
+		if ($scope.selectedUserId) {
+			// Administrator is booking on behalf of another user
+			$scope.userBookings=true;			
+			$http.get("/user/"+	$scope.selectedUserId)
+				.success(function(data,status){
+					$scope.bookingForm=data;
+					$scope.paidMsg="";
+					// Convert lodge no to numeric
+					$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
+					// Initialise confirmation email
+					$scope.bookingForm.confirmemail = $scope.bookingForm.email;	
+					$scope.bookingForm.places=$scope.placesMin;
+					if ($scope.bookingForm.places>1)
+						$scope.makeArray();			
+				})
+				.error(function(data, status, headers, config) {
+					console.log("Error retrieving selected user for booking "+$scope.selectedUserId)
+				});
+		}
+	}	
 
 	// If we are in "create" mode we should be safe to assume that there
 	// will be no existing booking details
@@ -89,9 +111,11 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 	}
 	else {
-		$scope.bookingForm.places=$scope.placesMin;
-		if ($scope.bookingForm.places>1)
-			$scope.makeArray();		
+		if (!$scope.selectedUserId) {
+			$scope.bookingForm.places=$scope.placesMin;
+			if ($scope.bookingForm.places>1)
+				$scope.makeArray();
+		}		
 	}
 
 	
@@ -201,6 +225,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							window.location='/mybookings'
 						else if ($scope.eventBookings)
 							window.location='/eventbookings?eventid='+$scope.event.id;
+						else if ($scope.userBookings)
+							window.location='/userbookings?userid='+$scope.selectedUserId;
 						else
 							window.location = '/'	
 					},1000)				
@@ -277,6 +303,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							window.location='/mybookings'
 						else if ($scope.eventBookings)
 							window.location='/eventbookings?eventid='+$scope.event.id;
+						else if ($scope.userBookings)
+							window.location='/userbookings?userid='+$scope.selectedUserId;
 						else
 							window.location = '/'
 					},1000);
@@ -303,7 +331,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				route+='/create';
 				// Check the email address being used and, if it is already in use, warn the user
 				// before proceeding
-				$http.get("/user?email="+$scope.bookingForm.email)
+				if (!$scope.selectedUserId) {
+					$http.get("/user?email="+$scope.bookingForm.email)
 					.then(function(sailsResponse){
 						if (sailsResponse.data.length>0) {
 							$scope.duplicateUser=sailsResponse.data[0];
@@ -328,6 +357,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						else 
 							makeBooking(route);
 					})	
+				}
+				else {
+					// Administrator making a booking for another user
+					route+="?selecteduserid="+$scope.selectedUserId; 
+					makeBooking(route);
+				}
 			}
 			else {
 				makeBooking(route);

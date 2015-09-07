@@ -75,12 +75,12 @@
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="createNewBooking()" ng-disabled="newBooking" ng-show="eventBookings">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="createNewBooking()" ng-disabled="newBooking" ng-show="eventBookings || userBookings">
           <span ng-show="!newBooking">Create booking</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="newBooking" ></span>
           <span ng-show="newBooking">Please wait...</span>
         </button>
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking">
           <span ng-show="!newBooking">Download bookings</span>         
         </button>  
         
@@ -128,6 +128,7 @@
     <script src="/js/private/EventDetailsController.js"></script>
     <script src="/js/private/EventsController.js"></script>
     <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UserBookingsController.js"></script>
     <script src="/js/private/UserDetailsController.js"></script>
     <script src="/js/private/UsersController.js"></script>
     <script src="/js/public/HomepageController.js"></script>

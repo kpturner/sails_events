@@ -89,8 +89,10 @@ module.exports = {
 		
 		var eventId=req.param("eventid");
 		var bookingId=req.param("bookingid");
+		var userId=req.param("userid");
+		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making a booking on behalf of someone else
 		var action=req.param("action");
-		var mode="edit";
+		var mode=(selectedUserId)?"create":"edit";
 		if (action)
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
 		var myBookings=(req.param("mybookings"))?true:false;
@@ -120,6 +122,7 @@ module.exports = {
 				res.locals.eventBookings=eventBookings;
 				res.locals.userBookings=userBookings;
 				res.locals.mops=sails.config.events.mops;
+				res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
 					
 				// Get the data for the event and the user and then navigate to the booking view
 				if (req.wantsJSON)
@@ -134,53 +137,68 @@ module.exports = {
 						});		
 			})	
 		}	
-			
-		// If we have a booking id then we are editing the booking from either MyBookings or the admin booking maintenance
-		// as opposed to the public dashboard
-		if (bookingId) {
-			Booking.findOne(bookingId).populate('user').exec(function(err, existingBooking) {
-				if (err) {
-					return res.genericErrorResponse('470','This booking no longer exists!')
-				}
-				else {
-					if (!existingBooking) {
-						return res.view('events',{
-								  filter: req.session.eventFilter,
-								  errors: req.flash('error')
-								});  
-					}
-					Event.findOne(existingBooking.event).populate("organiser").exec(function(err,event){
-						initialiseBooking(event,existingBooking);			
-					})					
-				}					
-			})
-		}	
-		else {	
-			Event.findOne(eventId).populate('organiser').exec(function(err,event){
+		
+		
+		// User bookings must simply go to a look-a-like of the dashboard, but with a pre-selected user
+		if (userBookings && userId) {
+			User.findOne(userId).exec(function(err,user){
 				if (err) {
 					return res.negotiate(err);
-				}	
-				// Create or edit/delete mode?				
-				if (action=="create") {
-					initialiseBooking(event);
 				}
-				else {
-					// Has the user already made this booking?  If multiple bookings are allowed, we don't care (treat it as a new booking)
-					if (!sails.config.events.multipleBookings) {
-						Booking.findOne({
-											event: eventId,
-											user:req.user.id
-										}).populate('user').exec(function(err, existingBooking) {
-							// if there is already a booking for this user the called function will get it, otherwise it will get nada
-							initialiseBooking(event,existingBooking);	
-						})
+				return res.view("userBookings",{
+					selectedUser: user
+				})
+			})
+		}
+		else {
+			// If we have a booking id then we are editing the booking from either MyBookings or the admin booking maintenance
+			// as opposed to the public dashboard
+			if (bookingId) {
+				Booking.findOne(bookingId).populate('user').exec(function(err, existingBooking) {
+					if (err) {
+						return res.genericErrorResponse('470','This booking no longer exists!')
 					}
 					else {
-						initialiseBooking(event);
+						if (!existingBooking) {
+							return res.view('events',{
+									filter: req.session.eventFilter,
+									errors: req.flash('error')
+									});  
+						}
+						Event.findOne(existingBooking.event).populate("organiser").exec(function(err,event){
+							initialiseBooking(event,existingBooking);			
+						})					
 					}					
-				}			
-			})					
-		}	
+				})
+			}	
+			else {	
+				Event.findOne(eventId).populate('organiser').exec(function(err,event){
+					if (err) {
+						return res.negotiate(err);
+					}	
+					// Create or edit/delete mode?				
+					if (action=="create") {
+						initialiseBooking(event);
+					}
+					else {
+						// Has the user already made this booking?  If multiple bookings are allowed, we don't care (treat it as a new booking)
+						if (!sails.config.events.multipleBookings) {
+							var userId=(selectedUserId)?selectedUserId:req.user.id;
+							Booking.findOne({
+												event: eventId,
+												user:userId
+											}).populate('user').exec(function(err, existingBooking) {
+								// if there is already a booking for this user the called function will get it, otherwise it will get nada
+								initialiseBooking(event,existingBooking);	
+							})
+						}
+						else {
+							initialiseBooking(event);
+						}					
+					}			
+				})					
+			}		
+		}
 		
 	},
 	
@@ -192,6 +210,7 @@ module.exports = {
 		var eventId=req.param("eventid");
 		var bookingId=req.param("bookingId");
 		var action=req.param("action");		
+		var selectedUserId=req.param("selecteduserid");		
 		var bookingRef=null;
 		var bookingDate=null;
 				 
@@ -402,24 +421,30 @@ module.exports = {
 			// We need to decide if we are using the current user (normal booking) or if we 
 			// are in "create" mode where the user may or may not exist yet
 			if (action=="create") {
-				// Does the user exist already (with this email address?)
-				User.findOne({email:user.email}).exec(function(err,existingUser){
-					if (err || !existingUser) {
-						// Create a dummy user for the booking
-						user.authProvider="dummy";
-						User.create(user).exec(function(err, newUser){
-							if (err) {
-								//!Ouch!
-								sails.log.error('res.genericErrorResponse() :: Sending '+errorCode+': '+errorMsg+' response');
-								return res.genericErrorResponse("455","Booking failed. Attempt to create new user failed!")
-							}
-							bookIt(newUser.id)
-						})
-					}
-					else {
-						bookIt(existingUser.id);
-					}
-				})
+				if (selectedUserId) {
+					// Administrator making booking on behalf of another user
+					bookIt(selectedUserId);	
+				}
+				else {
+					// Does the user exist already (with this email address?)
+					User.findOne({email:user.email}).exec(function(err,existingUser){
+						if (err || !existingUser) {
+							// Create a dummy user for the booking
+							user.authProvider="dummy";
+							User.create(user).exec(function(err, newUser){
+								if (err) {
+									//!Ouch!
+									sails.log.error('res.genericErrorResponse() :: Sending '+errorCode+': '+errorMsg+' response');
+									return res.genericErrorResponse("455","Booking failed. Attempt to create new user failed!")
+								}
+								bookIt(newUser.id)
+							})
+						}
+						else {
+							bookIt(existingUser.id);
+						}
+					})	
+				}				
 			}
 			else {
 				if (bookingId) {
@@ -459,7 +484,7 @@ module.exports = {
 		// Now we want a list of additional bookings that are recorded against this
 		// event, excluding those from this particular booking
 		var duplicates=[];
-		Booking.find(where).populate("additions")
+		Booking.find(where).populate('user').populate("additions")
 			.exec(function(err,bookings){
 				if (err) {
 					console.log(err)
@@ -467,6 +492,17 @@ module.exports = {
 				// Traverse the bookings and analyse each additional booking
 				if (bookings) {
 					bookings.forEach(function(booking,b){
+						// Check the main bookee first
+						linkedBookings.forEach(function(ob,m){
+							if (
+									booking.user.surname.toLowerCase()==ob.surname.toLowerCase()
+								&&	booking.user.firstName.toLowerCase()==ob.firstName.toLowerCase()	
+							) {
+									if (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase()==ob.lodge.toLowerCase())
+										duplicates.push(ob)
+							}	
+						})
+						// Additions		
 						booking.additions.forEach(function(lb,l){
 							// Possible duplicate?
 							linkedBookings.forEach(function(ob,m){
@@ -474,7 +510,8 @@ module.exports = {
 										lb.surname.toLowerCase()==ob.surname.toLowerCase()
 									&&	lb.firstName.toLowerCase()==ob.firstName.toLowerCase()	
 								) {
-										duplicates.push(ob)
+										if (lb.lodge && ob.lodge && lb.lodge.toLowerCase()==ob.lodge.toLowerCase())
+											duplicates.push(ob)
 								}	
 							})						
 						})

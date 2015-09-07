@@ -13,7 +13,7 @@
                         event.paid.$dirty}" ng-hide="mode=='create'">
   <label>Amount paid</label>       
     <input type="number" class="form-control" placeholder="e.g. 20.00" name="amountpaid" ng-model="<%-model%>Form.amountPaid" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" 
-      ng-disabled="!eventBookings || mode=='delete'"></input>
+      ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
    
 </div>      
 
@@ -23,7 +23,7 @@
   ng-class="{'has-error':event.paid.$invalid &&
                         event.paid.$dirty}" ng-hide="mode=='create'">
    <label>
-    <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="!eventBookings || mode=='delete'"></input>
+    <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
     &nbsp;Fully paid?
    </label>
 </div>  
@@ -31,7 +31,7 @@
  <!-- M E T H O D  O F  P A Y M E N T -->
 <div class="control-group form-group col-md-5"
   ng-class="{'has-error':event.mop.$invalid &&
-                        event.mop.$dirty}" ng-hide="mode=='create' || !eventBookings">
+                        event.mop.$dirty}" ng-hide="mode=='create' || (!eventBookings && !userBookings)">
   <label>Method of Payment</label>  
   <select class="form-control" placeholder="e.g. BACS" name="mop" ng-options="mop for mop in mops" ng-model="<%-model%>Form.mop">
     <option value="">-- choose mop --</option>
