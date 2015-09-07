@@ -11,7 +11,7 @@ The screenshots here are from an iPhone 6.
 
 The following screen will be displayed:
 
-![](reademe_media/media/image1.png)
+![](readme_media/media/image1.png)
 
 If you use Social Media regularly, you may find it convenient to
 register with your Twitter, Facebook or Google account simply by
@@ -23,7 +23,7 @@ The following screen is then shown. You must complete all the fields
 whose label is flagged with an asterisk. Some fields will be already
 filled in if you have used a Social Media passport.
 
-![](reademe_media/media/image2.png)![](reademe_media/media/image3.png)
+![](readme_media/media/image2.png)![](readme_media/media/image3.png)
 
 *The user name and password field(s) are only shown if you are signing
 up manually (as opposed to using your Social Media passport).* When all
@@ -42,7 +42,7 @@ Administrators have more functions that ordinary users, such as the
 ability to edit users, create and administer events, download bookings
 and manually add bookings to events. If you think you require
 administrative rights, please email an existing administrator and
-provide the details you registered with (email address will be suffice.
+provide the details you registered with (email address will be suffice).
 
 Booking in
 ==========
@@ -52,12 +52,12 @@ it by clicking/tapping the “Book in” text in the top left hand corner.
 Clicking the provincial logo will take you to the provincial web site.
 On this screen you will see a list of events that are available.
 
-![](reademe_media/media/image4.png)
+![](readme_media/media/image4.png)
 
 Simply tab or click an event to book in. The following screen is
 displayed:
 
-![](reademe_media/media/image5.png)![](reademe_media/media/image6.png)
+![](readme_media/media/image5.png)![](readme_media/media/image6.png)
 
 Simply fill in your details (some will filled in automatically) and
 click “Book now”.
@@ -74,17 +74,19 @@ If you need to book other people in as well as yourself, change the
 Managing your bookings
 ======================
 
-In the top right hand corner of the screen is a menu button:
-![](reademe_media/media/image7.png)
+On small screens there is a menu button in the top right hand corner:
+![](readme_media/media/image7.png)
+
+On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the
 options that are available to you. Click on
 
-![](reademe_media/media/image8.png)
+![](readme_media/media/image8.png)
 
 And you will get a list of your bookings:
 
-![](reademe_media/media/image9.png)
+![](readme_media/media/image9.png)
 
 Here I only have one booking, but you may have several. You can narrow
 down the list by keying in filter information (event name, venue etc) or
@@ -106,13 +108,15 @@ for something like Perfect Table Plan.
 Managing your profile
 =====================
 
-In the top right hand corner of the screen is a menu button:
-![](reademe_media/media/image7.png)
+On small screens there is a menu button in the top right hand corner:
+![](readme_media/media/image7.png)
+
+On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the
 options that are available to you. Click on
 
-![](reademe_media/media/image10.png)
+![](readme_media/media/image10.png)
 
 This will take you to the same page that you saw when you registered.
 Here you can edit and save your profile details (i.e. you registered
@@ -123,13 +127,15 @@ Administering events
 
 ***This option is only available to administrators.***
 
-In the top right hand corner of the screen is a menu button:
-![](reademe_media/media/image7.png)
+On small screens there is a menu button in the top right hand corner:
+![](readme_media/media/image7.png)
+
+On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the
 options that are available to you. Click on
 
-![](reademe_media/media/image11.png)
+![](readme_media/media/image11.png)
 
 You will get a list of existing events that you can filter, create,
 copy, change or delete.
@@ -137,39 +143,40 @@ copy, change or delete.
 You can also view all the bookings associated with an event, and
 edit/download those.
 
-![](reademe_media/media/image12.png)
+![](readme_media/media/image12.png)
 
 The event maintenance page looks like this:
 
-![](reademe_media/media/image13.png)
-![](reademe_media/media/image14.png)
+![](readme_media/media/image13.png) ![](readme_media/media/image14.png)
 
-![](reademe_media/media/image15.png)
+![](readme_media/media/image15.png)
 
 Administering users
 ===================
 
 ***This option is only available to administrators.***
 
-In the top right hand corner of the screen is a menu button:
-![](reademe_media/media/image7.png)
+On small screens there is a menu button in the top right hand corner:
+![](readme_media/media/image7.png)
+
+On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the
 options that are available to you. Click on
 
-![](reademe_media/media/image16.png)
+![](readme_media/media/image16.png)
 
 You will then get a list of the users that you can filter, edit or
 delete.
 
-![](reademe_media/media/image17.png)
+![](readme_media/media/image17.png)
 
 The user maintenance screen is similar to the profile maintenance
 screen, but has some extra fields that only administrators can see:
 
-![](reademe_media/media/image18.png)
+![](readme_media/media/image18.png)
 
 Email example
 =============
 
-![](reademe_media/media/image19.png)
+![](readme_media/media/image19.png)

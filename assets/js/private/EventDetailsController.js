@@ -6,8 +6,9 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		loading: false
 	}
 
-	$scope.eventForm=SAILS_LOCALS.event;
 	
+	$scope.eventForm=SAILS_LOCALS.event;
+		
 	// Get a list of users in name order
 	$http.get("/organisers")
 		.then(function onSuccess(sailsResponse){
