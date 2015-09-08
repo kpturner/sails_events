@@ -37,7 +37,7 @@
        
       <!-- EVENT FORM --> 
       <form ng-submit="filterEvents()" id="filter-form" name="filterform" 
-          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}"> 
         <h3 class="form-signin-heading">Event Maintenance</h3>
         
         <div class="row">
@@ -52,7 +52,7 @@
         </div>
          
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading">
-          <span ng-show="!filterForm.loading">Filter events</span>
+          <span class="fa fa-filter"></span><span ng-show="!filterForm.loading"> Filter events</span>
           <span class="overlord-loading-spinner fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
