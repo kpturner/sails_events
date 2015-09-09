@@ -6,7 +6,7 @@
             <h5>Lodge: {{card.user.lodge}} {{card.user.lodgeNo}}</h4>      
             <h5>Places: {{card.places}} Paid: {{(card.paid)?'Yes':'No'}}</h4>      
             <h5>Ref: {{card.ref}}</h5>    
-            <h5><a href="mailto:{{card.user.email}}?Subject={{mother.event.name}}: {{ mother.event.date | date : 'EEE, MMM dd, yyyy'}} at {{mother.event.time}}" target="_top">Send email</a></h5>                             
+            <h5><a href="mailto:{{card.user.email}}?Subject={{mother.event.name}}: {{ mother.event.date | date : 'EEE, MMM dd, yyyy'}} at {{mother.event.time}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
         </div>        
     </a>
     <div class="photo-description">

@@ -5,7 +5,7 @@
                     
             <h5>{{ card.event.date | date : 'EEE, MMM dd, yyyy'}} at {{card.event.time}}</h5>
             <h5>Ref: {{card.ref}}</h5> 
-            <h5><a href="mailto:{{mother.selectedUser.email}}?Subject={{card.event.name}}: {{ card.event.date | date : 'EEE, MMM dd, yyyy'}} at {{card.event.time}}" target="_top">Send email</a></h5>   
+            <h5><a href="mailto:{{mother.selectedUser.email}}?Subject={{card.event.name}}: {{ card.event.date | date : 'EEE, MMM dd, yyyy'}} at {{card.event.time}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>   
             <p>{{card.event.venue}}<p>
                      
         </div>        
