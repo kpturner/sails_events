@@ -12,6 +12,10 @@
 	}
 }
 
+.card-btn {
+	margin-top: 3px;
+}
+
 .bigcheckbox {
 	transform:scale(2, 2);
 }

@@ -4,14 +4,15 @@
             <h3>{{card.event.name}}</h3> 
                     
             <h5>{{ card.event.date | date : 'EEE, MMM dd, yyyy'}} at {{card.event.time}}</h5>
-            <h5>Ref: {{card.ref}}</h5>    
+            <h5>Ref: {{card.ref}}</h5> 
+            <h5><a href="mailto:{{mother.selectedUser.email}}?Subject={{card.event.name}}: {{ card.event.date | date : 'EEE, MMM dd, yyyy'}} at {{card.event.time}}" target="_top">Send email</a></h5>   
             <p>{{card.event.venue}}<p>
                      
         </div>        
     </a>
     <div class="photo-description">
         <a href="/booking/delete?bookingid={{card.id}}&userbookings=true" class="a-unstyled">     
-            <button type="button" class="btn btn-danger">
+            <button type="button" class="btn btn-danger card-btn">
                 <span>Cancel booking</span>
             </button>
         </a>          

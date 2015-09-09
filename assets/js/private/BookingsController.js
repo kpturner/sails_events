@@ -31,9 +31,9 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			.success(function(data, status) {
 				if (typeof data == 'object') {
 					$scope.bookings = data;
-					// Calculate capacity 
+					// Calculate capacity and add user details if needed
 					$scope.bookings.forEach(function(b,i){
-						$scope.event.capacity-=b.places;
+						$scope.event.capacity-=b.places;						
 					})
 					 				
 				}
@@ -122,41 +122,5 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		
 		}	
 		
-		/**
-		 * Download bookings
-		 */  
-		/* 
-		$scope.downloadBookings = function(){
-			$scope.downloading=true;
-			// Submit request to Sails.
-			var route;
-			if (SAILS_LOCALS.myBookings) {
-				route='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1&download=1'
-			}
-			else {
-				route='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id+'&download=1';
-			}	
-			$http.get(route)
-				.then(function onSuccess(sailsResponse){
-					if (typeof sailsResponse.data == 'object') {
-						$scope.bookings = sailsResponse.data;					
-					}
-					else {
-						window.location="/";
-					}
-				})
-				.catch(function onError(sailsResponse){
-		
-					// Handle known error type(s).
-					toastr.error(sailsResponse.data, 'Error');
-					
-		
-				})
-				.finally(function eitherWay(){
-					$scope.downloading = false;
-				})
-		}
-
-		*/ 
-
+		 
 }])
