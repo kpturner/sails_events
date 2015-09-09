@@ -12,6 +12,10 @@
 	}
 }
 
+.deckgrid {
+      width:100%;
+}
+
 .card-btn {
 	margin-top: 3px;
 }
