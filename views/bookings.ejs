@@ -51,11 +51,16 @@
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings <span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
         
+        <div ng-show="userBookings">
+          <h5><a href="mailto:{{selectedUser.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
+          <h5 ng-hide="!selectedUser.phone"><span class="fa fa-phone"></span> {{selectedUser.phone}}</h5>  
+        </div>  
+        
         <div ng-show="eventBookings">
           <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
           <h4>{{event.venue}}<h4>
           <h5>Places remaining: {{event.capacity}}</h5>  
-          <h5>Organiser: {{event.organiser.name}} (<a href="mailto:{{event.organiser.email}}" target="_top">{{event.organiser.email}}</a>)</h5>     
+          <h5><a href="mailto:{{event.organiser.email}}?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}" target="_top"><span class="fa fa-envelope"></span> Organiser: {{event.organiser.name}}</a></h5>     
         </div>
          
         
@@ -90,21 +95,22 @@
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form> 
-        
-      
-       
-      <h4 class="hidden-md hidden-lg">Tap a booking to edit</h4>  
-      <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>  
             
-      <% if (myBookings) {%> 
-      <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div> 
-      <% } %>
-      <% if (eventBookings) {%> 
-      <div deckgrid source="bookings" cardTemplate="/templates/eventBookings.html" class="deckgrid"></div> 
-      <% } %>
-      <% if (userBookings) {%> 
-      <div deckgrid source="bookings" cardTemplate="/templates/userBookings.html" class="deckgrid"></div> 
-      <% } %>  
+     
+      <div class="container">      
+        <h4 class="hidden-md hidden-lg">Tap a booking to edit</h4>  
+        <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>  
+            
+        <% if (myBookings) {%> 
+        <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div> 
+        <% } %>
+        <% if (eventBookings) {%> 
+        <div deckgrid source="bookings" cardTemplate="/templates/eventBookings.html" class="deckgrid"></div> 
+        <% } %>
+        <% if (userBookings) {%> 
+        <div deckgrid source="bookings" cardTemplate="/templates/userBookings.html" class="deckgrid"></div> 
+        <% } %>  
+      </div>  
      
     
       <% include partials/public/footer.ejs %>   

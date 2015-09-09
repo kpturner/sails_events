@@ -5,6 +5,8 @@
                       
             <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>   
              
+            <p><a href="mailto:{{card.organiser.email}}?Subject={{card.name}}: {{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}" target="_top"><span class="fa fa-envelope"></span> {{card.organiser.name}}</a></p> 
+            <p ng-hide="!card.organiser.phone"><span class="fa fa-phone"></span> {{card.organiser.phone}}</p>             
                           
         </div>        
     </a>  
