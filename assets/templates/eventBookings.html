@@ -7,7 +7,7 @@
             <h5>Places: {{card.places}} Paid: {{(card.paid)?'Yes':'No'}}</h4>      
             <h5>Ref: {{card.ref}}</h5>    
             <h5><a href="mailto:{{card.user.email}}?Subject={{mother.event.name}}: {{ mother.event.date | date : 'EEE, MMM dd, yyyy'}} at {{mother.event.time}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
-            <h5 ng-hide="!card.user.phone"><span class="fa fa-phone"></span> {{card.user.phone}}</h5>      
+            <h5 ng-hide="!card.user.phone"><a href="tel:{{card.user.phone}}"><span class="fa fa-phone"></span> {{card.user.phone}}</a></h5>      
         </div>        
     </a>
     <div class="photo-description">

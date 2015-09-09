@@ -53,7 +53,7 @@
         
         <div ng-show="userBookings">
           <h5><a href="mailto:{{selectedUser.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
-          <h5 ng-hide="!selectedUser.phone"><span class="fa fa-phone"></span> {{selectedUser.phone}}</h5>  
+          <h5 ng-hide="!selectedUser.phone"><a href="tel:{{selectedUser.phone}}"><span class="fa fa-phone"></span> {{selectedUser.phone}}</a></h5>  
         </div>  
         
         <div ng-show="eventBookings">

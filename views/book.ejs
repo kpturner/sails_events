@@ -59,7 +59,7 @@
         <h5>Price per place: £{{event.price.toFixed(2)}}</h5>
         <h5>Places remaining: {{event.capacity}}</h5>  
         <h5><a href="mailto:{{event.organiser.email}}?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}" target="_top"><span class="fa fa-envelope"></span> Organiser: {{event.organiser.name}}</a></h5> 
-        <h5 ng-hide="!event.organiser.phone"><span class="fa fa-phone"></span> {{event.organiser.phone}}</h5>
+        <h5 ng-hide="!event.organiser.phone">< href="tel:{{event.organiser.phone}}"><span class="fa fa-phone"></span> {{event.organiser.phone}}</a></h5>
         <h3 ng-hide="event.capacity>0">THIS EVENT IS FULLY BOOKED</h3>     
         <h3 ng-hide="eventBookings || userBookings || !existingBooking || myBookings || mode=='delete'">YOU HAVE ALREADY BOOKED IN {{paidMsg}}</h3> 
         <h3 ng-hide="eventBookings || userBookings || existingBooking">HINT: CHECK YOUR EMAIL SPAM FOLDER!</h3> 

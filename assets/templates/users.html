@@ -4,7 +4,7 @@
             <h4>{{card.surname}}, {{card.firstName}}</h4> 
             <h4>Lodge: {{card.lodge}} {{card.lodgeNo}}</h4> 
             <h5><a href="mailto:{{card.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>      
-            <h5 ng-hide="!card.phone"><span class="fa fa-phone"></span> {{card.phone}}</h5>            
+            <h5 ng-hide="!card.phone"><a href="tel:{{card.phone}}"><span class="fa fa-phone"></span> {{card.phone}}</a></h5>            
         </div>        
     </a>  
     <div class="photo-description">
