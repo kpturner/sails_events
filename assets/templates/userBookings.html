@@ -2,8 +2,9 @@
     <a href="/booking?bookingid={{card.id}}&userbookings=true" class="a-unstyled">        
         <div class="photo-description">
             <h3>{{card.event.name}}</h3> 
-                      
+                    
             <h5>{{ card.event.date | date : 'EEE, MMM dd, yyyy'}} at {{card.event.time}}</h5>
+            <h5>Ref: {{card.ref}}</h5>    
             <p>{{card.event.venue}}<p>
                      
         </div>        
