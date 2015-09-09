@@ -11,6 +11,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.event=SAILS_LOCALS.event;
 	$scope.mode=SAILS_LOCALS.mode;
 	$scope.selectedUserId=SAILS_LOCALS.selectedUserId; // Only populated when the administrator is making a booking on behalf of another user
+	$scope.makingBooking=true;
 	
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
