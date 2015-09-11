@@ -128,7 +128,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		if (   (!$scope.bookingForm.name || $scope.bookingForm.name.length==0)
 			|| (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0)
 			|| (!$scope.bookingForm.lodgeNo || isNaN($scope.bookingForm.lodgeNo))
-			|| (!$scope.bookingForm.email || $scope.bookingForm.email.length==0)			
+			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))			
 		) {
 			complete=false;
 		}
@@ -170,7 +170,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					linkedBookings: $scope.linkedbookings,
 					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 				})
-				.then(function onSuccess(sailsResponse){			 
+				.then(function onSuccess(sailsResponse){	
+					if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {
+						toastr.error("Your session has expired. Please log in again")	
+						setTimeout(function(){
+							window.location="/homepage";
+						},1000);
+						return;
+					}		 
 					if (sailsResponse.data.length==0) {
 						// No potential problems
 						$scope.proceed()
@@ -278,6 +285,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					name: $scope.bookingForm.name,
 					surname: $scope.bookingForm.surname,
 					firstName: $scope.bookingForm.firstName,
+					phone: $scope.bookingForm.phone,
 					lodge: $scope.bookingForm.lodge,
 					lodgeNo: $scope.bookingForm.lodgeNo,
 					rank: $scope.bookingForm.rank,
@@ -314,11 +322,16 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					// Handle known error type(s).
 					toastr.error(sailsResponse.data, 'Error');
 					$scope.bookingForm.loading = false;
-					// Re-evaluate the capacity
-					$http.post('/reevaluateevent',{eventid:$scope.event.id})
-						.then(function onSuccess(sailsResponse){
-							$scope.event=sailsResponse.data
-						})
+					setTimeout(function(){
+						if ($scope.myBookings)
+							window.location='/mybookings'
+						else if ($scope.eventBookings)
+							window.location='/eventbookings?eventid='+$scope.event.id;
+						else if ($scope.userBookings)
+							window.location='/userbookings?userid='+$scope.selectedUserId;
+						else
+							window.location = '/'	
+					},3000)				
 				})
 				.finally(function eitherWay(){
 					//$scope.bookingForm.loading = false;
@@ -335,6 +348,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				if (!$scope.selectedUserId) {
 					$http.get("/user?email="+$scope.bookingForm.email)
 					.then(function(sailsResponse){
+						// Session expired?
+						if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {
+							toastr.error("Your session has expired. Please log in again")	
+							setTimeout(function(){
+								window.location="/homepage";
+							},1000);
+							return;
+						}
 						if (sailsResponse.data.length>0) {
 							$scope.duplicateUser=sailsResponse.data[0];
 							var opts={

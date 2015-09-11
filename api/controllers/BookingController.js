@@ -229,10 +229,12 @@ module.exports = {
 			user.rank=req.param("rank");
 			user.dietary=req.param("dietary");
 			user.email=req.param("email");
+			if (req.param("phone"))
+				user.phone=req.param("phone");
 			var linkedBookings=req.param("linkedBookings");
 			
 			/**
-			 *  Private function to create the booking
+			 * Private function to create booking
 			 */
 			var bookIt=function(userId){
 				User.update(userId,user).exec(
@@ -414,7 +416,39 @@ module.exports = {
 		
 						})	
 					}
-				)	
+				)
+			}
+			
+			/**
+			 *  Private function to check and create the booking
+			 */
+			var checkAndbookIt=function(userId){
+				// Check existing booking before continuing
+				Booking.findOne({
+									event: eventId,
+									user:userId
+								}).populate('user').exec(function(err, existingBooking) {
+					if (existingBooking) {
+						if (existingBooking.id==bookingId) {
+							// OK
+							return bookIt(userId);
+						}
+							else {
+								if (!sails.config.events.multipleBookings) {
+								return res.genericErrorResponse("460","Booking failed. This user is already booked in to the event")
+							}
+							else {
+								// OK
+								return bookIt(userId);
+							}	
+						}						
+					}
+					else {
+						// OK
+						return bookIt(userId);
+					} 
+				})				
+					
 			} 
 			/********************************************* */
 			
@@ -423,27 +457,41 @@ module.exports = {
 			if (action=="create") {
 				if (selectedUserId) {
 					// Administrator making booking on behalf of another user
-					bookIt(selectedUserId);	
+					checkAndbookIt(selectedUserId);	
 				}
 				else {
 					// Does the user exist already (with this email address?)
-					User.findOne({email:user.email}).exec(function(err,existingUser){
-						if (err || !existingUser) {
-							// Create a dummy user for the booking
-							user.authProvider="dummy";
-							User.create(user).exec(function(err, newUser){
-								if (err) {
-									//!Ouch!
-									sails.log.error('res.genericErrorResponse() :: Sending '+errorCode+': '+errorMsg+' response');
-									return res.genericErrorResponse("455","Booking failed. Attempt to create new user failed!")
-								}
-								bookIt(newUser.id)
-							})
-						}
-						else {
-							bookIt(existingUser.id);
-						}
-					})	
+					if (user.email) {
+						User.findOne({email:user.email}).exec(function(err,existingUser){
+							if (err || !existingUser) {
+								// Create a dummy user for the booking
+								user.authProvider="dummy";
+								User.create(user).exec(function(err, newUser){
+									if (err) {
+										//!Ouch!
+										sails.log.error('res.genericErrorResponse() :: Sending '+errorCode+': '+errorMsg+' response');
+										return res.genericErrorResponse("455","Booking failed. Attempt to create new user failed!")
+									}
+									checkAndbookIt(newUser.id)
+								})
+							}
+							else {
+								checkAndbookIt(existingUser.id);
+							}
+						})	
+					}
+					else {
+						// No email provided so we must create a dummy user regardless
+						user.authProvider="dummy";
+						User.create(user).exec(function(err, newUser){
+							if (err) {
+								//!Ouch!
+								sails.log.error('res.genericErrorResponse() :: Sending '+errorCode+': '+errorMsg+' response');
+								return res.genericErrorResponse("455","Booking failed. Attempt to create new user failed!")
+							}
+							checkAndbookIt(newUser.id)
+						})
+					}					
 				}				
 			}
 			else {
@@ -451,12 +499,12 @@ module.exports = {
 					// Rebook for existing user
 					Booking.findOne(bookingId).exec(function(err,booking){
 						bookingRef=booking.ref;
-						bookIt(booking.user);	
+						checkAndbookIt(booking.user);	
 					})
 				}
 				else {
 					// Book for current user
-					bookIt(res.locals.user.id);	
+					checkAndbookIt(res.locals.user.id);	
 				}				
 			}
 			

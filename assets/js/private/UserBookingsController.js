@@ -6,7 +6,7 @@ angular.module('EventsModule').controller('UserBookingsController', ['$scope', '
 		$scope.userBookings=true;
 
 		// Get the events
-		$http.get('/openevents').success(function(data, status) {
+		$http.get('/openevents?selecteduserid='+$scope.selectedUser.id).success(function(data, status) {
 			if (typeof data == 'object') {
 				$scope.events = data;
 				$scope.events.forEach(function(event,i){

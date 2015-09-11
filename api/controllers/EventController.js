@@ -29,7 +29,7 @@ module.exports = {
 	 */
 	openEvents: function (req, res) {
 		var today=new Date().getDate();
-		
+		var selectedUserId=req.param("selecteduserid");  // If this exists, omit events for which this user is already booked in
 		Event.find({
 					where:	{
 								open:true,
@@ -53,7 +53,32 @@ module.exports = {
 				    	return res.json({});
 				  	}
 					  
-					return res.json(events);  
+					// If we have a selectedUserId then only include events that the user is NOT booked into already
+					if (selectedUserId && !sails.config.events.multipleBookings) {
+						var particularEvents=[];
+						events.forEach(function(event,index){
+							Booking.find(
+								{
+									where: {
+										event: event.id,
+										user: selectedUserId
+									},
+									limit: 1
+								}
+							).exec(function(err,bookings){
+								if (bookings.length<=0) {
+									particularEvents.push(event)
+								}
+								if (index==events.length-1) {
+									// End of the list of events
+									return res.json(particularEvents);  	
+								}
+							})
+						})						
+					}					
+					else {
+						return res.json(events);  	
+					}  					
 				}
 			)
 			

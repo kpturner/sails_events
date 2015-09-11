@@ -52,7 +52,7 @@
         <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings <span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
         
         <div ng-show="userBookings">
-          <h5><a href="mailto:{{selectedUser.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
+          <h5 ng-hide="!selectedUser.email"><a href="mailto:{{selectedUser.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
           <h5 ng-hide="!selectedUser.phone"><a href="tel:{{selectedUser.phone}}"><span class="fa fa-phone"></span> {{selectedUser.phone}}</a></h5>  
         </div>  
         

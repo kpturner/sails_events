@@ -41,7 +41,7 @@
 <!-- B O O K I N G   R E F -->
   
 <div class="control-group form-group col-xs-10" ng-show="bookingForm.ref.length>0">
-  <label>Booking Reference</label>  
+  <label>Booking/Payment Reference</label>  
   <input type="text" class="form-control" name="ref" ng-model="<%-model%>Form.ref" readonly>  
 </div>         
 
@@ -90,6 +90,13 @@ and/or maxlength) -->
     <span ng-show="<%-model%>.firstname.$error.required">First name is required.</span>
     <span ng-show="<%-model%>.firstname.$error.maxlength">The first name cannot be more than 50 characters.</span>
   </span>
+</div>
+
+<!-- C O N T A C T   N U M B E R -->
+
+<div class="control-group form-group col-xs-10" ng-hide="!eventBookings"> 
+  <label>Contact number</label>
+  <input type="text" class="form-control" placeholder="e.g. mobile number" name="phone" ng-model="<%-model%>Form.phone">   
 </div>
 
 <!-- L O D G E -->
@@ -147,8 +154,8 @@ ng-class="{'has-error':<%-model%>.dietary.$invalid &&
 <div class="control-group form-group col-xs-10"
 ng-class="{'has-error':<%-model%>.email.$invalid &&
                     <%-model%>.email.$dirty}">
-<label>* Email address</label>
-<input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-model%>Form.email" compare-to="<%-model%>Form.confirmemail" required>
+<label><span ng-hide="eventBookings || userBookings">* </span>Email address</label>
+<input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-model%>Form.email" compare-to="<%-model%>Form.confirmemail" ng-required="!eventBookings && !userBookings">
 <span class="help-block has-error" ng-if="<%-model%>.email.$dirty">
   <span ng-show="<%-model%>.email.$error.required">Email address is required.</span>
   <span ng-show="<%-model%>.email.$error.email">Not a valid email address.</span>
@@ -162,7 +169,7 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
                     <%-model%>.confirmemail.$dirty}">
 <label ng-hide="mode=='create'">Re-enter your email address</label>
 <label ng-show="mode=='create'">Re-enter the email address</label>
-<input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-model%>Form.confirmemail" required >
+<input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-model%>Form.confirmemail" ng-required="!eventBookings && !userBookings" >
 <span class="help-block has-error" ng-if="<%-model%>.confirmemail.$dirty">
   <span ng-show="<%-model%>.email.$error.compareTo">Email address must match.</span>
   <span ng-show="<%-model%>.confirmemail.$error.required">Confirmation email address is required.</span>

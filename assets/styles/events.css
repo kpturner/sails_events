@@ -16,6 +16,10 @@
       width:100%;
 }
 
+.photo-description {
+	overflow: auto;
+}
+
 .card-btn {
 	margin-top: 3px;
 }
