@@ -427,7 +427,7 @@ module.exports = {
 				Booking.findOne({
 									event: eventId,
 									user:userId
-								}).populate('user').exec(function(err, existingBooking) {
+								}).exec(function(err, existingBooking) {
 					if (existingBooking) {
 						if (existingBooking.id==bookingId) {
 							// OK
