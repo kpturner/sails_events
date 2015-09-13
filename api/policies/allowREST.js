@@ -15,9 +15,9 @@ module.exports = function(req, res, next) {
   // Allowed only in development mode
   var allowed=true;
  
-  if (action=="find" && process.env.NODE_ENV!=='development') {
-    allowed=false;
-  }
+  //if (action=="find" && process.env.NODE_ENV!=='development') {
+  //  allowed=false;
+  //}
  
   if (allowed) {
     return next();
