@@ -244,8 +244,10 @@ module.exports = {
 						}
 						
 						// User updated
-						req.user=users[0];
-						res.locals.user=req.user;
+						if (!req.session.eventBookings && !req.session.userBookings) {
+							req.user=users[0];
+							res.locals.user=req.user;	
+						}						
 						
 						// Before making the booking, make doubly sure we have capacity
 						var places=0;
@@ -332,7 +334,7 @@ module.exports = {
 																		
 										
 										// If this is the user making a booking, send them a confirmation email	
-										if(!req.session.eventBookings) {
+										if(!req.session.eventBookings && !req.session.userBookings && user.email) {
 											var formattedDate=event.date.toString();
 											formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
 											
@@ -355,7 +357,7 @@ module.exports = {
 											sails.hooks.email.send(
 											"bookingConfirmation",
 										    {
-										      recipientName: res.locals.user.name,
+										      recipientName: user.name,
 										      senderName: sails.config.events.title,
 											  		updated: updated,
 													eventName: event.name,
@@ -368,11 +370,11 @@ module.exports = {
 													eventBlurb: event.blurb || "",
 													eventMenu: event.menu || "",
 													eventDressCode: event.dressCode || "",
-												  	email: res.locals.user.email,
-												  	lodge: res.locals.user.lodge,
-												  	lodgeNo: res.locals.user.lodgeNo,
-												  	rank: res.locals.user.rank || "",
-												  	dietary: res.locals.user.dietary || "",
+												  	email: user.email,
+												  	lodge: user.lodge,
+												  	lodgeNo: user.lodgeNo,
+												  	rank: user.rank || "",
+												  	dietary: user.dietary || "",
 												  	bookingRef: bookingRef,
 													info: booking.info || "",  
 													places: booking.places,
@@ -381,7 +383,7 @@ module.exports = {
 													deadline: deadline,
 										    },
 										    {
-										      to: res.locals.user.email,
+										      to: user.email,
 											  cc: event.organiser.email,
 										      subject: subject
 										    },
@@ -834,7 +836,7 @@ module.exports = {
 		var bookingId=req.param("bookingid"); 
 		
 		// Get all the information first (for the email)
-		Booking.findOne(bookingId).populate("event").populate("additions").exec(function(err,booking){
+		Booking.findOne(bookingId).populate("user").populate("event").populate("additions").exec(function(err,booking){
 			if (err) {
 				return res.genericErrorResponse('470','This booking no longer exists!')
 			}
@@ -889,11 +891,12 @@ module.exports = {
 							if (bookingId)
 								updated=' has been cancelled'
 							
+							if (booking.user.email) {
 							
-							sails.hooks.email.send(
+								sails.hooks.email.send(
 									"bookingConfirmation",
 								    {
-								      recipientName: res.locals.user.name,
+								      recipientName: booking.user.name,
 								      senderName: sails.config.events.title,
 									  		updated: updated,
 											eventName: booking.event.name,
@@ -906,11 +909,11 @@ module.exports = {
 											eventBlurb: booking.event.blurb || "",
 											eventMenu: booking.event.menu || "",
 											eventDressCode: booking.event.dressCode || "",
-										  	email: res.locals.user.email,
-										  	lodge: res.locals.user.lodge,
-										  	lodgeNo: res.locals.user.lodgeNo,
-										  	rank: res.locals.user.rank || "",
-										  	dietary: res.locals.user.dietary || "",
+										  	email: booking.user.email,
+										  	lodge: booking.user.lodge,
+										  	lodgeNo: booking.user.lodgeNo,
+										  	rank: booking.user.rank || "",
+										  	dietary: booking.user.dietary || "",
 										  	bookingRef: booking.event.code+"/"+booking.id.toString(),
 											info: booking.info || "",  
 											places: booking.places,
@@ -919,14 +922,17 @@ module.exports = {
 											deadline: deadline
 								    },
 								    {
-								      to: res.locals.user.email,
+								      to: booking.user.email,
 									  cc: organiser.email || "",
 								      subject: "Event booking cancellation confirmation"
 								    },
 								    function(err) {if (err) console.log(err);}
-							   	)    		
+							   	)    			
+							
+							}
+							
 								
-								return res.ok();	
+							return res.ok();	
 						})						
 					})
 						 
