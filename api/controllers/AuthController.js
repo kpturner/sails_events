@@ -385,13 +385,13 @@ var AuthController = {
 					sails.hooks.email.send(
 						"profileChanged", {
     				      recipientName: updatedUser[0].name,
-    				      senderName: "Event Management",
+    				      senderName: sails.config.events.title,
     			        details: updatedUser[0]
 							  
 						    },
 						    {
 						      to: updatedUser[0].email,
-						      subject: "Event Management - Profile updated confirmation"
+						      subject: sails.config.events.title + " - Profile updated confirmation"
 						    },
 						    function(err) {if (err) console.log(err);}
 					   )     
