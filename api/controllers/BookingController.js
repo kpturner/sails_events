@@ -328,7 +328,7 @@ module.exports = {
 				 						
 										// If we don't have a booking ref, create and update now
 										if (!bookingRef) {
-											bookingRef=event.code+"/"+booking.id.toString()
+											bookingRef=event.code+booking.id.toString()
 											Booking.update(booking.id,{ref:bookingRef}).exec(function(){})
 										} 
 																		 
