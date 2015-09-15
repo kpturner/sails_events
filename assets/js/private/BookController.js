@@ -11,7 +11,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.event=SAILS_LOCALS.event;
 	$scope.mode=SAILS_LOCALS.mode;
 	$scope.selectedUserId=SAILS_LOCALS.selectedUserId; // Only populated when the administrator is making a booking on behalf of another user
-	$scope.makingBooking=true;
+	
 	
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
@@ -80,6 +80,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 	}	
 
+	// Salutations
+	$scope.salutations=SAILS_LOCALS.salutations;
+	
+	if (!$scope.eventBookings && !$scope.userBookings && !$scope.myBookings)
+		$scope.makingBooking=true;
+
 	// If we are in "create" mode we should be safe to assume that there
 	// will be no existing booking details
 	if (SAILS_LOCALS.booking.id) {
@@ -128,6 +134,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		if (   (!$scope.bookingForm.name || $scope.bookingForm.name.length==0)
 			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0))
 			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodgeNo || isNaN($scope.bookingForm.lodgeNo)))
+			|| (!$scope.bookingForm.salutation || $scope.bookingForm.salutation.length==0)			
 			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))			
 		) {
 			complete=false;
@@ -282,6 +289,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			var makeBooking=function(route){
 				$http.post(route, {
 					eventid: $scope.event.id,	
+					salutation: $scope.bookingForm.salutation,
 					name: $scope.bookingForm.name,
 					surname: $scope.bookingForm.surname,
 					firstName: $scope.bookingForm.firstName,

@@ -45,6 +45,15 @@
   <input type="text" class="form-control" name="ref" ng-model="<%-model%>Form.ref" readonly>  
 </div>         
 
+ <!-- S A L U T A T I O N -->
+<div class="control-group form-group col-xs-10">
+  <label>* Salutation</label>  
+  <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-model%>Form.salutation">
+    <option value="">-- choose salutation --</option>
+  </select>
+</div>
+
+
 <!-- N A M E -->
   
 <!-- checking whether the form "<%-model%>" with the "name" property is both $invalid AND $dirty.  If it is

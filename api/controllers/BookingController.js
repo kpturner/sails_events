@@ -123,6 +123,7 @@ module.exports = {
 				res.locals.userBookings=userBookings;
 				res.locals.mops=sails.config.events.mops;
 				res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
+				res.locals.salutations=sails.config.events.salutations;
 					
 				// Get the data for the event and the user and then navigate to the booking view
 				if (req.wantsJSON)
@@ -221,6 +222,7 @@ module.exports = {
 			
 			// Update the user profile
 			var user={};
+			user.salutation=req.param("salutation");
 			user.name=req.param("name");
 			user.surname=req.param("surname");
 			user.firstName=req.param("firstName");
