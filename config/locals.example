@@ -71,7 +71,7 @@ module.exports = {
         pass: "yyyyy"
       }
 	 },
-   from: sails.config.events.title + ' <noreply@squareevents.org>', // sender address
+   from: 'Provincial Events <noreply@squareevents.org>', // sender address
    testMode:  false 
   },
   
