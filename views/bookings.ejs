@@ -97,9 +97,14 @@
       </form> 
             
      
-      <div class="container">      
-        <h4 class="hidden-md hidden-lg">Tap a booking to edit</h4>  
-        <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>  
+      <div class="container">   
+        <div ng-show="bookings.length>0">   
+          <h4 class="hidden-md hidden-lg">Tap a booking to edit</h4>  
+          <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>  
+        </div>    
+        <div ng-show="bookings.length==0">   
+          <h4>There are no bookings to show you!</h4>  
+        </div>      
             
         <% if (myBookings) {%> 
         <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div> 
