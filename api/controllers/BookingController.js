@@ -244,10 +244,11 @@ module.exports = {
 						}
 						
 						// User updated
+						user=users[0];
 						if (!req.session.eventBookings && !req.session.userBookings) {
 							req.user=users[0];
 							res.locals.user=req.user;	
-						}						
+						}					
 						
 						// Before making the booking, make doubly sure we have capacity
 						var places=0;
@@ -270,7 +271,7 @@ module.exports = {
 								// Private function to process booking
 								var processBooking=function(){
 									var booking={};
-									booking.user=res.locals.user.id;
+									booking.user=user.id;
 									booking.event=eventId;
 									booking.info=req.param("info");
 									if (req.param("places")) {
