@@ -2,7 +2,7 @@
     <a href="/booking?bookingid={{card.id}}&eventbookings=true" class="a-unstyled">        
         <div class="photo-description">
             <h3>{{card.user.surname}}, {{card.user.firstName}}</h3> 
-                
+            <h5>Salutation: {{card.user.salutation}}</h5>    
             <h5>Lodge: {{card.user.lodge}} {{card.user.lodgeNo}}</h4>      
             <h5>Places: {{card.places}} Paid: {{(card.paid)?'Yes':'No'}}</h4>      
             <h5>Ref: {{card.ref}}</h5>    
