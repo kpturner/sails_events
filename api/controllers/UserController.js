@@ -118,6 +118,7 @@ module.exports = {
 				// Send the details
 				return res.view("userdetails",{
 					mode:mode,
+					salutations: sails.config.events.salutations,
 					form:'userdetails',
 					userDetails:user
 				})	
@@ -126,6 +127,7 @@ module.exports = {
 		else {
 			return res.view("userdetails",{
 				mode:mode,
+				salutations: sails.config.events.salutations,
 				form:'userdetails',
 				userDetails:{}
 			})	

@@ -29,6 +29,7 @@
       _csrf: "<%= _csrf %>",
       user: <%- JSON.stringify(res.locals.user) %>,
       userDetails: <%- JSON.stringify(userDetails) %>,
+      salutations: <%- JSON.stringify(res.locals.salutations) %>,
       mode: "<%= mode.toLowerCase() %>"
     };
     

@@ -26,14 +26,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	}
 	
 	// Build a list of MOPs from the config for the MOP dropdown
-	$scope.mops=[];
-	$.each(SAILS_LOCALS.mops, function(){
-		var mop=this.toString();
-		var mopObj={};
-		mopObj.id=mop;
-		mopObj.name=mop;
-		$scope.mops.push(mopObj);
-	});
+	//$scope.mops=[];
+	//$.each(SAILS_LOCALS.mops, function(){
+	//	var mop=this.toString();
+	//	var mopObj={};
+	//	mopObj.id=mop;
+	//	mopObj.name=mop;
+	//	$scope.mops.push(mopObj);
+	//});
 	$scope.mops=SAILS_LOCALS.mops;
 	 
 	
@@ -126,8 +126,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.detailsComplete = function() {
 		var complete=true;
 		if (   (!$scope.bookingForm.name || $scope.bookingForm.name.length==0)
-			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0))
-			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodgeNo || isNaN($scope.bookingForm.lodgeNo)))
+			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0))
+			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodgeNo || isNaN($scope.bookingForm.lodgeNo)))
 			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))			
 		) {
 			complete=false;

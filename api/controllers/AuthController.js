@@ -101,6 +101,7 @@ var AuthController = {
   register: function (req, res) {
     res.view({
       form: 'signup',
+      salutations: sails.config.events.salutations,
       errors: req.flash('error')
     });
   },
@@ -246,6 +247,7 @@ var AuthController = {
   profile: function(req, res) {
     res.view('profile',{
       form: 'profile',
+      salutations: sails.config.events.salutations,
       errors: req.flash('error')
     });  
   }, 

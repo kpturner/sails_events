@@ -25,7 +25,9 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 			toastr.error(sailsResponse.data, 'Error');
 
 		})
-		
+	
+	// Salutations
+	$scope.salutations=SAILS_LOCALS.salutations;	
     
 	
 	/**
@@ -34,9 +36,14 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	$scope.detailsComplete = function() {
 		var complete=true;
 		if (   (!$scope.userdetailsForm.name || $scope.userdetailsForm.name.length==0)
-			|| (!$scope.userdetailsForm.lodge || $scope.userdetailsForm.lodge.length==0)
-			|| (!$scope.userdetailsForm.lodgeNo || isNaN($scope.userdetailsForm.lodgeNo))
-			|| (!$scope.userdetailsForm.email || $scope.userdetailsForm.email.length==0)
+			|| (!$scope.userdetailsForm.salutation || $scope.userdetailsForm.salutation.length==0)
+			|| (($scope.userdetailsForm.authProvider!="dummy")
+					&& (
+							(!$scope.userdetailsForm.email || $scope.userdetailsForm.email.length==0)
+						|| 	(!$scope.userdetailsForm.lodge || $scope.userdetailsForm.lodge.length==0)
+						|| 	(!$scope.userdetailsForm.lodgeNo || isNaN($scope.userdetailsForm.lodgeNo))
+					)
+				)
 			|| (!$scope.userdetailsForm.surname || $scope.userdetailsForm.surname.length==0)
 			|| (!$scope.userdetailsForm.firstName || $scope.userdetailsForm.firstName.length==0)
 			|| (($scope.userdetailsForm.authProvider=="local")

@@ -970,9 +970,10 @@ module.exports = {
 			}
 			var row={};
 			row.ref=booking.ref;
+			row.salutation=booking.user.salutation;
 			row.surname=booking.user.surname;
 			row.firstName=booking.user.firstName;
-			row.displayName=booking.user.name;
+			row.displayName=booking.user.salutation+" "+booking.user.name;
 			row.rank=booking.user.rank;
 			row.lodge=booking.user.lodge;
 			row.lodgeNo=booking.user.lodgeNo;

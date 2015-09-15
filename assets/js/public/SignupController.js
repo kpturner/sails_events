@@ -4,6 +4,23 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		loading: false
 	}
 
+	/**
+	 * Test if the details are complete on the user
+	 */
+	$scope.detailsComplete=function() {
+		var complete=true;
+		if (   (!$scope.signupForm.salutation || $scope.signupForm.salutation.length==0)
+			 
+		) {
+			complete=false;
+		}
+			
+		return complete;
+	}
+
+	// Salutations
+	$scope.salutations=SAILS_LOCALS.salutations;	
+
 	$scope.submitSignupForm = function(){
 		$scope.signupForm.loading=true;
 		// Submit request to Sails.

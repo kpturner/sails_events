@@ -15,7 +15,9 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	$scope.profileForm.voLodgeNo = parseInt($scope.user.voLodgeNo); 
 	// Set the confirm email
 	$scope.profileForm.confirmemail=$scope.profileForm.email; 
-	  
+	 
+	// Salutations
+	$scope.salutations=SAILS_LOCALS.salutations;	  
 	
 	/**
 	 * Test if the details are complete on the profile
@@ -23,6 +25,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	$scope.detailsComplete = function() {
 		var complete=true;
 		if (   (!$scope.profileForm.name || $scope.profileForm.name.length==0)
+			|| (!$scope.profileForm.salutation || $scope.profileForm.salutation.length==0)
 			|| (!$scope.profileForm.lodge || $scope.profileForm.lodge.length==0)
 			|| (!$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo))
 			|| (!$scope.profileForm.email || $scope.profileForm.email.length==0)

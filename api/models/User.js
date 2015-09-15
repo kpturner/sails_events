@@ -18,6 +18,11 @@ var User = {
       type: 'string'
     },
     
+    // Salutation
+    salutation: {
+      type: 'string'
+    },
+    
     // Surname
     surname: {
       type: 'string'
