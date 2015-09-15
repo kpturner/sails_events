@@ -33,7 +33,8 @@ module.exports = {
 
       // Edit the profile if essentials are missing
       if ( (!user.name || user.name.length==0)
-  			|| (!user.lodge || user.lodge.length==0)
+  			|| (!user.salutation || user.salutation.length==0)
+        || (!user.lodge || user.lodge.length==0)
   			|| (!user.lodgeNo || user.lodgeNo.length==0)
   			|| (!user.email || user.email.length==0)
         || (!user.firstName || user.firstName.length==0)
@@ -42,7 +43,10 @@ module.exports = {
   					&& ( !user.username || user.username.length==0 )
   				)
   		) {
-         return res.view('profile',{form:'profile'}); 
+         return res.view('profile',{
+           form:'profile',
+           salutations: sails.config.events.salutations
+         }); 
   		}
       
       // Default home location
