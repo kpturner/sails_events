@@ -140,6 +140,7 @@
       function hideCalendarItems(mouseEvent){
         // We cannot have the extra angularjs classes in the data or it will not work        
         $("body").one('touchend', function(e) {
+          alert("Hello")
           $(".atcb-list").hide();
         });
       }
