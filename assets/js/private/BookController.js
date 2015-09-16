@@ -351,10 +351,27 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			var route='/makebooking';
 			if ($scope.mode=="create") {
 				route+='/create';
-				// Check the email address being used and, if it is already in use, warn the user
-				// before proceeding
+				// Check that we are not booking in a user that is potentially already registered
 				if (!$scope.selectedUserId) {
-					$http.get("/user?email="+$scope.bookingForm.email)
+					
+					var searchClause='where={"or":[{';
+					// First name, surname (and possibly lodge and lodge number) match
+					searchClause+='"firstName":"'+$scope.bookingForm.firstName+'"';
+					searchClause+=',"surname":"'+$scope.bookingForm.surname+'"';
+					if ($scope.bookingForm.lodge && $scope.bookingForm.lodge.length>0) {
+						searchClause+=',"lodge":"'+$scope.bookingForm.lodge+'"';
+					}
+					if ($scope.bookingForm.lodgeNo && $scope.bookingForm.lodgeNo.length>0) {
+						searchClause+=',"lodgeNo":'+$scope.bookingForm.lodgeNo;
+					}
+					searchClause+="}"
+					// OR the email address matches
+					if ($scope.bookingForm.email && $scope.bookingForm.email.length>0) {
+						searchClause+=',{"email":"'+$scope.bookingForm.email+'"}';
+					}
+					searchClause+=']}'
+					 
+					$http.get("/user?"+searchClause)
 					.then(function(sailsResponse){
 						// Session expired?
 						if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {
@@ -374,7 +391,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							// Pop the dialog
 							ngDialog.openConfirm(opts)
 								.then(function (value) {
-									// Continue with booking
+									// Continue with booking for the duplicate user we found
 									angular.forEach($scope.duplicateUser,function(value,key){
 										$scope.bookingForm[key]=$scope.duplicateUser[key]	
 									})									

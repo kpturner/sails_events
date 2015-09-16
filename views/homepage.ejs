@@ -9,7 +9,7 @@
     
     <!-- HOMEPAGE -->
 
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-deckgrid.css">
     <link rel="stylesheet" href="/styles/angular-toastr.css">
@@ -91,7 +91,7 @@
                 </div>
           			<button class="btn btn-primary btn-lg btn-block" type="submit">
                     <span ng-show="!loginForm.loading">Login</span>
-                    <span class="overlord-loading-spinner fa fa-spinner" ng-show="loginForm.loading" ></span>
+                    <span class="fa-pulse fa fa-spinner" ng-show="loginForm.loading" ></span>
                     <span ng-show="loginForm.loading">Logging in...</span>
                   </button>
           			 <input type="hidden" name="_csrf" value="<%= _csrf %>" />

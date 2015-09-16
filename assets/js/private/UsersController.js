@@ -2,6 +2,9 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 
 	// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
+		
+		// Animate a spinner while we load the users
+		$scope.usersLoading=true;
 		 
 		$scope.filterForm = {
 			loading: false,
@@ -11,6 +14,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		// Get the users
 		$http.get('/allusers/'+$scope.filterForm.filter)
 			.success(function(data, status) {
+				$scope.usersLoading=false;
 				if (typeof data == 'object') {
 					$scope.users = data;					
 				}
@@ -30,6 +34,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		 */  
 		$scope.filterUsers = function(){
 			$scope.filterForm.loading=true;
+			$scope.usersLoading=true;
 			// Submit request to Sails.
 			$http.get('/allusers/'+encodeURIComponent($scope.filterForm.filter))
 				.then(function onSuccess(sailsResponse){
@@ -49,6 +54,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 				})
 				.finally(function eitherWay(){
 					$scope.filterForm.loading = false;
+					$scope.usersLoading=false;
 				})
 		}
 

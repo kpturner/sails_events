@@ -62,7 +62,7 @@ module.exports = {
 		if (filter && filter.length>0) {
 			where = {
 				or: [
-					{salutation: {contains: salutation}},
+					{salutation: {contains: filter}},
 					{name: {contains: filter}},
 					{surname: {contains: filter}},
 					{name: {contains: filter}},	
