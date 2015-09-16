@@ -134,16 +134,14 @@
           var href=$this.attr("href");
           href=href.replace(RegExp(" ng-binding","g"),"");
           $this.attr("href",href);
-        })
-        
-        $("body").on('touchend', function(e) {
-           hideCalendarItems();
-        });
+        }) 
         
       }
       function hideCalendarItems(mouseEvent){
-        // We cannot have the extra angularjs classes in the data or it will not work
-        $(".atcb-list").hide();
+        // We cannot have the extra angularjs classes in the data or it will not work        
+        $("body").one('touchend', function(e) {
+          $(".atcb-list").hide();
+        });
       }
     </script>  
     <script type="text/javascript">(function () {
