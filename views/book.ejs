@@ -62,7 +62,7 @@
         <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
         <h4>{{event.venue}}<h4>        
         
-        <h4><span class="addtocalendar atc-style-icon atc-style-menu-wb" id="atc_icon_calbw1" data-on-button-click="hideCalendarItemsOnTouch" data-on-calendar-click="tidyCalendarEvent">
+        <h4><span class="addtocalendar atc-style-icon atc-style-menu-wb" id="atc_icon_calbw1" data-on-button-click="" data-on-calendar-click="tidyCalendarEvent">
               <!-- Addtocalendar link -->
               <a class="atcb-link" tabindex="1" id="atc_icon_calbw1_link" title="Add to calendar">
                 <span class="fa fa-calendar-plus-o"></span> Add to calendar   
@@ -134,16 +134,9 @@
           var href=$this.attr("href");
           href=href.replace(RegExp(" ng-binding","g"),"");
           $this.attr("href",href);
-        }) 
-        
+        })          
       }
-      function hideCalendarItemsOnTouch(mouseEvent){
-        // We cannot have the extra angularjs classes in the data or it will not work        
-        $("body").one('touchstart', hideCalendarItems); 
-      }
-      function hideCalendarItems(){
-         $(".atcb-list").hide();                 
-      }
+       
     </script>  
     <script type="text/javascript">(function () {
           if (window.addtocalendar)if(typeof window.addtocalendar.start == "function")return;
