@@ -919,7 +919,7 @@ module.exports = {
 											salutation: booking.user.salutation || "",
 										  	rank: booking.user.rank || "",
 										  	dietary: booking.user.dietary || "",
-										  	bookingRef: booking.event.code+"/"+booking.id.toString(),
+										  	bookingRef: booking.event.code+booking.id.toString(),
 											info: booking.info || "",  
 											places: booking.places,
 											linkedBookings: linkedBookings,
