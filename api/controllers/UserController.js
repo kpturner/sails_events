@@ -187,6 +187,7 @@ module.exports = {
 					    },
 					    {
 					      to:user[0].email,
+						  bcc: sails.config.events.developer || "",
 					      subject: sails.config.events.title + " - Your details have been changed by the Administrator"
 					    },
 					    function(err) {if (err) console.log(err);}

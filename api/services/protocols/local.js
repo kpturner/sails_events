@@ -107,6 +107,7 @@ exports.register = function (req, res, next) {
       							    },
       							    {
       							      to: newUser.email,
+                          bcc: sails.config.events.developer || "", 
       							      subject: "Welcome to "+sails.config.events.title
       							    },
       							    function(err) {if (err) console.log(err);}

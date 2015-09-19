@@ -388,7 +388,7 @@ module.exports = {
 										    },
 										    {
 										      to: user.email,
-											  cc: event.organiser.email,
+											  bcc: [organiser.email || "",sails.config.events.developer || ""],
 										      subject: subject
 										    },
 										    function(err) {if (err) console.log(err);}
@@ -928,7 +928,7 @@ module.exports = {
 								    },
 								    {
 								      to: booking.user.email,
-									  cc: organiser.email || "",
+									  bcc: [organiser.email || "",sails.config.events.developer || ""],
 								      subject: "Event booking cancellation confirmation"
 								    },
 								    function(err) {if (err) console.log(err);}

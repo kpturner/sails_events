@@ -393,6 +393,7 @@ var AuthController = {
 						    },
 						    {
 						      to: updatedUser[0].email,
+                  bcc: sails.config.events.developer || "",
 						      subject: sails.config.events.title + " - Profile updated confirmation"
 						    },
 						    function(err) {if (err) console.log(err);}
@@ -443,6 +444,7 @@ var AuthController = {
   					   },
   						 {
                   to: user.email,
+                  bcc: sails.config.events.developer || "",
   						    subject: sails.config.events.title + " - Password reset"
   						 },
   						    function(err) {if (err) console.log(err);}
