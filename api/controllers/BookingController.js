@@ -992,9 +992,10 @@ module.exports = {
 			booking.additions.forEach(function(addition,j){
 				var row={};
 				row.ref=booking.ref;
+				row.salutation=addition.salutation;
 				row.surname=addition.surname;
 				row.firstName=addition.firstName;
-				row.displayName=row.firstName+" "+row.surname;
+				row.displayName=row.salutation+" "+row.firstName+" "+row.surname;
 				row.rank=addition.rank;
 				row.lodge=addition.lodge;
 				row.lodgeNo=addition.lodgeNo;

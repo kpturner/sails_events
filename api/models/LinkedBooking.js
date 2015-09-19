@@ -13,6 +13,11 @@ var LinkedBooking = {
         model:'booking'
     },
     
+    // Salutation
+    salutation: {
+      type: 'string'
+    },
+    
     // Preferred name
     surname: {
       type: 'string'

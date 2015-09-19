@@ -26,7 +26,7 @@ module.exports.events = {
 	mops: ['Cheque', 'BACS', 'Cash', 'Paypal'],
 	
 	// Salutations
-	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro'],
+	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr'],
 	
 	// Domain (for signup email confirmations)
 	domain: "http://squareevents.org",

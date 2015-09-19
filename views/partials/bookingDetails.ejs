@@ -48,7 +48,7 @@
  <!-- S A L U T A T I O N -->
 <div class="control-group form-group col-xs-10">
   <label>* Salutation</label>  
-  <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-model%>Form.salutation">
+  <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-model%>Form.salutation" required>
     <option value="">-- choose salutation --</option>
   </select>
 </div>
@@ -213,7 +213,15 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	  <h4>Additional attendee {{place+1}}</h4>  
 	</div>
 	<ng-form name="linked<%-model%>">
-        	
+    
+    <!-- S A L U T A T I O N -->
+    <div class="control-group form-group col-xs-10">
+      <label>* Salutation</label>  
+      <select class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation" required>
+        <option value="">-- choose salutation --</option>
+      </select>
+    </div>     
+            
 	  <!-- S U R N A M E -->
 	  <div class="control-group form-group col-xs-10"
 	    ng-class="{'has-error':linked<%-model%>Form.surname.$invalid &&

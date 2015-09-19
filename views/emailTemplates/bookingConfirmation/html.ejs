@@ -30,6 +30,7 @@
 	  <br><b>Additional places</b></br>	
       <% linkedBookings.forEach(function (linkedBooking,place) { %>
 	  	<p><i>Additional attendee <%=place+1%></i></p>
+		<br>Salutation: <%=linkedBooking.salutation%>  
         <br>Surname: <%=linkedBooking.surname%>
 		<br>First name: <%=linkedBooking.firstName%>
 		<br>Lodge: <%=linkedBooking.lodge%>
