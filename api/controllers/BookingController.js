@@ -388,7 +388,7 @@ module.exports = {
 										    },
 										    {
 										      to: user.email,
-											  bcc: [organiser.email || "",sails.config.events.developer || ""],
+											  bcc: [event.organiser.email || "",sails.config.events.developer || ""],
 										      subject: subject
 										    },
 										    function(err) {if (err) console.log(err);}
