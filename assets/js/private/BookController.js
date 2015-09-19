@@ -54,7 +54,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}		
 		$scope.paidMsg="";
 		// Convert lodge no to numeric
-		$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
+		if ($scope.bookingForm.lodgeNo)
+		 	$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo); 
 		// Initialise confirmation email
 		$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
 	}	
@@ -99,6 +100,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.mop = SAILS_LOCALS.booking.mop;
 		$scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;
 		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
+		$scope.bookingForm.info = SAILS_LOCALS.booking.info;
 		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
 		$scope.makeArray();
 		// Get linked booking info
