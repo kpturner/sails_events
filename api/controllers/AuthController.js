@@ -386,7 +386,7 @@ var AuthController = {
           // Send confirmation email
 					sails.hooks.email.send(
 						"profileChanged", {
-    				      recipientName: updatedUser[0].name,
+    				      recipientName: updatedUser[0].salutation + " " + updatedUser[0].firstName,
     				      senderName: sails.config.events.title,
     			        details: updatedUser[0]
 							  
@@ -437,8 +437,8 @@ var AuthController = {
            // Send confirmation email
   					sails.hooks.email.send(
   						"passwordReset", {
-      				    recipientName: user.name,
-      				    senderName: sails.config.events.title,
+      				    recipientName: user.salutation + " " + user.firstName,
+                  senderName: sails.config.events.title,
   				        newPassword: newPassword,
                   domain:	sails.getBaseUrl(),  							   
   					   },

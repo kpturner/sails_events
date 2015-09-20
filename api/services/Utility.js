@@ -40,6 +40,23 @@ module.exports = {
     return isAdmin 
   },
 
+  jsonSort: function(field, reverse, primer){
+   
+   var s=field.split(".");
+   var o=s[0];
+   var f=s[1];  
+    
+   var key = primer ? 
+       function(x) {return primer(x[o][f])} : 
+       function(x) {return x[o][f]};
+
+   reverse = !reverse ? 1 : -1;
+
+   return function (a, b) {
+       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+     } 
+  },
+
   getRequestAction: function (req) {
     if (req.options.action) return req.options.action;
 

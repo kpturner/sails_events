@@ -236,7 +236,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					bookingid: SAILS_LOCALS.booking.id			 
 				})
 				.then(function onSuccess(sailsResponse){
-					toastr.success("You have successfully cancelled your booking")	
+					if ($scope.myBookings)
+						toastr.success("You have successfully cancelled your booking")	
+					else
+						toastr.success("You have successfully cancelled the booking")	
 					setTimeout(function(){
 						if ($scope.myBookings)
 							window.location='/mybookings'
@@ -312,10 +315,16 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				.then(function onSuccess(sailsResponse){	
 					if (SAILS_LOCALS.booking.id)	{
 						// An update rather than a new booking
-						toastr.success("Your booking has been updated successfully")	
+						if ($scope.myBookings)
+							toastr.success("Your booking has been updated successfully")
+						else
+							toastr.success("The booking has been updated successfully")	
 					}
 					else {
-						toastr.success("Your booking was successful")	
+						if ($scope.myBookings)
+							toastr.success("Your booking was successful")
+						else
+							toastr.success("The booking was successful")
 					}				
 					setTimeout(function(){
 						if ($scope.myBookings)

@@ -180,7 +180,7 @@ module.exports = {
 				// Send confirmation email
 				sails.hooks.email.send(
 					"profileChanged", {
-				      recipientName: user[0].name,
+				      recipientName: user[0].salutation + " " + user[0].firstName,
 				      senderName: sails.config.events.title,
 			        details: user[0]
 						  

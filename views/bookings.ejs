@@ -106,7 +106,7 @@
         <div ng-show="bookings.length==0">   
           <h4>There are no bookings to show you!</h4>  
         </div>      
-            
+        <span class="fa fa-spinner fa-pulse fa-3x fa-fw" ng-hide="!bookingsLoading"></span>    
         <% if (myBookings) {%> 
         <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div> 
         <% } %>

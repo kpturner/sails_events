@@ -360,7 +360,7 @@ module.exports = {
 											sails.hooks.email.send(
 											"bookingConfirmation",
 										    {
-										      recipientName: user.name,
+										      recipientName: user.salutation + " " + user.firstName,
 										      senderName: sails.config.events.title,
 											  		updated: updated,
 													eventName: event.name,
@@ -377,6 +377,8 @@ module.exports = {
 												  	lodge: user.lodge || "",
 												  	lodgeNo: user.lodgeNo || "",
 													salutation: user.salutation || "",
+													surname: user.surname || "",
+													firstName: user.firstName || "",
 												  	rank: user.rank || "",
 												  	dietary: user.dietary || "",
 												  	bookingRef: bookingRef,
@@ -605,10 +607,11 @@ module.exports = {
 				where.or.push({paid:false});
 				where.or.push({paid:null})
 			}
-		}
-										
+		}	
 		Booking.find({
 						where: where,
+						// NOTE: Sorting by date/time of the foreign "event" table as shown below does not appear to work at all.
+						//       We will have to sort it after getting the data set
 						sort: {
 								event: {
 									date:'desc',
@@ -627,6 +630,9 @@ module.exports = {
 				if (filter && filter.toLowerCase()=="late") {
 					bookings=sails.controllers.booking.filterLate(bookings);
 				}  
+				
+				// Sort response by user surname and first name
+				bookings.sort(Utility.jsonSort("event.date", true));
 				  
 				if (download) {					
 					sails.controllers.booking.download(req, res, req.user.username, bookings, req.user);					
@@ -678,16 +684,22 @@ module.exports = {
 		}
 			
 		var getBookings=function(req, res, grace) {
+					
+			
 			Booking.find({
-							where: where,
-							sort: {
-									user: {
-										surname:'asc',
-										firstName:'asc'
-									}		
-							}
+							where: where,							
+							// NOTE: Sorting by the surname/name of the foreign "user" table as shown below does not appear to work at all.
+							//       We will have to sort it after getting the data set 
+							//sort: {
+							//		user: {
+							//			surname:'asc',
+							//			firstName:'asc'
+							//		}		
+							//}
 						}
-				).populate('user').populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
+				)
+				.populate('user').populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
+				
 				.exec(function(err, bookings){
 					if (err) {
 						sails.log.verbose('Error occurred trying to retrieve bookings.');
@@ -698,6 +710,10 @@ module.exports = {
 					if (filter && filter.toLowerCase()=="late") {
 						bookings=sails.controllers.booking.filterLate(bookings,grace);
 					}    
+					
+					// Sort response by user surname (case insensitive)
+					bookings.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
+					 
 					  		
 					if (download) {					
 						Event.findOne(req.param("eventid")).exec(function(err,event){
@@ -900,7 +916,7 @@ module.exports = {
 								sails.hooks.email.send(
 									"bookingConfirmation",
 								    {
-								      recipientName: booking.user.name,
+								      recipientName: booking.user.salutation + " " + booking.user.firstName,
 								      senderName: sails.config.events.title,
 									  		updated: updated,
 											eventName: booking.event.name,
@@ -917,6 +933,8 @@ module.exports = {
 										  	lodge: booking.user.lodge || "",
 											lodgeNo: booking.user.lodgeNo || "",
 											salutation: booking.user.salutation || "",
+											surname: booking.user.surname || "",
+											firstName: booking.user.firstName || "",
 										  	rank: booking.user.rank || "",
 										  	dietary: booking.user.dietary || "",
 										  	bookingRef: booking.event.code+booking.id.toString(),

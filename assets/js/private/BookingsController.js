@@ -3,6 +3,8 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 	// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
 		 
+		$scope.bookingsLoading=true;
+		 
 		$scope.filterForm = {
 			loading: false,
 			filter:	SAILS_LOCALS.filter,
@@ -39,20 +41,23 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				}
 				else {
 					window.location = '/';
-				}
-			}).
-			error(function(data, status, headers, config) {
+				}				
+			})
+			.error(function(data, status, headers, config) {
 		   		// called asynchronously if an error occurs
 		    	// or server returns response with an error status.
 				window.location = '/';
-		  	}
-		);
+		  	})
+			.finally(function(){
+				$scope.bookingsLoading=false;
+			})
 		  
 		/**
 		 * Filter bookings
 		 */  
 		$scope.filterBookings = function(){
 			$scope.filterForm.loading=true;
+			$scope.bookingsLoading=true;
 			// Submit request to Sails.
 			var route;
 			if (SAILS_LOCALS.myBookings) {
@@ -82,6 +87,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				})
 				.finally(function eitherWay(){
 					$scope.filterForm.loading = false;
+					$scope.bookingsLoading=false;
 				})
 		}
 		
