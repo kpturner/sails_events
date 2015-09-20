@@ -315,16 +315,16 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				.then(function onSuccess(sailsResponse){	
 					if (SAILS_LOCALS.booking.id)	{
 						// An update rather than a new booking
-						if ($scope.myBookings)
-							toastr.success("Your booking has been updated successfully")
+						if ($scope.eventBookings || $scope.userBookings)
+							toastr.success("The booking has been updated successfully")								
 						else
-							toastr.success("The booking has been updated successfully")	
+							toastr.success("Your booking has been updated successfully")
 					}
 					else {
-						if ($scope.myBookings)
-							toastr.success("Your booking was successful")
+						if ($scope.eventBookings || $scope.userBookings)
+							toastr.success("The booking was successful")							
 						else
-							toastr.success("The booking was successful")
+							toastr.success("Your booking was successful")
 					}				
 					setTimeout(function(){
 						if ($scope.myBookings)

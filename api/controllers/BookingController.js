@@ -990,34 +990,38 @@ module.exports = {
 			if (user && !booking.user.surname) {
 				booking.user=user
 			}
+			var amountPaid=booking.amountPaid/booking.places;
 			var row={};
-			row.ref=booking.ref;
-			row.salutation=booking.user.salutation;
-			row.surname=booking.user.surname;
-			row.firstName=booking.user.firstName;
+			row.ref=booking.ref || "";
+			row.salutation=booking.user.salutation || "";
+			row.surname=booking.user.surname || "";
+			row.firstName=booking.user.firstName || "";
 			row.displayName=booking.user.salutation+" "+booking.user.name;
-			row.rank=booking.user.rank;
-			row.lodge=booking.user.lodge;
-			row.lodgeNo=booking.user.lodgeNo;
-			row.dietary=booking.dietary;
-			row.info=booking.info;
+			row.rank=booking.user.rank || "";
+			row.lodge=booking.user.lodge || "";
+			row.lodgeNo=booking.user.lodgeNo || "";
+			row.dietary=booking.dietary || "";
+			row.info=booking.info || "";
 			row.places=booking.places;
-			row.paid=booking.paid;
-			row.cost=booking.cost;
-			row.amountPaid=booking.amountPaid;							
+			row.paid=booking.paid || "";
+			row.cost=booking.cost || "";
+			row.amountPaid=amountPaid || "";						
+			row.places=booking.places;	
 			data.push(row);
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
 				var row={};
-				row.ref=booking.ref;
-				row.salutation=addition.salutation;
-				row.surname=addition.surname;
-				row.firstName=addition.firstName;
+				row.ref=booking.ref || "";
+				row.salutation=addition.salutation || "";
+				row.surname=addition.surname || "";
+				row.firstName=addition.firstName || "";
 				row.displayName=row.salutation+" "+row.firstName+" "+row.surname;
-				row.rank=addition.rank;
-				row.lodge=addition.lodge;
-				row.lodgeNo=addition.lodgeNo;
-				row.dietary=addition.dietary;
+				row.rank=addition.rank || "";
+				row.lodge=addition.lodge || "";
+				row.lodgeNo=addition.lodgeNo || "";
+				row.dietary=addition.dietary || "";
+				row.paid=booking.paid || "";
+				row.amountPaid=amountPaid || "";	
 				data.push(row);
 			})
 		})
