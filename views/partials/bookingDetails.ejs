@@ -24,7 +24,7 @@
                         event.paid.$dirty}" ng-hide="(!eventBookings && !userBookings)">
    <label>
     <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
-    &nbsp;Fully paid?
+    &nbsp;&nbsp;&nbsp;Fully paid?
    </label>
 </div>  
 
@@ -189,7 +189,7 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 <!-- A D D I T I O N A L  I N F O -->
 <div class="control-group form-group col-xs-10">
 <label>Any additional info</label>
-<textarea class="form-control" placeholder="additional info" name="info" ng-model="<%-model%>Form.info" ></textarea>            
+<textarea class="form-control" placeholder="e.g. seating requests etc" name="info" ng-model="<%-model%>Form.info" ></textarea>            
 </div>
 
 <!-- P L A C E S-->
