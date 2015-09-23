@@ -10,6 +10,11 @@
  */
 
 module.exports.http = {
+  
+  customMiddleware: function (app) {
+    var device = require('express-device');
+    app.use(device.capture());
+  }
 
   /****************************************************************************
   *                                                                           *
