@@ -18,7 +18,7 @@ ng-class="{'has-error':<%-form%>.name.$invalid &&
                       <%-form%>.name.$dirty}">
   <label>* Full name</label>  
   <!-- For this input field make it required, and have a max length of 50 -->
-  <input type="text" populate-names="['surname:1','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="<%-form%>Form.name" ng-maxlength="50" required>  
+  <input type="text" populate-names="['surname:last','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="<%-form%>Form.name" ng-maxlength="50" required>  
   <!-- Also, if <%-form%>.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
   and/or maxlength) -->
   <span class="help-block has-error" ng-if="<%-form%>.name.$dirty">
@@ -113,7 +113,7 @@ ng-class="{'has-error':<%-form%>.username.$invalid &&
   ng-class="{'has-error':<%-form%>.rank.$invalid &&
                         <%-form%>.rank.$dirty}">
   <label>Rank</label>
-  <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="<%-form%>Form.rank" ng-maxlength="100" >
+  <input type="text" class="form-control" placeholder="e.g. Master Mason or your Provincial and/or Grand rank" name="rank" ng-model="<%-form%>Form.rank" ng-maxlength="100" >
   <span class="help-block has-error" ng-if="<%-form%>.rank.$dirty">
     <span ng-show="<%-form%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
   </span>
