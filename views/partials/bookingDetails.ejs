@@ -272,7 +272,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	  <div class="control-group form-group col-xs-10"
 	    ng-class="{'has-error':linked<%-model%>.rank.$invalid &&
 	                          linked<%-model%>.rank.$dirty}">
-	    <label>Rank</label>
+	    <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
 	    <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="linked<%-model%>s[place].rank" ng-maxlength="100" >
 	    <span class="help-block has-error" ng-if="linked<%-model%>.rank.$dirty">
 	      <span ng-show="linked<%-model%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
