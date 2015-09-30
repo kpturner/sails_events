@@ -1,4 +1,4 @@
-<!DOCTYPE html>    
+<!DOCTYPE html>       
 
 <!-- S A L U T A T I O N -->
 <div class="control-group form-group col-xs-10">
@@ -112,7 +112,7 @@ ng-class="{'has-error':<%-form%>.username.$invalid &&
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.rank.$invalid &&
                         <%-form%>.rank.$dirty}">
-  <label>Rank</label>
+  <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
   <input type="text" class="form-control" placeholder="e.g. Master Mason or your Provincial and/or Grand rank" name="rank" ng-model="<%-form%>Form.rank" ng-maxlength="100" >
   <span class="help-block has-error" ng-if="<%-form%>.rank.$dirty">
     <span ng-show="<%-form%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>

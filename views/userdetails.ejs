@@ -73,7 +73,14 @@
               <input type="checkbox" class="bigcheckbox" name="isorganiser" ng-model="userdetailsForm.isOrganiser"></input>
               &nbsp;&nbsp;&nbsp;Event organiser?
              </label>
-           </div> 
+           </div>   
+  
+           
+          <!-- A U T H E N T I C A T I O N   P R O V I D E R -->
+          <div class="control-group form-group col-xs-10" ng-hide="userdetailsForm.authProvider=='dummy'">
+            <label>Auth provider</label>  
+            <input type="text" class="form-control" name="authprovider" ng-model="userdetailsForm.authProvider" readonly />
+          </div>
   
   
           <!-- V O ? -->
