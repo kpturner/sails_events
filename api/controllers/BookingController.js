@@ -393,7 +393,38 @@ module.exports = {
 											  bcc: [event.organiser.email || "",sails.config.events.developer || ""],
 										      subject: subject
 										    },
-										    function(err) {if (err) console.log(err);}
+										    function(err) {
+												//err={"foo":"bar"};
+												if (err) {
+													var errStr;
+													if (typeof err=="string")
+														errStr=err
+													else
+														errStr=JSON.stringify(err)
+													sails.log.error("Emailing error: "+errStr);
+													// Try to inform the developer
+													if (sails.config.events.developer) {
+														setTimeout(function(){
+															try {
+																sails.hooks.email.send(
+																	"diagnostic",
+																	{
+																		err:errStr
+																	},
+																	{
+																		to: sails.config.events.developer,
+																		subject: "Email failure"
+																	},
+																	function(){}
+																)	
+															}
+															catch(e) {
+																// No dice!
+															}
+														},10)
+													}
+												};
+											}
 										   )    		
 										
 										}	
