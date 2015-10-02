@@ -440,7 +440,7 @@ var AuthController = {
       				    recipientName: user.salutation + " " + user.firstName,
                   senderName: sails.config.events.title,
   				        newPassword: newPassword,
-                  domain:	sails.getBaseUrl(),  							   
+                  domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),  							   
   					   },
   						 {
                   to: user.email,
