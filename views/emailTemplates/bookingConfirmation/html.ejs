@@ -26,17 +26,17 @@
 	<br>Payment deadline: <%=deadline%>	
 	<br>
 	
-	<% if (linkedBookings) {%>
+	<% if (linkedBookings.length>0) {%>
 	  <br><b>Additional places</b></br>	
       <% linkedBookings.forEach(function (linkedBooking,place) { %>
-	  	<p><i>Additional attendee <%=place+1%></i></p>
-		<br>Salutation: <%=linkedBooking.salutation%>  
-        <br>Surname: <%=linkedBooking.surname%>
-		<br>First name: <%=linkedBooking.firstName%>
-		<br>Lodge: <%=linkedBooking.lodge%>
-		<br>Lodge no: <%=linkedBooking.lodgeNo%>
-		<br>Rank: <%=linkedBooking.rank%>
-		<br>Dietary reqs: <%=linkedBooking.dietary%>
+	  	<i>Additional attendee <%=place+1%></i>
+		<br>&nbsp;&nbsp;Salutation: <%=linkedBooking.salutation%>  
+        <br>&nbsp;&nbsp;Surname: <%=linkedBooking.surname%>
+		<br>&nbsp;&nbsp;First name: <%=linkedBooking.firstName%>
+		<br>&nbsp;&nbsp;Lodge: <%=linkedBooking.lodge%>
+		<br>&nbsp;&nbsp;Lodge no: <%=linkedBooking.lodgeNo%>
+		<br>&nbsp;&nbsp;Rank: <%=linkedBooking.rank%>
+		<br>&nbsp;&nbsp;Dietary reqs: <%=linkedBooking.dietary%>
       <% }) %>
     <% } %>
 	
