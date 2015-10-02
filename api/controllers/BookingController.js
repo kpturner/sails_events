@@ -977,7 +977,7 @@ module.exports = {
 											deadline: deadline
 								    },
 								    {
-								      from: event.name + ' <noreply@squareevents.org>',
+								      from: booking.event.name + ' <noreply@squareevents.org>',
 									  to: booking.user.email,
 									  bcc: [organiser.email || "",sails.config.events.developer || ""],
 								      subject: "Event booking cancellation confirmation"
