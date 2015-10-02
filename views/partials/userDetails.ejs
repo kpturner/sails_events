@@ -16,7 +16,7 @@ insert the "has-error" class on the input field (i.e. insert a red border around
 <div class="control-group form-group col-xs-10"
 ng-class="{'has-error':<%-form%>.name.$invalid &&
                       <%-form%>.name.$dirty}">
-  <label>* Full name</label>  
+  <label>* Full name (for <span class="hidden-xs">seating</span> reservation card)</label>  
   <!-- For this input field make it required, and have a max length of 50 -->
   <input type="text" populate-names="['surname:last','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="<%-form%>Form.name" ng-maxlength="50" required>  
   <!-- Also, if <%-form%>.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
@@ -51,7 +51,7 @@ ng-class="{'has-error':<%-form%>.username.$invalid &&
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.surname.$invalid &&
                       <%-form%>.surname.$dirty}">
-  <label>* Surname</label>  
+  <label>* Surname (for correspondence)</label>  
   <!-- For this input field make it required, and have a max length of 50 -->
   <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="<%-form%>Form.surname" ng-maxlength="50" required>  
   <span class="help-block has-error" ng-if="<%-form%>.surname.$dirty">
@@ -65,7 +65,7 @@ ng-class="{'has-error':<%-form%>.username.$invalid &&
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.firstName.$invalid &&
                       <%-form%>.firstName.$dirty}">
-  <label>* First name</label>  
+  <label>* First name (for correspondence)</label>  
   <!-- For this input field make it required, and have a max length of 50 -->
   <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="<%-form%>Form.firstName" ng-maxlength="50" required>  
   <span class="help-block has-error" ng-if="<%-form%>.firstname.$dirty">
