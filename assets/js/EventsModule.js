@@ -19,7 +19,18 @@ angular.module('EventsModule', ['ngDialog', 'ui.bootstrap', 'toastr', 'compareTo
 						var targets=eval(attrs['populateNames']);
 						$.each(targets,function(){
 							var s=this.toString().split(":");
-							var i=s[1];
+							var i
+							if (!isNaN(parseInt(s[1]))) {
+								i=s[1];								
+							}
+							else {
+								if (s[1].toLowerCase()=="last") {
+									i=splits.length-1;	
+								}
+								else if (s[1].toLowerCase()=="first") {
+									i=0;
+								}	 
+							}		
 							var $this=$("[name="+s[0]+']');
 							if ($this.length>0) {
 								if ($this.val().length==0) {
