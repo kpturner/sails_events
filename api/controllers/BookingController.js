@@ -386,6 +386,7 @@ module.exports = {
 													places: booking.places,
 													linkedBookings: linkedBookings,
 													paymentDetails: event.paymentDetails.replace(/[\n\r]/g, '<br>'),
+													total: (booking.places * event.price),
 													deadline: deadline,
 										    },
 										    {
@@ -974,6 +975,7 @@ module.exports = {
 											places: booking.places,
 											linkedBookings: linkedBookings,
 											paymentDetails: booking.event.paymentDetails.replace(/[\n\r]/g, '<br>'),
+											total: (booking.places * booking.event.price),
 											deadline: deadline
 								    },
 								    {
