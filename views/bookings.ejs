@@ -100,8 +100,8 @@
      
       <div class="container">   
         <div ng-show="bookings.length>0"> 
-          <h4>
-            <a href="mailto:?from={{event.organiser.email}}&Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}&bcc={{allAddresses}}" 
+          <h4 class="hidden-xs hidden-sm">
+            <a href="mailto:?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}&bcc={{allAddresses}}" 
                 target="_top">
                   <span class="fa fa-envelope"></span> Email all below
             </a>
