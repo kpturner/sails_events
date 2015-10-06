@@ -74,6 +74,11 @@ module.exports = {
 					{lodgeNo: {contains: filter}}, 
 				]
 			}
+			
+			// Special value for partially complete registrations
+			if (filter.toLowerCase()=="partial") {
+				where.or.push({salutation:null})
+			}
 		}
 										
 		User.find({
