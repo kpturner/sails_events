@@ -16,6 +16,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.userBookings= SAILS_LOCALS.userBookings;
 		$scope.event 		= SAILS_LOCALS.event;
 		$scope.selectedUser	= SAILS_LOCALS.selectedUser;
+		$scope.allAddresses = "";
 		
 		// Get the bookings
 		var route;
@@ -35,7 +36,9 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 					$scope.bookings = data;
 					// Calculate capacity and add user details if needed
 					$scope.bookings.forEach(function(b,i){
-						$scope.event.capacity-=b.places;						
+						$scope.event.capacity-=b.places;
+						if (b.user.email) 
+							$scope.allAddresses+=b.user.email+";"								
 					})
 					 				
 				}
@@ -72,7 +75,13 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			$http.get(route)
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
-						$scope.bookings = sailsResponse.data;					
+						$scope.bookings = sailsResponse.data;	
+						// Calculate all addresses
+						$scope.allAddresses = "";
+						$scope.bookings.forEach(function(b,i){
+							if (b.user.email) 
+								$scope.allAddresses+=b.user.email+";"								
+						})				
 					}
 					else {
 						window.location="/";
@@ -91,7 +100,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				})
 		}
 		
-				
+		
 		/**
 		 * Create new booking
 		 * @param {Integer} eventId 
