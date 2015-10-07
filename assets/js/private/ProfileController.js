@@ -17,7 +17,23 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	$scope.profileForm.confirmemail=$scope.profileForm.email; 
 	 
 	// Salutations
-	$scope.salutations=SAILS_LOCALS.salutations;	  
+	$scope.salutations=SAILS_LOCALS.salutations;	
+ 
+ 	// Make the duff fields dirty straight away :)
+	setTimeout($scope.setDirty,500)
+	
+	/**
+	 * Make erroneous fields dirty
+	 */
+	$scope.setDirty = function() {
+		angular.forEach($scope.profile.$error.required, function(field) {
+			field.$setDirty();
+		}); 
+		if (!$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo)) {
+			$scope.profile.lodgeno.$setDirty();	
+			$scope.profile.lodgeno.$setValidity("required",false);	
+		}				
+	}
 	
 	/**
 	 * Test if the details are complete on the profile
@@ -37,6 +53,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 						)
 				)
 		) {
+			$scope.setDirty();
 			complete=false;
 		}
 			
@@ -45,6 +62,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
+		 
 		// Submit request to Sails.
 		$http.post('/updateprofile', {
 			profile: $scope.profileForm

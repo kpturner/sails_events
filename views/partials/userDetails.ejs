@@ -1,11 +1,16 @@
 <!DOCTYPE html>       
 
 <!-- S A L U T A T I O N -->
-<div class="control-group form-group col-xs-10">
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-form%>.salutation.$invalid &&
+                      <%-form%>.salutation.$dirty}">
   <label>* Salutation</label>  
-  <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-form%>Form.salutation">
+  <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-form%>Form.salutation" required>
     <option value="">-- choose salutation --</option>
   </select>
+  <span class="help-block has-error" ng-if="<%-form%>.salutation.$dirty">
+    <span ng-show="<%-form%>.salutation.$error.required">Salutation is required.</span> 
+  </span>
 </div>     
          
 <!-- N A M E -->
@@ -97,8 +102,8 @@ ng-class="{'has-error':<%-form%>.username.$invalid &&
 <!-- L O D G E  N U M B E R-->
 
 <div class="control-group form-group col-xs-6 col-md-4"
-  ng-class="{'has-error':<%-form%>.lodgeNo.$invalid &&
-                        <%-form%>.lodgeNo.$dirty}">
+  ng-class="{'has-error':<%-form%>.lodgeno.$invalid &&
+                        <%-form%>.lodgeno.$dirty}">
   <label><span ng-hide="<%-form%>Form.authProvider=='dummy'">* </span>Lodge number</label>
   <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-form%>Form.lodgeNo" ng-maxlength="5" min="(<%-form%>Form.authProvider!='dummy')?1:0" ng-required="<%-form%>Form.authProvider!='dummy'">
   <span class="help-block has-error" ng-if="<%-form%>.lodgeno.$dirty">
