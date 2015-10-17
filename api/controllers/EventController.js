@@ -28,12 +28,15 @@ module.exports = {
 	 * @param {Object} res
 	 */
 	openEvents: function (req, res) {
-		var today=new Date().getDate();
+		var today=new Date();
+		today=new Date(today.setHours(0));
+		today=new Date(today.setMinutes(0));
+		today=new Date(today.setSeconds(0));
 		var selectedUserId=req.param("selecteduserid");  // If this exists, omit events for which this user is already booked in
 		Event.find({
 					where:	{
 								open:true,
-								closingDate: { '>': today } 
+								closingDate: { '>=': today } 
 							}, 
 					sort: 	{
 								date:'desc',
