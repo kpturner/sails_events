@@ -28,11 +28,38 @@ module.exports = {
 	 * @param {Object} res
 	 */
 	openEvents: function (req, res) {
+		
 		var today=new Date();
 		today=new Date(today.setHours(0));
 		today=new Date(today.setMinutes(0));
 		today=new Date(today.setSeconds(0));
 		var selectedUserId=req.param("selecteduserid");  // If this exists, omit events for which this user is already booked in
+		
+		// An example using promises (bluebird)
+		/*				
+		Event.find({
+					where:	{
+								open:true,
+								closingDate: { '>=': today } 
+							}, 
+					sort: 	{
+								date:'desc',
+								time:'desc'
+							}
+					})
+					.populate('organiser')
+					.then(function(events){
+						console.log(events.length)
+						 return events;
+					}).spread(function(event1,event2){
+						// Promises are awesome!
+						console.log(event1)
+						console.log(event2)
+					}).catch(function(err){
+						// An error occurred
+					})
+		*/
+		
 		Event.find({
 					where:	{
 								open:true,
