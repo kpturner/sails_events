@@ -285,7 +285,7 @@ module.exports = {
 				      				booking.cost=booking.places*event.price;
 									booking.dietary=user.dietary;
 									
-									if(req.session.eventBookings) {
+									if(req.session.eventBookings || req.session.userBookings) {
 										booking.amountPaid=req.param("amountPaid");
 										booking.paid=req.param("paid");
 										booking.mop=req.param("mop");	
