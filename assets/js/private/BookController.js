@@ -346,16 +346,16 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					// Handle known error type(s).
 					toastr.error(sailsResponse.data, 'Error');
 					$scope.bookingForm.loading = false;
-					setTimeout(function(){
-						if ($scope.myBookings)
-							window.location='/mybookings'
-						else if ($scope.eventBookings)
-							window.location='/eventbookings?eventid='+$scope.event.id;
-						else if ($scope.userBookings)
-							window.location='/userbookings?userid='+$scope.selectedUserId;
-						else
-							window.location = '/'	
-					},3000)				
+					//setTimeout(function(){
+					//	if ($scope.myBookings)
+					//		window.location='/mybookings'
+					//	else if ($scope.eventBookings)
+					//		window.location='/eventbookings?eventid='+$scope.event.id;
+					//	else if ($scope.userBookings)
+					//		window.location='/userbookings?userid='+$scope.selectedUserId;
+					//	else
+					//		window.location = '/'	
+					//},3000)				
 				})
 				.finally(function eitherWay(){
 					//$scope.bookingForm.loading = false;
