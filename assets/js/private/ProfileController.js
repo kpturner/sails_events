@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('ProfileController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('ProfileController', ['$scope', '$http', '$timeout', 'toastr', function($scope, $http, $timeout, toastr){
 
 	
 	$scope.profileForm = {
@@ -19,8 +19,10 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;	
  
- 	// Make the duff fields dirty straight away :)
-	setTimeout($scope.setDirty,500)
+ 	// Set elements that have validity checking to dirty straight away 
+ 	angular.element(document).ready(function () {
+		 $timeout($scope.setDirty);
+	});
 	
 	/**
 	 * Make erroneous fields dirty

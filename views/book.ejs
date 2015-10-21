@@ -104,7 +104,7 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors --> 
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || (!eventBookings && paid) || bookingForm.loading">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || (!eventBookings && !userBookings && paid) || bookingForm.loading">
           <span ng-show="!bookingForm.loading && mode=='delete'">Cancel booking</span>
           <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete'">Book now</span>
           <span ng-show="!bookingForm.loading && existingBooking && mode!='delete'">Update booking</span>

@@ -149,11 +149,28 @@ passport.connect = function (req, query, profile, next) {
                 },function(err, already){
                   var ok=false;
                   if (already.authProvider=="dummy") {
+                                                          
                     // This is OK.  A dummy user with this email address was created for bookings before
                     // they attempted to sign-up. Use this and carry on with passport sign-up
                     ok=true;
                     user=already;
                     user.authProvider=provider;
+                    
+                    // Asynchronously email the developer
+                    if (sails.config.events.developer) {
+                      sails.hooks.email.send(
+                      "dummyUserConversion", {
+                            convertedUser: user                      
+                          },
+                          {
+                            to: sails.config.events.developer,
+                            subject: sails.config.events.title + " - Dummy user conversion"
+                          },
+                          function(err) {if (err) console.log(err);}
+                      )       
+                    }  
+                                 
+                    // Convert the user
                     User.update(user.id,user).exec(function(){
                       return createPassport(next,user);  
                     });                    

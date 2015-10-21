@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('SignupController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('SignupController', ['$scope', '$http', '$timeout', 'toastr', function($scope, $http, $timeout, toastr){
 
 	$scope.signupForm = {
 		loading: false
@@ -12,6 +12,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		if (   (!$scope.signupForm.salutation || $scope.signupForm.salutation.length==0)
 			 
 		) {
+			$scope.setDirty();
 			complete=false;
 		}
 			
@@ -19,7 +20,26 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	}
 
 	// Salutations
-	$scope.salutations=SAILS_LOCALS.salutations;	
+	$scope.salutations=SAILS_LOCALS.salutations;
+	 
+	// Set elements that have validity checking to dirty straight away 
+ 	angular.element(document).ready(function () {
+		 $timeout($scope.setDirty);
+	});
+	
+	/**
+	 * Make erroneous fields dirty
+	 */
+	$scope.setDirty = function() {
+		angular.forEach($scope.signup.$error.required, function(field) {
+			field.$setDirty();
+		}); 
+		$scope.signup.username.$setDirty();	
+		$scope.signup.username.$setValidity("required",false);	
+		$scope.signup.lodgeno.$setDirty();	
+		$scope.signup.lodgeno.$setValidity("required",false);							
+	}
+	 
 
 	$scope.submitSignupForm = function(){
 		$scope.signupForm.loading=true;

@@ -48,6 +48,11 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	if ($scope.mode!="create") {
 		if (SAILS_LOCALS.booking.id) {
 			$scope.bookingForm = SAILS_LOCALS.booking.user;	
+			// Is the administrator managing a booking for somebody else?
+			if (SAILS_LOCALS.booking.user.id!=$scope.user.id) {
+				$scope.userBookings=true;	
+				$scope.selectedUserId=SAILS_LOCALS.booking.user.id;	
+			}
 		}
 		else {
 			$scope.bookingForm = $scope.user;							

@@ -160,6 +160,22 @@ exports.register = function (req, res, next) {
                   // this registration is invalid
                   if (existingUser.authProvider=="dummy") {
                     User.update(existingUser.id,user).exec(function(err,newUsers){
+                      
+                      // Asynchronously email the developer
+                      if (sails.config.events.developer) {
+                        newUsers[0].authProvider="local";
+                        sails.hooks.email.send(
+                        "dummyUserConversion", {
+                              convertedUser: newUsers[0]                      
+                            },
+                            {
+                              to: sails.config.events.developer,
+                              subject: sails.config.events.title + " - Dummy user conversion"
+                            },
+                            function(err) {if (err) console.log(err);}
+                        )       
+                      }                    
+                      
                       // Complete registration
                       completeReg(newUsers[0],user.password);         
                     })
