@@ -342,7 +342,12 @@ module.exports = {
 											Booking.update(booking.id,{ref:bookingRef}).exec(function(){})
 										} 
 																		 
-																		
+										// If the user has previously sent an apology, delete it
+										Apology.destroy({event:booking.event,user:booking.user}).exec(function(err, deleted){
+											if (!err) {
+												//console.log(deleted)
+											}
+										})								
 										
 										// If this is the user making a booking, send them a confirmation email	
 										if(!req.session.eventBookings && !req.session.userBookings && user.email) {
@@ -1090,7 +1095,7 @@ module.exports = {
 	  sails.log.silly('res.csv() :: Sending 200 ("OK") response');
 	
 		
-	  //PUT THE DATA THROGH THE GAUNTLET...
+	  //PUT THE DATA THROUGH THE GAUNTLET...
 	
 	  if(!data){
 	    throw new Error('data cannot be null');

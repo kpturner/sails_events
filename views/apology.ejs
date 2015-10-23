@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= sails.config.events.title %> </title>
+    <title><%= sails.config.events.title %> - Apology</title>
+
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-deckgrid.css">
@@ -22,35 +23,79 @@
     <link rel="stylesheet" href="/styles/ng-dialog/ngDialog-theme-plain.min.css">
     <link rel="stylesheet" href="/styles/ng-dialog/ngDialog.min.css">
     <!--STYLES END-->
+
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
     window.SAILS_LOCALS = {
-      _csrf: '<%= _csrf %>',
+      _csrf: "<%= _csrf %>",
       user: <%- JSON.stringify(res.locals.user) %>,
-      selectedUser: <%- JSON.stringify(res.locals.selectedUser) %>,
+      event: <%- JSON.stringify(res.locals.event) %>,
+      mode: "<%= mode.toLowerCase() %>",  
+      bookingId:   <%= res.locals.bookingId %>,
+      apology:   <%- JSON.stringify( res.locals.apology ) %>,
     };
-    </script>
-  </head>
-  <body ng-app="EventsModule" data-ng-controller="UserBookingsController" ng-cloak>
-
-    <!-- container = Fixed-width container container-fluid = full-width -->
-    <div class="container-fluid">
-      <% include partials/private/navbar.ejs %>  
-        
-      <div>
-          <h2>New booking for {{ selectedUser.name }}</h2>          
-      </div>  
-       
-      <div class="container">     
-        <h4 class="hidden-md hidden-lg">Tap an event to book in</h4>  
-        <h4 class="hidden-xs hidden-sm">Click an event to book in</h4>  
-        <span class="fa fa-spinner fa-pulse fa-3x fa-fw" ng-hide="!bookingsLoading"></span>   
-        <div deckgrid source="events" cardTemplate="/templates/dashboard.html" class="deckgrid"></div>
-      </div>
     
-      <% include partials/public/footer.ejs %>   
+    </script>
+        
+  </head>
 
-    </div>
+  <body ng-app="EventsModule" data-ng-controller="ApologyController" ng-cloak>
+     
+        
+                     
+    <div class="container-fluid">
+       
+      <% include partials/private/navbar.ejs %> 
+        
+              
+
+      <!-- APOLOGY FORM --> 
+      <form ng-submit="submitApologyForm()" id="apology-form" name="apology" 
+          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        
+        <h3 class="form-signin-heading">Booking for {{event.name}}</h3>
+        <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
+        <h4>{{event.venue}}<h4>        
+            
+        
+        <h5><a href="mailto:{{event.organiser.email}}?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}" target="_top">
+              <span class="fa fa-envelope"></span> Organiser: {{event.organiser.name}}
+            </a>
+        </h5> 
+       
+        <h5 ng-hide="!event.organiser.phone"><a href="tel:{{event.organiser.phone}}"><span class="fa fa-phone"></span> {{event.organiser.phone}}</a></h5>
+        <h3 ng-hide="!existingApology">YOU HAVE ALREADY SENT YOUR APOLOGIES</h3> 
+        <h3 ng-hide="!existingBooking">YOU HAVE ALREADY BOOKED IN!</h3>   
+        <h3 ng-show="!existingApology && !existingBooking">YOUR APOLOGY WILL BE REMOVED IF YOU SUBSEQUENTLY BOOK IN</h3>        
+        <h5> Items marked with * are mandatory</h5>  
+        <div class="row" disable-contents="(existingApology || existingBooking)">  <!-- disable-contents is a custom directive I have added to EventsModule -->
+           
+            <!-- M E S S A G E -->
+            <div class="control-group form-group col-xs-10">
+            <label>Any additional message</label>
+            <textarea class="form-control" placeholder="e.g. why you cannot attend"" name="message" ng-model="<%-model%>Form.message" ></textarea>            
+            </div>
+          
+        </div>  
+  
+        <br/>
+  
+        <!-- Disable button until something has been edited and the form has no errors --> 
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="apologyForm.loading || existingApology || existingBooking">
+          <span ng-hide="apologyForm.loading">Send apology</span>
+          <span class="fa-pulse fa fa-spinner" ng-show="apologyForm.loading" ></span>
+          <span ng-show="apologyForm.loading">Sending apology...</span>
+        </button>
+  
+        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+      </form>
+     
+     </div>  
+
+
+    <% include partials/public/footer.ejs %>   
+      
+         
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery/jquery.js"></script>
@@ -78,6 +123,5 @@
     <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
     <!--SCRIPTS END-->
-
   </body>
 </html>

@@ -11,6 +11,12 @@
             <p ng-hide="!card.organiser.phone"><a href="tel:{{card.organiser.phone}}"><span class="fa fa-phone"></span> {{card.organiser.phone}}</a></p>                 
         </div>        
     </a>
-   
+    <div class="photo-description" >
+        <a href="/apology?eventid={{card.id}}" class="a-unstyled">     
+            <button type="button" class="btn btn-danger card-btn">
+                <span>Send apology</span>
+            </button>
+        </a>          
+    </div>
             
 </div>

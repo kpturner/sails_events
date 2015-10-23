@@ -73,6 +73,13 @@ module.exports.routes = {
   'post /validateadditions': 'BookingController.validateAdditions',
   'post /updatebooking/:action': 'BookingController.updateBooking',
   
+  // Apologies
+  'get /apology': 'ApologyController.prepareApology',
+  'get /apology/:action': 'ApologyController.prepareApology',
+  'post /sendapology': 'ApologyController.sendApology',
+  'get /eventapologies': 'ApologyController.eventApologies',
+  'get /alleventapologies/:filter?': 'ApologyController.allEventApologies',
+  
   // Users
   'get /users': 'UserController.users',
   'get /allusers/:filter?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional
