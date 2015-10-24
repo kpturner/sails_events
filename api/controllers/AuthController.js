@@ -288,7 +288,7 @@ var AuthController = {
             delta[field]=profile[field];
         }
         
-                 
+       
         // Always treat the email as changed so the gravatar is updated after a social media sign-up
         delta.email=profile.email;  
 				  
@@ -317,8 +317,7 @@ var AuthController = {
 			}	
 			
 			var handlePassword=function(req,delta){
-				if (req.param('password')) {
-					
+        if (delta.password) {
 					// Get the existing passport
 					Passport.findOne({ user: req.user.id }, function(err, passport) {
 					    if (err) { return res.negotiate(err); }
@@ -326,9 +325,10 @@ var AuthController = {
 					    var validator = require('validator');
 						var crypto    = require('crypto');
 						var token = crypto.randomBytes(48).toString('base64'); 
+            
 						Passport.update(
 							passport.id,{
-								password: 		req.param("password"),
+								password: 		delta.password,
 								accessToken: 	token
 							}
 						).exec(function(err, passport){
