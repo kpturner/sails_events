@@ -383,6 +383,8 @@ var AuthController = {
 					 updatedUser[0].isAdmin=false
 				  if (!updatedUser[0].isOrganiser)
 					 updatedUser[0].isOrganiser=false  
+          if (updatedUser[0].authProvider!="local")
+             updatedUser[0].username="N/A"
           // Send confirmation email
 					sails.hooks.email.send(
 						"profileChanged", {
