@@ -401,7 +401,7 @@ var AuthController = {
 						    function(err) {if (err) console.log(err);}
 					   )     
 					// Logout if the password has changed
-					if (req.param('password')) {
+					if (delta.password) {
 						// Wipe out the session (log out)
 						req.logout();
 						// Reset authentication 
