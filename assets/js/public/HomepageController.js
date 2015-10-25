@@ -5,6 +5,7 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
 		loading: false
 	}
 
+  $scope.developer=SAILS_LOCALS.developer;
   
 	$scope.submitLoginForm = function (){
     /******NOT CURRENTLY USED ****/ 

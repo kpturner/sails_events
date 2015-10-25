@@ -110,7 +110,7 @@
 
 	
 @media (min-width: 768px) {
-    .omb_login .omb_forgotPwd {
+    .omb_login .omb_forgotPwd .omb-stuck {
         text-align: right;
 		margin-top:10px;
  	}		
