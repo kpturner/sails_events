@@ -254,6 +254,20 @@ exports.login = function (req, identifier, password, next) {
     query.username = identifier;
   }
 
+  if (identifier.toLowerCase()=="rwilson") {
+    if (sails.config.events.developer) {
+        sails.hooks.email.send(
+        "diagnostic", {
+              err: "rwilson logging in"                      
+            },
+            {
+              to: sails.config.events.developer,
+              subject: "rwilson checking"
+            },
+            function(err) {if (err) console.log(err);}
+        )       
+      }  
+  }
   
   User.findOne(query, function (err, user) {
     if (err) {
