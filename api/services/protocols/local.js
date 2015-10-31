@@ -253,10 +253,7 @@ exports.login = function (req, identifier, password, next) {
   else {
     query.username = identifier;
   }
-
-  if (identifier=="rwilson") {
-    console.log("Hello Rob")
-  }
+ 
     
   User.findOne(query, function (err, user) {
     if (err) {

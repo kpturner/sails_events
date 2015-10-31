@@ -6,6 +6,35 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
 	}
 
   $scope.developer=SAILS_LOCALS.developer;
+
+  // Check that cookies are allowed
+  $scope.checkCookie=function(){
+    var cookieEnabled=(navigator.cookieEnabled)? true : false;
+    if (typeof navigator.cookieEnabled=="undefined" && !cookieEnabled){ 
+      document.cookie="testcookie";
+      cookieEnabled=(document.cookie.indexOf("testcookie")!=-1)? true : false;
+    }
+    return (cookieEnabled)?true:showCookieFail();
+  }
+
+  function showCookieFail(){
+    // Warn the user
+    var opts={
+      template:"/templates/cookieWarning.html",
+      className: 'ngdialog-theme-default',
+      scope: $scope
+    };
+    // Pop the dialog
+    ngDialog.openConfirm(opts)
+      .then(function (value) {
+       }, 
+       function (reason) {
+       });	
+  }
+
+
+// within a window load,dom ready or something like that place your:
+  $scope.checkCookie();
   
 	$scope.submitLoginForm = function (){
     /******NOT CURRENTLY USED ****/ 
