@@ -235,7 +235,7 @@ var AuthController = {
                 }  
             }
             
-            res.redirect('/');
+            res.redirect('/dashboard');
           }
         }   
                 
