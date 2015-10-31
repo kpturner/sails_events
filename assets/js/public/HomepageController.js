@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('HomepageController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('HomepageController', ['$scope', '$http', 'toastr', 'ngDialog', function($scope, $http, toastr, ngDialog){
 
 	// set-up loginForm loading state
 	$scope.loginForm = {
