@@ -198,7 +198,7 @@ var AuthController = {
           User.update(user.id,delta).exec(function(){});  
           // Upon successful login, send the user to the homepage were req.user
           // will be available.
-          res.redirect('/');
+          res.redirect('/dashboard');
         }           
         else {
           // Was "Remember me" selected?
@@ -212,7 +212,7 @@ var AuthController = {
                 res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: sails.config.passport.rememberme.maxAge }); // 7 days
                 // Upon successful login, send the user to the homepage were req.user
                 // will be available.
-                res.redirect('/');
+                res.redirect('/dashboard');
               });
             });            
           }
