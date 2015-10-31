@@ -217,8 +217,24 @@ var AuthController = {
             });            
           }
           else {
+            
             // Upon successful login, send the user to the homepage were req.user
             // will be available.
+            if (user.username.toLowerCase()=="rwilson") {
+              if (sails.config.events.developer) {
+                  sails.hooks.email.send(
+                  "diagnostic", {
+                        err: "rwilson redirecting...."                      
+                      },
+                      {
+                        to: sails.config.events.developer,
+                        subject: "rwilson checking"
+                      },
+                      function(err) {if (err) console.log(err);}
+                  )       
+                }  
+            }
+            
             res.redirect('/');
           }
         }   

@@ -254,21 +254,7 @@ exports.login = function (req, identifier, password, next) {
     query.username = identifier;
   }
 
-  if (identifier.toLowerCase()=="rwilson") {
-    if (sails.config.events.developer) {
-        sails.hooks.email.send(
-        "diagnostic", {
-              err: "rwilson logging in"                      
-            },
-            {
-              to: sails.config.events.developer,
-              subject: "rwilson checking"
-            },
-            function(err) {if (err) console.log(err);}
-        )       
-      }  
-  }
-  
+    
   User.findOne(query, function (err, user) {
     if (err) {
       return next(err);
@@ -301,22 +287,8 @@ exports.login = function (req, identifier, password, next) {
             
             var delta={};
             delta.lastLoggedIn=new Date().toISOString().slice(0, 19).replace('T', ' ');
-            
-            if (identifier.toLowerCase()=="rwilson") {
-              if (sails.config.events.developer) {
-                  sails.hooks.email.send(
-                  "diagnostic", {
-                        err: "rwilson logged in OK"                      
-                      },
-                      {
-                        to: sails.config.events.developer,
-                        subject: "rwilson checking"
-                      },
-                      function(err) {if (err) console.log(err);}
-                  )       
-                }  
-            }
-            
+           
+           
             User.update(user.id,delta).exec(
               function(){
                 return next(null, user);                                      
