@@ -197,8 +197,8 @@ var AuthController = {
           var delta={};
           delta.lastLoggedIn=new Date().toISOString().slice(0, 19).replace('T', ' ');
           User.update(user.id,delta).exec(function(){});  
-          // Upon successful login, send the user to the dashboard
-          res.redirect('/dashboard');
+          // Upon successful login, send the user to the default page
+          res.redirect('/');
         }           
         else {
           // Was "Remember me" selected?
@@ -210,15 +210,15 @@ var AuthController = {
               Token.create({token:token, user: user.id }, function(err) {
                 if (err) { return next(err); }
                 res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: sails.config.passport.rememberme.maxAge }); // 7 days
-                // Upon successful login, send the user to the dashboard
-                res.redirect('/dashboard');
+                // Upon successful login, send the user to the default page
+                res.redirect('/');
               });
             });            
           }
           else {
             
-            // Upon successful login, send the user to the dashboard
-            res.redirect('/dashboard');
+            // Upon successful login, send the user to the default page
+            res.redirect('/');
           }
         }   
                 

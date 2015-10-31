@@ -9,8 +9,9 @@
 module.exports = {
 	validateRequest: function (req, res) {
   
-    //console.log(req.user);
-    //console.log(res.locals.user);
+    console.log(req.user);
+    console.log(res.locals.user);
+    console.log(req.session.authenticated)
             
     // If not logged in, show the public view.
     if (!req.session.authenticated) {
