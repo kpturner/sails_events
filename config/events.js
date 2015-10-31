@@ -28,6 +28,9 @@ module.exports.events = {
 	// Salutations
 	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr'],
 	
+	// Areas
+	areas: ['North Central', 'North East', 'Solent', 'South Central', 'South East', 'South West'],
+	
 	// Domain (for signup email confirmations)
 	domain: "http://squareevents.org",
 	

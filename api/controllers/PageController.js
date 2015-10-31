@@ -45,7 +45,8 @@ module.exports = {
   		) {
          return res.view('profile',{
            form:'profile',
-           salutations: sails.config.events.salutations
+           salutations: sails.config.events.salutations,
+           areas: sails.config.events.areas,
          }); 
   		}
       

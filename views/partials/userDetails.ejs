@@ -112,7 +112,16 @@ ng-class="{'has-error':<%-form%>.username.$invalid &&
   </span>
 </div>
 
- <!-- R A N K -->
+
+<!-- A R E A -->
+<div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
+  <label>Area</label>  
+  <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-form%>Form.area">
+    <option value="">-- choose area --</option>
+  </select>
+</div>
+
+<!-- R A N K -->
 
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.rank.$invalid &&

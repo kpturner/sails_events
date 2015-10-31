@@ -124,6 +124,7 @@ module.exports = {
 				res.locals.mops=sails.config.events.mops;
 				res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
 				res.locals.salutations=sails.config.events.salutations;
+				res.locals.areas=sails.config.events.areas;
 					
 				// Get the data for the event and the user and then navigate to the booking view
 				if (req.wantsJSON)
@@ -228,6 +229,7 @@ module.exports = {
 			user.firstName=req.param("firstName");
 			user.lodge=req.param("lodge");
 			user.lodgeNo=req.param("lodgeNo");
+			user.area=req.param("area");
 			user.rank=req.param("rank");
 			user.dietary=req.param("dietary");
 			user.email=req.param("email");
@@ -390,6 +392,7 @@ module.exports = {
 												  	lodge: user.lodge || "",
 												  	lodgeNo: user.lodgeNo || "",
 													salutation: user.salutation || "",
+													area: user.area || "",
 													surname: user.surname || "",
 													firstName: user.firstName || "",
 												  	rank: user.rank || "",
@@ -979,6 +982,7 @@ module.exports = {
 										  	lodge: booking.user.lodge || "",
 											lodgeNo: booking.user.lodgeNo || "",
 											salutation: booking.user.salutation || "",
+											area: booking.user.area || "",
 											surname: booking.user.surname || "",
 											firstName: booking.user.firstName || "",
 										  	rank: booking.user.rank || "",
@@ -1048,6 +1052,7 @@ module.exports = {
 			row.rank=booking.user.rank || "";
 			row.lodge=booking.user.lodge || "";
 			row.lodgeNo=booking.user.lodgeNo || "";
+			row.area=booking.user.area || "";
 			row.dietary=booking.dietary || "";
 			row.info=booking.info || "";
 			row.places=booking.places;
@@ -1067,6 +1072,7 @@ module.exports = {
 				row.rank=addition.rank || "";
 				row.lodge=addition.lodge || "";
 				row.lodgeNo=addition.lodgeNo || "";
+				row.area=addition.area || "";
 				row.dietary=addition.dietary || "";
 				row.paid=booking.paid || "";
 				row.amountPaid=amountPaid || "";	

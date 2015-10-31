@@ -37,6 +37,11 @@ var LinkedBooking = {
       type: 'string'
     },
     
+    // The user's area
+    area: {
+      type: 'string'
+    },
+    
     // The user's rank
     rank: {
       type: 'string'

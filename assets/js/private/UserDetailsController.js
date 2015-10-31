@@ -28,7 +28,9 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;	
-    
+    	
+	// Areas
+	$scope.areas=SAILS_LOCALS.areas;
 	
 	/**
 	 * Test if the details are complete on the user

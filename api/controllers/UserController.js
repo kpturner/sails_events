@@ -72,6 +72,7 @@ module.exports = {
 					{dietary: {contains: filter}},
 					{lodge: {contains: filter}},
 					{lodgeNo: {contains: filter}}, 
+					{area: {contains: filter}}, 
 				]
 			}
 			
@@ -125,6 +126,7 @@ module.exports = {
 				return res.view("userdetails",{
 					mode:mode,
 					salutations: sails.config.events.salutations,
+					areas: sails.config.events.areas,
 					form:'userdetails',
 					userDetails:user
 				})	
@@ -134,6 +136,7 @@ module.exports = {
 			return res.view("userdetails",{
 				mode:mode,
 				salutations: sails.config.events.salutations,
+				areas: sails.config.events.areas,
 				form:'userdetails',
 				userDetails:{}
 			})	

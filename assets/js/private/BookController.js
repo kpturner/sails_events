@@ -89,6 +89,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
 	
+	// Areas
+	$scope.areas=SAILS_LOCALS.areas;
+	
 	if (!$scope.eventBookings && !$scope.userBookings && !$scope.myBookings)
 		$scope.makingBooking=true;
 
@@ -306,6 +309,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					phone: $scope.bookingForm.phone,
 					lodge: $scope.bookingForm.lodge,
 					lodgeNo: $scope.bookingForm.lodgeNo,
+					area: $scope.bookingForm.area,
 					rank: $scope.bookingForm.rank,
 					dietary: $scope.bookingForm.dietary,
 					email: $scope.bookingForm.email,

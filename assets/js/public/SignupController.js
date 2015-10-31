@@ -21,6 +21,9 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
+	
+	// Areas
+	$scope.areas=SAILS_LOCALS.areas;
 	 
 	// Set elements that have validity checking to dirty straight away 
  	angular.element(document).ready(function () {

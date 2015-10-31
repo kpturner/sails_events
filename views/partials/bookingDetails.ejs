@@ -45,7 +45,7 @@
   <input type="text" class="form-control" name="ref" ng-model="<%-model%>Form.ref" readonly>  
 </div>         
 
- <!-- S A L U T A T I O N -->
+<!-- S A L U T A T I O N -->
 <div class="control-group form-group col-xs-10">
   <label>* Salutation</label>  
   <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-model%>Form.salutation" required>
@@ -132,6 +132,15 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
   <span ng-show="<%-model%>.lodgeno.$error.required">Lodge number is required.</span>
   <span ng-show="<%-model%>.lodgeno.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
 </span>
+</div>
+
+
+<!-- A R E A -->
+<div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
+  <label>Area</label>  
+  <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-model%>Form.area">
+    <option value="">-- choose area --</option>
+  </select>
 </div>
 
 <!-- R A N K -->
@@ -267,6 +276,15 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	      <span ng-show="linked<%-model%>.lodgeNo.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
 	    </span>
 	  </div>
+    
+    
+    <!-- A R E A -->
+    <div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
+      <label>Area</label>  
+      <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="linked<%-model%>[place].area">
+        <option value="">-- choose area --</option>
+      </select>
+    </div>
 	  
 	   <!-- R A N K -->
 	  <div class="control-group form-group col-xs-10"

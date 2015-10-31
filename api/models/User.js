@@ -42,6 +42,11 @@ var User = {
     lodgeNo: {
       type: 'string'
     },
+        
+    // The user's area
+    area: {
+      type: 'string'
+    },
     
     // The user's rank
     rank: {
