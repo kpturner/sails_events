@@ -1,0 +1,13 @@
+<div class="ngdialog-message">
+    <h3>WARNING</h3>
+    <p>The following booking(s) already exist for this event:</p>
+     
+    <div ng-repeat="duplicate in potentialDuplicates">
+        <label>{{duplicate.surname}}, {{duplicate.firstName}} (Lodge: {{duplicate.lodge}})</label>
+        <span style="font-size:x-small">- booked in by {{duplicate.host.salutation}} {{duplicate.host.firstName}} {{duplicate.host.surname}}</span>  
+    </div> 
+    <p><i>Please check before booking in</i></p>
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Close</button> 
+</div>

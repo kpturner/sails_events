@@ -104,40 +104,76 @@ module.exports = {
 			// Now we have to adjust capacity by the number of places booked so far
 			var places=0;
 			var criteria={};
-			criteria.event=event.id;
+			criteria.event=event.id;			 
+			
+			var preparedBooking=function(userForBooking,criteria){
+				var potentialDuplicates=[];
+				Booking.find(criteria).populate("user").populate("additions").exec(function(err,bookings){
+					if (!err) {
+						bookings.forEach(function(booking,index){
+							places+=booking.places
+							// Look for potential duplicates
+							if (!sails.config.events.multipleBookings) {
+								booking.additions.forEach(function(addition,a){
+									if (
+											addition.surname.toLowerCase()==userForBooking.surname.toLowerCase()
+										&&	addition.firstName.toLowerCase()==userForBooking.firstName.toLowerCase()	
+									) {
+											if (!addition.lodge || (addition.lodge && userForBooking.lodge && addition.lodge.toLowerCase()==userForBooking.lodge.toLowerCase())) {
+												addition.host=booking.user;
+												potentialDuplicates.push(addition)	
+											}											
+									}	
+								})	
+							}							
+						})
+						
+							
+					}
+				
+					res.locals.event=event;
+					res.locals.event.capacity-=places;
+					res.locals.booking=existingBooking;
+					res.locals.myBookings=myBookings;
+					res.locals.eventBookings=eventBookings;
+					res.locals.userBookings=userBookings;
+					res.locals.mops=sails.config.events.mops;
+					res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
+					res.locals.salutations=sails.config.events.salutations;
+					res.locals.areas=sails.config.events.areas;
+					res.locals.potentialDuplicates=potentialDuplicates;
+						
+					// Get the data for the event and the user and then navigate to the booking view
+					if (req.wantsJSON)
+						return res.json({
+								model:'booking',
+								mode: mode
+							});
+					else
+						return res.view("book",{
+								model:'booking',
+								mode: mode
+							});		
+				})	
+			}
+			
+			// Return prepared booking
 			if (existingBooking) {
 				criteria.id={"!":existingBooking.id} // Exclude the existing booking details from the calcs
+				return preparedBooking(existingBooking.user,criteria);
 			}
-			Booking.find(criteria).exec(function(err,bookings){
-				if (!err) {
-					bookings.forEach(function(booking,index){
-						places+=booking.places
-					})	
+			else {
+				if (selectedUserId) {
+					User.findOne(selectedUserId)
+						.then(function(userForBooking){
+							return preparedBooking(userForBooking,criteria);
+						})
 				}
+				else {
+					return preparedBooking(res.locals.user,criteria);
+				}
+			}
 			
-				res.locals.event=event;
-				res.locals.event.capacity-=places;
-				res.locals.booking=existingBooking;
-				res.locals.myBookings=myBookings;
-				res.locals.eventBookings=eventBookings;
-				res.locals.userBookings=userBookings;
-				res.locals.mops=sails.config.events.mops;
-				res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
-				res.locals.salutations=sails.config.events.salutations;
-				res.locals.areas=sails.config.events.areas;
-					
-				// Get the data for the event and the user and then navigate to the booking view
-				if (req.wantsJSON)
-					return res.json({
-							model:'booking',
-							mode: mode
-						});
-				else
-					return res.view("book",{
-							model:'booking',
-							mode: mode
-						});		
-			})	
 		}	
 		
 		

@@ -135,6 +135,19 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}		
 	}
 
+
+	// Warn if there are potential duplicates
+	if (SAILS_LOCALS.potentialDuplicates && SAILS_LOCALS.potentialDuplicates.length>0) {
+		$scope.potentialDuplicates=SAILS_LOCALS.potentialDuplicates;
+		// Give the user the chance to pull out
+		var opts={
+			template:"/templates/potentialDuplicates.html",
+			className: 'ngdialog-theme-default',
+			scope: $scope
+		};
+		// Pop the dialog
+		ngDialog.open(opts);
+	}
 	
 	/**
 	 * Test if the details are complete on the booking
@@ -166,7 +179,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		else {
 			// Remove items from the linkedBookings that are beyond the number of places
 			if ($scope.bookingForm.places<2) {
-				$scope.linkedBookings=[]
+				$scope.linkedbookings=[]
 			}
 			else {
 				$scope.linkedbookings=$.grep($scope.linkedbookings,function(obj,n){
