@@ -639,7 +639,7 @@ module.exports = {
 									booking.user.surname.toLowerCase()==ob.surname.toLowerCase()
 								&&	booking.user.firstName.toLowerCase()==ob.firstName.toLowerCase()	
 							) {
-									if (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase()==ob.lodge.toLowerCase())
+									if (!booking.user.lodge || (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase()==ob.lodge.toLowerCase()))
 										duplicates.push(ob)
 							}	
 						})
@@ -651,7 +651,7 @@ module.exports = {
 										lb.surname.toLowerCase()==ob.surname.toLowerCase()
 									&&	lb.firstName.toLowerCase()==ob.firstName.toLowerCase()	
 								) {
-										if (lb.lodge && ob.lodge && lb.lodge.toLowerCase()==ob.lodge.toLowerCase())
+										if (!lb.lodge || (lb.lodge && ob.lodge && lb.lodge.toLowerCase()==ob.lodge.toLowerCase()))
 											duplicates.push(ob)
 								}	
 							})						
