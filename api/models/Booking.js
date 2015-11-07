@@ -70,9 +70,14 @@ module.exports = {
     },
 
     // Booking date
-    bookingDate : {
+    bookingDate: {
        type: 'date',
-    }
+    },
+    
+    // Table no
+    tableNo: {
+      type: 'integer'
+    }, 
 
   }
 };

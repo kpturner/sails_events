@@ -180,6 +180,15 @@ ng-class="{'has-error':<%-model%>.email.$invalid &&
 </span>
 </div>
 
+<!-- T A B L E  N O. -->
+
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-model%>.tableno.$invalid &&
+                    <%-model%>.tableno.$dirty}" ng-hide="(!eventBookings && !userBookings)">
+<label>Table no.</label>
+<input type="number" class="form-control" placeholder="e.g 10" name="tableno" ng-model="<%-model%>Form.tableNo">
+</div>
+
 <!-- C O N F I R M  E M A I L -->
 
 <div class="control-group form-group col-xs-10"

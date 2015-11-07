@@ -276,7 +276,7 @@ module.exports = {
 			/**
 			 * Private function to create booking
 			 */
-			var bookIt=function(userId){
+			var bookIt=function(userId,existingBooking){
 				User.update(userId,user).exec(
 					function(err,users) {
 						if (err) {
@@ -319,6 +319,9 @@ module.exports = {
 								// Private function to process booking
 								var processBooking=function(){
 									var booking={};
+									if (existingBooking) {
+										_.extend(booking, existingBooking);
+									}
 									booking.user=user.id;
 									booking.event=eventId;
 									booking.info=req.param("info");
@@ -335,11 +338,16 @@ module.exports = {
 										booking.amountPaid=req.param("amountPaid");
 										booking.paid=req.param("paid");
 										booking.mop=req.param("mop");	
+										booking.tableNo=req.param("tableNo");
 									}
 									else {
-										booking.amountPaid=0;
-										booking.paid=false;	
-										booking.mop=null;
+										if (!existingBooking) {
+											// New booking
+											booking.amountPaid=0;
+											booking.paid=false;	
+											booking.mop=null;	
+											booking.tableNo=null;
+										}																	
 									}
 									
 									// Use pre-existing booking ref if it exists
@@ -524,15 +532,15 @@ module.exports = {
 					if (existingBooking) {
 						if (existingBooking.id==bookingId) {
 							// OK
-							return bookIt(userId);
+							return bookIt(userId,existingBooking);
 						}
-							else {
-								if (!sails.config.events.multipleBookings) {
+						else {
+							if (!sails.config.events.multipleBookings) {
 								return res.genericErrorResponse("460","Booking failed. This user is already booked in to the event")
 							}
 							else {
 								// OK
-								return bookIt(userId);
+								return bookIt(userId,existingBooking);
 							}	
 						}						
 					}
@@ -1080,6 +1088,7 @@ module.exports = {
 			}
 			var amountPaid=booking.amountPaid/booking.places;
 			var row={};
+			row.tableNo=booking.tableNo || "";
 			row.ref=booking.ref || "";
 			row.salutation=booking.user.salutation || "";
 			row.surname=booking.user.surname || "";
@@ -1100,6 +1109,7 @@ module.exports = {
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
 				var row={};
+				row.tableNo=booking.tableNo || "";
 				row.ref=booking.ref || "";
 				row.salutation=addition.salutation || "";
 				row.surname=addition.surname || "";
