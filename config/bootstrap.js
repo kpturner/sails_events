@@ -36,7 +36,8 @@ module.exports.bootstrap = function(cb) {
     });
     // Send the Sails object
     latePaymentDaemon.send({
-      action:   "*START"
+      action              :   "*START",
+      latePaymentInterval :   sails.config.events.latePaymentInterval,
     });	    
     // Send the Sails object
     //setTimeout(function(){

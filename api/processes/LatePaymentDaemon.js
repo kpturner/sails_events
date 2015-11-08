@@ -19,11 +19,8 @@ process.on('message', function(parms) {
 			// Every 24 hours, email late payers
 			setInterval(function(){
 				process.send({action:"*LATEPAYERS"});
-			},86400000)
-			// Test
-			//setInterval(function(){
-			//	process.send({action:"*LATEPAYERS"});
-			//},5000)
+			},parms.latePaymentInterval)
+			 
 			break;
 			
 		case "*STOP":

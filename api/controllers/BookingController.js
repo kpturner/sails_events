@@ -1080,7 +1080,8 @@ module.exports = {
 		Event	.find({
 					where:	{
 								open:true,
-								closingDate: { '>=': today } 
+								closingDate: { '>=': today },
+								grace: {'>': 0} 
 							}, 
 					sort: 	{
 								date:'desc',

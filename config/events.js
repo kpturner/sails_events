@@ -34,4 +34,7 @@ module.exports.events = {
 	// Domain (for signup email confirmations)
 	domain: "http://squareevents.org",
 	
+	// Late payment interval
+	latePaymentInterval: 86400000,
+	
 };
