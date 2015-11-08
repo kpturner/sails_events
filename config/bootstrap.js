@@ -16,7 +16,7 @@ module.exports.bootstrap = function(cb) {
   
   sails.on('lifted', function() {
     // Start the late payment daemon
-    latePaymentDaemon = require("child_process").fork(__dirname+"/../api/processes/latepaymentdaemon");
+    latePaymentDaemon = require("child_process").fork(__dirname+"/../api/processes/LatePaymentDaemon");
     // Detect it exiting
     latePaymentDaemon.on("exit", function(code, signal){
       sails.log.debug("Late payment daemon process exiting with code/signal "+code+"/"+signal );
