@@ -923,6 +923,7 @@ module.exports = {
 		var bookingsOut=[];
 		bookings.forEach(function(booking,i){
 			// Calculate the deadline date
+			//console.log("Checking booking for "+booking.user.name)
 			var g=(grace)?grace:booking.event.grace;
 			if (g>0 && booking.bookingDate) {
 				var dl=new Date(booking.bookingDate);
@@ -1065,6 +1066,88 @@ module.exports = {
 		})	
 		
 	},
+	
+	/**
+	 * Process late payers
+	 */
+	 processLatePayers: function(){
+		sails.log.debug("Processing late payers...");  
+		// Get a list of open events
+		var today=new Date();
+		today=new Date(today.setHours(0));
+		today=new Date(today.setMinutes(0));
+		today=new Date(today.setSeconds(0));
+		Event	.find({
+					where:	{
+								open:true,
+								closingDate: { '>=': today } 
+							}, 
+					sort: 	{
+								date:'desc',
+								time:'desc'
+							}
+					})
+				.populate('organiser')
+				.then(function(events){
+					// Get a list of bookings for this event that are late with their payment
+					events.forEach(function(event,ev){
+						Booking.find({
+									where: {
+										event:event.id,
+										or: [{paid:false},{paid:null}]
+									}
+								})
+						.populate('user')			
+						.then(function(bookings){
+							// Filter bookings so we only have late payers
+							bookings=sails.controllers.booking.filterLate(bookings,event.grace); 
+							// Process late payers
+							bookings.forEach(function(booking,b){
+								sails.log.debug("Late booking found for "+event.name+" for "+booking.user.name)
+								// Only email a reminder if a week has passed since last reminder
+								var reminderDeadline=today;
+								if (booking.lastPaymentReminder) {
+									reminderDeadline=new Date((booking.lastPaymentReminder).getTime()+(86400000*7));
+									//console.log(reminderDeadline<=today);	
+								}
+								if (!booking.lastPaymentReminder || reminderDeadline <= today) {
+									// Update the booking so we don't spam them
+									Booking.update(booking.id,{lastPaymentReminder:today}).exec(function(err,booking){});
+									// Format some data for the email
+									var formattedDate=event.date.toString();
+									formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+									var dl=new Date(booking.bookingDate);
+									dl.setDate(dl.getDate()+event.grace);
+									dl=dl.toString();
+									var deadline=dl.substr(0,dl.indexOf(":")-2);
+								 
+									// Send email reminder
+									sails.hooks.email.send(
+										"latePaymentReminder", {
+											recipientName: booking.user.salutation + " " + booking.user.firstName,
+											senderName: sails.config.events.title,
+											eventDate: formattedDate,
+											event: event,
+											deadline: deadline,
+											details: booking												
+										},
+										{
+											//to: booking.user.email,
+											to: "kevin.turner@coraltree.co.uk",
+											cc: event.organiser.email || "",
+											bcc: sails.config.events.developer || "",
+											subject: event.name + " - Late payment reminder"
+										},
+										function(err) {if (err) console.log(err);}
+									)     
+								}
+							})
+						})
+					})
+					
+				})
+					 
+	 }, 
 	
 	/**
 	 * Download bookings

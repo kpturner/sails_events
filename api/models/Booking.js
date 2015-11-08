@@ -74,6 +74,11 @@ module.exports = {
        type: 'date',
     },
     
+    // Last payment reminder
+    lastPaymentReminder: {
+      type: 'date', 
+    },
+    
     // Table no
     tableNo: {
       type: 'integer'

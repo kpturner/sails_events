@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<p>Dear <%=recipientName%>,</p>
+
+<p>This is a courtesy email to remind you that your payment for this event is overdue.</p>
+<p>If you think you have been sent this email in error, please contact the organiser.</p> 
+
+<p>
+	Booking ref: <b><%=details.ref%></b>
+	<br>Event: <%=event.name%>
+	<br>On: <%=eventDate%> at <%=event.time%>
+	<br>At: <%-event.venue%> 
+	<br>Organiser: <%=event.organiser.name%> (<%=event.organiser.email%>) <%=(event.organiser.phone||"")%>	
+	<br>Info: <%-event.blurb%>
+	<br>Menu: <%-event.menu%> 
+	<br>Dress code: <%-event.dressCode%> 
+	<br>Payment deadline: <%=deadline%>	
+	<br>Amount to pay: £<%=details.cost%>
+	<br>
+		
+	<p> Payment details: <b><%-event.paymentDetails%></b>
+
+<p>Yours S&F,<br/><%=senderName%></p>
+
+<p><i>Do not reply to this email. The recipient is not a human!</i></p>
