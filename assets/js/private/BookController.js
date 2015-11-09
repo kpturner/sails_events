@@ -111,6 +111,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
 		$scope.bookingForm.info = SAILS_LOCALS.booking.info;
 		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
+		$scope.bookingForm.remindersSent = SAILS_LOCALS.booking.remindersSent;
 		$scope.makeArray();
 		// Get linked booking info
 		if (SAILS_LOCALS.booking.places>1) {

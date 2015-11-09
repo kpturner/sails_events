@@ -79,6 +79,11 @@ module.exports = {
       type: 'date', 
     },
     
+    // Reminders sent (total)
+    remindersSent: {
+      type: 'integer'  
+    },
+    
     // Table no
     tableNo: {
       type: 'integer'

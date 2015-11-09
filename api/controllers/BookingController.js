@@ -1159,7 +1159,10 @@ module.exports = {
 									var to=booking.user.email;
 									var cc=(event.organiser.email || "");
 									if (!sails.config.events.reminderTestMode) 
-										Booking.update(booking.id,{lastPaymentReminder:today}).exec(function(err,booking){});
+										Booking.update(booking.id,{
+												lastPaymentReminder:today,
+												remindersSent:((!booking.remindersSent)?1:booking.remindersSent+1)
+										}).exec(function(err,booking){});
 									else {
 										to="";
 										cc="";
