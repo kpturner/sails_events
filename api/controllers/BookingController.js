@@ -1113,7 +1113,12 @@ module.exports = {
 								}
 								if (!booking.lastPaymentReminder || reminderDeadline <= today) {
 									// Update the booking so we don't spam them
-									Booking.update(booking.id,{lastPaymentReminder:today}).exec(function(err,booking){});
+									var to=booking.user.email
+									if (!sails.config.events.reminderTestMode) 
+										Booking.update(booking.id,{lastPaymentReminder:today}).exec(function(err,booking){});
+									else {
+										to="";
+									}
 									// Format some data for the email
 									var formattedDate=event.date.toString();
 									formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
@@ -1134,7 +1139,7 @@ module.exports = {
 										},
 										{
 											//to: booking.user.email,
-											to: "kevin.turner@coraltree.co.uk",
+											to: to,
 											cc: event.organiser.email || "",
 											bcc: sails.config.events.developer || "",
 											subject: event.name + " - Late payment reminder"
