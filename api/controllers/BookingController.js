@@ -1113,7 +1113,7 @@ module.exports = {
 								}
 								if (!booking.lastPaymentReminder || reminderDeadline <= today) {
 									// Update the booking so we don't spam them
-									var to=booking.user.email
+									var to=booking.user.email;
 									if (!sails.config.events.reminderTestMode) 
 										Booking.update(booking.id,{lastPaymentReminder:today}).exec(function(err,booking){});
 									else {

@@ -38,13 +38,9 @@ module.exports.bootstrap = function(cb) {
     latePaymentDaemon.send({
       action              :   "*START",
       latePaymentInterval :   sails.config.events.latePaymentInterval,
+      reminderTestMode    :   sails.config.events.reminderTestMode,
     });	    
-    // Send the Sails object
-    //setTimeout(function(){
-    //  latePaymentDaemon.send({
-    //    action:   "*STOP"
-    //  });	    
-    //},30000)
+     
         
   }); 
 
