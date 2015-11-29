@@ -32,7 +32,7 @@ module.exports = function (req, res, next) {
         if(req.user) {
           // Must be authenticated, so set the session flag (in case we got here from remember-me)
           req.session.authenticated=true;
-          req.user.isAdmin=Utility.isAdmin(req.user);
+          req.user.isAdmin=Utility.isAdmin(req.user);          
         }
         // Make the user available throughout the frontend      
         res.locals.user = req.user;

@@ -19,6 +19,12 @@ module.exports.events = {
 	// Homepage heading
 	heading: "Provincial Events",
 	
+	// Logo
+	logo: "/images/provincial/crest.png",
+	
+	// Logo link
+	logoLink: "http://www.hiowmasons.org/",
+	
 	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
 	multipleBookings: false,
 	
@@ -36,5 +42,8 @@ module.exports.events = {
 	
 	// Late payment interval
 	latePaymentInterval: 86400000,
+	
+	// Additional info field label
+	//additionalInfoLabel: "Sit me with"
 	
 };
