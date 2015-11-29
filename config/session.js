@@ -27,12 +27,12 @@ module.exports.session = {
   /***************************************************************************
   *                                                                          *
   * Set the session cookie expire time The maxAge is set by milliseconds,    *
-  * the example below is for 60 minutes                                      *
-  *                                                                          *
+  * the example below is for 10 years. Session expiry is handled by          *
+  * sails.config.events.sessionExpiry                                        *
   ***************************************************************************/
 
    cookie: {
-     maxAge: 60 * 60 * 1000
+     maxAge: 10 * 365 * 24 * 60 * 60 * 1000
      //maxAge: 10 *1000
    },
 

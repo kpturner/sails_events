@@ -10,6 +10,9 @@
 
 module.exports.events = {
 
+	// Expire session afterh this many minutes
+	sessionExpiry:  30 * 60 * 1000,
+
 	// Admins can be a single string or an array, each representing a user name or email address
 	// admins: ['user'],
 	

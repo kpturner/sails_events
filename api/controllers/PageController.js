@@ -12,12 +12,12 @@ module.exports = {
     //console.log(req.user);
     //console.log(res.locals.user);
     //console.log(req.session.authenticated)
-    
-            
+               
     // If not logged in, show the public view.
     if (!req.session.authenticated) {
       return res.redirect("/homepage");
     }
+      
     
     // Otherwise, look up the logged-in user and show the logged-in view,
     // bootstrapping basic user data in the HTML sent from the server

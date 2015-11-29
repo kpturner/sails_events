@@ -16,7 +16,32 @@ module.exports = function(req, res, next) {
   // or we are being authenticated, we can also proceed
   res.locals.developer=sails.config.events.developer;
   if (req.session.authenticated || req.url=="/" || req.url=="/homepage" || req.url=="/register" || req.url.indexOf("/auth/")>=0) {
+    
+     
+    // For authenticated sessions, check for expiry
+    if (req.session.authenticated) {
+          
+      // Should we expire the session?
+      var lastRequest=req.session.lastRequest;
+      var thisRequest=new Date().getTime();
+      
+      if (lastRequest && sails.config.events.sessionExpiry) {
+        if (thisRequest-lastRequest>sails.config.events.sessionExpiry) {
+          // Session expired
+          sails.log.debug("Session expired for "+req.user.name);
+          req.flash('error', 'Error.Session.Expired'); 
+          req.session.lastRequest=null;
+          return sails.controllers.auth.logout(req, res); 
+        }
+      } 
+      
+      // Set the last request
+      req.session.lastRequest=new Date().getTime();
+    }
+     
     return next();
+    
+       
   } 
   // User is not allowed
   // (default res.forbidden() behavior can be overridden in `config/403.js`)
