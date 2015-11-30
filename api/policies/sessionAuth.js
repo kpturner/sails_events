@@ -20,21 +20,25 @@ module.exports = function(req, res, next) {
      
     // For authenticated sessions, check for expiry
     if (req.session.authenticated) {
-          
-      // Should we expire the session?
-      var lastRequest=req.session.lastRequest;
-      var thisRequest=new Date().getTime();
       
-      if (lastRequest && sails.config.events.sessionExpiry) {
-        if (thisRequest-lastRequest>sails.config.events.sessionExpiry) {
-          // Session expired
-          sails.log.debug("Session expired for "+req.user.name);
-          req.flash('error', 'Error.Session.Expired'); 
-          req.session.lastRequest=null;
-          return sails.controllers.auth.logout(req, res); 
-        }
-      } 
-      
+      // Check for session expiry unless we have a remember-me cookie which will have its 
+      // own time-out set in the passport config
+      if (!req.cookies.remember_me)  {
+        // Should we expire the session?
+        var lastRequest=req.session.lastRequest;
+        var thisRequest=new Date().getTime();
+        
+        if (lastRequest && sails.config.events.sessionExpiry) {
+          if (thisRequest-lastRequest>sails.config.events.sessionExpiry) {
+            // Session expired
+            sails.log.debug("Session expired for "+req.user.name);
+            req.flash('error', 'Error.Session.Expired'); 
+            req.session.lastRequest=null;
+            return sails.controllers.auth.logout(req, res); 
+          }
+        } 
+      }
+            
       // Set the last request
       req.session.lastRequest=new Date().getTime();
     }

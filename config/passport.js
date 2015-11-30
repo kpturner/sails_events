@@ -21,7 +21,7 @@ module.exports.passport = {
 
   rememberme : {
     strategy: require('passport-remember-me').Strategy,
-    maxAge: 7 * 24 * 60 * 60 * 1000,   // Time to live for remember me cookie        
+    maxAge: 7 * 24 * 60 * 60 * 1000,   // Time to live for remember me cookie             
   },
 
   //bearer: {
