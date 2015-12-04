@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('ProfileController', ['$scope', '$http', '$timeout', 'toastr', function($scope, $http, $timeout, toastr){
+angular.module('EventsModule').controller('ProfileController', ['$scope', '$http', '$timeout', 'toastr', 'ngDialog', function($scope, $http, $timeout, toastr, ngDialog){
 
 	
 	$scope.profileForm = {
@@ -67,38 +67,59 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
-		 
-		// Submit request to Sails.
-		$http.post('/updateprofile', {
-			profile: $scope.profileForm
-			//name: $scope.profileForm.name,
-			//username: $scope.profileForm.username,
-			//lodge: $scope.profileForm.lodge,
-			//lodgeNo: $scope.profileForm.lodgeNo,
-			//rank: $scope.profileForm.rank,
-			//dietary: $scope.profileForm.dietary,
-			//email: $scope.profileForm.email,
-			//isAdmin: $scope.profileForm.isAdmin,
-			//isVO: $scope.profileForm.isVO,
-			//voLodge: $scope.profileForm.voLodge,
-			//voLodgeNo: $scope.profileForm.voLodgeNo,
-			//password: $scope.profileForm.password,
-			//surname: $scope.profileForm.surname,
-			//firstName: $scope.profileForm.firstName,
-			//phone: $scope.profileForm.phone,
-		})
-		.then(function onSuccess(sailsResponse){
-			window.location = '/';
-		})
-		.catch(function onError(sailsResponse){
-
-			// Handle known error type(s).
-			toastr.error(sailsResponse.data, 'Error');
-
-		})
-		.finally(function eitherWay(){
-			$scope.profileForm.loading = false;
-		})
+		
+		var submitForm=function(){
+			// Submit request to Sails.
+			$http.post('/updateprofile', {
+				profile: $scope.profileForm
+			})
+			.then(function onSuccess(sailsResponse){
+				window.location = '/';
+			})
+			.catch(function onError(sailsResponse){
+	
+				// Handle known error type(s).
+				toastr.error(sailsResponse.data, 'Error');
+	
+			})
+			.finally(function eitherWay(){
+				$scope.profileForm.loading = false;
+			})
+		}
+		
+		// Before submitting the form, check the domain and issue SPAM warning
+		// if required
+		var submit=true;
+		if (!$scope.user.spamAck) {
+			var domain;
+			if ($scope.profileForm.email) {
+				domain=$scope.profileForm.email.split("@")[1]
+			} 
+			if (domain) {
+				var details=SAILS_LOCALS.spamDomains[domain];
+			}
+			if (details) {
+				// It is a troublesome domain
+				details.domain=domain;
+				submit=false;
+				$scope.spamWarning=details
+				var opts={
+					template:"/templates/spamWarning.html",
+					className: 'ngdialog-theme-default',
+					scope: $scope
+				};
+				// Pop the dialog
+				ngDialog.open(opts)
+					.closePromise.then(function (value) {
+						// Continue  
+						$scope.profileForm.spamAck=true;
+						submitForm();
+					});
+			}
+		}	 
+		// Submit if we are not sending any warnings
+		if (submit)
+			submitForm()
 	}
 
 }])

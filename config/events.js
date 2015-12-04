@@ -49,4 +49,12 @@ module.exports.events = {
 	// Additional info field label
 	//additionalInfoLabel: "Sit me with"
 	
+	// Domains requiring SPAM warning
+	spamDomains: {
+		"gmail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that the sender is in your list of contacts."},
+		"googlemail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that the sender is in your list of contacts."},
+		"hotmail.com":{}, 
+		"hotmail.co.uk":{},
+	}
+	
 };

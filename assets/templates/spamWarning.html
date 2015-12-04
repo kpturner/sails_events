@@ -1,0 +1,14 @@
+<div class="ngdialog-message">
+    <h3>WARNING</h3>
+    <p>Your email domain ({{spamWarning.domain}}) employs a very strict anti-spam policy.</p>
+    <p>Please check your SPAM folder for emails from this system and whitelist it.<p>
+    <p>{{spamWarning.additionalinfo}}</p>
+    <div ng-hide="!spamWarning.video">
+      <p>Here is a video that shows you how (won't run on iOS):<p>
+      <p><a href="{{spamWarning.video}}" target="_blank" title="Demo video">Video</a></p> 
+      <p><b>Once you have dismissed this warning, you will not see it again</b></p>   
+    </div>
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Close</button>
+</div>

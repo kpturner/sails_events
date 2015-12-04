@@ -110,7 +110,13 @@ var User = {
     // url for gravatar
     gravatarUrl: {
       type: 'string'
+    },
+    
+    // SPAM warning acknowledged
+    spamAck: {
+      type: 'boolean'  
     }
+    
   }
 };
 
