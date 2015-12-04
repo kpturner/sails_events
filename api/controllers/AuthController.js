@@ -192,6 +192,7 @@ var AuthController = {
         
         // Mark the session as authenticated to work with default Sails sessionAuth.js policy
         req.session.authenticated = true;
+        req.session.lastRequest=null;
         
         if (user.authProvider!="local") {
           var delta={};

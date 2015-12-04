@@ -89,6 +89,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
 	
+	
+	// Display the payment details
+	$scope.bookingForm.paymentDetails=$scope.event.paymentDetails;
+	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
 	

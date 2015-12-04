@@ -45,7 +45,7 @@
       <% include partials/private/navbar.ejs %>     
 
       <!-- EVENT FORM --> 
-      <form ng-submit="submitEventForm()" id="profile-form" name="event" 
+      <form ng-submit="submitEventForm()" id="profile-form" name="eventdetails" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h3 class="form-signin-heading">Event - <%=mode%></h3>
         <h5>Items marked with * are mandatory</h5>
@@ -55,8 +55,8 @@
           <!-- O P E N ? -->
   
           <div class="control-group form-group col-md-5"
-            ng-class="{'has-error':event.open.$invalid &&
-                                  event.open.$dirty}">
+            ng-class="{'has-error':eventdetails.open.$invalid &&
+                                  eventdetails.open.$dirty}">
              <label>
               <input type="checkbox" class="bigcheckbox" name="open" ng-model="eventForm.open"></input>
               &nbsp;&nbsp;&nbsp;Open for bookings?
@@ -66,8 +66,8 @@
           <!-- V O  O N L Y ? -->
           <!--
           <div class="control-group form-group col-md-5"
-            ng-class="{'has-error':event.voonly.$invalid &&
-                                  event.voonly.$dirty}">
+            ng-class="{'has-error':eventdetails.voonly.$invalid &&
+                                  eventdetails.voonly.$dirty}">
              <label>
               <input type="checkbox" class="bigcheckbox" name="voonly" ng-model="eventForm.voOnly"></input>
               &nbsp;&nbsp;&nbsp;VOs only?
@@ -81,16 +81,16 @@
           insert the "has-error" class on the input field (i.e. insert a red border around the input field)
           -->
           <div class="control-group form-group col-md-10"
-            ng-class="{'has-error':event.name.$invalid &&
-                                event.name.$dirty}">
+            ng-class="{'has-error':eventdetails.name.$invalid &&
+                                eventdetails.name.$dirty}">
             <label>* Full name</label>  
             <!-- For this input field make it required, and have a max length of 50 -->
             <input type="text" class="form-control" placeholder="e.g. Provincial AGM" name="name" ng-model="eventForm.name" ng-maxlength="50" required>  
-            <!-- Also, if event.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+            <!-- Also, if eventdetails.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
             and/or maxlength) -->
-            <span class="help-block has-error" ng-if="event.name.$dirty">
-              <span ng-show="event.name.$error.required">Name is required.</span>
-              <span ng-show="event.name.$error.maxlength">The name cannot be more than 50 characters.</span>
+            <span class="help-block has-error" ng-if="eventdetails.name.$dirty">
+              <span ng-show="eventdetails.name.$error.required">Name is required.</span>
+              <span ng-show="eventdetails.name.$error.maxlength">The name cannot be more than 50 characters.</span>
             </span>
           </div>
           
@@ -98,12 +98,12 @@
           
           <!-- O R G A N I S E R -->
           <div class="control-group form-group col-md-7"
-            ng-class="{'has-error':event.organiser.$invalid &&
-                                  event.organiser.$dirty}">
+            ng-class="{'has-error':eventdetails.organiser.$invalid &&
+                                  eventdetails.organiser.$dirty}">
             <label>* Organiser</label>
             <select type="text" class="form-control" placeholder="event organiser" name="organiser" ng-options="a.id as a.name for a in organisers" ng-model="eventForm.organiser"   required></select>
-            <span class="help-block has-error" ng-if="event.organiser.$dirty">
-              <span ng-show="event.organiser.$error.required">Organiser is required.</span> 
+            <span class="help-block has-error" ng-if="eventdetails.organiser.$dirty">
+              <span ng-show="eventdetails.organiser.$error.required">Organiser is required.</span> 
             </span>
           </div>
          
@@ -111,13 +111,13 @@
           <!-- C O D E -->
   
           <div class="control-group form-group col-md-7"
-            ng-class="{'has-error':event.code.$invalid &&
-                                  event.code.$dirty}">
+            ng-class="{'has-error':eventdetails.code.$invalid &&
+                                  eventdetails.code.$dirty}">
             <label>* Code (for payment)</label>
             <input type="text" class="form-control" placeholder="e.g. AGM16" name="code" ng-model="eventForm.code" ng-maxlength="8" required>
-            <span class="help-block has-error" ng-if="event.code.$dirty">
-              <span ng-show="event.code.$error.required">Event code is required.</span>
-              <span ng-show="event.code.$error.maxlength">The event code cannot be more than 8 characters.</span>
+            <span class="help-block has-error" ng-if="eventdetails.code.$dirty">
+              <span ng-show="eventdetails.code.$error.required">Event code is required.</span>
+              <span ng-show="eventdetails.code.$error.maxlength">The event code cannot be more than 8 characters.</span>
             </span>
           </div>          
          
@@ -125,20 +125,20 @@
           <!-- V E N U E -->
   
           <div class="control-group form-group col-md-10"
-            ng-class="{'has-error':event.rank.$invalid &&
-                                  event.rank.$dirty}">
+            ng-class="{'has-error':eventdetails.rank.$invalid &&
+                                  eventdetails.rank.$dirty}">
             <label>* Venue</label>
             <textarea type="text" class="form-control" placeholder="full address details" name="venue" ng-model="eventForm.venue" required rows="3"></textarea>
-            <span class="help-block has-error" ng-if="event.venue.$dirty">
-              <span ng-show="event.venue.$error.required">Venue is required.</span>
+            <span class="help-block has-error" ng-if="eventdetails.venue.$dirty">
+              <span ng-show="eventdetails.venue.$error.required">Venue is required.</span>
             </span>
           </div>
           
           <!-- D A T E -->
   
-          <div class="control-group form-group col-md-5"
-            ng-class="{'has-error':event.date.$invalid &&
-                                  event.date.$dirty}">
+          <div class="control-group form-group col-md-8"
+            ng-class="{'has-error':eventdetails.date.$invalid &&
+                                  eventdetails.date.$dirty}">
              <label>* Date</label>
             <p class="input-group">             
               <input type="date" class="form-control" datepicker-popup datepicker-options="dateOptions" is-open="dateOpened"  placeholder="date of event" name="date" 
@@ -147,79 +147,79 @@
                 <button type="button" class="btn btn-default" ng-click="openDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>              
             </p>           
-            <span class="help-block has-error" ng-if="event.date.$dirty">
-              <span ng-show="event.date.$error.required">Date is required.</span>
+            <span class="help-block has-error" ng-if="eventdetails.date.$dirty">
+              <span ng-show="eventdetails.date.$error.required">Date is required.</span>
             </span>
            </div>
            
            <!-- T I M E -->
   
-          <div class="control-group form-group col-md-3"
-            ng-class="{'has-error':event.time.$invalid &&
-                                  event.time.$dirty}">
+          <div class="control-group form-group col-md-4"
+            ng-class="{'has-error':eventdetails.time.$invalid &&
+                                  eventdetails.time.$dirty}">
               <label>* Time</label>       
               <input type="time" class="form-control" placeholder="e.g. 18:00:00" name="time" ng-model="eventForm.time" required></input>
-              <span class="help-block has-error" ng-if="event.time.$dirty">
-                <span ng-show="event.time.$error.required">Time is required.</span>
+              <span class="help-block has-error" ng-if="eventdetails.time.$dirty">
+                <span ng-show="eventdetails.time.$error.required">Time is required.</span>
               </span>
            </div>
            
                      
            <!-- P R I C E -->
   
-          <div class="control-group form-group col-md-3"
-            ng-class="{'has-error':event.price.$invalid &&
-                                  event.price.$dirty}">
+          <div class="control-group form-group col-md-8"
+            ng-class="{'has-error':eventdetails.price.$invalid &&
+                                  eventdetails.price.$dirty}">
               <label>* Price</label>       
               <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required></input>
-              <span class="help-block has-error" ng-if="event.price.$dirty">
-                <span ng-show="event.price.$error.required">Price is required.</span>
+              <span class="help-block has-error" ng-if="eventdetails.price.$dirty">
+                <span ng-show="eventdetails.price.$error.required">Price is required.</span>
               </span>
            </div>  
            
            <!-- M I N I M U M   B O O K I N G   P L A C E S -->
   
           <div class="control-group form-group col-md-8"
-            ng-class="{'has-error':event.minbookingplaces.$invalid &&
-                                  event.minbookingplaces.$dirty}">
+            ng-class="{'has-error':eventdetails.minbookingplaces.$invalid &&
+                                  eventdetails.minbookingplaces.$dirty}">
               <label>* Minimum number of places per booking</label>       
               <input type="number" class="form-control" placeholder="e.g. 1" name="minbookingplaces" ng-model="eventForm.minBookingPlaces" min="1" required></input>
-              <span class="help-block has-error" ng-if="event.event.minBookingPlaces.$dirty">
-                <span ng-show="event.minbookingplaces.$error.required">Minimum number of booking places is required.</span>
-                <span ng-show="event.minbookingplaces.$error.min">Minimum number of booking places must be greater than 0.</span>
+              <span class="help-block has-error" ng-if="eventdetails.minBookingPlaces.$dirty">
+                <span ng-show="eventdetails.minbookingplaces.$error.required">Minimum number of booking places is required.</span>
+                <span ng-show="eventdetails.minbookingplaces.$error.min">Minimum number of booking places must be greater than 0.</span>
               </span>
            </div>
                       
            <!-- M A X I M U M   B O O K I N G   P L A C E S -->
   
           <div class="control-group form-group col-md-8"
-            ng-class="{'has-error':event.maxbookingplaces.$invalid &&
-                                  event.maxbookingplaces.$dirty}">
+            ng-class="{'has-error':eventdetails.maxbookingplaces.$invalid &&
+                                  eventdetails.maxbookingplaces.$dirty}">
               <label>* Maximum number of places per booking</label>       
               <input type="number" class="form-control" placeholder="e.g. 10" name="maxbookingplaces" ng-model="eventForm.maxBookingPlaces" min="1" required></input>
-              <span class="help-block has-error" ng-if="event.event.maxBookingPlaces.$dirty">
-                <span ng-show="event.maxbookingplaces.$error.required">Maximum number of booking places is required.</span>
-                <span ng-show="event.maxbookingplaces.$error.min">Maximum number of booking places must be greater than 0.</span>
+              <span class="help-block has-error" ng-if="eventdetails.maxBookingPlaces.$dirty">
+                <span ng-show="eventdetails.maxbookingplaces.$error.required">Maximum number of booking places is required.</span>
+                <span ng-show="eventdetails.maxbookingplaces.$error.min">Maximum number of booking places must be greater than 0.</span>
               </span>
            </div>
            
            <!-- C A P A C I T Y -->
           </br>
           <div class="control-group form-group col-md-3"
-            ng-class="{'has-error':event.capacity.$invalid &&
-                                  event.capacity.$dirty}">
+            ng-class="{'has-error':eventdetails.capacity.$invalid &&
+                                  eventdetails.capacity.$dirty}">
               <label>* Capacity</label>       
               <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" required></input>
-              <span class="help-block has-error" ng-if="event.capacity.$dirty">
-                <span ng-show="event.capacity.$error.required">Capacity is required.</span>
+              <span class="help-block has-error" ng-if="eventdetails.capacity.$dirty">
+                <span ng-show="eventdetails.capacity.$error.required">Capacity is required.</span>
               </span>
            </div>
                       
            <!-- B L U R B -->
   
           <div class="control-group form-group col-md-10"
-            ng-class="{'has-error':event.blurb.$invalid &&
-                                  event.blurb.$dirty}">
+            ng-class="{'has-error':eventdetails.blurb.$invalid &&
+                                  eventdetails.blurb.$dirty}">
             <label>Blurb</label>
             <textarea type="text" class="form-control" placeholder="describe the event" name="blurb" ng-model="eventForm.blurb" rows="10"></textarea>
           
@@ -228,8 +228,8 @@
            <!-- M E N U -->
   
           <div class="control-group form-group col-md-10"
-            ng-class="{'has-error':event.menu.$invalid &&
-                                  event.menu.$dirty}">
+            ng-class="{'has-error':eventdetails.menu.$invalid &&
+                                  eventdetails.menu.$dirty}">
             <label>Menu</label>
             <textarea type="text" class="form-control" placeholder="menu details if known" name="menu" ng-model="eventForm.menu" rows="4"></textarea>
           
@@ -238,8 +238,8 @@
            <!-- D R E S S  C O D E -->
   
           <div class="control-group form-group col-md-10"
-            ng-class="{'has-error':event.dressCode.$invalid &&
-                                  event.dressCode.$dirty}">
+            ng-class="{'has-error':eventdetails.dressCode.$invalid &&
+                                  eventdetails.dressCode.$dirty}">
             <label>Dress code</label>
             <textarea type="text" class="form-control" placeholder="dress code if known" name="dresscode" ng-model="eventForm.dressCode" rows="3"></textarea>
           
@@ -249,8 +249,8 @@
           <!-- C L O S I N G  D A T E -->
   
           <div class="control-group form-group col-md-5"
-            ng-class="{'has-error':event.closingDate.$invalid &&
-                                  event.date.$dirty}">
+            ng-class="{'has-error':eventdetails.closingDate.$invalid &&
+                                  eventdetails.date.$dirty}">
              <label>* Closing date for bookings</label>
             <p class="input-group">             
               <input type="date" class="form-control" datepicker-popup datepicker-options="dateOptions" is-open="closingDateOpened"  placeholder="closing date for bookings" name="closingdate" 
@@ -259,16 +259,16 @@
                 <button type="button" class="btn btn-default" ng-click="openClosingDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>              
             </p>
-            <span class="help-block has-error" ng-if="event.closingdate.$dirty">
-              <span ng-show="event.closingdate.$error.required">Closing date is required.</span>
+            <span class="help-block has-error" ng-if="eventdetails.closingdate.$dirty">
+              <span ng-show="eventdetails.closingdate.$error.required">Closing date is required.</span>
             </span>
            </div>
            
            <!-- P A Y M E N T   D E T A I L S -->
   
             <div class="control-group form-group col-md-10"
-              ng-class="{'has-error':event.paymentDetails.$invalid &&
-                                    event.paymentDetails.$dirty}">
+              ng-class="{'has-error':eventdetails.paymentDetails.$invalid &&
+                                    eventdetails.paymentDetails.$dirty}">
               <label>Payment details</label>
               <textarea type="text" class="form-control" placeholder="e.g. Bank details for BACS payments" name="paymentdetails" ng-model="eventForm.paymentDetails" rows="4"></textarea>
             
@@ -277,8 +277,8 @@
             <!-- I N S T A N T  P A Y M E N T  ? -->
   
             <div style="display:none" class="control-group form-group col-md-7"
-              ng-class="{'has-error':event.instantPayment.$invalid &&
-                                    event.instantPayment.$dirty}">
+              ng-class="{'has-error':eventdetails.instantPayment.$invalid &&
+                                    eventdetails.instantPayment.$dirty}">
                <label>
                 <input type="checkbox" class="bigcheckbox" name="instantpayment" ng-model="eventForm.instantPayment" ></input>
                 &nbsp;&nbsp;&nbsp;Instant payment required?
@@ -297,7 +297,7 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors --> 
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (event.$invalid && || !detailsComplete())) || eventForm.loading">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (eventdetails.$invalid || !detailsComplete())) || eventForm.loading">
           <span ng-show="!eventForm.loading && mode!='delete'">Save Details</span>
           <span ng-show="!eventForm.loading && mode=='delete'">Delete</span>
           <span class="fa-pulse fa fa-spinner" ng-show="eventForm.loading" ></span>

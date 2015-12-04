@@ -120,7 +120,8 @@ exports.register = function (req, res, next) {
                         return res.genericErrorResponse(412,"Failed to login after registration");
                       }
                       // Mark the session as authenticated to work with default Sails sessionAuth.js policy
-                      req.session.authenticated = true;                        
+                      req.session.authenticated = true;   
+                      req.session.lastRequest=null;                     
                     });
       							return res.json({
       								id:	newUser.id
