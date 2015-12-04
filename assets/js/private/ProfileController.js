@@ -96,7 +96,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 				domain=$scope.profileForm.email.split("@")[1]
 			} 
 			if (domain) {
-				var details=SAILS_LOCALS.spamDomains[domain];
+				var details=SAILS_LOCALS.spamDomains[domain.toLowerCase();];
 			}
 			if (details) {
 				// It is a troublesome domain
