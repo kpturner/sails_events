@@ -22,6 +22,9 @@ module.exports.events = {
 	// Homepage heading
 	heading: "Provincial Events",
 	
+	// Email address
+	email: "noreply@squareevents.org",
+	
 	// Logo
 	logo: "/images/provincial/crest.png",
 	
@@ -51,10 +54,10 @@ module.exports.events = {
 	
 	// Domains requiring SPAM warning
 	spamDomains: {
-		"gmail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that the sender is in your list of contacts."},
-		"googlemail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that the sender is in your list of contacts."},
-		"hotmail.com":{}, 
-		"hotmail.co.uk":{},
+		"gmail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
+		"googlemail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
+		"hotmail.com":{additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."}, 
+		"hotmail.co.uk":{additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
 	}
 	
 };

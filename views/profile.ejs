@@ -32,6 +32,7 @@
       salutations: <%- JSON.stringify(res.locals.salutations) %>,
       areas: <%- JSON.stringify(res.locals.areas) %>,
       spamDomains: <%- JSON.stringify(sails.config.events.spamDomains) %>,
+      sender: "<%- sails.config.events.email %>",
     };
     
     </script>

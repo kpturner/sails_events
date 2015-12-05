@@ -450,7 +450,7 @@ module.exports = {
 													deadline: deadline,
 										    },
 										    {
-										      from: event.name + ' <noreply@squareevents.org>',
+										      from: event.name + ' <'+sails.config.events.email+'>',
 											  to: user.email,
 											  bcc: [event.organiser.email || "",sails.config.events.developer || ""],
 										      subject: subject
