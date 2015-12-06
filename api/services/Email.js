@@ -38,7 +38,7 @@ module.exports = {
                         sails.log.debug(err);
                 }else if(success){
                         // create reusable transporter object using SMTP transport
-                        sails.log.debug('DKIM verification successful');
+                        sails.log.silly('DKIM verification successful');
                         var transporter = nodemailer.createTransport(sails.config.email.transporter);
                         transporter._dkim=true; // Stops us initialising it again
                         // Tell it to stream correctly with the DKIM header(s)
