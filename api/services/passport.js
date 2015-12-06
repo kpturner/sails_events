@@ -158,7 +158,7 @@ passport.connect = function (req, query, profile, next) {
                     
                     // Asynchronously email the developer
                     if (sails.config.events.developer) {
-                      sails.hooks.email.send(
+                      Email.send(
                       "dummyUserConversion", {
                             convertedUser: user                      
                           },

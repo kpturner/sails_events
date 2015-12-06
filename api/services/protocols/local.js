@@ -96,7 +96,7 @@ exports.register = function (req, res, next) {
                     newUser.phone=""
             
                   // Send confirmation email
-    							sails.hooks.email.send(
+    							Email.send(
     								"signupConfirmation",
     							    {
     							      recipientName: newUser.salutation + " " + newUser.firstName,
@@ -165,7 +165,7 @@ exports.register = function (req, res, next) {
                       // Asynchronously email the developer
                       if (sails.config.events.developer) {
                         newUsers[0].authProvider="local";
-                        sails.hooks.email.send(
+                        Email.send(
                         "dummyUserConversion", {
                               convertedUser: newUsers[0]                      
                             },
@@ -245,7 +245,7 @@ exports.connect = function (req, res, next) {
  * @param {Function} next
  */
 exports.login = function (req, identifier, password, next) {
-  var isEmail = validator.isEmail(identifier)
+  var isEmail = validator.isEmail.send(identifier)
     , query   = {};
 
   if (isEmail) {

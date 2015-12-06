@@ -387,7 +387,7 @@ var AuthController = {
           if (updatedUser[0].authProvider!="local")
              updatedUser[0].username="N/A"
           // Send confirmation email
-					sails.hooks.email.send(
+					Email.send(
 						"profileChanged", {
     				      recipientName: updatedUser[0].salutation + " " + updatedUser[0].firstName,
     				      senderName: sails.config.events.title,
@@ -438,7 +438,7 @@ var AuthController = {
        
         var sendEmail=function(user,newPassword){
            // Send confirmation email
-  					sails.hooks.email.send(
+  					Email.send(
   						"passwordReset", {
       				    recipientName: user.salutation + " " + user.firstName,
                   senderName: sails.config.events.title,
@@ -462,7 +462,7 @@ var AuthController = {
             
             if (passport.provider) {
               newPassword="You need to log on with your "+passport.provider+" account!";
-              sendEmail(user,newPassword);
+              sendEmail.send(user,newPassword);
             }
             else {
               // Create new password
@@ -475,7 +475,7 @@ var AuthController = {
                   console.log(err)
                 else {
                   newPassword="Your new temporary password is: "+newPassword;
-                  sendEmail(user,newPassword);   
+                  sendEmail.send(user,newPassword);   
                 }                
               });              
               

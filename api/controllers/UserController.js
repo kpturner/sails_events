@@ -186,7 +186,7 @@ module.exports = {
 				if (!user[0].isOrganiser)
 					user[0].isOrganiser=false
 				// Send confirmation email
-				sails.hooks.email.send(
+				Email.send(
 					"profileChanged", {
 				      recipientName: user[0].salutation + " " + user[0].firstName,
 				      senderName: sails.config.events.title,

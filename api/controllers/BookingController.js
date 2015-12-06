@@ -416,7 +416,7 @@ module.exports = {
 												updated=' has been updated';
 												subject='Event booking update confirmation'
 											}	
-											sails.hooks.email.send(
+											Email.send(
 											"bookingConfirmation",
 										    {
 										      recipientName: user.salutation + " " + user.firstName,
@@ -468,7 +468,7 @@ module.exports = {
 													if (sails.config.events.developer) {
 														setTimeout(function(){
 															try {
-																sails.hooks.email.send(
+																Email.send(
 																	"diagnostic",
 																	{
 																		err:errStr
@@ -1007,7 +1007,7 @@ module.exports = {
 							
 							if (booking.user.email) {
 							
-								sails.hooks.email.send(
+								Email.send(
 									"bookingConfirmation",
 								    {
 								      recipientName: booking.user.salutation + " " + booking.user.firstName,
@@ -1126,7 +1126,7 @@ module.exports = {
 										var to=event.organiser.email; 
 										if (sails.config.events.reminderTestMode) 
 											to=""; 
-										sails.hooks.email.send(
+										Email.send(
 											"latePaymentWarning", {
 												recipientName: event.organiser.salutation + " " + event.organiser.firstName,
 												senderName: sails.config.events.title,
@@ -1173,7 +1173,7 @@ module.exports = {
 									var deadline=dl.substr(0,dl.indexOf(":")-2);
 								 
 									// Send email reminder
-									sails.hooks.email.send(
+									Email.send(
 										"latePaymentReminder", {
 											recipientName: booking.user.salutation + " " + booking.user.firstName,
 											senderName: sails.config.events.title,

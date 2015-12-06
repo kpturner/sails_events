@@ -58,6 +58,13 @@ module.exports.events = {
 		"googlemail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
 		"hotmail.com":{additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."}, 
 		"hotmail.co.uk":{additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
-	}
+	},
+	
+	// DKIM details to help prevent our emails being flagged as spam
+    DKIM: {
+      domainName: "squareevents.org", 
+      keySelector: "default",
+      privateKey: "default.squareevents.org.pem"	
+    },
 	
 };

@@ -41,7 +41,7 @@ module.exports = {
 					formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
 					if (newApology.message==null)
 						newApology.message=""					
-					sails.hooks.email.send(
+					Email.send(
 							"apology",
 							{
 								event:event,
