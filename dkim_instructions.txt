@@ -1,0 +1,35 @@
+These are the instructions I followed to ensure the DKIM (for preventing emails being flagged as SPAM) setup worked for this system.
+
+First, install the relevant module: "npm install nodemailer-dkim -save"
+Doco: https://github.com/andris9/nodemailer-dkim
+
+Then I generated a public/private key using https://www.port25.com/support/domainkeysdkim-wizard/
+An alternative is to use puttygen.exe on windows.
+
+The public key was pasted into a DNS TXT record for default._domainkey.squareevents.org.
+
+The private key was saved into this project in default.squareevents.org.pem
+
+Now I need to find a way to get the sails-hook-email code to enable me to tell the transport object to use the DKIM option:
+
+transport.use('stream', require('nodemailer-dkim').signer({
+    domainName: 'squareevents.org',
+    keySelector: 'default',
+    privateKey: fs.readFileSync('default.squareevents.org.pem')
+})); 
+
+Waiting for response to https://github.com/balderdashy/sails-hook-email/issues/24
+
+
+NOTES:  I could not add the TXT file in FastHosts - it complained about the contents of the TXT record but wasn't specific.....so I switched to my own ns.kpturner.co.uk name servers.
+
+
+
+
+
+
+
+
+
+
+
