@@ -20,7 +20,12 @@ module.exports = {
      
      // Check to see if we a reusing DKIM.  If not, we can just use sails-hook-email 
      // functionality unaugmented 
-     if (sails.config.events.DKIM && !sails.config.email.transporter._dkim) {
+     
+     // Use my localised email hook while waiting for a fix to sails-hook-email
+     var hook="eventemail";
+     //var hook="email"; 
+     var transporter=sails.hooks[hook].transporter(); 
+     if (sails.config.events.DKIM && !transporter._dkim) {
         var nodemailer = require('nodemailer');
         var nodemailerDKIM = require('nodemailer-dkim');
         var fs = require('fs');
@@ -38,21 +43,18 @@ module.exports = {
                         sails.log.debug(err);
                 }else if(success){
                         // create reusable transporter object using SMTP transport
-                        sails.log.silly('DKIM verification successful');
-                        var transporter = nodemailer.createTransport(sails.config.email.transporter);
+                        sails.log.verbose('DKIM verification successful');
                         transporter._dkim=true; // Stops us initialising it again
                         // Tell it to stream correctly with the DKIM header(s)
-                        transporter.use('stream', nodemailerDKIM.signer(dkimOpts)); 
-                        // Override the transporter in the config
-                        sails.config.email.transporter=transporter;                
+                        transporter.use('stream', nodemailerDKIM.signer(dkimOpts));                         
                 }
                 // Send the email
-                sails.hooks.email.send(template,data,opts,cb);     	
+                sails.hooks[hook].send(template,data,opts,cb);     	
         }); 
      } 
      else {
         // Send the email
-        sails.hooks.email.send(template,data,opts,cb);     	        
+        sails.hooks[hook].send(template,data,opts,cb);     	        
      }
      	
      
