@@ -462,7 +462,7 @@ var AuthController = {
             
             if (passport.provider) {
               newPassword="You need to log on with your "+passport.provider+" account!";
-              Email.send(user,newPassword);
+              sendEmail(user,newPassword);
             }
             else {
               // Create new password
@@ -475,7 +475,7 @@ var AuthController = {
                   console.log(err)
                 else {
                   newPassword="Your new temporary password is: "+newPassword;
-                  Email.send(user,newPassword);   
+                  sendEmail(user,newPassword);   
                 }                
               });              
               
