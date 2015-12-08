@@ -245,7 +245,8 @@ exports.connect = function (req, res, next) {
  * @param {Function} next
  */
 exports.login = function (req, identifier, password, next) {
-  var isEmail = validator.isEmail.send(identifier)
+  
+  var isEmail = validator.isEmail(identifier)
     , query   = {};
 
   if (isEmail) {
