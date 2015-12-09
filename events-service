@@ -1,6 +1,11 @@
 #!/bin/sh
 
+# /etc/init.d/events-service
+# chkconfig: 35 99 99
+# description: SailsJS Event Management Service
+#
 # Save in /etc/init.d
+# then "cd /etc/init.d"
 # Switch it on: chkconfig --level 345 events-service on
 # Set the permissions: chmod a+rwx events-service
 # Confirm: chkconfig --list | grep events-service
@@ -12,7 +17,6 @@
 # Stop the service using
 #   service events-service stop
 #
-# description: SailsJS Event Management Service
 #
 #
 

@@ -2,9 +2,18 @@ Log in to CENTOS (Plesk on Parallels) using putty.exe
 Log in as "root"
 Run the following commands to install node.js and npm
 
+====================================================================================
+Install c++ compiler (note this is liable to change as node release move on and require newer compilers):
 
 cd
-sudo yum install gcc-c++
+sudo curl http://linuxsoft.cern.ch/cern/scl/slc6-scl.repo > /etc/yum.repos.d/slc6-scl.repo
+sudo rpm --import http://ftp.mirrorservice.org/sites/ftp.scientificlinux.org/linux/scientific/51/i386/RPM-GPG-KEYs/RPM-GPG-KEY-cern
+sudo yum install -y devtoolset-3
+scl enable devtoolset-3 bash
+
+====================================================================================
+Now create node (at the time of writing there is no nice install for node on centos so we have to build it):
+
 echo 'export PATH=$HOME/local/bin:$PATH' >> ~/.bashrc
 . ~/.bashrc
 mkdir ~/local
@@ -13,8 +22,16 @@ cd ~/node-latest-install
 curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1
 ./configure --prefix=$HOME/local
 make install
+
+WARNING:  The above takes AGES!
+
+====================================================================================
+Now install npm:
+cd
 curl -L https://www.npmjs.org/install.sh | sh
 
+====================================================================================
+Now for the node stuff we want:
 
 Install forever:  "npm install forever -g"
 
@@ -22,9 +39,13 @@ Install sails:    "npm install sails -g"
 
 Now install Git: "sudo yum install git"
 
+get the nano editor: "yum install nano"
+
+INSTALLS NOW COMPLETE
+
 First time in
 =============
-Make a new folder structure:   /usr/sails/projects 
+Make a new folder structure in /usr:   /sails/projects 
 
 Clone the repo from github:
 git clone https://github.com/kpturner/sails_events.git /usr/sails/projects/events
