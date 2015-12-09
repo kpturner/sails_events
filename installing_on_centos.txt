@@ -1,0 +1,67 @@
+Log in to CENTOS (Plesk on Parallels) using putty.exe 
+Log in as "root"
+Run the following commands to install node.js and npm
+
+
+cd
+sudo yum install gcc-c++
+echo 'export PATH=$HOME/local/bin:$PATH' >> ~/.bashrc
+. ~/.bashrc
+mkdir ~/local
+mkdir ~/node-latest-install
+cd ~/node-latest-install
+curl http://nodejs.org/dist/node-latest.tar.gz | tar xz --strip-components=1
+./configure --prefix=$HOME/local
+make install
+curl -L https://www.npmjs.org/install.sh | sh
+
+
+Install forever:  "npm install forever -g"
+
+Install sails:    "npm install sails -g"
+
+Now install Git: "sudo yum install git"
+
+First time in
+=============
+Make a new folder structure:   /usr/sails/projects 
+
+Clone the repo from github:
+git clone https://github.com/kpturner/sails_events.git /usr/sails/projects/events
+
+cd /usr/sails/projects/events 
+
+mkdir logs
+
+Install missing modules:  "npm install"
+
+Look in "events-service" file for instructions on installing a service to run this application.
+
+In Plesk, create the squareevents.org domain and add a MySql database and user - usually called 
+"squareevents" but double check the localhostMySqlServer settings in /usr/sails/projects/events/config/connections.js
+
+In the squareevents.org file system replace the default index.html file with one that redirects 
+to our node app.  There is an example in our root called "index.example".
+
+run "sails lift" to fire everything up for the first time - this will also set up the database. 
+
+
+Not first time in
+=================
+cd /usr/sails/projects/events 
+
+Pull updates from GitHub using: "bash gitupdate.sh"
+
+Stop the service:  "service events-service stop"
+If DB updates required:   "sails lift"     (after lift completes, cancel then "service events-service start")
+otherwise start service: "service events-service start"
+
+
+
+
+
+
+
+
+
+

@@ -1,3 +1,6 @@
+NOT CURRENTLY USED AS PLESK IS BACKING UP TO CORALTREE FTP SERVER
+
+
 I temporarily setup automysqlbackup by logging in using Putty.
 
 From the default /usr direcory I cloned the git repo:
