@@ -350,6 +350,8 @@ module.exports = {
 										}																	
 									}
 									
+									//console.log(bookingRef)
+									
 									// Use pre-existing booking ref if it exists
 									if (bookingRef)
 										booking.ref=bookingRef;
@@ -382,114 +384,139 @@ module.exports = {
 											})
 										}
 				 						
-										// If we don't have a booking ref, create and update now
-										if (!bookingRef) {
-											bookingRef=event.code+booking.id.toString()
-											Booking.update(booking.id,{ref:bookingRef}).exec(function(){})
-										} 
-																		 
-										// If the user has previously sent an apology, delete it
-										Apology.destroy({event:booking.event,user:booking.user}).exec(function(err, deleted){
-											if (!err) {
-												//console.log(deleted)
-											}
-										})								
-										
-										// If this is the user making a booking, send them a confirmation email	
-										if(!req.session.eventBookings && !req.session.userBookings && user.email) {
-											var formattedDate=event.date.toString();
-											formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+										var finalise=function(){
+											// If the user has previously sent an apology, delete it
+											Apology.destroy({event:booking.event,user:booking.user}).exec(function(err, deleted){
+												if (!err) {
+													//console.log(deleted)
+												}
+											})								
 											
-											// Booking payment deadline
-											var deadline="N/A";
-											if (event.grace && event.grace>0 && !booking.paid) {
-												var dl=new Date(booking.bookingDate);
-												dl.setDate(dl.getDate()+event.grace);
-												dl=dl.toString();
-												deadline=dl.substr(0,dl.indexOf(":")-2);
-												 
-											}
-											
-											var updated = "";
-											var subject = "Event booking confirmation";
-											if (bookingId) {
-												updated=' has been updated';
-												subject='Event booking update confirmation'
-											}	
-											Email.send(
-											"bookingConfirmation",
-										    {
-										      recipientName: user.salutation + " " + user.firstName,
-										      senderName: sails.config.events.title,
-											  		updated: updated,
-													eventName: event.name,
-													eventDate: formattedDate,
-													eventTime: event.time,
-													eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
-													eventOrganiser: event.organiser.name,
-													organiserEmail: event.organiser.email,
-													organiserContactNo: event.organiser.phone || "",
-													eventBlurb: (event.blurb || "").replace(/[\n\r]/g, '<br>'),
-													eventMenu: (event.menu || "").replace(/[\n\r]/g, '<br>'),
-													eventDressCode: (event.dressCode || "").replace(/[\n\r]/g, '<br>'),
-												  	email: user.email,
-												  	lodge: user.lodge || "",
-												  	lodgeNo: user.lodgeNo || "",
-													salutation: user.salutation || "",
-													area: user.area || "",
-													surname: user.surname || "",
-													firstName: user.firstName || "",
-												  	rank: user.rank || "",
-												  	dietary: user.dietary || "",
-												  	bookingRef: bookingRef,
-													info: (booking.info || "").replace(/[\n\r]/g, '<br>'),  
-													places: booking.places,
-													linkedBookings: linkedBookings,
-													paymentDetails: event.paymentDetails.replace(/[\n\r]/g, '<br>'),
-													total: (booking.places * event.price),
-													deadline: deadline,
-										    },
-										    {
-										      from: event.name + ' <'+sails.config.events.email+'>',
-											  to: user.email,
-											  bcc: [event.organiser.email || "",sails.config.events.developer || ""],
-										      subject: subject
-										    },
-										    function(err) {
-												//err={"foo":"bar"};
-												if (err) {
-													var errStr;
-													if (typeof err=="string")
-														errStr=err
-													else
-														errStr=JSON.stringify(err)
-													sails.log.error("Emailing error: "+errStr);
-													// Try to inform the developer
-													if (sails.config.events.developer) {
-														setTimeout(function(){
-															try {
-																Email.send(
-																	"diagnostic",
-																	{
-																		err:errStr
-																	},
-																	{
-																		to: sails.config.events.developer,
-																		subject: "Email failure"
-																	},
-																	function(){}
-																)	
+											// If this is the user making a booking, send them a confirmation email	
+											if(!req.session.eventBookings && !req.session.userBookings && user.email) {
+												var formattedDate=event.date.toString();
+												formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+												
+												// Booking payment deadline
+												var deadline="N/A";
+												if (event.grace && event.grace>0 && !booking.paid) {
+													var dl=new Date(booking.bookingDate);
+													dl.setDate(dl.getDate()+event.grace);
+													dl=dl.toString();
+													deadline=dl.substr(0,dl.indexOf(":")-2);
+													
+												}
+												
+												var updated = "";
+												var subject = "Event booking confirmation";
+												if (bookingId) {
+													updated=' has been updated';
+													subject='Event booking update confirmation'
+												}	
+												Email.send(
+													"bookingConfirmation",
+													{
+													recipientName: user.salutation + " " + user.firstName,
+													senderName: sails.config.events.title,
+															updated: updated,
+															eventName: event.name,
+															eventDate: formattedDate,
+															eventTime: event.time,
+															eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
+															eventOrganiser: event.organiser.name,
+															organiserEmail: event.organiser.email,
+															organiserContactNo: event.organiser.phone || "",
+															eventBlurb: (event.blurb || "").replace(/[\n\r]/g, '<br>'),
+															eventMenu: (event.menu || "").replace(/[\n\r]/g, '<br>'),
+															eventDressCode: (event.dressCode || "").replace(/[\n\r]/g, '<br>'),
+															email: user.email,
+															lodge: user.lodge || "",
+															lodgeNo: user.lodgeNo || "",
+															salutation: user.salutation || "",
+															area: user.area || "",
+															surname: user.surname || "",
+															firstName: user.firstName || "",
+															rank: user.rank || "",
+															dietary: user.dietary || "",
+															bookingRef: bookingRef,
+															info: (booking.info || "").replace(/[\n\r]/g, '<br>'),  
+															places: booking.places,
+															linkedBookings: linkedBookings,
+															paymentDetails: event.paymentDetails.replace(/[\n\r]/g, '<br>'),
+															total: (booking.places * event.price),
+															deadline: deadline,
+													},
+													{
+													from: event.name + ' <'+sails.config.events.email+'>',
+													to: user.email,
+													bcc: [event.organiser.email || "",sails.config.events.developer || ""],
+													subject: subject
+													},
+													function(err) {
+														//err={"foo":"bar"};
+														if (err) {
+															var errStr;
+															if (typeof err=="string")
+																errStr=err
+															else
+																errStr=JSON.stringify(err)
+															sails.log.error("Emailing error: "+errStr);
+															// Try to inform the developer
+															if (sails.config.events.developer) {
+																setTimeout(function(){
+																	try {
+																		Email.send(
+																			"diagnostic",
+																			{
+																				err:errStr
+																			},
+																			{
+																				to: sails.config.events.developer,
+																				subject: "Email failure"
+																			},
+																			function(){}
+																		)	
+																	}
+																	catch(e) {
+																		// No dice!
+																	}
+																},10)
 															}
-															catch(e) {
-																// No dice!
-															}
-														},10)
+														};
 													}
-												};
-											}
-										   )    		
+												)    		
+											
+											}		
+										} 
+										 
+										// If we don't have a booking ref, create and update now
+										// UNCOMMENT WHEN WE HAVE ATOMIC BOOKING REF SETTING SORTED
+										/*
+										if (!bookingRef) {											
+											Event.incrementLastBookingRef(event.id,function(err, event){
+												if (!err) {
+													bookingRef=event.code+event.lastBookingRef.toString()
+												}
+												else {
+													bookingRef=event.code+booking.id.toString()
+												}
+												Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
+												// Finalise booking
+												finalise();								
+											})											
+										} 												 
+										else {
+											// Finalise booking
+											finalise();
+										}
+										*/
 										
-										}	
+										// COMMENT THIS OUT WHEN WE HAVE ATOMIC BOOKING REF SETTING SORTED
+										if (!bookingRef) {	
+											bookingRef=event.code+booking.id.toString();
+											Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
+										}
+										finalise();
 										
 										// Get the data for the event and the user and then navigate to the booking view
 										return res.ok();
@@ -1158,15 +1185,18 @@ module.exports = {
 									// Update the booking so we don't spam them
 									var to=booking.user.email;
 									var cc=(event.organiser.email || "");
-									if (!sails.config.events.reminderTestMode) 
-										Booking.update(booking.id,{
-												lastPaymentReminder:today,
-												remindersSent:((!booking.remindersSent)?1:booking.remindersSent+1)
-										}).exec(function(err,booking){});
-									else {
+									// Update the booking whether we are in test mode or not
+									Booking.update(booking.id,{
+											lastPaymentReminder:today,
+											remindersSent:((!booking.remindersSent)?1:booking.remindersSent+1)
+									}).exec(function(err,booking){});
+															
+									// In test mode, make sure only the developer gets an email
+									if (sails.config.events.reminderTestMode) {
 										to="";
 										cc="";
-									}									
+									}
+																		
 									var dl=new Date(booking.bookingDate);
 									dl.setDate(dl.getDate()+event.grace);
 									dl=dl.toString();

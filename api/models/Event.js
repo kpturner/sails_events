@@ -113,6 +113,42 @@ module.exports = {
       type: 'integer'
     },
     
-  }
+    lastBookingRef: {
+      type: 'integer',
+      defaultsTo: 0
+    },  
+    
+  },
+  
+  // Function to increment booking ref
+  incrementLastBookingRef : function(id, cb) {
+     
+        // TODO We need this more atomic so use 
+        // SET WAIT_TIMEOUT
+        // LOCK TABLES event WRITE
+        // ....do the stuff
+        // UNLOCK TABLES
+     
+        // Increment the last booking ref
+        Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){
+          Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {
+            if(cb) {
+              if(err) return cb(err,null);
+              // Find the event so we can pass the updated version back
+              Event.findOne(id)
+                .then(function(event){
+                    return cb(err,event);  
+                })
+                .catch(function (err) {
+                    return cb(err,null);  
+                });           
+            } 
+            else {
+              return;
+            } 
+          })     
+        })        
+  },
+  
 };
 
