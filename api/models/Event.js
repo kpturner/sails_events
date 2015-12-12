@@ -124,8 +124,9 @@ module.exports = {
   incrementLastBookingRef : function(id, cb) {
     
         var diagnosticEmail=function(err,subject){
-          //console.log("Sending email to "+sails.config.events.developer)
-          var errStr;
+          if (sails.config.events.developer) {
+             //console.log("Sending email to "+sails.config.events.developer)
+            var errStr;
             if (typeof err=="string")
               errStr=err
             else
@@ -141,6 +142,7 @@ module.exports = {
               },
               function(){}
             )	
+          }         
         }
         // Just in case we need it, create a string for any errors
         var subject="Error trying to obtain a unique booking reference for event "+id;       

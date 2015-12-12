@@ -497,8 +497,26 @@ module.exports = {
 												}
 												else {
 													// Use the original event object as the update failed
-													bookingRef=event.code+booking.id.toString()
+													bookingRef=event.code+booking.id.toString();
+													// Email developer for comfort
+													try {
+														if (sails.config.events.developer) {
+														Email.send(
+																"diagnostic",
+																{
+																	err:"Booking id resorted to original method "+bookingRef
+																},
+																{
+																	to: sails.config.events.developer,
+																	subject: "Booking id resorted to original method "+bookingRef
+																},
+																function(){}
+															)
+														}						
+													}
+													catch(e) {}								
 												}
+												// Update the booking ref
 												Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
 												// Finalise booking
 												finalise();								
