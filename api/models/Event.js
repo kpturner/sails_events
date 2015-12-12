@@ -144,8 +144,8 @@ module.exports = {
         }
         // Just in case we need it, create a string for any errors
         var subject="Error trying to obtain a unique booking reference for event "+id;       
-        // Increment the last booking ref
-        Event.query('SELECT GET_LOCK("EVENT",5)',function(err){
+        // Increment the last booking ref - get lock (waiting 10 seconds at most)
+        Event.query('SELECT GET_LOCK("EVENT",10)',function(err){
           if (err) {
             // Wow!  Disaster - we cannot get a lock so this means something horrible has happened trying to get a 
             // unique booking reference.
