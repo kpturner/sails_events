@@ -491,7 +491,7 @@ module.exports = {
 										 
 										// If we don't have a booking ref, create and update now.
 										// Why on earth are we doing this now rather than before we create the
-										// booking??  Yuo may well ask - but the reason is that prior to 
+										// booking??  You may well ask - but the reason is that prior to 
 										// create the Event.incrementLastBookingRef function, we used the 
 										// incrementally generated key to the new booking (the "id") in the 
 										// booking reference, so we had to create the booking first.  
