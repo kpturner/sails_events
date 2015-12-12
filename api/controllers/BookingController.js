@@ -490,14 +490,13 @@ module.exports = {
 										} 
 										 
 										// If we don't have a booking ref, create and update now
-										// UNCOMMENT WHEN WE HAVE ATOMIC BOOKING REF SETTING SORTED
-										/*
 										if (!bookingRef) {											
-											Event.incrementLastBookingRef(event.id,function(err, event){
+											Event.incrementLastBookingRef(event.id,function(err, updatedEvent){
 												if (!err) {
-													bookingRef=event.code+event.lastBookingRef.toString()
+													bookingRef=updatedEvent.code+updatedEvent.lastBookingRef.toString()
 												}
 												else {
+													// Use the original event object as the update failed
 													bookingRef=event.code+booking.id.toString()
 												}
 												Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
@@ -509,14 +508,17 @@ module.exports = {
 											// Finalise booking
 											finalise();
 										}
-										*/
+										
 										
 										// COMMENT THIS OUT WHEN WE HAVE ATOMIC BOOKING REF SETTING SORTED
+										/*
 										if (!bookingRef) {	
 											bookingRef=event.code+booking.id.toString();
 											Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
 										}
 										finalise();
+										*/
+										
 										
 										// Get the data for the event and the user and then navigate to the booking view
 										return res.ok();

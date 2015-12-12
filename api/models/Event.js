@@ -122,32 +122,79 @@ module.exports = {
   
   // Function to increment booking ref
   incrementLastBookingRef : function(id, cb) {
-     
-        // TODO We need this more atomic so use 
-        // SET WAIT_TIMEOUT
-        // LOCK TABLES event WRITE
-        // ....do the stuff
-        // UNLOCK TABLES
-     
+    
+        var diagnosticEmail=function(err,subject){
+          //console.log("Sending email to "+sails.config.events.developer)
+          var errStr;
+            if (typeof err=="string")
+              errStr=err
+            else
+              errStr=JSON.stringify(err)
+            Email.send(
+              "diagnostic",
+              {
+                err:errStr
+              },
+              {
+                to: sails.config.events.developer,
+                subject: subject
+              },
+              function(){}
+            )	
+        }
+        // Just in case we need it, create a string for any errors
+        var subject="Error trying to obtain a unique booking reference for event "+id;       
         // Increment the last booking ref
-        Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){
-          Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {
-            if(cb) {
-              if(err) return cb(err,null);
-              // Find the event so we can pass the updated version back
-              Event.findOne(id)
-                .then(function(event){
-                    return cb(err,event);  
-                })
-                .catch(function (err) {
-                    return cb(err,null);  
-                });           
-            } 
+        Event.query('SELECT GET_LOCK("EVENT",5)',function(err){
+          if (err) {
+            // Wow!  Disaster - we cannot get a lock so this means something horrible has happened trying to get a 
+            // unique booking reference.
+            sails.log.error(subject)
+            sails.log.error(err);
+            diagnosticEmail(err,subject);
+            // Pass the error back to the callback if need be
+            if (cb) {
+              return cb(err,null)
+            }
             else {
-              return;
-            } 
-          })     
-        })        
+              return
+            }
+          }
+          else {
+            //console.log("Updating "+id)
+            Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){
+              //console.log(err)
+              Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {
+                if(cb) {
+                  if(err) {
+                    Event.query('SELECT RELEASE_LOCK("EVENT")');
+                    diagnosticEmail(err,subject);
+                    return cb(err,null)
+                  }
+                  else {
+                    // Find the event so we can pass the updated version back
+                    Event.findOne(id)
+                      .then(function(event){
+                          Event.query('SELECT RELEASE_LOCK("EVENT")');
+                          return cb(err,event);  
+                      })
+                      .catch(function (err) {
+                          Event.query('SELECT RELEASE_LOCK("EVENT")'); 
+                          diagnosticEmail(err,subject);                    
+                          return cb(err,null);  
+                      });             
+                  }                  
+                } 
+                else {
+                  Event.query('SELECT RELEASE_LOCK("EVENT")');
+                  diagnosticEmail(err,subject);
+                  return;
+                } 
+              })     
+            })        
+          }
+        })
+        
   },
   
 };
