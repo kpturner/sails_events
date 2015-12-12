@@ -164,7 +164,8 @@ module.exports = {
           }
           else {
             //console.log("Updating "+id)
-            Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){
+            //No need for the fix to null lastBookingRef fields now
+            //Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){
               //console.log(err)
               Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {
                 if(cb) {
@@ -193,7 +194,7 @@ module.exports = {
                   return;
                 } 
               })     
-            })        
+            //})        
           }
         })
         
