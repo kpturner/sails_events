@@ -92,7 +92,6 @@
         <h5 ng-hide="!event.organiser.phone"><a href="tel:{{event.organiser.phone}}"><span class="fa fa-phone"></span> {{event.organiser.phone}}</a></h5>
         <h3 ng-hide="event.capacity>0">THIS EVENT IS FULLY BOOKED</h3>     
         <h3 ng-hide="eventBookings || userBookings || !existingBooking || myBookings || mode=='delete'">YOU HAVE ALREADY BOOKED IN {{paidMsg}}</h3> 
-        <h3 ng-hide="eventBookings || userBookings || existingBooking">HINT: CHECK YOUR EMAIL SPAM FOLDER!</h3> 
         <h3 ng-show="myBookings && paid">YOU HAVE ALREADY PAID FOR THIS BOOKING</h3> 
         <h4 ng-show="!eventBookings && !userBookings && paid && mode!='delete'"><i>Please contact the organiser to make changes</i></h4>      
         <h4 ng-show="!eventBookings && !userBookings && paid && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>

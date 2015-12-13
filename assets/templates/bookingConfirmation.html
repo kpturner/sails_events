@@ -1,0 +1,11 @@
+<div class="ngdialog-message">
+    <h3>BOOKING CONFIRMATION</h3>
+    <p>An email confirmation has been sent to <b>{{user.email}}</b>.</p>
+    <p>PLEASE CHECK YOUR SPAM FOLDER!</p>
+    <p>Your booking reference is <b><i>{{booking.ref}}</i></b>.</p>
+    <h4>Payment Details</h4>
+    <textarea type="text" class="form-control" name="paymentdetails" ng-model="event.paymentDetails" rows="4" readonly></textarea>
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Close</button>
+</div>

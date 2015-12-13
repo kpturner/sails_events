@@ -342,6 +342,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 				})
 				.then(function onSuccess(sailsResponse){	
+					console.log(sailsResponse)
+					$scope.booking=sailsResponse.data;
 					if (SAILS_LOCALS.booking.id)	{
 						// An update rather than a new booking
 						if ($scope.eventBookings || $scope.userBookings)
@@ -354,17 +356,38 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							toastr.success("The booking was successful")							
 						else
 							toastr.success("Your booking was successful")
-					}				
-					setTimeout(function(){
-						if ($scope.myBookings)
-							window.location='/mybookings'
-						else if ($scope.eventBookings)
-							window.location='/eventbookings?eventid='+$scope.event.id;
-						else if ($scope.userBookings)
-							window.location='/userbookings?userid='+$scope.selectedUserId;
-						else
-							window.location = '/'
-					},1000);
+					}
+					// For my bookings or ordinary bookings we will issue a confirmation dialog, 
+					// otherwise we will return to where we came from
+					if ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id) {
+						setTimeout(function(){
+							if ($scope.myBookings)
+								window.location='/mybookings'
+							else if ($scope.eventBookings)
+								window.location='/eventbookings?eventid='+$scope.event.id;
+							else if ($scope.userBookings)
+								window.location='/userbookings?userid='+$scope.selectedUserId;
+							else
+								window.location = '/'
+						},1000);	
+					}	
+					else {
+						var opts={
+							template:"/templates/bookingConfirmation.html",
+							className: 'ngdialog-theme-default',
+							scope: $scope,
+						};
+						// Pop the dialog
+						ngDialog.open(opts)
+							.closePromise.then(function (value) {								 
+								if ($scope.myBookings)
+									window.location='/mybookings'
+								else
+									window.location = '/'								
+							});
+												
+					}
+					
 				})
 				.catch(function onError(sailsResponse){			 
 					// Handle known error type(s).

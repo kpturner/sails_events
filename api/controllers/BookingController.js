@@ -486,7 +486,11 @@ module.exports = {
 													}
 												)    		
 											
-											}		
+											}
+											
+											// Return to caller with complete booking info
+											return res.json(booking);
+													
 										} 
 										 
 										// If we don't have a booking ref, create and update now.
@@ -525,6 +529,7 @@ module.exports = {
 												}
 												// Update the booking ref
 												Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
+												booking.ref=bookingRef;
 												// Finalise booking
 												finalise();								
 											})											
@@ -545,8 +550,6 @@ module.exports = {
 										*/
 										
 										
-										// Get the data for the event and the user and then navigate to the booking view
-										return res.ok();
 									})
 								}
 							
