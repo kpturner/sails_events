@@ -342,7 +342,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 				})
 				.then(function onSuccess(sailsResponse){	
-					console.log(sailsResponse)
+					//console.log(sailsResponse)
 					$scope.booking=sailsResponse.data;
 					if (SAILS_LOCALS.booking.id)	{
 						// An update rather than a new booking
