@@ -41,6 +41,8 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 	// Convert the opening date 
 	if ($scope.eventForm.openingDate)
 		$scope.eventForm.openingDate = new Date($scope.eventForm.openingDate);
+	else
+		$scope.eventForm.openingDate = $scope.today;
 		
 	// Convert the closing date 
 	$scope.eventForm.closingDate = new Date($scope.eventForm.closingDate);
@@ -100,6 +102,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			|| (!$scope.eventForm.price || isNaN($scope.eventForm.price))
 			|| (!$scope.eventForm.minBookingPlaces || isNaN($scope.eventForm.minBookingPlaces))
 			|| (!$scope.eventForm.maxBookingPlaces || isNaN($scope.eventForm.maxBookingPlaces))
+			|| (!$scope.eventForm.openingDate || $scope.eventForm.openingDate.length==0)
 			|| (!$scope.eventForm.closingDate || $scope.eventForm.closingDate.length==0)	
 			|| (!$scope.eventForm.capacity || isNaN($scope.eventForm.capacity))
 		) {

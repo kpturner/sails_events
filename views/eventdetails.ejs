@@ -251,15 +251,17 @@
           <div class="control-group form-group col-xs-8"
             ng-class="{'has-error':eventdetails.openingdate.$invalid &&
                                   eventdetails.openingdate.$dirty}">
-             <label>Opening date bookings (optional)</label>
+             <label>* Opening date bookings</label>
             <p class="input-group">             
               <input type="date" class="form-control" datepicker-popup datepicker-options="dateOptions" is-open="openingDateOpened"  placeholder="opening date for bookings" name="openingdate" 
-                ng-model="eventForm.openingDate"></input>
+                ng-model="eventForm.openingDate" required></input>
               <span class="input-group-btn hidden-xs hidden-sm">
                 <button type="button" class="btn btn-default" ng-click="openOpeningDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>              
             </p>
-           
+            <span class="help-block has-error" ng-if="eventdetails.openingdate.$dirty">
+              <span ng-show="eventdetails.openingdate.$error.required">Opening date is required.</span>
+            </span>
            </div>
   
           <!-- C L O S I N G  D A T E -->
