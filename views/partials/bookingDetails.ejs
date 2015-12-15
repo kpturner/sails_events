@@ -38,6 +38,14 @@
   </select>
 </div>
 
+<!-- B L U R B -->
+  
+<div class="control-group form-group col-md-10">
+   
+  <textarea type="text" class="form-control" name="blurb" ng-model="<%-model%>Form.blurb" rows="10" readonly></textarea>
+
+</div>
+
 <!-- B O O K I N G   R E F -->
   
 <div class="control-group form-group col-xs-12 col-md-10" ng-show="bookingForm.ref.length>0">
@@ -47,7 +55,7 @@
 
 <!-- P A Y M E N T   D E T A I L S -->
   
-<div class="control-group form-group col-md-10">
+<div class="control-group form-group col-md-10" ng-show="openForBookings">
   <label>Payment details</label>
   <textarea type="text" class="form-control" name="paymentdetails" ng-model="<%-model%>Form.paymentDetails" rows="4" readonly></textarea>
 </div>
