@@ -86,6 +86,24 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 	}	
 
+	// Open for bookings?
+	var today=new Date();
+	$scope.openForBookings=true;
+	if (!$scope.eventBookings && !$scope.userBookings && $scope.event.openingDate && new Date($scope.event.openingDate)>today) {
+		$scope.openForBookings=false;			
+	}
+
+	// Warn if not open for bookings
+	if (!$scope.openForBookings) {
+		var opts={
+			template:"/templates/notOpenForBookings.html",
+			className: 'ngdialog-theme-default',
+			scope: $scope
+		};
+		// Pop the dialog
+		ngDialog.open(opts);
+	}
+
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
 	
@@ -165,6 +183,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodgeNo || isNaN($scope.bookingForm.lodgeNo)))
 			|| (!$scope.bookingForm.salutation || $scope.bookingForm.salutation.length==0)			
 			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))			
+			// Don't allow people to book themselves in if there is an opening date and we having got there yet!
+			|| (!$scope.openForBookings)	
+		
 		) {
 			complete=false;
 		}

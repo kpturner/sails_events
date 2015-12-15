@@ -1,0 +1,8 @@
+<div class="ngdialog-message">
+    <h3>FOR INFORMATION</h3>
+    <p>This event is not open for online bookings until</p>
+    <p>{{event.openingDate | date : 'EEE, MMM dd, yyyy'}}</p>
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Close</button>
+</div>

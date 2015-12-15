@@ -245,12 +245,28 @@
           
           </div>
       
+      
+          <!-- O P E N I N G   D A T E -->
+  
+          <div class="control-group form-group col-xs-8"
+            ng-class="{'has-error':eventdetails.openingdate.$invalid &&
+                                  eventdetails.openingdate.$dirty}">
+             <label>Opening date bookings (optional)</label>
+            <p class="input-group">             
+              <input type="date" class="form-control" datepicker-popup datepicker-options="dateOptions" is-open="openingDateOpened"  placeholder="opening date for bookings" name="openingdate" 
+                ng-model="eventForm.openingDate"></input>
+              <span class="input-group-btn hidden-xs hidden-sm">
+                <button type="button" class="btn btn-default" ng-click="openOpeningDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>              
+            </p>
+           
+           </div>
   
           <!-- C L O S I N G  D A T E -->
   
-          <div class="control-group form-group col-md-5"
-            ng-class="{'has-error':eventdetails.closingDate.$invalid &&
-                                  eventdetails.date.$dirty}">
+          <div class="control-group form-group col-xs-8"
+            ng-class="{'has-error':eventdetails.closingdate.$invalid &&
+                                  eventdetails.closingdate.$dirty}">
              <label>* Closing date for bookings</label>
             <p class="input-group">             
               <input type="date" class="form-control" datepicker-popup datepicker-options="dateOptions" is-open="closingDateOpened"  placeholder="closing date for bookings" name="closingdate" 

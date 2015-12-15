@@ -38,6 +38,9 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		$scope.eventForm.time = new Date($scope.eventForm.date);	
 	}
 	
+	// Convert the opening date 
+	if ($scope.eventForm.openingDate)
+		$scope.eventForm.openingDate = new Date($scope.eventForm.openingDate);
 		
 	// Convert the closing date 
 	$scope.eventForm.closingDate = new Date($scope.eventForm.closingDate);
@@ -66,6 +69,13 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		$event.stopPropagation();
 		
 		$scope.dateOpened = true;
+	};
+
+	$scope.openOpeningDate = function($event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+		
+		$scope.openingDateOpened = true;
 	};
 
 	$scope.openClosingDate = function($event) {

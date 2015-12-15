@@ -67,6 +67,12 @@ module.exports = {
       type: 'string'
     },
     
+    // If entered, bookings may only be entered on or after this date
+    openingDate: {
+      type: 'date',
+      required: false
+    },
+    
     // When do booking close
     closingDate: {
       type: 'date',
