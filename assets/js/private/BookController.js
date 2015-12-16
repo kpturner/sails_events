@@ -94,14 +94,31 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	}
 
 	// Warn if not open for bookings
-	if (!$scope.openForBookings) {
+	$scope.bookingForm.bypassCode="";
+	if (!$scope.openForBookings && $scope.mode!="delete") {
 		var opts={
 			template:"/templates/notOpenForBookings.html",
 			className: 'ngdialog-theme-default',
 			scope: $scope
 		};
+		var erOpts=$.extend({},opts);
+		erOpts={
+			template:"/templates/bypassCodeInvalid.html"
+		};
 		// Pop the dialog
-		ngDialog.open(opts);
+		ngDialog.openConfirm(opts)
+			.then(function (value) {
+				// Attempting to bypass with a code
+				var ok=false;
+				// TODO = Server side bypass code check
+				if (ok)
+					$scope.openForBookings=true;			
+				else 	
+					ngDialog.open(erOpts);			
+					 
+			}, function (reason) {
+				// Cannot continue
+			});
 	}
 
 	// Salutations

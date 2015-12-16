@@ -1,8 +1,11 @@
 <div class="ngdialog-message">
     <h3>FOR INFORMATION</h3>
-    <p>This event is not open for online bookings until</p>
-    <p>{{event.openingDate | date : 'EEE, MMM dd, yyyy'}}</p>
+    <p>This event is not open for online bookings until {{event.openingDate | date : 'EEE, MMM dd, yyyy'}}</p>
+    <p>unless you have been issued with a code:</p>
+    <input type="text" class="form-control" placeholder="enter your code" name="bypasscode" ng-model="bookingForm.bypassCode" />             
 </div>
 <div class="ngdialog-buttons">
     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Close</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Use my code</button>
 </div>
+ 
