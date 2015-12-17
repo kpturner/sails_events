@@ -72,6 +72,7 @@ module.exports.routes = {
   'get /linkedbooking/:bookingid': 'LinkedBookingController.linkedBookings',
   'post /validateadditions': 'BookingController.validateAdditions',
   'post /updatebooking/:action': 'BookingController.updateBooking',
+  'post /verifybypasscode': 'EventController.verifyBypassCode',
   
   // Apologies
   'get /apology': 'ApologyController.prepareApology',

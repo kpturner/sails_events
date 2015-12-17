@@ -132,6 +132,9 @@ module.exports = {
 					}
 				
 					res.locals.event=event;
+					// Obscure some fields!
+					if (res.locals.event.bypassCode)
+						res.locals.event.bypassCode="*redacted";
 					res.locals.event.capacity-=places;
 					res.locals.booking=existingBooking;
 					res.locals.myBookings=myBookings;

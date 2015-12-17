@@ -97,6 +97,7 @@
            
           
           <!-- O R G A N I S E R -->
+          
           <div class="control-group form-group col-md-7"
             ng-class="{'has-error':eventdetails.organiser.$invalid &&
                                   eventdetails.organiser.$dirty}">
@@ -281,6 +282,15 @@
               <span ng-show="eventdetails.closingdate.$error.required">Closing date is required.</span>
             </span>
            </div>
+           
+           <!-- B Y P A S S  C O D E -->
+  
+          <div class="control-group form-group col-md-10"
+            ng-class="{'has-error':eventdetails.bypassCode.$invalid &&
+                                  eventdetails.bypassCode.$dirty}">
+            <label>Bypass code</label>
+            <input type="text" class="form-control" placeholder="used to bypass the opening date" name="bypassCode" ng-model="eventForm.bypassCode"></input>
+          </div>
            
            <!-- P A Y M E N T   D E T A I L S -->
   

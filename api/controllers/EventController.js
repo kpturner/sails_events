@@ -262,6 +262,19 @@ module.exports = {
 		}
 		
 		
+	},
+	
+	/**
+	 * Verify bypass code 
+	 */	
+	verifyBypassCode: function(req,res) {
+		
+		Event.findOne(req.param("id")).exec(function(err,event){
+			if (!err && event.bypassCode.toLowerCase()==req.param("bypassCode").toLowerCase()) {
+				return res.ok()
+			}
+			return res.notFound()
+		})
 	}
 	
 };

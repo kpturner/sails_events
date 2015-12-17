@@ -119,6 +119,10 @@ module.exports = {
       type: 'integer'
     },
     
+    bypassCode: {
+      type: 'string'
+    },
+    
     lastBookingRef: {
       type: 'integer',
       defaultsTo: 0

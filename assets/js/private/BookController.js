@@ -97,24 +97,25 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.bookingForm.bypassCode="";
 	if (!$scope.openForBookings && $scope.mode!="delete") {
 		var opts={
-			template:"/templates/notOpenForBookings.html",
-			className: 'ngdialog-theme-default',
-			scope: $scope
+			className: 'ngdialog-theme-default'			
 		};
 		var erOpts=$.extend({},opts);
-		erOpts={
-			template:"/templates/bypassCodeInvalid.html"
-		};
+		opts.template="/templates/notOpenForBookings.html";
+		opts.scope=$scope;
+		erOpts.template="/templates/bypassCodeInvalid.html";
+		erOpts.scope=$scope;
 		// Pop the dialog
 		ngDialog.openConfirm(opts)
 			.then(function (value) {
 				// Attempting to bypass with a code
 				var ok=false;
-				// TODO = Server side bypass code check
-				if (ok)
-					$scope.openForBookings=true;			
-				else 	
-					ngDialog.open(erOpts);			
+				$http.post("/verifybypasscode",{id:$scope.event.id,bypassCode:$scope.bookingForm.bypassCode})
+					.success(function(data, status) {
+						$scope.openForBookings=true;		
+					}).
+					error(function(data, status, headers, config) {
+						ngDialog.open(erOpts);	
+					});				
 					 
 			}, function (reason) {
 				// Cannot continue
