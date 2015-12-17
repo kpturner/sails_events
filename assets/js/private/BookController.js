@@ -95,32 +95,42 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	// Warn if not open for bookings
 	$scope.bookingForm.bypassCode="";
-	if (!$scope.openForBookings && $scope.mode!="delete") {
-		var opts={
-			className: 'ngdialog-theme-default'			
-		};
-		var erOpts=$.extend({},opts);
-		opts.template="/templates/notOpenForBookings.html";
-		opts.scope=$scope;
-		erOpts.template="/templates/bypassCodeInvalid.html";
-		erOpts.scope=$scope;
-		// Pop the dialog
-		ngDialog.openConfirm(opts)
-			.then(function (value) {
-				// Attempting to bypass with a code
-				var ok=false;
-				$http.post("/verifybypasscode",{id:$scope.event.id,bypassCode:$scope.bookingForm.bypassCode})
-					.success(function(data, status) {
-						$scope.openForBookings=true;		
-					}).
-					error(function(data, status, headers, config) {
-						ngDialog.open(erOpts);	
-					});				
-					 
-			}, function (reason) {
-				// Cannot continue
-			});
+	
+	$scope.chkOpenForBookings=function(){
+		if (!$scope.openForBookings && $scope.mode!="delete") {
+			var opts={
+				className: 'ngdialog-theme-default'			
+			};
+			var erOpts=$.extend({},opts);
+			opts.template="/templates/notOpenForBookings.html";
+			opts.scope=$scope;
+			erOpts.template="/templates/bypassCodeInvalid.html";
+			erOpts.scope=$scope;
+			// Pop the dialog
+			ngDialog.openConfirm(opts)
+				.then(function (value) {
+					// Attempting to bypass with a code
+					var ok=false;
+					$http.post("/verifybypasscode",{id:$scope.event.id,bypassCode:$scope.bookingForm.bypassCode})
+						.success(function(data, status) {
+							$scope.openForBookings=true;		
+						}).
+						error(function(data, status, headers, config) {
+							ngDialog.open(erOpts)
+								.closePromise.then(function (value) {								 
+									$scope.chkOpenForBookings();							
+								});	
+						});				
+						
+				}, function (reason) {
+					// Cannot continue
+				});
+		}
 	}
+	
+	// Check if open for bookings
+	$scope.chkOpenForBookings();
+	
 
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
