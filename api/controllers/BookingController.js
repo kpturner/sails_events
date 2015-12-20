@@ -1145,7 +1145,7 @@ module.exports = {
 		// Test to see if email arrives
 		Email.send(
 					"latePaymentWarning", {
-						recipientName: ""event.organiser.salutation + " " + event.organiser.firstName"",
+						recipientName: "",
 						senderName: sails.config.events.title,
 						eventDate: "",
 						event: {},
