@@ -1141,7 +1141,7 @@ module.exports = {
 	 */
 	 processLatePayers: function(){
 		sails.log.debug("Processing late payers...");  
-		
+		sails.log.debug("Emailing "+sails.config.events.developer)
 		// Test to see if email arrives
 		Email.send(
 					"latePaymentWarning", {
