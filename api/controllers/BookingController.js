@@ -1148,7 +1148,7 @@ module.exports = {
 						recipientName: ""event.organiser.salutation + " " + event.organiser.firstName"",
 						senderName: sails.config.events.title,
 						eventDate: "",
-						event: {}},
+						event: {},
 						bookings: []												
 					},
 					{
