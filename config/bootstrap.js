@@ -14,7 +14,7 @@ module.exports.bootstrap = function(cb) {
   // Load the passport strategies
   sails.services.passport.loadStrategies();
   
-  sails.on('lifted', function() {
+  //sails.on('lifted', function() {
     // Start the late payment daemon
     latePaymentDaemon = require("child_process").fork(__dirname+"/../api/processes/LatePaymentDaemon");
     // Detect it exiting
@@ -42,7 +42,7 @@ module.exports.bootstrap = function(cb) {
     });	    
      
         
-  }); 
+  //}); 
 
   
   // It's very important to trigger this callback method when you are finished
