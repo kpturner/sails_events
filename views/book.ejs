@@ -97,6 +97,7 @@
         <h4 ng-show="!eventBookings && !userBookings && paid && mode!='delete'"><i>Please contact the organiser to make changes</i></h4>      
         <h4 ng-show="!eventBookings && !userBookings && paid && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>
         <h4 ng-show="(eventBookings || userBookings) && bookingForm.remindersSent && bookingForm.remindersSent>0"><b>PAYMENT REMINDERS SENT: {{bookingForm.remindersSent}}</b></h4>           
+        <h5 ng-show="existingBooking && !paid">Payment deadline: <b>{{ deadline }}</b></h5> 
         <h5 ng-hide="event.capacity<=0">Items marked with * are mandatory</h5>  
         <div class="row" ng-hide="event.capacity<=0 && !myBookings && !eventBookings && !userBookings" disable-contents="(!eventBookings && !userBookings && paid) || mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to EventsModule -->
            

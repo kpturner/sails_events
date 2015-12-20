@@ -39,6 +39,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	
 	// Do we have an existing booking to edit?
 	$scope.existingBooking=false;
+	$scope.deadline=SAILS_LOCALS.booking.deadline;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
 	$scope.placesMax=($scope.event.capacity>$scope.event.maxBookingPlaces)?$scope.event.maxBookingPlaces:$scope.event.capacity;

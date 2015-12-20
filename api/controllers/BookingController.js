@@ -10,7 +10,22 @@
 
 module.exports = {
 
-		
+	/**
+	 * Payment Deadline
+	 */	
+	 paymentDeadline: function(event,booking) {
+		// Booking payment deadline
+		var df = require("dateformat");
+		var deadline="N/A";
+		if (event.grace && event.grace>0 && !booking.paid) {
+			var dl=new Date(booking.bookingDate);
+			dl.setDate(dl.getDate()+event.grace);
+			//dl=dl.toString();
+			//deadline=dl.substr(0,dl.indexOf(":")-2);			
+			deadline=df(dl, "ddd, mmm dS, yyyy");
+		}
+		return deadline;
+	 },
 		  
 	/**
 	 * My bookings
@@ -163,6 +178,7 @@ module.exports = {
 			// Return prepared booking
 			if (existingBooking) {
 				criteria.id={"!":existingBooking.id} // Exclude the existing booking details from the calcs
+				existingBooking.deadline=sails.controllers.booking.paymentDeadline(event,existingBooking);				
 				return preparedBooking(existingBooking.user,criteria);
 			}
 			else {
@@ -401,14 +417,7 @@ module.exports = {
 												formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
 												
 												// Booking payment deadline
-												var deadline="N/A";
-												if (event.grace && event.grace>0 && !booking.paid) {
-													var dl=new Date(booking.bookingDate);
-													dl.setDate(dl.getDate()+event.grace);
-													dl=dl.toString();
-													deadline=dl.substr(0,dl.indexOf(":")-2);
-													
-												}
+												var deadline=sails.controllers.booking.paymentDeadline(event,booking);		
 												
 												var updated = "";
 												var subject = "Event booking confirmation";
@@ -1210,18 +1219,19 @@ module.exports = {
 								// Only email a reminder if a week has passed since last reminder
 								var reminderDeadline=today;
 								if (booking.lastPaymentReminder) {
-									reminderDeadline=new Date((booking.lastPaymentReminder).getTime()+(86400000*7));
-									//console.log(reminderDeadline<=today);	
+									reminderDeadline=new Date((booking.lastPaymentReminder).getTime()+(86400000*7));									
 								}
+								//sails.log.debug(booking.user.name+" reminder deadline "+reminderDeadline);	
 								if (!booking.lastPaymentReminder || reminderDeadline <= today) {
 									sails.log.debug("Late booking reminder issued for "+event.name+" for "+booking.user.name+((sails.config.events.reminderTestMode)?" in test mode":" "))
 									// Update the booking so we don't spam them
 									var to=booking.user.email;
 									var cc=(event.organiser.email || "");
 									// Update the booking whether we are in test mode or not
+									var howMany=(!booking.remindersSent)?1:booking.remindersSent+1;
 									Booking.update(booking.id,{
 											lastPaymentReminder:today,
-											remindersSent:((!booking.remindersSent)?1:booking.remindersSent+1)
+											remindersSent:howMany
 									}).exec(function(err,booking){});
 															
 									// In test mode, make sure only the developer gets an email
