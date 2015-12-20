@@ -1147,7 +1147,7 @@ module.exports = {
 					"latePaymentWarning", {
 						recipientName: ""event.organiser.salutation + " " + event.organiser.firstName"",
 						senderName: sails.config.events.title,
-						eventDate: ""formattedDate"",
+						eventDate: "",
 						event: {}},
 						bookings: []												
 					},
