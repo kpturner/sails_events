@@ -996,7 +996,7 @@ module.exports = {
 			var g=(grace)?grace:booking.event.grace;
 			if (g>0 && booking.bookingDate) {
 				var dl=new Date(booking.bookingDate);
-				dl.setDate(dl.getDate()+g);
+				dl.setDate(dl.getDate()+g+1);
 				//console.log(dl)
 				if (new Date()>dl) {
 					//console.log("late")
