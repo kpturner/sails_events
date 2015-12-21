@@ -1155,7 +1155,7 @@ module.exports = {
 						//to: booking.user.email,
 						to: "",
 						bcc: sails.config.events.developer || "",
-						subject: event.name + " - Late payment reminder warning"
+						subject: " - Late payment reminder warning"
 					},
 					function(err) {if (err) console.log(err);}
 				)	
