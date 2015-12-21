@@ -1141,26 +1141,7 @@ module.exports = {
 	 */
 	 processLatePayers: function(){
 		sails.log.debug("Processing late payers...");  
-		sails.log.debug("Emailing "+sails.config.events.developer)
-		// Test to see if email arrives
-		Email.send(
-					"latePaymentWarning", {
-						recipientName: "",
-						senderName: sails.config.events.title,
-						eventDate: "",
-						event: {},
-						bookings: []												
-					},
-					{
-						//to: booking.user.email,
-						to: "",
-						bcc: sails.config.events.developer || "",
-						subject: " - Late payment reminder warning"
-					},
-					function(err) {if (err) console.log(err);}
-				)	
-		
-		
+				
 		// Get a list of open events
 		var today=new Date();
 		today=new Date(today.setHours(0));
