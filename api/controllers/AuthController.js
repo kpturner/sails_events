@@ -436,14 +436,15 @@ var AuthController = {
      
    	User.findOne({email:req.param("email")}).exec(function(err, user) {
        
-        var sendEmail=function(user,newPassword){
+        var sendEmail=function(user,resetInstructions,newPassword){
            // Send confirmation email
   					Email.send(
   						"passwordReset", {
       				    recipientName: user.salutation + " " + user.firstName,
-                  senderName: sails.config.events.title,
-  				        newPassword: newPassword,
-                  domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),  							   
+                        senderName: sails.config.events.title,
+  				        resetInstructions: resetInstructions,
+                        newPassword: newPassword,
+                        domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),  							   
   					   },
   						 {
                   to: user.email,
@@ -459,10 +460,12 @@ var AuthController = {
           Passport.findOne({user:user.id}).exec(function(err,passport){
             
             var newPassword;
+            var resetInstructions="Your reset instructions are shown below:";
             
             if (passport.provider) {
-              newPassword="You originally registered using your "+passport.provider+" account. To log on, simply click the "+passport.provider+" button on the login page.";
-              sendEmail(user,newPassword);
+              resetInstructions="You originally registered using your "+passport.provider+" account. To log on, simply click the "+passport.provider+" button on the login page.";
+              newPassword="No new password has been issued as it is not required";
+              sendEmail(user,resetInstructions,newPassword);
             }
             else {
               // Create new password
@@ -475,7 +478,7 @@ var AuthController = {
                   console.log(err)
                 else {
                   newPassword="Your new temporary password is: "+newPassword;
-                  sendEmail(user,newPassword);   
+                  sendEmail(user,resetInstructions,newPassword);   
                 }                
               });              
               
