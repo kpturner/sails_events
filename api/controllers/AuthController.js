@@ -461,7 +461,7 @@ var AuthController = {
             var newPassword;
             
             if (passport.provider) {
-              newPassword="You need to log on with your "+passport.provider+" account!";
+              newPassword="You originally registered using your "+passport.provider+" account. To log on, simply click the "+passport.provider+" button on the login page.";
               sendEmail(user,newPassword);
             }
             else {
