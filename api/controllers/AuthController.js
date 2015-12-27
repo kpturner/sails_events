@@ -464,7 +464,7 @@ var AuthController = {
             
             if (passport.provider) {
               resetInstructions="You originally registered using your "+passport.provider+" account. To log on, simply click the "+passport.provider+" button on the login page.";
-              newPassword="No new password has been issued as it is not required";
+              newPassword="No new password has been issued as it is not required.";
               sendEmail(user,resetInstructions,newPassword);
             }
             else {
