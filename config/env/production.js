@@ -66,7 +66,7 @@ module.exports = {
     rest: true,
     shortcuts: false,
     index: false,
-    defaultLimit: -1,
+    defaultLimit: 1000,
   }
 
 };
