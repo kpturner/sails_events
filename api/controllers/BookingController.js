@@ -1136,6 +1136,39 @@ module.exports = {
 		
 	},
 	
+    
+    /**
+     * Transfer bookings
+     */
+    transferBookings: function(req, res) {
+        var from=req.param("id");
+        var to=req.param("newuser");
+        
+        // Here we are going to build an array of promises for each update and only return 
+        // to the client when .all() the updates are complete
+        var updates=[];
+        Booking.find({user:from})
+            .then(function(bookings){
+                bookings.forEach(function(booking,b){
+                    updates.push(
+                         Booking.update(booking.id,{user:to})  
+                            .then(function(bookingArr){
+                                //console.log("Updated "+bookingArr[0].id) 
+                            })      
+                    )
+                })               
+                return updates;
+            })
+            .all()
+                .then(function(update){
+                    //console.log("All done")
+                    return res.ok()
+                })
+            .catch(function(err){
+                return res.negotiate(err);
+            })
+    },
+    
 	/**
 	 * Process late payers
 	 */

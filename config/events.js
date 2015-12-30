@@ -38,7 +38,7 @@ module.exports.events = {
 	mops: ['Cheque', 'BACS', 'Cash', 'Paypal'],
 	
 	// Salutations
-	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr'],
+	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr', 'Mrs', 'Ms', 'Miss'],
 	
 	// Areas
 	areas: ['North Central', 'North East', 'Solent', 'South Central', 'South East', 'South West'],

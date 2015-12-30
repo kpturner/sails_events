@@ -60,5 +60,12 @@ module.exports = {
   // log: {
   //   level: "silent"
   // }
+  
+  blueprints: {
+    actions: false,
+    rest: true,
+    shortcuts: false,
+    index: false,
+  }
 
 };

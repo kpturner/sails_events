@@ -29,13 +29,9 @@ module.exports.policies = {
   // '*': true,
   
   //'*': 'noCache',
-  '*': [ 'passport', 'noCache' , 'sessionAuth', 'allowREST'],
+  '*': [ 'passport', 'noCache' , 'sessionAuth'],
 
-  // Pass all requests through UserController through the allowRest policy and also disable browser cache
-  //UserController: {
-  //  '*': 'allowREST' 
-  //}
-
+ 
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *

@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$http', 'toastr', 'ngDialog', function($scope, $http, toastr, ngDialog){
 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.mode=SAILS_LOCALS.mode;
@@ -31,6 +31,9 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
     	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
+    
+    // New user for transfering bookings
+    $scope.userdetailsForm.newuser="HELLO";
 	
 	/**
 	 * Test if the details are complete on the user
@@ -72,13 +75,68 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 		})
 		.catch(function onError(sailsResponse){
 
-			// Handle known error type(s).
-			toastr.error(sailsResponse.data, 'Error');
-
+            // Response status of 460 means the user has bookings. Offer the option of allocating them to 
+            // another user if this user is a "dummy" created by the organiser
+            if (sailsResponse.status==460 && SAILS_LOCALS.userDetails.authProvider=="dummy") {
+                $scope.transferDialog(sailsResponse);                    
+            }  
+            else {
+                // Handle known error type(s).
+                toastr.error(sailsResponse.data, 'Error');   
+            }
 		})
 		.finally(function eitherWay(){
 			$scope.userdetailsForm.loading = false;
 		})
 	}
+    
+    $scope.transferDialog = function(origResponse) {
+        // Get a list of users that excludes this user
+        $http.get('/user?where={"id":{"not":'+SAILS_LOCALS.userDetails.id.toString()+'}}&sort=surname')
+            .then(function onSuccess(sailsResponse){
+                if (typeof sailsResponse.data == 'object') {
+                    $scope.users = sailsResponse.data;
+                    // Prompt the user to select a user to transfer
+                    // the bookings to
+                    var opts={
+                        template:"/templates/bookingsTransfer.html",
+                        className: 'ngdialog-theme-default',
+                        scope: $scope
+                        };
+                    // Pop the dialog
+                    ngDialog.openConfirm(opts)
+                        .then(function (value) {
+                            // Transfer bookings and try again
+                            $http.post('/booking/transfer',{
+                                id:SAILS_LOCALS.userDetails.id,
+                                newuser:$scope.userdetailsForm.newuser
+                            })
+                            .then(function(){
+                                // Try delete again
+                                $scope.submitUserForm();
+                            })
+                            .catch(function(sailsResponse){
+                                 toastr.error(sailsResponse.data, 'Error');
+                            })
+                        }, 
+                        function (reason) {
+                            toastr.error(origResponse.data, 'Error');  
+                        });						
+                }
+                else {
+                     toastr.error(origResponse.data, 'Error');  
+                }
+            })
+            .catch(function onError(sailsResponse){
+    
+                // Handle known error type(s).
+                toastr.error(sailsResponse.data, 'Error');
+                
+    
+            })
+            .finally(function eitherWay(){
+                // Nothing to do
+            })
+    }
 
 }])

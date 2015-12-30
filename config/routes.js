@@ -73,6 +73,7 @@ module.exports.routes = {
   'post /validateadditions': 'BookingController.validateAdditions',
   'post /updatebooking/:action': 'BookingController.updateBooking',
   'post /verifybypasscode': 'EventController.verifyBypassCode',
+  'post /booking/transfer': 'BookingController.transferBookings',
   
   // Apologies
   'get /apology': 'ApologyController.prepareApology',

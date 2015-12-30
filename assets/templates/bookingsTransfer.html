@@ -1,0 +1,12 @@
+<div class="ngdialog-message">
+    <h3>WARNING</h3>
+    <p>Bookings exist for this user.</p>
+    <p>Before you can delete the user you must transfer the bookings to another user:<p> 
+    <select type="text" class="form-control" placeholder="transfer to user" name="newuser" ng-options="a.id as (a.surname + ', '+a.firstName+' ('+a.lodge+' '+a.lodgeNo+')') for a in users" ng-model="userdetailsForm.newuser" required>
+        <option value="">-- choose new user --</option>
+    </select>        
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Continue</button>
+</div>
