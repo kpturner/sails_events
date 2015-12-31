@@ -132,28 +132,7 @@ module.exports = {
   
   // Function to increment booking ref
   incrementLastBookingRef : function(id, cb) {
-    
-        var diagnosticEmail=function(err,subject){
-          if (sails.config.events.developer) {
-             //console.log("Sending email to "+sails.config.events.developer)
-            var errStr;
-            if (typeof err=="string")
-              errStr=err
-            else
-              errStr=JSON.stringify(err)
-            Email.send(
-              "diagnostic",
-              {
-                err:errStr
-              },
-              {
-                to: sails.config.events.developer,
-                subject: subject
-              },
-              function(){}
-            )	
-          }         
-        }
+            
         // Just in case we need it, create a string for any errors
         var subject="Error trying to obtain a unique booking reference for event "+id;       
         // Increment the last booking ref - get lock (waiting 10 seconds at most)
@@ -163,7 +142,7 @@ module.exports = {
             // unique booking reference.
             sails.log.error(subject)
             sails.log.error(err);
-            diagnosticEmail(err,subject);
+            Utility.diagnosticEmail(err,subject);
             // Pass the error back to the callback if need be
             if (cb) {
               return cb(err,null)
@@ -181,7 +160,7 @@ module.exports = {
                 if(cb) {
                   if(err) {
                     Event.query('SELECT RELEASE_LOCK("EVENT")');
-                    diagnosticEmail(err,subject);
+                    Utility.diagnosticEmail(err,subject);
                     return cb(err,null)
                   }
                   else {
@@ -193,14 +172,14 @@ module.exports = {
                       })
                       .catch(function (err) {
                           Event.query('SELECT RELEASE_LOCK("EVENT")'); 
-                          diagnosticEmail(err,subject);                    
+                          Utility.diagnosticEmail(err,subject);                    
                           return cb(err,null);  
                       });             
                   }                  
                 } 
                 else {
                   Event.query('SELECT RELEASE_LOCK("EVENT")');
-                  diagnosticEmail(err,subject);
+                  Utility.diagnosticEmail(err,subject);
                   return;
                 } 
               })     

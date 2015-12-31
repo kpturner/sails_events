@@ -16,8 +16,9 @@ process.on('message', function(parms) {
 		case "*START":
 			process.send({action:"*LOG",message:"Late payment daemon started" + ((parms.reminderTestMode)?" in test mode":"")});
 		
-			// Every 24 hours, email late payers
-			setInterval(function(){
+			// On start up, and then every preconfigured interval, email late payers
+			process.send({action:"*LATEPAYERS"});
+            setInterval(function(){
 				process.send({action:"*LATEPAYERS"});
 			},parms.latePaymentInterval)
 			 

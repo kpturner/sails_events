@@ -40,6 +40,29 @@ module.exports = {
     return isAdmin 
   },
 
+
+  diagnosticEmail: function(err,subject){
+          if (sails.config.events.developer) {
+             //console.log("Sending email to "+sails.config.events.developer)
+            var errStr;
+            if (typeof err=="string")
+              errStr=err
+            else
+              errStr=JSON.stringify(err)
+            Email.send(
+              "diagnostic",
+              {
+                err:errStr
+              },
+              {
+                to: sails.config.events.developer,
+                subject: subject
+              },
+              function(){}
+            )	
+          }         
+        },
+
   jsonSort: function(field, reverse, primer){
    
    var s=field.split(".");
