@@ -1175,7 +1175,7 @@ module.exports = {
 	 processLatePayers: function(){
         var info="Processing late payers..."; 
 		sails.log.debug(info);  
-		Utility.diagnosticEmail(info,"Late payment daemon");		
+		/////////Utility.diagnosticEmail(info,"Late payment daemon");		
 		// Get a list of open events
 		var today=new Date();
 		today=new Date(today.setHours(0));
