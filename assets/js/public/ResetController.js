@@ -22,6 +22,7 @@ angular.module('EventsModule').controller('ResetController', ['$scope', '$http',
 		$scope.resetForm.loading=true;
 		// Submit request to Sails.
 		$http.post('/auth/passwordreset', {
+            _csrf: SAILS_LOCALS._csrf,
 			email: $scope.resetForm.email,
 		})
 		.then(function onSuccess(sailsResponse){

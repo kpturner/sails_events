@@ -23,6 +23,7 @@ angular.module('EventsModule').controller('ApologyController', ['$scope', '$http
 		$scope.apologyForm.loading=true;
 		
 		$http.post('/sendapology/', {
+            _csrf: SAILS_LOCALS._csrf,
 			eventid: SAILS_LOCALS.event.id,
 			message: $scope.apologyForm.message			 
 		})

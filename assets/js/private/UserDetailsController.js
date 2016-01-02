@@ -68,6 +68,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 						
 		// Submit request to Sails.
 		$http.post('/updateuser/'+$scope.mode, {
+            _csrf: SAILS_LOCALS._csrf,
 			data: $scope.userdetailsForm			 
 		})
 		.then(function onSuccess(sailsResponse){
@@ -108,6 +109,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
                         .then(function (value) {
                             // Transfer bookings and try again
                             $http.post('/booking/transfer',{
+                                _csrf: SAILS_LOCALS._csrf,
                                 id:SAILS_LOCALS.userDetails.id,
                                 newuser:$scope.userdetailsForm.newuser
                             })

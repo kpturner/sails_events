@@ -48,6 +48,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		$scope.signupForm.loading=true;
 		// Submit request to Sails.
 		$http.post('/auth/local/register', {
+            _csrf: SAILS_LOCALS._csrf,
 			user: $scope.signupForm
 			//name: $scope.signupForm.name,
 			//username: $scope.signupForm.username,

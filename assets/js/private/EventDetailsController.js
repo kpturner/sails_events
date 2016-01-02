@@ -121,6 +121,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 						
 		// Submit request to Sails.
 		$http.post('/updateevent/'+$scope.mode, {
+            _csrf: SAILS_LOCALS._csrf,
 			data: $scope.eventForm			 
 		})
 		.then(function onSuccess(sailsResponse){

@@ -43,6 +43,7 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
 
     // Submit request to Sails.
     $http.post('/auth/local', {
+      _csrf: SAILS_LOCALS._csrf,
       identifier: $scope.loginForm.identifier,
       password: $scope.loginForm.password
     })

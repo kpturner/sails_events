@@ -112,7 +112,11 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				.then(function (value) {
 					// Attempting to bypass with a code
 					var ok=false;
-					$http.post("/verifybypasscode",{id:$scope.event.id,bypassCode:$scope.bookingForm.bypassCode})
+					$http.post("/verifybypasscode",{
+                            _csrf: SAILS_LOCALS._csrf,
+                            id:$scope.event.id,
+                            bypassCode:$scope.bookingForm.bypassCode
+                        })
 						.success(function(data, status) {
 							$scope.openForBookings=true;		
 						}).
@@ -253,6 +257,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			}	
 			else {
 				$http.post("/validateadditions",{
+                    _csrf: SAILS_LOCALS._csrf,
 					eventId: $scope.event.id,	
 					linkedBookings: $scope.linkedbookings,
 					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
@@ -311,6 +316,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			// The only "mode" we care about is delete, since "create" is handled as a normal booking
 			var cancelBooking=function(){
 				$http.post('/updatebooking/'+$scope.mode, {
+                    _csrf: SAILS_LOCALS._csrf,
 					bookingid: SAILS_LOCALS.booking.id			 
 				})
 				.then(function onSuccess(sailsResponse){
@@ -371,6 +377,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			 */	
 			var makeBooking=function(route){
 				$http.post(route, {
+                    _csrf: SAILS_LOCALS._csrf,
 					eventid: $scope.event.id,	
 					salutation: $scope.bookingForm.salutation,
 					name: $scope.bookingForm.name,

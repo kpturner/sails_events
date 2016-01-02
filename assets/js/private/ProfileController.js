@@ -71,6 +71,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		var submitForm=function(){
 			// Submit request to Sails.
 			$http.post('/updateprofile', {
+                _csrf: SAILS_LOCALS._csrf,
 				profile: $scope.profileForm
 			})
 			.then(function onSuccess(sailsResponse){
