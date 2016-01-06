@@ -4,6 +4,8 @@
  * @description :: Server-side logic for managing late payment reminders
  */
  
+process.stdout.write(new Date()+" Late daemon child process\n"); 
+ 
 process.on('disconnect', function() {
 	// Parent is exiting
 	process.exit(0);
@@ -13,13 +15,13 @@ process.on('disconnect', function() {
 process.on('message', function(parms) {
 			 
 	switch (parms.action) {
-		case "*START":
+		case "*START":        
 			process.send({action:"*LOG",message:"Late payment daemon started" + ((parms.reminderTestMode)?" in test mode":"")});
 		
-			// On start up, and then every preconfigured interval, email late payers
-			process.send({action:"*LATEPAYERS"});
-            setInterval(function(){
-				process.send({action:"*LATEPAYERS"});
+			// On start up, and then every preconfigured interval, email late payers			
+            process.send({action:"*LATEPAYERS"});
+            setInterval(function(){          
+                process.send({action:"*LATEPAYERS"});
 			},parms.latePaymentInterval)
 			 
 			break;
