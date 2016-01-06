@@ -19,8 +19,10 @@ module.exports.bootstrap = function(cb) {
     latePaymentDaemon = require("child_process").fork(__dirname+"/../api/processes/LatePaymentDaemon");
     // Detect it exiting
     latePaymentDaemon.on("exit", function(code, signal){
-      sails.log.debug("Late payment daemon process exiting with code/signal "+code+"/"+signal );
-      latePaymentDaemon=null;
+      var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
+      Utility.diagnosticEmail(msg,"Late payment daemon");	
+      sails.log.debug(msg);
+      latePaymentDaemon=null;     
     });
     // Detect messages
     latePaymentDaemon.on("message", function(data){
