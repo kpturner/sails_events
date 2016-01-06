@@ -42,7 +42,7 @@ module.exports = {
   },
 
   // Switch CSRF on for production
-  csrf: true,
+  csrf: false,
   
   // Increase hook timeout
   hookTimeout: 90000, // 90 seconds

@@ -30,6 +30,6 @@ module.exports = {
   hookTimeout: 60000, // 60 seconds
   
   // Switch CSRF on
-  csrf: false,
+  csrf: true,
   
 };
