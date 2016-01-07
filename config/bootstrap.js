@@ -16,7 +16,9 @@ module.exports.bootstrap = function(cb) {
   
   sails.on('lifted', function() {
     // Start the late payment daemon
-    latePaymentDaemon = require("child_process").fork(__dirname+"/../api/processes/LatePaymentDaemon");
+    var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
+    var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
+    
     // Detect it exiting
     latePaymentDaemon.on("exit", function(code, signal){
       var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
@@ -24,25 +26,8 @@ module.exports.bootstrap = function(cb) {
       sails.log.debug(msg);
       latePaymentDaemon=null;     
     });
-    // Detect messages
-    latePaymentDaemon.on("message", function(data){
-      switch (data.action) {
-        case "*LOG":
-          sails.log.debug(data.message); 
-          break;
-        case "*LATEPAYERS":         
-          sails.controllers.booking.processLatePayers();
-          break;
-      }
-       
-    });
-    // Send the Sails object
-    latePaymentDaemon.send({
-      action              :   "*START",
-      latePaymentInterval :   sails.config.events.latePaymentInterval,
-      reminderTestMode    :   sails.config.events.reminderTestMode,
-    });	    
-     
+    
+    
         
   }); 
 

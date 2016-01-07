@@ -25,6 +25,13 @@
 			"type": "node",
 			"request": "attach",
 			"port": 5858
+		},
+		{
+			"name": "Child",
+			"type": "node",
+            "request": "attach",
+			"address": "localhost",
+			"port": 5859
 		}
 	]
 }

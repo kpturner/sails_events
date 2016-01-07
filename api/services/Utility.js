@@ -12,12 +12,13 @@
 /**
  * Module dependencies
  */
-  //var util = require('util'),
-  //    _ = require('lodash');
-  var util = require('util');
+//var util = require('util'),
+//    _ = require('lodash');
+var util = require('util');
+ 
 
 module.exports = {
-  
+    
   isAdmin: function(user) {
     var isAdmin=false;
     // Allow for users configured in locals.js to be admins even if their profile says otherwise
