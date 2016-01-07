@@ -36,8 +36,7 @@ process.on('message', function(parms) {
 			 
 	switch (parms.action) {		
 		case "*STOP":
-			//process.send({action:"*LOG",message:"Late payment daemon stopping"});
-            sails.debug.log("Late payment daemon stopping");
+			sails.debug.log("Late payment daemon stopping");
 			process.exit(0);	
     }
 	 
