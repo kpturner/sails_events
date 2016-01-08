@@ -56,7 +56,7 @@ module.exports = {
 		
 		var filter=req.param('filter');
 		req.session.userFilter=filter;
-						
+		req.session.bookingFilter="";				
 		var where = {};
 		
 		if (filter && filter.length>0) {

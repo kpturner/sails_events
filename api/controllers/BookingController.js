@@ -750,6 +750,7 @@ module.exports = {
 		
 		var filter=req.param('filter');
 		req.session.bookingFilter=filter;
+        req.session.userFilter="";
 		var download=req.param('download');
 								
 		var where = {};

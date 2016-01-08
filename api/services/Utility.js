@@ -17,7 +17,8 @@
 var util = require('util');
  
 
-module.exports = {
+module.exports = { 
+
     
   isAdmin: function(user) {
     var isAdmin=false;

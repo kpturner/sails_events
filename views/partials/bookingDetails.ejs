@@ -252,7 +252,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
     <!-- S A L U T A T I O N -->
     <div class="control-group form-group col-xs-10">
       <label>* Salutation</label>  
-      <select class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation" required>
+      <select class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="{{place}}_salutation" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation" required>
         <option value="">-- choose salutation --</option>
       </select>
     </div>     
@@ -262,7 +262,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	    ng-class="{'has-error':linked<%-model%>Form.surname.$invalid &&
 	                      linked<%-model%>.surname.$dirty}">
 	    <label>* Surname</label>  
-	    <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="linked<%-model%>s[place].surname" ng-maxlength="50" required >              
+	    <input type="text" class="form-control" placeholder="e.g. Bloggs" name="{{place}}_surname" ng-model="linked<%-model%>s[place].surname" ng-maxlength="50" required >              
 	    <span class="help-block has-error" ng-if="linked<%-model%>Form.surname.$dirty">
 	      <span ng-show="linked<%-model%>Form.surname.$error.required">Surname is required.</span>
 	      <span ng-show="linked<%-model%>Form.surname.$error.maxlength">Surname cannot be more than 50 characters.</span>
@@ -274,7 +274,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	    ng-class="{'has-error':linked<%-model%>Form.firstname.$invalid &&
 	                      linked<%-model%>.firstname.$dirty}">
 	    <label>* First name</label>  
-	    <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="linked<%-model%>s[place].firstName" ng-maxlength="50" required >              
+	    <input type="text" class="form-control" placeholder="e.g. Fred" name="{{place}}_firstname" ng-model="linked<%-model%>s[place].firstName" ng-maxlength="50" required >              
 	    <span class="help-block has-error" ng-if="linked<%-model%>Form.firstname.$dirty">
 	      <span ng-show="linked<%-model%>Form.firstname.$error.required">First name is required.</span>
 	      <span ng-show="linked<%-model%>Form.firstname.$error.maxlength">First name cannot be more than 50 characters.</span>
@@ -286,7 +286,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	    ng-class="{'has-error':linked<%-model%>.lodge.$invalid &&
 	                          linked<%-model%>.lodge.$dirty}">
 	    <label>Lodge name</label>
-	    <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="linked<%-model%>s[place].lodge" ng-maxlength="50">
+	    <input type="text" class="form-control" placeholder="e.g. Hamtun" name="{{place}}_lodge" ng-model="linked<%-model%>s[place].lodge" ng-maxlength="50">
 	    <span class="help-block has-error" ng-if="linked<%-model%>.lodge.$dirty">
 	      <span ng-show="linked<%-model%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
 	    </span>
@@ -297,7 +297,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	    ng-class="{'has-error':linked<%-model%>.lodgeNo.$invalid &&
 	                          linked<%-model%>.lodgeNo.$dirty}">
 	    <label>Lodge number</label>
-	    <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="linked<%-model%>s[place].lodgeNo" ng-maxlength="5" min="1">
+	    <input type="number" class="form-control" placeholder="e.g. 7083" name="{{place}}_lodgeno" ng-model="linked<%-model%>s[place].lodgeNo" ng-maxlength="5" min="1">
 	    <span class="help-block has-error" ng-if="linked<%-model%>.lodgeNo.$dirty">                 
 	      <span ng-show="linked<%-model%>.lodgeNo.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
 	    </span>
@@ -307,7 +307,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
     <!-- A R E A -->
     <div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
       <label>Area</label>  
-      <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="linked<%-model%>[place].area">
+      <select class="form-control" placeholder="e.g. South Central" name="{{place}}_area" ng-options="area for area in areas" ng-model="linked<%-model%>s[place].area">
         <option value="">-- choose area --</option>
       </select>
     </div>
@@ -317,7 +317,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	    ng-class="{'has-error':linked<%-model%>.rank.$invalid &&
 	                          linked<%-model%>.rank.$dirty}">
 	    <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
-	    <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="linked<%-model%>s[place].rank" ng-maxlength="100" >
+	    <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="{{place}}_rank" ng-model="linked<%-model%>s[place].rank" ng-maxlength="100" >
 	    <span class="help-block has-error" ng-if="linked<%-model%>.rank.$dirty">
 	      <span ng-show="linked<%-model%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
 	    </span>
@@ -328,7 +328,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	    ng-class="{'has-error':linked<%-model%>.dietary.$invalid &&
 	                          linked<%-model%>.dietary.$dirty}">
 	    <label>Dietary requirements</label>
-	    <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="linked<%-model%>s[place].dietary" ng-maxlength="50" >
+	    <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="{{place}}_dietary" ng-model="linked<%-model%>s[place].dietary" ng-maxlength="50" >
 	    <span class="help-block has-error" ng-if="linked<%-model%>.dietary.$dirty">
 	      <span ng-show="linked<%-model%>.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
 	    </span>

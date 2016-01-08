@@ -119,6 +119,10 @@ module.exports = {
       type: 'integer'
     },
     
+    showApologyButton: {
+      type: 'boolean'
+    },
+    
     bypassCode: {
       type: 'string'
     },

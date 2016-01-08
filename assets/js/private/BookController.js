@@ -474,24 +474,33 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				route+='/create';
 				// Check that we are not booking in a user that is potentially already registered
 				if (!$scope.selectedUserId) {
+                    
+                    var uriEncodeSimpleJson=function(json) {
+                        var out={}
+                        angular.forEach(json,function(v,n){
+                            out[n]=encodeURIComponent(v);
+                        })
+                        return out;
+                    }  
 					
+                    var sc=uriEncodeSimpleJson($scope.bookingForm);
 					var searchClause='where={"or":[{';
 					// First name, surname (and possibly lodge and lodge number) match
-					searchClause+='"firstName":"'+$scope.bookingForm.firstName+'"';
-					searchClause+=',"surname":"'+$scope.bookingForm.surname+'"';
+					searchClause+='"firstName":"'+sc.firstName+'"';
+					searchClause+=',"surname":"'+sc.surname+'"';
 					if ($scope.bookingForm.lodge && $scope.bookingForm.lodge.length>0) {
-						searchClause+=',"lodge":"'+$scope.bookingForm.lodge+'"';
+						searchClause+=',"lodge":"'+sc.lodge+'"';
 					}
 					if ($scope.bookingForm.lodgeNo && $scope.bookingForm.lodgeNo.length>0) {
-						searchClause+=',"lodgeNo":'+$scope.bookingForm.lodgeNo;
+						searchClause+=',"lodgeNo":'+sc.lodgeNo;
 					}
 					searchClause+="}"
 					// OR the email address matches
 					if ($scope.bookingForm.email && $scope.bookingForm.email.length>0) {
-						searchClause+=',{"email":"'+$scope.bookingForm.email+'"}';
+						searchClause+=',{"email":"'+sc.email+'"}';
 					}
 					searchClause+=']}'
-					 
+				 
 					$http.get("/user?"+searchClause)
 					.then(function(sailsResponse){
 						// Session expired?
@@ -515,7 +524,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 									// Continue with booking for the duplicate user we found
 									angular.forEach($scope.duplicateUser,function(value,key){
 										$scope.bookingForm[key]=$scope.duplicateUser[key]	
-									})									
+									})	
+                                    route+="?selecteduserid="+$scope.duplicateUser.id; 								
 									makeBooking(route);
 				                }, function (reason) {
 									// They bottled it
