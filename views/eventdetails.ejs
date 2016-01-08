@@ -241,8 +241,8 @@
            <!-- D R E S S  C O D E -->
   
           <div class="control-group form-group col-md-10"
-            ng-class="{'has-error':eventdetails.dressCode.$invalid &&
-                                  eventdetails.dressCode.$dirty}">
+            ng-class="{'has-error':eventdetails.dresscode.$invalid &&
+                                  eventdetails.dresscode.$dirty}">
             <label>Dress code</label>
             <textarea type="text" class="form-control" placeholder="dress code if known" name="dresscode" ng-model="eventForm.dressCode" rows="3"></textarea>
           
@@ -251,10 +251,10 @@
           <!-- B Y P A S S  C O D E -->
   
           <div class="control-group form-group col-md-10"
-            ng-class="{'has-error':eventdetails.bypassCode.$invalid &&
-                                  eventdetails.bypassCode.$dirty}">
+            ng-class="{'has-error':eventdetails.bypasscode.$invalid &&
+                                  eventdetails.bypasscode.$dirty}">
             <label>Bypass code</label>
-            <input type="text" class="form-control" placeholder="used to bypass the opening date" name="bypassCode" ng-model="eventForm.bypassCode"></input>
+            <input type="text" class="form-control" placeholder="used to bypass the opening date" name="bypasscode" ng-model="eventForm.bypassCode"></input>
           </div>
       
           <!-- O P E N I N G   D A T E -->
@@ -297,8 +297,8 @@
            <!-- P A Y M E N T   D E T A I L S -->
   
             <div class="control-group form-group col-md-10"
-              ng-class="{'has-error':eventdetails.paymentDetails.$invalid &&
-                                    eventdetails.paymentDetails.$dirty}">
+              ng-class="{'has-error':eventdetails.paymentdetails.$invalid &&
+                                    eventdetails.paymentdetails.$dirty}">
               <label>Payment details</label>
               <textarea type="text" class="form-control" placeholder="e.g. Bank details for BACS payments" name="paymentdetails" ng-model="eventForm.paymentDetails" rows="4"></textarea>
             
@@ -307,8 +307,8 @@
             <!-- I N S T A N T  P A Y M E N T  ? -->
   
             <div style="display:none" class="control-group form-group col-md-7"
-              ng-class="{'has-error':eventdetails.instantPayment.$invalid &&
-                                    eventdetails.instantPayment.$dirty}">
+              ng-class="{'has-error':eventdetails.instantpayment.$invalid &&
+                                    eventdetails.instantpayment.$dirty}">
                <label>
                 <input type="checkbox" class="bigcheckbox" name="instantpayment" ng-model="eventForm.instantPayment" ></input>
                 &nbsp;&nbsp;&nbsp;Instant payment required?
@@ -320,6 +320,17 @@
             <div class="control-group form-group col-md-7">
                 <label>Grace period for payment (days)</label>       
                 <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace"></input>
+             </div>
+             
+             <!-- S H O W  A P O L O G Y  B U T T O N ? -->
+  
+            <div class="control-group form-group col-md-7"
+              ng-class="{'has-error':eventdetails.showapologybutton.$invalid &&
+                                    eventdetails.showapologybutton.$dirty}">
+               <label>
+                <input type="checkbox" class="bigcheckbox" name="showapologybutton" ng-model="eventForm.showApologyButton" ></input>
+                &nbsp;&nbsp;&nbsp;Show 'Send Apology' button?
+               </label>
              </div>
          
         </div>
