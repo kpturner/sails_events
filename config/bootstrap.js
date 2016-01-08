@@ -15,20 +15,20 @@ module.exports.bootstrap = function(cb) {
   sails.services.passport.loadStrategies();
   
   sails.on('lifted', function() {
+      
     // Start the late payment daemon
-    /*
-    var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
-    var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
-    
-    // Detect it exiting
-    latePaymentDaemon.on("exit", function(code, signal){
-      var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
-      Utility.diagnosticEmail(msg,"Late payment daemon");	
-      sails.log.debug(msg);
-      latePaymentDaemon=null;     
-    });
-    
-    */
+    if (sails.config.events.latePaymentDaemon) {
+        var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
+        var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
+        
+        // Detect it exiting
+        latePaymentDaemon.on("exit", function(code, signal){
+        var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
+        Utility.diagnosticEmail(msg,"Late payment daemon");	
+        sails.log.debug(msg);
+        latePaymentDaemon=null;     
+        });    
+    }    
         
   }); 
 
