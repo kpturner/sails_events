@@ -16,6 +16,7 @@ module.exports.bootstrap = function(cb) {
   
   sails.on('lifted', function() {
     // Start the late payment daemon
+    /*
     var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
     var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
     
@@ -27,7 +28,7 @@ module.exports.bootstrap = function(cb) {
       latePaymentDaemon=null;     
     });
     
-    
+    */
         
   }); 
 
