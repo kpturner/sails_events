@@ -5,11 +5,19 @@
  */
  
 var sails;
-require('sails').load(function(err, sailsInstance) {
+// Override the grunt hook to do nothing
+var cfg={
+        hooks: {
+            grunt: function(sails){return {}}
+        }
+    };
+ 
+//cfg.hooks={grunt:null};
+require('sails').load(cfg,function(err, sailsInstance) {
     // At this point you have access to all your models, services, etc.
     // Initialise the "sails" global
     sails=sailsInstance;
-    
+     
     // Get some config
     var latePaymentInterval = sails.config.events.latePaymentInterval;
     var reminderTestMode = sails.config.events.reminderTestMode;
