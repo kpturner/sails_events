@@ -163,6 +163,8 @@ module.exports = function EventEmail(sails) {
       };
 
       sails.log.verbose('EMAILING:', options);
+      //sails.log.debug(templateDir);
+      //sails.log.debug(templatePath);
 
       async.auto({
 
@@ -184,6 +186,7 @@ module.exports = function EventEmail(sails) {
             // Send the email
             sendEmail: ['compileHtmlTemplate', 'compileTextTemplate', function (next, results) {
 
+              //sails.log.debug(results)
               defaultOptions.html = results.compileHtmlTemplate;
               if (results.compileTextTemplate) defaultOptions.text = results.compileTextTemplate;
 

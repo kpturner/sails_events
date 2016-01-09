@@ -417,7 +417,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					}
 					// For my bookings or ordinary bookings we will issue a confirmation dialog, 
 					// otherwise we will return to where we came from
-					if ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id) {
+					if ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id || $scope.selectedUserId) {
 						setTimeout(function(){
 							if ($scope.myBookings)
 								window.location='/mybookings'
@@ -501,7 +501,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					}
 					searchClause+=']}'
 				 
-					$http.get("/user?"+searchClause)
+					$http.get("/user?_csrf="+SAILS_LOCALS._csrf+"&"+searchClause)
 					.then(function(sailsResponse){
 						// Session expired?
 						if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {

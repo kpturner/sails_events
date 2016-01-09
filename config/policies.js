@@ -29,7 +29,7 @@ module.exports.policies = {
   // '*': true,
   
   //'*': 'noCache',
-  '*': [ 'passport', 'noCache' , 'sessionAuth'],
+  '*': [ 'passport', 'noCache' , 'sessionAuth', 'allowREST'],
 
  
   /***************************************************************************
