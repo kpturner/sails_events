@@ -79,8 +79,8 @@
 	position: relative;
 	font-size: 1.5em;
 	color: #aaa;
-	margin-top: 1em;
-	margin-bottom: 1em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
 }
@@ -100,7 +100,26 @@
 	width: 3em;
 	text-align: center;
 }			
-
+.omb_login .omb_loginOr .omb_spanSocial {
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: -0.6em;
+	margin-left: -6em;
+	background-color: #eee;
+	width: 12em;
+	text-align: center;
+}	
+.omb_login .omb_loginOr .omb_spanManual {
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: -0.4em;
+	margin-left: -5em;
+	background-color: #eee;
+	width: 10em;
+	text-align: center;
+}	
 .omb_login .omb_loginForm .input-group.i {
 	width: 2em;
 }

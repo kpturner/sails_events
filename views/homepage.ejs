@@ -47,7 +47,13 @@
         <h1><%= sails.config.events.heading %></h1>
         <h2 class="hidden-xs">Masonic event management</h2>
         <div class="omb_login">
-          	<h3 class="omb_authTitle">Login via Social Media</h3>
+            <h4 class="omb_authTitle"><a href="/register">Register</a></h4>
+      		<div class="row omb_row-sm-offset-3 omb_loginOr">
+      			<div class="col-xs-12 col-sm-6">
+      				<hr class="omb_hrOr">
+      				<span class="omb_spanSocial">or login via Social Media</span>
+      			</div>
+      		</div>  
       		<div class="row omb_row-sm-offset-3 omb_socialButtons">
               <% if (Object.keys(providers).length) {%>                         
                 <% Object.keys(providers).forEach(function (key) { %>
@@ -60,13 +66,13 @@
                 <% }) %>
               <% } %>          	    
       		</div>
-          <h4 class="omb_authTitle">or <a href="/register">Sign up</a></h4>
-      		<div class="row omb_row-sm-offset-3 omb_loginOr">
+            <div class="row omb_row-sm-offset-3 omb_loginOr">
       			<div class="col-xs-12 col-sm-6">
       				<hr class="omb_hrOr">
-      				<span class="omb_spanOr">or</span>
+      				<span class="omb_spanManual">or (if registered)</span>
       			</div>
-      		</div>
+      		</div>  
+            
       
       		<div class="row omb_row-sm-offset-3">
       			<div class="col-xs-12 col-sm-6">	
