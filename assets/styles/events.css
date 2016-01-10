@@ -94,7 +94,7 @@
 	display: block;
 	position: absolute;
 	left: 50%;
-	top: -0.6em;
+	top: -0.7em;
 	margin-left: -1.5em;
 	background-color: #eee;
 	width: 3em;
@@ -104,20 +104,20 @@
 	display: block;
 	position: absolute;
 	left: 50%;
-	top: -0.6em;
-	margin-left: -6em;
+	top: -0.7em;
+	margin-left: -4.5em;
 	background-color: #eee;
-	width: 12em;
+	width: 9em;
 	text-align: center;
 }	
 .omb_login .omb_loginOr .omb_spanManual {
 	display: block;
 	position: absolute;
 	left: 50%;
-	top: -0.4em;
-	margin-left: -5em;
+	top: -0.7em;
+	margin-left: -4em;
 	background-color: #eee;
-	width: 10em;
+	width: 8em;
 	text-align: center;
 }	
 .omb_login .omb_loginForm .input-group.i {
