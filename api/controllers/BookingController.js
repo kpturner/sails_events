@@ -1014,7 +1014,7 @@ module.exports = {
 	updateBooking: function(req, res) {
 		
 		// The only supported action is "delete" as the rest of booking maintenance is done via
-		// the "makeBooking" function.  However, we will stick to our naming convention rather
+		// the "makeBooking" function.  However, we will stick to our naming convention  
 		// in case that changes
 		var action=req.param("action");
 		var bookingId=req.param("bookingid"); 
