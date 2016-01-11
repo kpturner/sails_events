@@ -94,12 +94,15 @@
         <h3 ng-hide="eventBookings || userBookings || !existingBooking || myBookings || mode=='delete'">YOU HAVE ALREADY BOOKED IN {{paidMsg}}</h3> 
         <h3 ng-show="myBookings && paid">YOU HAVE ALREADY PAID FOR THIS BOOKING</h3> 
         <h4 ng-show="!eventBookings && !userBookings && !openForBookings">NOT OPEN FOR BOOKINGS UNTIL {{ event.openingDate | date : 'EEE, MMM dd, yyyy'}}</h4>      
-        <h4 ng-show="!eventBookings && !userBookings && paid && mode!='delete'"><i>Please contact the organiser to make changes</i></h4>      
+        <h4 ng-show="!eventBookings && !userBookings && paid && mode!='delete'"><i>Contact the organiser to amend the number of places booked</i></h4>      
         <h4 ng-show="!eventBookings && !userBookings && paid && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>
         <h4 ng-show="(eventBookings || userBookings) && bookingForm.remindersSent && bookingForm.remindersSent>0"><b>PAYMENT REMINDERS SENT: {{bookingForm.remindersSent}}</b></h4>           
         <h5 ng-show="existingBooking && !paid">Payment deadline: <b>{{ deadline }}</b></h5> 
         <h5 ng-hide="event.capacity<=0">Items marked with * are mandatory</h5>  
-        <div class="row" ng-hide="event.capacity<=0 && !myBookings && !eventBookings && !userBookings" disable-contents="(!eventBookings && !userBookings && paid) || mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to EventsModule -->
+        <!--
+        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !myBookings && !eventBookings && !userBookings" disable-contents="(!user.isAdmin && !eventBookings && !userBookings && paid) || mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to 
+        -->
+        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !myBookings && !eventBookings && !userBookings" disable-contents="mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to 
            
            <% include partials/bookingDetails.ejs %>  
           
@@ -108,7 +111,10 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors --> 
+        <!--
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || (!eventBookings && !userBookings && paid) || bookingForm.loading">
+        -->
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || bookingForm.loading">
           <span ng-show="!bookingForm.loading && mode=='delete'">Cancel booking</span>
           <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete'">Book now</span>
           <span ng-show="!bookingForm.loading && existingBooking && mode!='delete'">Update booking</span>

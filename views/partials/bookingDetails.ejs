@@ -234,7 +234,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
                       <%-model%>.places.$dirty}">
 <label>* Places</label>
 <input type="number" class="form-control" placeholder="places required" name="places" ng-model="<%-model%>Form.places" min="{{placesMin}}" max="{{placesMax}}"
-  ng-change="makeArray()"  >
+  ng-change="makeArray()"  ng-disabled="!user.isAdmin && !eventBookings && !userBookings && paid">
 <span class="help-block has-error" ng-if="<%-model%>.places.$dirty">
   <span ng-show="<%-model%>.places.$error.required">Number of places is required.</span>
   <span ng-show="<%-model%>.places.$error.min">Number of places cannot be less than {{placesMin}}.</span>
