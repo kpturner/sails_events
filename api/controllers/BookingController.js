@@ -1341,6 +1341,7 @@ module.exports = {
 			row.lodge=booking.user.lodge || "";
 			row.lodgeNo=booking.user.lodgeNo || "";
 			row.area=booking.user.area || "";
+            row.email=booking.user.email || "";
 			row.dietary=booking.dietary || "";
 			row.info=booking.info || "";
 			row.places=booking.places;

@@ -110,6 +110,18 @@
             </span>
           </div>
          
+         
+          <!-- L O G O -->
+          
+          <div class="control-group form-group col-md-10"
+            ng-class="{'has-error':eventdetails.logo.$invalid &&
+                                  eventdetails.logo.$dirty}">
+            <label>Path to logo</label>
+            <input type="text" class="form-control" placeholder="e.g /images/provincial/crest.png or http address" name="logo" ng-model="eventForm.logo"></input>
+            <span class="help-block has-error" ng-if="eventdetails.logo.$dirty">
+              <span ng-show="eventdetails.logo.$error.required">Path to logo is required.</span> 
+            </span>
+          </div>
   
           <!-- C O D E -->
   

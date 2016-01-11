@@ -1,8 +1,14 @@
 <div class="photo ng-scope">
    <a href="/booking?eventid={{card.id}}&selecteduserid={{card.selectedUserId}}&userbookings={{card.userBookings}}" title="Click here to book in" class="a-unstyled">        
         <div class="photo-description">
-            <h3>{{card.name}}</h3> 
-                      
+            <div>
+                <div ng-show="card.logo" class="event-logo">
+                    <img src="{{card.logo}}"></img>
+                </div>
+                <div>
+                    <span class="event-name">{{card.name}}</span>
+                </div> 
+            </div>          
             <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>
             <p>{{card.venue}}</p>
                 

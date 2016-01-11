@@ -28,6 +28,10 @@ module.exports = {
       required: true
     },
     
+    logo: {
+      type: 'string'
+    },
+    
     // Where it is
     venue : {
       type: 'string',
