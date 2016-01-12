@@ -10,8 +10,7 @@
  */
 
 module.exports.bootstrap = function(cb) {
-
-    console.log(sails.config.models.migrate)
+ 
    
   // Load the passport strategies
   sails.services.passport.loadStrategies();
