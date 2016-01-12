@@ -10,10 +10,7 @@
  */
 
 module.exports.bootstrap = function(cb) {
- 
- console.log(process.env.LATEPAYMENTDAEMON=="1")
- console.log(sails.config.events.latePaymentDaemon)
-   
+  
   // Load the passport strategies
   sails.services.passport.loadStrategies();
   
