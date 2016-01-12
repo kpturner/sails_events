@@ -25,7 +25,7 @@ module.exports.eventemail = {
                                         pass: process.env.SMTP_PASS || null
                                     }:null
 	 },
-   from:  'Provincial Events <noreply@squareevents.org>', // sender address
+   from:  process.env.SMTP_SENDER || 'Provincial Events <noreply@squareevents.org>', // sender address
    testMode:  (process.env.SMTP_TESTMODE=='1')?true:false, 
  
  
