@@ -14,7 +14,7 @@ module.exports.events = {
 	sessionExpiry:  30 * 60 * 1000,
 
 	// Admins can be a single string or an array, each representing a user name or email address
-	// admins: ['user'],
+	admins: ['kturner'],
 	
 	// Browser tab title
 	title: "Provincial Events",
