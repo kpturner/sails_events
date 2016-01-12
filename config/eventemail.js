@@ -17,7 +17,9 @@ module.exports.eventemail = {
 	transporter:	{
       host: process.env.SMTP_HOST || '',
       port: process.env.SMTP_PORT || 25,
-      //tls:{rejectUnauthorized: false},
+      tls:{
+          rejectUnauthorized: process.env.SMTP_TLS_REJECT_UNAUTHORIZED?true:false
+      },
       auth: (process.env.SMTP_USER)?{
                                         user: process.env.SMTP_USER || null,
                                         pass: process.env.SMTP_PASS || null
