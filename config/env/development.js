@@ -22,9 +22,9 @@ module.exports = {
   // }
   
   models: {
-      connection: 'localhostMysqlServer',  
-      migrate:  'alter'            
-  },  
+      connection: process.env.DB_CONNECTION || 'localhostMysqlServer';,  
+      migrate:  process.env.DB_MIGRATE || 'alter'            
+  },
 
   // Increase hook timeout
   hookTimeout: 60000, // 60 seconds
