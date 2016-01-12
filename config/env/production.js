@@ -37,7 +37,7 @@ module.exports = {
   },
  
   /**
-   * NOTE: Adapter really should be overriden to 'redis' in production
+   * NOTE: Use redis by default in production for future clustering and scaling
    */
   session: {
     adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'redis', 
