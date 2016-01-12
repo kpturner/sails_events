@@ -52,6 +52,7 @@ module.exports = {
   // This is needed to ensure that passport authentication works properly on
   // Heroku, otherwise we end up with a redirect_uri of localhost:random port
   proxyHost: process.env.PROXYHOST || null, 
+  proxyPort: process.env.PROXYPORT || null, 
 
   // Switch CSRF on for production
   csrf: true,

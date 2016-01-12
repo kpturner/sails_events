@@ -34,6 +34,7 @@ module.exports = {
   // This is needed to ensure that passport authentication works properly on
   // Heroku, otherwise we end up with a redirect_uri of localhost:random port
   proxyHost: process.env.PROXYHOST || null, 
+  proxyPort: process.env.PROXYPORT || null, 
 
   // Increase hook timeout
   hookTimeout: 60000, // 60 seconds
