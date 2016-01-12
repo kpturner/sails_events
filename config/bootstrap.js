@@ -11,6 +11,8 @@
 
 module.exports.bootstrap = function(cb) {
   
+  console.log("Starting on port "+sails.config.port)
+  
   // Load the passport strategies
   sails.services.passport.loadStrategies();
   
