@@ -9,7 +9,7 @@
  */
 
 module.exports.events = {
-
+    
 	// Expire session afterh this many minutes
 	sessionExpiry:  30 * 60 * 1000,
 

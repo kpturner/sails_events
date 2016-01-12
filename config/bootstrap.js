@@ -11,6 +11,7 @@
 
 module.exports.bootstrap = function(cb) {
 
+   
   // Load the passport strategies
   sails.services.passport.loadStrategies();
   

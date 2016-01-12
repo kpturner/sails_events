@@ -52,8 +52,6 @@ git clone https://github.com/kpturner/sails_events.git /usr/sails/projects/event
 
 cd /usr/sails/projects/events 
 
-mkdir logs
-
 Install missing modules:  "npm install"
 
 Look in "events-service" file for instructions on installing a service to run this application.
@@ -65,6 +63,22 @@ In the squareevents.org file system replace the default index.html file with one
 to our node app.  There is an example in our root called "index.example".
 
 run "sails lift" to fire everything up for the first time - this will also set up the database. 
+
+
+Install Redis (for sessions)
+============================
+# wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+# wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+# rpm -Uvh remi-release-6*.rpm epel-release-6*.rpm
+# yum install redis php-pecl-redis
+# service redis start
+# chkconfig redis on
+
+Now verify its set to start at boot
+# chkconfig -–list redis
+redis 0:off 1:off 2:on 3:on 4:on 5:on 6:off
+
+To make sure redis is working, run command “redis-cli ping” from command line. If you get result “PONG”, that shows redis is working.
 
 
 Not first time in
