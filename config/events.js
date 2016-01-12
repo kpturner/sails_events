@@ -10,6 +10,8 @@
 
 module.exports.events = {
     
+    developer: process.env.DEVELOPER || null,
+    
 	// Expire session afterh this many minutes
 	sessionExpiry:  30 * 60 * 1000,
 
@@ -49,8 +51,11 @@ module.exports.events = {
     // Late payment interval
     latePaymentDaemon: (process.env.LATEPAYMENTDAEMON=="0")?false:true,
     
+    // Reminder text mode
+    reminderTestMode: (process.env.REMINDERTESTMODE=='1')?true:false,
+            
 	// Late payment interval
-	latePaymentInterval: 86400000,
+	latePaymentInterval: process.env.LATEPAYMENTINTERVAL || 86400000,
 	
 	// Additional info field label
 	//additionalInfoLabel: "Sit me with"
