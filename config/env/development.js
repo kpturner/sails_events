@@ -27,13 +27,7 @@ module.exports = {
   },
 
   session: {
-        adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'redis', 
-        host: process.env.REDIS_HOST || 'localhost',
-        port: process.env.REDIS_PORT || 6379,
-        // ttl: <redis session TTL in seconds>,
-        db: process.env.REDIS_DB || 0,
-        pass: process.env.REDIS_PASS || "",
-        prefix: 'sess:', 
+        adapter: 'memory'
   },
 
    

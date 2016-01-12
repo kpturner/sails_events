@@ -40,7 +40,7 @@ module.exports = {
    * NOTE: Adapter really should be overriden to 'redis' in production
    */
   session: {
-    adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'memory', 
+    adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'redis', 
     host: process.env.REDIS_HOST || 'localhost',
     port: process.env.REDIS_PORT || 6379,
     // ttl: <redis session TTL in seconds>,
