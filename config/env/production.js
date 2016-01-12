@@ -67,7 +67,7 @@ module.exports = {
    ***************************************************************************/
 
   log: {
-     colors: false,  // To get clean logs without prefixes or color codings
+     colors: (process.env.LOGTOCONSOLE)?true:false,  // To get clean logs without prefixes or color codings
      custom: (process.env.LOGTOCONSOLE)?null:customLogger,
      level: process.env.LOGLEVEL || "silent"
   },
