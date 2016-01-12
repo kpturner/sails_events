@@ -47,7 +47,7 @@ module.exports.events = {
 	domain: "http://squareevents.org",
 	
     // Late payment interval
-    latePaymentDaemon: (process.env.LATEPAYMENTDAEMON=="1") || true,
+    latePaymentDaemon: (process.env.LATEPAYMENTDAEMON=="0")?false:true,
     
 	// Late payment interval
 	latePaymentInterval: 86400000,
