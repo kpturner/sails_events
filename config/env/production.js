@@ -45,11 +45,7 @@ module.exports = {
     pass: process.env.REDIS_PASS || "",
     prefix: 'sess:', 
   },
-  
-  log: {
-    colors: false,  // To get clean logs without prefixes or color codings
-    custom: customLogger,
-  },
+   
 
   // Switch CSRF on for production
   csrf: true,
@@ -68,6 +64,8 @@ module.exports = {
    ***************************************************************************/
 
   log: {
+     colors: false,  // To get clean logs without prefixes or color codings
+     custom: (process.env.LOGTOCONSOLE)?null:customLogger,
      level: process.env.LOGLEVEL || "silent"
   }
   
