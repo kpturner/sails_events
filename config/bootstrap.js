@@ -11,6 +11,8 @@
 
 module.exports.bootstrap = function(cb) {
    
+  console.log(sails.config.eventemail) 
+   
   // Load the passport strategies
   sails.services.passport.loadStrategies();
   
