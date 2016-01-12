@@ -33,7 +33,6 @@ module.exports = {
 
   models: {
       connection: process.env.DB_CONNECTION || 'localhostMysqlServer',  
-      migrate:  process.env.DB_MIGRATE || 'safe'            
   },
  
   session: {
