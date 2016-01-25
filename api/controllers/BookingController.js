@@ -1350,6 +1350,8 @@ module.exports = {
 			row.cost=booking.cost || "";
 			row.amountPaid=amountPaid || "";						
 			row.places=booking.places;	
+            row.createdAt=booking.createdAt;
+            row.updatedAt=booking.updatedAt;
 			data.push(row);
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
@@ -1366,7 +1368,9 @@ module.exports = {
 				row.area=addition.area || booking.user.area || "";
 				row.dietary=addition.dietary || "";
 				row.paid=booking.paid || "";
-				row.amountPaid=amountPaid || "";	
+				row.amountPaid=amountPaid || "";
+                row.createdAt=addition.createdAt;
+                row.updatedAt=addition.updatedAt;	
 				data.push(row);
 			})
 		})
