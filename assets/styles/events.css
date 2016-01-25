@@ -121,11 +121,11 @@
 .omb_login .omb_loginOr .omb_spanSocial {
 	display: block;
 	position: absolute;
-	left: 50%;
+	left: 47%;
 	top: -0.7em;
 	margin-left: -4.5em;
 	background-color: #eee;
-	width: 9em;
+	width: 11em;
 	text-align: center;
 }	
 .omb_login .omb_loginOr .omb_spanManual {
