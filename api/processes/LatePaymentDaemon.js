@@ -8,7 +8,8 @@ var sails;
 // Override the grunt hook to do nothing
 var cfg={
         hooks: {
-            grunt: function(sails){return {}}
+            //grunt: function(sails){return {}}
+            grunt: false
         }
     };
  
