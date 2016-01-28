@@ -24,10 +24,10 @@ module.exports.bootstrap = function(cb) {
         
         // Detect it exiting
         latePaymentDaemon.on("exit", function(code, signal){
-        var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
-        Utility.diagnosticEmail(msg,"Late payment daemon");	
-        sails.log.debug(msg);
-        latePaymentDaemon=null;     
+            var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
+            Utility.diagnosticEmail(msg,"Late payment daemon");	
+            sails.log.debug(msg);
+            latePaymentDaemon=null;     
         });    
     }    
         
