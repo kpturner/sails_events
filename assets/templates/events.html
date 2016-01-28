@@ -1,7 +1,14 @@
 <div class="photo ng-scope">
    <a href="/event/edit?eventid={{card.id}}" class="a-unstyled" title="Click here to edit event">        
         <div class="photo-description">
-            <h4>{{card.name}}</h4> 
+            <div>
+                <div ng-show="card.logo" class="event-logo">
+                    <img src="{{card.logo}}"></img>
+                </div>
+                <div>
+                    <span class="event-name">{{card.name}}</span>
+                </div> 
+            </div>    
                       
             <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>   
              
