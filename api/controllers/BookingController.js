@@ -288,6 +288,11 @@ module.exports = {
 			user.rank=req.param("rank");
 			user.dietary=req.param("dietary");
 			user.email=req.param("email");
+            user.address1=req.param("address1");
+            user.address2=req.param("address2");
+            user.address3=req.param("address3");
+            user.address4=req.param("address4");
+            user.postcode=req.param("postcode");
 			if (req.param("phone"))
 				user.phone=req.param("phone");
 			var linkedBookings=req.param("linkedBookings");
@@ -442,6 +447,13 @@ module.exports = {
 															eventMenu: (event.menu || "").replace(/[\n\r]/g, '<br>'),
 															eventDressCode: (event.dressCode || "").replace(/[\n\r]/g, '<br>'),
 															email: user.email,
+                                                            addressReqd: event.addressReqd,
+                                                            address1: user.address1 || "",
+                                                            address2: user.address2 || "",
+                                                            address3: user.address3 || "",
+                                                            address4: user.address4 || "",
+                                                            postcode: user.postcode || "",
+                                                            phone: user.phone || "",
 															lodge: user.lodge || "",
 															lodgeNo: user.lodgeNo || "",
 															salutation: user.salutation || "",

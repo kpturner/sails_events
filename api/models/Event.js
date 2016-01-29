@@ -92,7 +92,11 @@ module.exports = {
     open: {
       type: 'boolean',
     },
-    
+        
+    // Address details are required 
+    addressReqd: {
+      type: 'boolean',
+    },
         
     // Visiting Officers only 
     //voOnly: {

@@ -79,6 +79,28 @@ ng-class="{'has-error':<%-form%>.username.$invalid &&
   </span>
 </div>
 
+
+<!-- A D D R E S S -->
+
+<div class="control-group form-group col-xs-10">
+  <label>Address (for postal correspondence)</label>  
+  <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-form%>Form.address1">  
+  <br>
+  <input type="text" class="form-control" placeholder="address line 2" name="address2" ng-model="<%-form%>Form.address2">  
+  <br>
+  <input type="text" class="form-control" placeholder="address line 3" name="address3" ng-model="<%-form%>Form.address3">  
+  <br>
+  <input type="text" class="form-control" placeholder="address line 4" name="address4" ng-model="<%-form%>Form.address4">  
+</div>
+
+<!-- P O S T   C O D E -->
+
+<div class="control-group form-group col-xs-6">
+  <label>Postcode</label>  
+  <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-form%>Form.postcode">  
+</div>
+
+
 <!-- C O N T A C T   N U M B E R -->
 
 <div class="control-group form-group col-xs-10">

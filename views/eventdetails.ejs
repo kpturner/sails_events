@@ -63,6 +63,17 @@
              </label>
            </div>
            
+          <!-- A D D R E S S   R E Q D ? -->
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':eventdetails.addressreqd.$invalid &&
+                                  eventdetails.addressreqd.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="addressreqd" ng-model="eventForm.addressReqd"></input>
+              &nbsp;&nbsp;&nbsp;Postal address reqd?
+             </label>
+          </div>
+          
+           
           <!-- V O  O N L Y ? -->
           <!--
           <div class="control-group form-group col-md-5"
