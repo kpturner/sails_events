@@ -892,7 +892,7 @@ module.exports = {
 					  		
 					if (download) {					
 						Event.findOne(req.param("eventid")).exec(function(err,event){
-							sails.controllers.booking.download(req, res, event.code, bookings);		
+							sails.controllers.booking.download(req, res, event.code, event.addressReqd, bookings);		
 						})									
 					}
 					else {
@@ -1324,7 +1324,7 @@ module.exports = {
 	/**
 	 * Download bookings
 	 */
-	 download: function(req, res, prefix, bookings, user) {
+	 download: function(req, res, prefix, addressReqd, bookings, user) {
 	 	if (!bookings) {
 			bookings=[]
 		}
@@ -1349,7 +1349,7 @@ module.exports = {
 			row.surname=booking.user.surname || "";
 			row.firstName=booking.user.firstName || "";
 			row.displayName=booking.user.salutation+" "+booking.user.name;
-            if (booking.event.addressReqd) {
+            if (addressReqd) {
                 row.address1=booking.user.address1 || "";
                 row.address2=booking.user.address2 || "";
                 row.address3=booking.user.address3 || "";
