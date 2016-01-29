@@ -32,6 +32,11 @@ module.exports = {
       type: 'string'
     },
     
+    
+    logoRight: {
+      type: 'string'
+    },
+    
     // Where it is
     venue : {
       type: 'string',

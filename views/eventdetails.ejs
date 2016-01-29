@@ -122,6 +122,18 @@
               <span ng-show="eventdetails.logo.$error.required">Path to logo is required.</span> 
             </span>
           </div>
+          
+          <!-- R I G H T - S I D E  L O G O -->
+          
+          <div class="control-group form-group col-md-10"
+            ng-class="{'has-error':eventdetails.logoright.$invalid &&
+                                  eventdetails.logoright.$dirty}">
+            <label>Path to right-hand logo (if reqd)</label>
+            <input type="text" class="form-control" placeholder="e.g /images/provincial/crest.png or http address" name="logoright" ng-model="eventForm.logoRight"></input>
+            <span class="help-block has-error" ng-if="eventdetails.logoright.$dirty">
+              <span ng-show="eventdetails.logoright.$error.required">Path to right side logo is required.</span> 
+            </span>
+          </div>
   
           <!-- C O D E -->
   
@@ -199,7 +211,7 @@
                                   eventdetails.minbookingplaces.$dirty}">
               <label>* Minimum number of places per booking</label>       
               <input type="number" class="form-control" placeholder="e.g. 1" name="minbookingplaces" ng-model="eventForm.minBookingPlaces" min="1" required></input>
-              <span class="help-block has-error" ng-if="eventdetails.minBookingPlaces.$dirty">
+              <span class="help-block has-error" ng-if="eventdetails.minbookingplaces.$dirty">
                 <span ng-show="eventdetails.minbookingplaces.$error.required">Minimum number of booking places is required.</span>
                 <span ng-show="eventdetails.minbookingplaces.$error.min">Minimum number of booking places must be greater than 0.</span>
               </span>
@@ -212,7 +224,7 @@
                                   eventdetails.maxbookingplaces.$dirty}">
               <label>* Maximum number of places per booking</label>       
               <input type="number" class="form-control" placeholder="e.g. 10" name="maxbookingplaces" ng-model="eventForm.maxBookingPlaces" min="1" required></input>
-              <span class="help-block has-error" ng-if="eventdetails.maxBookingPlaces.$dirty">
+              <span class="help-block has-error" ng-if="eventdetails.maxbookingplaces.$dirty">
                 <span ng-show="eventdetails.maxbookingplaces.$error.required">Maximum number of booking places is required.</span>
                 <span ng-show="eventdetails.maxbookingplaces.$error.min">Maximum number of booking places must be greater than 0.</span>
               </span>

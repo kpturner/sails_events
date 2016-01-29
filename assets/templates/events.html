@@ -5,18 +5,21 @@
                 <div ng-show="card.logo" class="event-logo">
                     <img src="{{card.logo}}"></img>
                 </div>
-                <div>
+                <div class="event-name">
                     <span class="event-name">{{card.name}}</span>
                 </div> 
+                <div ng-show="card.logoRight" class="event-logo-right">
+                    <img src="{{card.logoRight}}"></img>
+                </div>
             </div>    
-                      
-            <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>   
-             
-            <p><a href="mailto:{{card.organiser.email}}?Subject={{card.name}}: {{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}" target="_top"><span class="fa fa-envelope"></span> {{card.organiser.name}}</a></p> 
-            <p ng-hide="!card.organiser.phone"><a href="tel:{{card.organiser.phone}}"><span class="fa fa-phone"></span> {{card.organiser.phone}}</a></p>             
-                          
+                
         </div>        
     </a>  
+    <div class="photo-description">          
+        <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>              
+        <p><a href="mailto:{{card.organiser.email}}?Subject={{card.name}}: {{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}" target="_top"><span class="fa fa-envelope"></span> {{card.organiser.name}}</a></p> 
+        <p ng-hide="!card.organiser.phone"><a href="tel:{{card.organiser.phone}}"><span class="fa fa-phone"></span> {{card.organiser.phone}}</a></p>             
+    </div>          
     <div class="photo-description">
         <a href="/event/copy?eventid={{card.id}}" class="a-unstyled">      
             <button type="button" class="btn btn-success card-btn">
