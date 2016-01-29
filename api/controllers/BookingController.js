@@ -1349,6 +1349,13 @@ module.exports = {
 			row.surname=booking.user.surname || "";
 			row.firstName=booking.user.firstName || "";
 			row.displayName=booking.user.salutation+" "+booking.user.name;
+            if (booking.event.addressReqd) {
+                row.address1=booking.user.address1 || "";
+                row.address2=booking.user.address2 || "";
+                row.address3=booking.user.address3 || "";
+                row.address4=booking.user.address4 || "";
+                row.postcode=booking.user.postcode || "";
+            }
 			row.rank=booking.user.rank || "";
 			row.lodge=booking.user.lodge || "";
 			row.lodgeNo=booking.user.lodgeNo || "";
