@@ -14,6 +14,25 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 			.success(function(data, status) {
 				if (typeof data == 'object') {
 					$scope.events = data;
+                    // Traverse the events and calculate an appropriate width
+                    // for each event name
+                    angular.forEach($scope.events,function(event){
+                        // Calculate an appropriate width for the event name
+                        event.nameWidth="100%";
+                        if (event.logoRight) {
+                            if (event.logo) {
+                                event.nameWidth="60%";
+                            }
+                            else {
+                                event.nameWidth="80%";
+                            }
+                        }   
+                        else {
+                            if (event.logo) {
+                                event.nameWidth="80%";
+                            }
+                        } 		
+                    })
 				}
 				else {
 					window.location = '/';

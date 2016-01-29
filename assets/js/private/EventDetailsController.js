@@ -21,22 +21,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 
 		})
 		
-    // Calculate an appropriate width for the event name
-    $scope.nameWidth="100%";
-    if ($scope.eventForm.logoRight) {
-        if ($scope.eventForm.logo) {
-             $scope.nameWidth="60%";
-        }
-        else {
-             $scope.nameWidth="80%";
-        }
-    }   
-    else {
-         if ($scope.eventForm.logo) {
-             $scope.nameWidth="80%";
-        }
-    } 
-		
+    
   	// Date handling functions
   
 	// Calculate "today"
