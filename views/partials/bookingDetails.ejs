@@ -123,7 +123,7 @@ and/or maxlength) -->
   ng-class="{'has-error':<%-model%>.address1.$invalid &&
                       <%-model%>.address1.$dirty}" ng-show="event.addressReqd">
   <label>* Address (for postal correspondence)</label>  
-  <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-model%>Form.address1"   required> 
+  <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-model%>Form.address1"  ng-required="event.addressReqd"> 
   <span class="help-block has-error" ng-if="<%-model%>.address1.$dirty">
     <span ng-show="<%-model%>.address1.$error.required">First line of address is required.</span>
   </span> 
@@ -141,7 +141,7 @@ and/or maxlength) -->
     ng-class="{'has-error':<%-model%>.postcode.$invalid &&
                       <%-model%>.postcode.$dirty}" ng-show="event.addressReqd">
   <label>* Postcode</label>  
-  <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-model%>Form.postcode"  required>  
+  <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-model%>Form.postcode"   ng-required="event.addressReqd">  
   <span class="help-block has-error" ng-if="<%-model%>.postcode.$dirty">
     <span ng-show="<%-model%>.postcode.$error.required">Postcode address is required.</span>
   </span>
