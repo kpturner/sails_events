@@ -20,18 +20,18 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
                     // for each event name
                     angular.forEach($scope.events,function(event){
                         // Calculate an appropriate width for the event name
-                        event.nameWidth="100%";
+                        event.nameClass="event-name-100";
                         if (event.logoRight) {
                             if (event.logo) {
-                                event.nameWidth="60%";
+                                event.nameClass="event-name-60";
                             }
                             else {
-                                event.nameWidth="80%";
+                                event.nameClass="event-name-80";
                             }
                         }   
                         else {
                             if (event.logo) {
-                                event.nameWidth="80%";
+                                event.nameClass="event-name-80";
                             }
                         } 		
                     })				
