@@ -58,6 +58,18 @@
     float:left; 
 }
 
+.event-name-100 {
+    width: 100%
+}
+
+.event-name-80 {
+    width: 80%
+}
+
+.event-name-60 {
+    width: 60%
+}
+
 .event-logo-right {
     float:right;
     margin-top: 3px;

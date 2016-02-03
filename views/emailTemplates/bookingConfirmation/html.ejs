@@ -16,6 +16,16 @@
     <br>Menu: <%-eventMenu%> 
 	<br>Dress code: <%-eventDressCode%> 
 	<br><br><b>Your details:</b> 
+    <% if (addressReqd) {%>
+	  <br><i>Address</i>       
+	  	<br><%=address1%>
+		<br><%=address2%>  
+        <br><%=address3%>  
+        <br><%=address4%>  
+        <br><%=postcode%> 
+        <br> 
+    <% } %>
+    <br>Contact no: <%=phone%> 
 	<br>Lodge: <%=lodge%>
 	<br>Lodge no: <%=lodgeNo%>
 	<br>Area: <%=area%>

@@ -76,7 +76,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					// Convert lodge no to numeric
 					$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
 					// Initialise confirmation email
-					$scope.bookingForm.confirmemail = $scope.bookingForm.email;	
+					$scope.bookingForm.confirmemail = $scope.bookingForm.email;	                    
 					$scope.bookingForm.places=$scope.placesMin;
 					if ($scope.bookingForm.places>1)
 						$scope.makeArray();			
@@ -164,7 +164,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.mop = SAILS_LOCALS.booking.mop;
 		$scope.bookingForm.tableNo = SAILS_LOCALS.booking.tableNo;
 		$scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;
-		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
+		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;        
 		$scope.bookingForm.info = SAILS_LOCALS.booking.info;
 		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
 		$scope.bookingForm.remindersSent = SAILS_LOCALS.booking.remindersSent;
@@ -217,6 +217,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodgeNo || isNaN($scope.bookingForm.lodgeNo)))
 			|| (!$scope.bookingForm.salutation || $scope.bookingForm.salutation.length==0)			
 			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))			
+            || ($scope.event.addressReqd && (!$scope.bookingForm.address1 || !$scope.bookingForm.postcode || $scope.bookingForm.address1.length==0 || $scope.bookingForm.postcode.length==0))			
 			// Don't allow people to book themselves in if there is an opening date and we having got there yet!
 			|| (!$scope.openForBookings)	
 		
@@ -391,6 +392,11 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					rank: $scope.bookingForm.rank,
 					dietary: $scope.bookingForm.dietary,
 					email: $scope.bookingForm.email,
+                    address1: $scope.bookingForm.address1,
+                    address2: $scope.bookingForm.address2,
+                    address3: $scope.bookingForm.address3,
+                    address4: $scope.bookingForm.address4,
+                    postcode: $scope.bookingForm.postcode,
 					info: $scope.bookingForm.info,
 					paid: $scope.bookingForm.paid,
 					mop: $scope.bookingForm.mop,

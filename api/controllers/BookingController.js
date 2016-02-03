@@ -288,6 +288,11 @@ module.exports = {
 			user.rank=req.param("rank");
 			user.dietary=req.param("dietary");
 			user.email=req.param("email");
+            user.address1=req.param("address1");
+            user.address2=req.param("address2");
+            user.address3=req.param("address3");
+            user.address4=req.param("address4");
+            user.postcode=req.param("postcode");
 			if (req.param("phone"))
 				user.phone=req.param("phone");
 			var linkedBookings=req.param("linkedBookings");
@@ -443,6 +448,13 @@ module.exports = {
 															eventMenu: (event.menu || "n/a").replace(/[\n\r]/g, '<br>'),
 															eventDressCode: (event.dressCode || "n/a").replace(/[\n\r]/g, '<br>'),
 															email: user.email,
+                                                            addressReqd: event.addressReqd,
+                                                            address1: user.address1 || "",
+                                                            address2: user.address2 || "",
+                                                            address3: user.address3 || "",
+                                                            address4: user.address4 || "",
+                                                            postcode: user.postcode || "",
+                                                            phone: user.phone || "",
 															lodge: user.lodge || "",
 															lodgeNo: user.lodgeNo || "",
 															salutation: user.salutation || "",
@@ -881,7 +893,7 @@ module.exports = {
 					  		
 					if (download) {					
 						Event.findOne(req.param("eventid")).exec(function(err,event){
-							sails.controllers.booking.download(req, res, event.code, bookings);		
+							sails.controllers.booking.download(req, res, event.code, event.addressReqd, bookings);		
 						})									
 					}
 					else {
@@ -1313,7 +1325,7 @@ module.exports = {
 	/**
 	 * Download bookings
 	 */
-	 download: function(req, res, prefix, bookings, user) {
+	 download: function(req, res, prefix, addressReqd, bookings, user) {
 	 	if (!bookings) {
 			bookings=[]
 		}
@@ -1338,6 +1350,13 @@ module.exports = {
 			row.surname=booking.user.surname || "";
 			row.firstName=booking.user.firstName || "";
 			row.displayName=booking.user.salutation+" "+booking.user.name;
+            if (addressReqd) {
+                row.address1=booking.user.address1 || "";
+                row.address2=booking.user.address2 || "";
+                row.address3=booking.user.address3 || "";
+                row.address4=booking.user.address4 || "";
+                row.postcode=booking.user.postcode || "";
+            }
 			row.rank=booking.user.rank || "";
 			row.lodge=booking.user.lodge || "";
 			row.lodgeNo=booking.user.lodgeNo || "";

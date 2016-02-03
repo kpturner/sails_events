@@ -53,6 +53,27 @@ var User = {
       type: 'string'
     },
     
+    // Address
+    address1: {
+        type: "string"
+    },
+    
+    address2: {
+        type: "string"
+    },
+    
+    address3: {
+        type: "string"
+    },
+    
+    address4: {
+        type: "string"
+    },
+    
+    postcode: {
+        type: "string"
+    },
+    
     // The user's dietary requirements
     dietary: {
       type: 'string'

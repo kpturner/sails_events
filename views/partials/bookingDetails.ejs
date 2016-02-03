@@ -9,8 +9,8 @@
 
 <!-- A M O U N T  P A I D --> 
 <div class="control-group form-group col-md-5"
-  ng-class="{'has-error':event.paid.$invalid &&
-                        event.paid.$dirty}" ng-hide="(!eventBookings && !userBookings)">
+  ng-class="{'has-error':<%-model%>.paid.$invalid &&
+                        <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings)">
   <label>Amount paid</label>       
     <input type="number" class="form-control" placeholder="e.g. 20.00" name="amountpaid" ng-model="<%-model%>Form.amountPaid" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" 
       ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
@@ -20,8 +20,8 @@
  
 <!-- P A I D ? -->
 <div class="control-group form-group col-md-5"
-  ng-class="{'has-error':event.paid.$invalid &&
-                        event.paid.$dirty}" ng-hide="(!eventBookings && !userBookings)">
+  ng-class="{'has-error':<%-model%>.paid.$invalid &&
+                        <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings)">
    <label>
     <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
     &nbsp;&nbsp;&nbsp;Fully paid?
@@ -30,8 +30,8 @@
 
  <!-- M E T H O D  O F  P A Y M E N T -->
 <div class="control-group form-group col-md-5"
-  ng-class="{'has-error':event.mop.$invalid &&
-                        event.mop.$dirty}" ng-hide="(!eventBookings && !userBookings)">
+  ng-class="{'has-error':<%-model%>.mop.$invalid &&
+                        <%-model%>t.mop.$dirty}" ng-hide="(!eventBookings && !userBookings)">
   <label>Method of Payment</label>  
   <select class="form-control" placeholder="e.g. BACS" name="mop" ng-options="mop for mop in mops" ng-model="<%-model%>Form.mop">
     <option value="">-- choose mop --</option>
@@ -116,9 +116,40 @@ and/or maxlength) -->
   </span>
 </div>
 
+
+<!-- A D D R E S S -->
+
+<div class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-model%>.address1.$invalid &&
+                      <%-model%>.address1.$dirty}" ng-show="event.addressReqd">
+  <label>* Address (for postal correspondence)</label>  
+  <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-model%>Form.address1"  ng-required="event.addressReqd"> 
+  <span class="help-block has-error" ng-if="<%-model%>.address1.$dirty">
+    <span ng-show="<%-model%>.address1.$error.required">First line of address is required.</span>
+  </span> 
+  <br>
+  <input type="text" class="form-control" placeholder="address line 2" name="address2" ng-model="<%-model%>Form.address2">  
+  <br>
+  <input type="text" class="form-control" placeholder="address line 3" name="address3" ng-model="<%-model%>Form.address3">  
+  <br>
+  <input type="text" class="form-control" placeholder="address line 4" name="address4" ng-model="<%-model%>Form.address4">  
+</div>
+
+<!-- P O S T   C O D E -->
+
+<div class="control-group form-group col-xs-6"  
+    ng-class="{'has-error':<%-model%>.postcode.$invalid &&
+                      <%-model%>.postcode.$dirty}" ng-show="event.addressReqd">
+  <label>* Postcode</label>  
+  <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-model%>Form.postcode"   ng-required="event.addressReqd">  
+  <span class="help-block has-error" ng-if="<%-model%>.postcode.$dirty">
+    <span ng-show="<%-model%>.postcode.$error.required">Postcode address is required.</span>
+  </span>
+</div>
+
 <!-- C O N T A C T   N U M B E R -->
 
-<div class="control-group form-group col-xs-10" ng-hide="!eventBookings"> 
+<div class="control-group form-group col-xs-10"> 
   <label>Contact number</label>
   <input type="text" class="form-control" placeholder="e.g. mobile number" name="phone" ng-model="<%-model%>Form.phone">   
 </div>
@@ -247,7 +278,7 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	<div class="control-group form-group col-xs-10">
 	  <h4>Additional attendee {{place+1}}</h4>  
 	</div>
-	<ng-form name="linked<%-model%>">
+	<ng-model name="linked<%-model%>">
     
     <!-- S A L U T A T I O N -->
     <div class="control-group form-group col-xs-10">
@@ -334,6 +365,6 @@ ng-class="{'has-error':<%-model%>.places.$invalid &&
 	    </span>
 	  </div>  
 	
-	</ng-form>  
+	</ng-model>  
 
 </div>  
