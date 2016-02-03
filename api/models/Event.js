@@ -37,6 +37,10 @@ module.exports = {
       type: 'string'
     },
     
+    additionalInfo: {
+        type: 'string'
+    },
+    
     // Where it is
     venue : {
       type: 'string',
