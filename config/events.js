@@ -64,8 +64,8 @@ module.exports.events = {
 	spamDomains: {
 		"gmail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
 		"googlemail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
-		"hotmail.com":{additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."}, 
-		"hotmail.co.uk":{additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
+		"hotmail.com":{additionalinfo:"Unfortunately HOTMAIL is blocking emails from this application. Please consider using an alternative address."}, 
+		"hotmail.co.uk":{additionalinfo:"Unfortunately HOTMAIL is blocking emails from this application. Please consider using an alternative address."},
 	},
 	
 	// DKIM details to help prevent our emails being flagged as spam
