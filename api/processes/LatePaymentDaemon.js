@@ -10,6 +10,9 @@ var cfg={
         hooks: {
             //grunt: function(sails){return {}}
             grunt: false
+        },
+        models: {
+            migrate: 'safe'
         }
     };
  

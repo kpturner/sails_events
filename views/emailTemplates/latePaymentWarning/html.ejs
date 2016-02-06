@@ -2,7 +2,8 @@
 
 <p>Dear <%=recipientName%>,</p>
 
-<p>The following bookings will be receiving late payment reminders within 48 hours. Please check that payment details are up to date to avoid embarrassment:</p>
+<p>Payment for the following bookings will be deemed "late" within 48 hours. Please check that payment details are up to date before making contact:</p>
+
 
 	<br>Event: <b><%=event.name%></b>
 	<br>On: <%=eventDate%> at <%=event.time%>
@@ -15,6 +16,13 @@
 		<% }) %>
     <% } %>
 
+
+<% if (reminderTestMode) { %>
+    <p>NOTE: The system is currently configured *not* to send automatic reminders to the bookee.</p>
+<% } %> 
+<% if (!reminderTestMode) { %>
+    <p>NOTE: The system is currently configured to automatically send reminders to the bookee. It is therefore essential that you keep the system up to date to avoid embarrassment.</p>
+<% } %> 
 
 <p>Yours S&F,<br/><%=senderName%></p>
 

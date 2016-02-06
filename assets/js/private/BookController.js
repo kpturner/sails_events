@@ -96,7 +96,23 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	// Warn if not open for bookings
 	$scope.bookingForm.bypassCode="";
-	
+    
+    // Check whether or not the booking has been paid for
+	$scope.chkPaid=function(){
+        if(!$.scopeuser.isAdmin && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
+            var opts={
+                template:"/templates/paidWarning.html",
+                className: 'ngdialog-theme-default',
+                scope: $scope	
+			};
+			 
+			// Pop the dialog
+			ngDialog.open(opts)
+			 
+        }
+    }
+    
+    // Check whether or not we are actually open for bookings
 	$scope.chkOpenForBookings=function(){
 		if (!$scope.openForBookings && $scope.mode!="delete") {
 			var opts={
@@ -136,7 +152,6 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Check if open for bookings
 	$scope.chkOpenForBookings();
 	
-
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
 	
@@ -184,6 +199,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		  	});
 			
 		}
+        
+        
+        // Check if paid
+        $scope.chkPaid();
 	}
 	else {
 		if (!$scope.selectedUserId) {
