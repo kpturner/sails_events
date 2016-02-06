@@ -42,7 +42,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.deadline=SAILS_LOCALS.booking.deadline;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
-    var maxPlaces=($.scope.user.isAdmin)?($scope.event.maxBookingPlaces*2):$scope.event.maxBookingPlaces;
+    var maxPlaces=($scope.user.isAdmin)?($scope.event.maxBookingPlaces*2):$scope.event.maxBookingPlaces;
 	$scope.placesMax=($scope.event.capacity>maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
 	if ($scope.placesMin>$scope.placesMax)
@@ -100,7 +100,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     
     // Check whether or not the booking has been paid for
 	$scope.chkPaid=function(){
-        if(!$.scope.user.isAdmin && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
+        if(!$scope.user.isAdmin && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
             var opts={
                 template:"/templates/paidWarning.html",
                 className: 'ngdialog-theme-default',
