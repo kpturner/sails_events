@@ -5,6 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+
 module.exports = {
 	
 	/**
@@ -173,12 +174,17 @@ module.exports = {
 					return res.negotiate(err)
 				}
 				// Success
-				if (user[0].dietary==null)
-					user[0].dietary=""
-				if (user[0].rank==null)
-					user[0].rank=""
-				if (user[0].phone==null)
-					user[0].phone=""
+				_.forEach(user[0],function(val,attr){
+                    if (!val || val==null)
+                        user[0][attr]=""
+                })
+                //if (user[0].dietary==null)
+				//	user[0].dietary=""
+				//if (user[0].rank==null)
+				//	user[0].rank=""
+				//if (user[0].phone==null)
+				//	user[0].phone=""
+                
 				if (!user[0].isVO)
 					user[0].isVO=false
 				if (!user[0].isAdmin)
