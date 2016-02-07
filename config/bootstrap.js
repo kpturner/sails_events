@@ -17,6 +17,8 @@ module.exports.bootstrap = function(cb) {
   
   sails.on('lifted', function() {
       
+    Utility.diagnosticEmail("Provincial events app started OK","Developers Paranoia!");	  
+      
     // Start the late payment daemon
     if (sails.config.events.latePaymentDaemon) {
         var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
@@ -30,6 +32,21 @@ module.exports.bootstrap = function(cb) {
             latePaymentDaemon=null;     
         });    
     }    
+      
+    process.on('uncaughtException', function (err) {
+        try {
+            var msg=(new Date).toUTCString() + ' uncaughtException: '+err.message;
+            msg+="</br>"+err.stack;
+            Utility.diagnosticEmail(msg,"Application crash");     
+            sails.log.error((new Date).toUTCString() + ' uncaughtException:', err.message);
+            sails.log.error(err.stack);
+        }
+        catch(e) {
+            sails.log.error("Error handling uncaught exception");
+            sails.log.error(e);   
+        }
+        process.exit(1);   //Forever should restart us;
+    })  
         
   }); 
 
