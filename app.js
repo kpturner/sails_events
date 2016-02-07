@@ -67,7 +67,9 @@ process.on('uncaughtException', function (err) {
             sails.log.error(err.stack);
             Utility.diagnosticEmail(msg,"Application crash",function(){
                 process.exit(1);   //Forever should restart us;
-            });   
+            }); 
+            // Make sure we exit if the email sending fails
+            setTimeout(function(){process.exit(1)},5000)  
         }
         else {
             console.log(msg);
