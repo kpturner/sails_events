@@ -811,7 +811,7 @@ module.exports = {
 				bookings.sort(Utility.jsonSort("event.date", true));
 				  
 				if (download) {					
-					sails.controllers.booking.download(req, res, req.user.username, bookings, req.user);					
+					sails.controllers.booking.download(req, res, req.user.username, false, bookings, req.user);					
 				}
 				else {
 					// If session refers to a user who no longer exists, still allow logout.
