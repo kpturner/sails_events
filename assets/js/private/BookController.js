@@ -42,7 +42,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.deadline=SAILS_LOCALS.booking.deadline;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
-    var maxPlaces=($scope.user.isAdmin)?($scope.event.maxBookingPlaces*2):$scope.event.maxBookingPlaces;
+    var maxPlaces=($scope.user.isAdmin || $scope.user.isOrganiser)?($scope.event.maxBookingPlaces*2):$scope.event.maxBookingPlaces;
 	$scope.placesMax=($scope.event.capacity>maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
 	if ($scope.placesMin>$scope.placesMax)
