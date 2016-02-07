@@ -43,27 +43,30 @@ module.exports = {
   },
 
 
-  diagnosticEmail: function(err,subject){
-          if (sails.config.events.developer) {
-             //console.log("Sending email to "+sails.config.events.developer)
+  diagnosticEmail: function(err,subject,cb){
+            
+        if (sails.config.events.developer) {
+            if (!cb)
+                cb=function(){}
+            //console.log("Sending email to "+sails.config.events.developer)
             var errStr;
             if (typeof err=="string")
-              errStr=err
+                errStr=err
             else
-              errStr=JSON.stringify(err)
+                errStr=JSON.stringify(err)
             Email.send(
-              "diagnostic",
-              {
+                "diagnostic",
+                {
                 err:errStr
-              },
-              {
+                },
+                {
                 to: sails.config.events.developer,
                 subject: subject
-              },
-              function(){}
+                },
+                cb
             )	
-          }         
-        },
+        }         
+    },
 
   jsonSort: function(field, reverse, primer){
    

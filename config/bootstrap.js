@@ -30,27 +30,11 @@ module.exports.bootstrap = function(cb) {
             Utility.diagnosticEmail(msg,"Late payment daemon");	
             sails.log.debug(msg);
             latePaymentDaemon=null;     
-        });    
-    }    
-      
-    process.on('uncaughtException', function (err) {
-        try {
-            var msg=(new Date).toUTCString() + ' uncaughtException: '+err.message;
-            msg+="</br>"+err.stack;
-            Utility.diagnosticEmail(msg,"Application crash");     
-            sails.log.error((new Date).toUTCString() + ' uncaughtException:', err.message);
-            sails.log.error(err.stack);
-        }
-        catch(e) {
-            sails.log.error("Error handling uncaught exception");
-            sails.log.error(e);   
-        }
-        process.exit(1);   //Forever should restart us;
-    })  
-        
+        });  
+         
+    }         
   }); 
-
-  
+    
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   cb();

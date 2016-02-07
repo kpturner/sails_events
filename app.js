@@ -57,3 +57,33 @@ process.chdir(__dirname);
   // Start server
   sails.lift(rc('sails'));
 })();
+
+process.on('uncaughtException', function (err) {
+    try {
+        var msg='uncaughtException: '+err.message;
+        msg+="</br>"+err.stack;
+        if (sails) {
+            sails.log.error('uncaughtException:', err.message);
+            sails.log.error(err.stack);
+            Utility.diagnosticEmail(msg,"Application crash",function(){
+                process.exit(1);   //Forever should restart us;
+            });   
+        }
+        else {
+            console.log(msg);
+            process.exit(1);   //Forever should restart us;
+        }
+    }
+    catch(e) {
+        if (sails) {
+            sails.log.error("Error handling uncaught exception");
+            sails.log.error(e);            
+        }
+        else {
+            console.log("Error handling uncaught exception");
+            console.log(e);  
+        }
+        process.exit(1);   //Forever should restart us;
+    }
+    
+})  
