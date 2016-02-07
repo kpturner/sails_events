@@ -67,13 +67,13 @@ module.exports = {
   //port: 80,
 
   /***************************************************************************
-   * Set the log level in production environment to "silent"                 *
+   * Set the log level in production environment to "error"                  *
    ***************************************************************************/
 
   log: {
      colors: (process.env.LOGTOCONSOLE)?true:false,  // To get clean logs without prefixes or color codings
      custom: (process.env.LOGTOCONSOLE)?null:customLogger,
-     level: process.env.LOGLEVEL || "silent"
+     level: process.env.LOGLEVEL || "error"
   },
   
   blueprints: {
