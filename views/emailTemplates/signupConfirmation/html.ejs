@@ -9,6 +9,21 @@
 	Surname: <%=details.surname%>
 	<br>First name: <%=details.firstName%>	
 	<br>Full name: <%=details.name%>
+    <% if  (details.address1 
+            || details.address2
+            || details.address3
+            || details.address4
+            || details.postcode  
+     ) {%>
+    <br>
+    <br><i>Address</i>       
+    <br><%=details.address1%>
+    <br><%=details.address2%>  
+    <br><%=details.address3%>  
+    <br><%=details.address4%>  
+    <br><%=details.postcode%> 
+    <br> 	
+    <% } %>
 	<br>Lodge: <%=details.lodge%>
 	<br>Lodge no: <%=details.lodgeNo%>
 	<br>Area: <%=details.area%>

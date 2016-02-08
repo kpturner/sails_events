@@ -88,6 +88,18 @@ exports.register = function (req, res, next) {
                     
                   }
             
+                  if (newUser.area==null)
+                      newUser.area=""
+                  if (newUser.address1==null)
+                      newUser.address1=""
+                  if (newUser.address2==null)
+                      newUser.address2=""
+                  if (newUser.address3==null)
+                      newUser.address3=""
+                  if (newUser.address4==null)
+                      newUser.address4=""
+                  if (newUser.postcode==null)
+                      newUser.postcode=""    
                   if (newUser.dietary==null)
                     newUser.dietary=""
                   if (newUser.rank==null)
