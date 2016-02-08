@@ -372,21 +372,34 @@ var AuthController = {
 						 return res.negotiate(err);
 					}
 					// Success
-          if (updatedUser[0].dietary==null)
-            updatedUser[0].dietary=""
-          if (updatedUser[0].rank==null)
-            updatedUser[0].rank=""
-          if (updatedUser[0].phone==null)
-            updatedUser[0].phone=""
-          if (!updatedUser[0].isVO)
-					 updatedUser[0].isVO=false
-				  if (!updatedUser[0].isAdmin)
-					 updatedUser[0].isAdmin=false
-				  if (!updatedUser[0].isOrganiser)
-					 updatedUser[0].isOrganiser=false  
-          if (updatedUser[0].authProvider!="local")
-             updatedUser[0].username="N/A"
-          // Send confirmation email
+                    if (updatedUser[0].area==null)
+                        updatedUser[0].area=""
+                    if (updatedUser[0].address1==null)
+                        updatedUser[0].address1=""
+                    if (updatedUser[0].address2==null)
+                        updatedUser[0].address2=""
+                    if (updatedUser[0].address3==null)
+                        updatedUser[0].address3=""
+                    if (updatedUser[0].address4==null)
+                        updatedUser[0].address4=""
+                    if (updatedUser[0].postcode==null)
+                        updatedUser[0].postcode=""    
+                    if (updatedUser[0].dietary==null)
+                        updatedUser[0].dietary=""
+                    if (updatedUser[0].rank==null)
+                        updatedUser[0].rank=""
+                    if (updatedUser[0].phone==null)
+                        updatedUser[0].phone=""
+                    if (!updatedUser[0].isVO)
+                        updatedUser[0].isVO=false
+                    if (!updatedUser[0].isAdmin)
+                        updatedUser[0].isAdmin=false
+                    if (!updatedUser[0].isOrganiser)
+                        updatedUser[0].isOrganiser=false  
+                    if (updatedUser[0].authProvider!="local")
+                        updatedUser[0].username="N/A"
+                    
+                    // Send confirmation email
 					Email.send(
 						"profileChanged", {
     				      recipientName: updatedUser[0].salutation + " " + updatedUser[0].firstName,
@@ -395,24 +408,24 @@ var AuthController = {
 							  
 						    },
 						    {
-						      to: updatedUser[0].email,
-                  bcc: sails.config.events.developer || "",
-						      subject: sails.config.events.title + " - Profile updated confirmation"
+						        to: updatedUser[0].email,
+                                bcc: sails.config.events.developer || "",
+                                subject: sails.config.events.title + " - Profile updated confirmation"
 						    },
 						    function(err) {if (err) console.log(err);}
 					   )     
-					// Logout if the password has changed
-					if (delta.password) {
-						// Wipe out the session (log out)
-						req.logout();
-						// Reset authentication 
-            AuthController.resetAuth(req, res);  
-						// Either send a 200 OK or redirect to the home page
-						return res.backToHomePage();
-					}
-					else {            
-						return res.ok();	 
-					}
+					   // Logout if the password has changed
+					   if (delta.password) {
+						  // Wipe out the session (log out)
+						  req.logout();
+						  // Reset authentication 
+                          AuthController.resetAuth(req, res);  
+						  // Either send a 200 OK or redirect to the home page
+						  return res.backToHomePage();
+					   }
+					   else {            
+						  return res.ok();	 
+					   }
 				})
         
       }

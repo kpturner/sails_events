@@ -174,16 +174,24 @@ module.exports = {
 					return res.negotiate(err)
 				}
 				// Success
-				_.forEach(user[0],function(val,attr){
-                    if (!val || val==null)
-                        user[0][attr]=""
-                })
-                //if (user[0].dietary==null)
-				//	user[0].dietary=""
-				//if (user[0].rank==null)
-				//	user[0].rank=""
-				//if (user[0].phone==null)
-				//	user[0].phone=""
+				if (user[0].address1==null)
+					user[0].address1=""
+                if (user[0].address2==null)
+					user[0].address2=""
+                if (user[0].address3==null)
+					user[0].address3=""
+                if (user[0].address4==null)
+					user[0].address4=""
+                if (user[0].postcode==null)
+					user[0].postcode=""
+                if (user[0].dietary==null)
+					user[0].dietary=""
+				if (user[0].rank==null)
+					user[0].rank=""
+				if (user[0].phone==null)
+					user[0].phone=""
+                if (user[0].area==null)
+					user[0].area=""
                 
 				if (!user[0].isVO)
 					user[0].isVO=false
@@ -194,10 +202,9 @@ module.exports = {
 				// Send confirmation email
 				Email.send(
 					"profileChanged", {
-				      recipientName: user[0].salutation + " " + user[0].firstName,
-				      senderName: sails.config.events.title,
-			        details: user[0]
-						  
+				            recipientName: user[0].salutation + " " + user[0].firstName,
+				            senderName: sails.config.events.title,
+			                details: user[0]						  
 					    },
 					    {
 					      to:user[0].email,

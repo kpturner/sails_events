@@ -94,24 +94,28 @@ exports.register = function (req, res, next) {
                     newUser.rank=""
                   if (newUser.phone==null)
                     newUser.phone=""
+                  if (newUser.rank==null)
+                    newUser.rank=""
+                  if (newUser.area==null)
+                    newUser.area=""  
             
                   // Send confirmation email
-    							Email.send(
-    								"signupConfirmation",
-    							    {
-    							      recipientName: newUser.salutation + " " + newUser.firstName,
-    							      senderName: sails.config.events.title,
-                        details: newUser,        								 
-      								  //domain:	sails.config.events.domain,
-                        domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
-      							    },
-      							    {
-      							      to: newUser.email,
-                          bcc: sails.config.events.developer || "", 
-      							      subject: "Welcome to "+sails.config.events.title
-      							    },
-      							    function(err) {if (err) console.log(err);}
-    							   )     
+                  Email.send(
+                        "signupConfirmation",
+                        {
+                            recipientName: newUser.salutation + " " + newUser.firstName,
+                            senderName: sails.config.events.title,
+                            details: newUser,        								 
+      						//domain:	sails.config.events.domain,
+                            domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
+      					},
+      					{
+      					    to: newUser.email,
+                            bcc: sails.config.events.developer || "", 
+      						subject: "Welcome to "+sails.config.events.title
+      					},
+      					function(err) {if (err) console.log(err);}
+                  )     
                     
                     // Success
                     // Mark the session as authenticated to work with default Sails sessionAuth.js policy
@@ -122,10 +126,12 @@ exports.register = function (req, res, next) {
                       // Mark the session as authenticated to work with default Sails sessionAuth.js policy
                       req.session.authenticated = true;   
                       req.session.lastRequest=null;                     
+                      return res.json({
+      				      id:	newUser.id
+      				  })
                     });
-      							return res.json({
-      								id:	newUser.id
-      							})
+      				
+                    
                 });
            }
            /**********************************************/
