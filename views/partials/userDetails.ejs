@@ -38,14 +38,16 @@ ng-class="{'has-error':<%-form%>.name.$invalid &&
 insert the "has-error" class on the input field (i.e. insert a red border around the input field)
 -->
 <div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-form%>.username.$invalid &&
+ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
                       <%-form%>.username.$dirty}" ng-hide="(<%-form%>Form.authProvider!='local' && '<%-form%>'!='signup')">
   <label>* User name (for logging in)</label>
     <!-- For this input field make it required, and have a max length of 25 -->
-  <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="<%-form%>Form.username" ng-maxlength="50" ng-required="<%-form%>Form.authProvider=='local'">
+  <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="<%-form%>Form.username" ng-maxlength="50" 
+        ng-change="checkUsername()" ng-required="<%-form%>Form.authProvider=='local'">
     <!-- Also, if <%-form%>.username.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
   and/or maxlength) -->
   <span class="help-block has-error" ng-if="<%-form%>.username.$dirty">
+    <span ng-show="invalidUsername">User name must not contain spaces.</span>
     <span ng-show="<%-form%>.username.$error.required">User name is required.</span>
     <span ng-show="<%-form%>.username.$error.maxlength">The user name cannot be more than 50 characters.</span>
   </span>

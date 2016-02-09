@@ -63,6 +63,18 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 		return complete;
 	}		
 	
+    /**
+     * Check user name 
+     **/
+    $scope.checkUsername=function(){
+        $scope.invalidUsername=false;
+        // Must not contain spaces
+        $scope.userdetailsForm.username=$.trim($scope.userdetailsForm.username);
+        if ($scope.userdetailsForm.username.indexOf(" ")>=0) {
+            $scope.invalidUsername=true;
+        }
+    } 		
+    
 	$scope.submitUserForm = function(){
 		$scope.userdetailsForm.loading=true;
 						

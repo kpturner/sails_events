@@ -63,7 +63,19 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		}
 			
 		return complete;
-	}		
+	}
+    
+    /**
+     * Check user name 
+     **/
+    $scope.checkUsername=function(){
+        $scope.invalidUsername=false;
+        // Must not contain spaces
+        $scope.profileForm.username=$.trim($scope.profileForm.username);
+        if ($scope.profileForm.username.indexOf(" ")>=0) {
+            $scope.invalidUsername=true;
+        }
+    } 		
 	
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
