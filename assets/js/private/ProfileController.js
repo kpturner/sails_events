@@ -53,7 +53,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 			|| (!$scope.profileForm.surname || $scope.profileForm.surname.length==0)
 			|| (!$scope.profileForm.firstName || $scope.profileForm.firstName.length==0)
 			|| (($scope.user.authProvider=="local")
-					&& (   (!$scope.profileForm.username || $scope.profileForm.username.length==0)
+					&& (   (!$scope.profileForm.username || $scope.profileForm.username.length==0 || $scope.invalidUsername)
 			//			|| (!$scope.profileForm.password ||$scope.profileForm.password.length==0)
 						)
 				)

@@ -10,7 +10,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	$scope.detailsComplete=function() {
 		var complete=true;
 		if (   (!$scope.signupForm.salutation || $scope.signupForm.salutation.length==0)
-			 
+		    || ($scope.invalidUsername)	
 		) {
 			$scope.setDirty();
 			complete=false;
@@ -38,9 +38,11 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 			field.$setDirty();
 		}); 
 		$scope.signup.username.$setDirty();	
-		$scope.signup.username.$setValidity("required",false);	
+        if (!$scope.signup.username || $scope.signup.username.length==0)
+            $scope.signup.username.$setValidity("required",false);	
 		$scope.signup.lodgeno.$setDirty();	
-		$scope.signup.lodgeno.$setValidity("required",false);							
+		if (!$scope.signup.lodgeno || $scope.signup.lodgeno.length==0)
+            $scope.signup.lodgeno.$setValidity("required",false);							
 	}
 	
     /**

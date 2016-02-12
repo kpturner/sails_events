@@ -52,7 +52,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 			|| (!$scope.userdetailsForm.surname || $scope.userdetailsForm.surname.length==0)
 			|| (!$scope.userdetailsForm.firstName || $scope.userdetailsForm.firstName.length==0)
 			|| (($scope.userdetailsForm.authProvider=="local")
-					&& (   (!$scope.userdetailsForm.username || $scope.userdetailsForm.username.length==0)
+					&& (   (!$scope.userdetailsForm.username || $scope.userdetailsForm.username.length==0  || $scope.invalidUsername)
 			//			|| (!$scope.userdetailsForm.password ||$scope.userdetailsForm.password.length==0)
 						)
 				)
