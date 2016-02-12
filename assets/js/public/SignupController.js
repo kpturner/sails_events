@@ -42,7 +42,18 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		$scope.signup.lodgeno.$setDirty();	
 		$scope.signup.lodgeno.$setValidity("required",false);							
 	}
-	 
+	
+    /**
+     * Check user name 
+     **/
+    $scope.checkUsername=function(){
+        $scope.invalidUsername=false;
+        // Must not contain spaces
+        $scope.signupForm.username=$.trim($scope.signupForm.username);
+        if ($scope.signupForm.username.indexOf(" ")>=0) {
+            $scope.invalidUsername=true;
+        }
+    } 		 
 
 	$scope.submitSignupForm = function(){
 		$scope.signupForm.loading=true;
