@@ -548,6 +548,17 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							ngDialog.openConfirm(opts)
 								.then(function (value) {
 									// Continue with booking for the duplicate user we found
+                                    if ($scope.event.addressReqd) {
+                                        // If the user doesn't yet have any address information, 
+                                        // use the address info the booking address
+                                        if (!$scope.duplicateUser.address1) {
+                                            $scope.duplicateUser.address1=$scope.bookingForm.address1;
+                                            $scope.duplicateUser.address2=$scope.bookingForm.address2;
+                                            $scope.duplicateUser.address3=$scope.bookingForm.address3;
+                                            $scope.duplicateUser.address4=$scope.bookingForm.address4;
+                                            $scope.duplicateUser.postcode=$scope.bookingForm.postcode;
+                                        }           
+                                    }
 									angular.forEach($scope.duplicateUser,function(value,key){
 										$scope.bookingForm[key]=$scope.duplicateUser[key]	
 									})	
