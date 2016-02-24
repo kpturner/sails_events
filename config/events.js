@@ -12,7 +12,7 @@ module.exports.events = {
     
     developer: process.env.DEVELOPER || null,
     
-	// Expire session afterh this many minutes
+	// Expire session after this many milliseconds
 	sessionExpiry:  30 * 60 * 1000,
 
 	// Admins can be a single string or an array, each representing a user name or email address
