@@ -1,1 +1,0 @@
-This file is only included so that the default repo pull/clone includes a /logs directory

@@ -889,7 +889,7 @@ module.exports = {
 					}    
 					
 					// Sort response by user surname (case insensitive) unless it is for a download, in which
-                    // case leave it in the order we used for the search above
+                    // case we will sort it later in the download function
                     if (!download)
 					   bookings.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
 					 
@@ -1352,15 +1352,12 @@ module.exports = {
 		// Build a custom JSON for the CSV
 		var data=[];
 		
-		bookings.forEach(function(booking,i){
+		bookings.forEach(function(booking,i){ 
 			if (user && !booking.user.surname) {
 				booking.user=user
 			}
 			var amountPaid=booking.amountPaid/booking.places;
-			var row={};
-            if (!user) {
-                row.seq=parseInt(booking.ref.replace(prefix,""));
-            }                   
+			var row={};                         
 			row.tableNo=booking.tableNo || "";
 			row.ref=booking.ref || "";
 			row.salutation=booking.user.salutation || "";
@@ -1414,10 +1411,16 @@ module.exports = {
 				data.push(row);
 			})
 		})
-        // Sort be sequence if required
+        // Sort by creation date if we are downloading bookings for an event
         if (!user) {
-            data.sort(Utility.jsonSort("seq", false))
+            data.sort(Utility.jsonSort("createdAt", false))
         }
+        var seq=0;
+        data.forEach(function(row,i){
+            seq+=1;
+            row.seq=seq;
+        }); 
+        // Re-process the rows and add a sequence number
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
 	 },
