@@ -863,7 +863,8 @@ module.exports = {
 					
 			
 			Booking.find({
-							where: where,							
+							where:  where,	
+                            sort:   "ref",						
 							// NOTE: Sorting by the surname/name of the foreign "user" table as shown below does not appear to work at all.
 							//       We will have to sort it after getting the data set 
 							//sort: {
@@ -887,8 +888,10 @@ module.exports = {
 						bookings=sails.controllers.booking.filterLate(bookings,grace);
 					}    
 					
-					// Sort response by user surname (case insensitive)
-					bookings.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
+					// Sort response by user surname (case insensitive) unless it is for a download, in which
+                    // case leave it in the order we used for the search above
+                    if (!download)
+					   bookings.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
 					 
 					  		
 					if (download) {					
@@ -983,7 +986,7 @@ module.exports = {
 					}  
 					  
 					if (download) {					
-						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, bookings, user);					
+						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, bookings, user);					
 					}
 					else {
 						// If session refers to a user who no longer exists, still allow logout.
@@ -1355,6 +1358,9 @@ module.exports = {
 			}
 			var amountPaid=booking.amountPaid/booking.places;
 			var row={};
+            if (!user) {
+                row.seq=parseInt(booking.ref.replace(prefix,""));
+            }                   
 			row.tableNo=booking.tableNo || "";
 			row.ref=booking.ref || "";
 			row.salutation=booking.user.salutation || "";
@@ -1387,6 +1393,9 @@ module.exports = {
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
 				var row={};
+                if (!user) {
+                    row.seq=parseInt(booking.ref.replace(prefix,""));
+                }    
 				row.tableNo=booking.tableNo || "";
 				row.ref=booking.ref || "";
 				row.salutation=addition.salutation || "";
@@ -1405,6 +1414,10 @@ module.exports = {
 				data.push(row);
 			})
 		})
+        // Sort be sequence if required
+        if (!user) {
+            data.sort(Utility.jsonSort("seq", false))
+        }
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
 	 },

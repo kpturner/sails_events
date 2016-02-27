@@ -72,11 +72,13 @@ module.exports = {
    
    var s=field.split(".");
    var o=s[0];
-   var f=s[1];  
+   var f
+   if (s.length>1)
+    f=s[1];  
     
    var key = primer ? 
-       function(x) {return primer(x[o][f])} : 
-       function(x) {return x[o][f]};
+       function(x) {return primer(f?x[o][f]:x[o])} : 
+       function(x) {return f?x[o][f]:x[o]};
 
    reverse = !reverse ? 1 : -1;
 
