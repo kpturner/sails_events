@@ -1415,12 +1415,16 @@ module.exports = {
         if (!user) {
             data.sort(Utility.jsonSort("createdAt", false))
         }
+        // Re-process the rows and add a sequence number
         var seq=0;
         data.forEach(function(row,i){
             seq+=1;
             row.seq=seq;
         }); 
-        // Re-process the rows and add a sequence number
+        // Go back to original booking order sequence 
+        if (!user) {
+            data.sort(Utility.jsonSort("ref", false))
+        }        
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
 	 },
