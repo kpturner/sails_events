@@ -864,7 +864,7 @@ module.exports = {
 			
 			Booking.find({
 							where:  where,	
-                            sort:   "ref",						
+                            sort:   "createdAt",						
 							// NOTE: Sorting by the surname/name of the foreign "user" table as shown below does not appear to work at all.
 							//       We will have to sort it after getting the data set 
 							//sort: {
@@ -1385,7 +1385,7 @@ module.exports = {
 			row.amountPaid=amountPaid || "";						
 			row.places=booking.places;	
             row.createdAt=booking.createdAt;
-            row.updatedAt=booking.updatedAt;
+            row.bookedAt=booking.createdAt;            
 			data.push(row);
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
@@ -1407,7 +1407,7 @@ module.exports = {
 				row.paid=booking.paid || "";
 				row.amountPaid=amountPaid || "";
                 row.createdAt=addition.createdAt;
-                row.updatedAt=addition.updatedAt;	
+                row.bookedAt=booking.createdAt;   // Use the main booking date
 				data.push(row);
 			})
 		})
@@ -1423,7 +1423,7 @@ module.exports = {
         }); 
         // Go back to original booking order sequence 
         if (!user) {
-            data.sort(Utility.jsonSort("ref", false))
+            data.sort(Utility.jsonSort("bookedAt", false))
         }        
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
