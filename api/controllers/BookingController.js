@@ -1419,7 +1419,7 @@ module.exports = {
         var seq=0;
         data.forEach(function(row,i){
             seq+=1;
-            row.seq=seq;
+            row.addedSeq=seq;
         }); 
         // Go back to original booking order sequence 
         if (!user) {
