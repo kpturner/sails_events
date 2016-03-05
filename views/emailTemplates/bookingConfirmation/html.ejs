@@ -12,7 +12,9 @@
 	<br>At: <%-eventVenue%> 
 	<br>Organiser: <%=eventOrganiser%> (<%=organiserEmail%>) <%=organiserContactNo%>
     <br>Info: <%-eventBlurb%>
+    <% if (eventAdditionalInfo) {%>
 	<br>Additional info: <%-eventAdditionalInfo%>
+    <% } %>
     <br>Menu: <%-eventMenu%> 
 	<br>Dress code: <%-eventDressCode%> 
 	<br><br><b>Your details:</b> 
