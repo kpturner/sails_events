@@ -27,7 +27,7 @@
 			"port": 5858
 		},
 		{
-			"name": "Child",
+			"name": "Server",
 			"type": "node",
             "request": "attach",
 			"address": "localhost",
