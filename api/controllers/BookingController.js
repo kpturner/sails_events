@@ -1397,7 +1397,7 @@ module.exports = {
 				row.paid=booking.paid || "";
 				row.amountPaid=amountPaid || "";   
                 // If the createdAt date is later than the booking date for the main booking, use that for the booking date
-                if (addition.createAt.getTime()>booking.bookingDate.getTime()) {
+                if (addition.createdAt.getTime()>booking.bookingDate.getTime()) {
                     row.bookingDate=addition.createAt;   // Use the additional booking creation date  
                 } 
                 else {
