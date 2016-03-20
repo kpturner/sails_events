@@ -1348,7 +1348,10 @@ module.exports = {
 				booking.user=user
 			}
 			var amountPaid=booking.amountPaid/booking.places;
-			var row={};                         
+			var row={};   
+            if (!user) {
+                row.seq=parseInt(booking.ref.replace(prefix,""));
+            }                        
 			row.tableNo=booking.tableNo || "";
 			row.ref=booking.ref || "";
 			row.salutation=booking.user.salutation || "";
@@ -1421,7 +1424,7 @@ module.exports = {
         }); 
         // Go back to original booking ref sequence 
         if (!user) {
-            data.sort(Utility.jsonSort("ref", false))
+            data.sort(Utility.jsonSort("seq", false))
         }        
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
