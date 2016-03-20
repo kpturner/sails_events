@@ -521,7 +521,7 @@ module.exports = {
 										// If we don't have a booking ref, create and update now.
 										// Why on earth are we doing this now rather than before we create the
 										// booking??  You may well ask - but the reason is that prior to 
-										// create the Event.incrementLastBookingRef function, we used the 
+										// creating the Event.incrementLastBookingRef function, we used the 
 										// incrementally generated key to the new booking (the "id") in the 
 										// booking reference, so we had to create the booking first.  
 										// The code is still in the same place so that we can fall back to that 
@@ -563,16 +563,7 @@ module.exports = {
 											// Finalise booking
 											finalise();
 										}
-										
-										
-										// COMMENT THIS OUT WHEN WE HAVE ATOMIC BOOKING REF SETTING SORTED
-										/*
-										if (!bookingRef) {	
-											bookingRef=event.code+booking.id.toString();
-											Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
-										}
-										finalise();
-										*/
+									
 										
 										
 									})
@@ -1382,10 +1373,9 @@ module.exports = {
 			row.places=booking.places;
 			row.paid=booking.paid || "";
 			row.cost=booking.cost || "";
-			row.amountPaid=amountPaid || "";						
-			row.places=booking.places;	
-            row.createdAt=booking.createdAt;
-            row.bookedAt=booking.createdAt;            
+			row.amountPaid=amountPaid || "";	
+            row.bookingDate=booking.bookingDate;
+            row.createdAt=booking.createdAt;        
 			data.push(row);
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
@@ -1405,15 +1395,21 @@ module.exports = {
 				row.area=addition.area || booking.user.area || "";
 				row.dietary=addition.dietary || "";
 				row.paid=booking.paid || "";
-				row.amountPaid=amountPaid || "";
-                row.createdAt=addition.createdAt;
-                row.bookedAt=booking.createdAt;   // Use the main booking date
-				data.push(row);
+				row.amountPaid=amountPaid || "";   
+                // If the createdAt date is later than the booking date for the main booking, use that for the booking date
+                if (addition.createAt.getTime()>booking.bookingDate.getTime()) {
+                    row.bookingDate=addition.createAt;   // Use the additional booking creation date  
+                } 
+                else {
+                    row.bookingDate=booking.bookingDate;   // Use the main booking date    
+                }                          
+				row.createdAt=addition.createdAt;
+                data.push(row);
 			})
 		})
         // Sort by creation date if we are downloading bookings for an event
         if (!user) {
-            data.sort(Utility.jsonSort("createdAt", false))
+            data.sort(Utility.jsonSort("bookingDate", false))
         }
         // Re-process the rows and add a sequence number
         var seq=0;
@@ -1421,9 +1417,9 @@ module.exports = {
             seq+=1;
             row.addedSeq=seq;
         }); 
-        // Go back to original booking order sequence 
+        // Go back to original booking ref sequence 
         if (!user) {
-            data.sort(Utility.jsonSort("bookedAt", false))
+            data.sort(Utility.jsonSort("ref", false))
         }        
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
