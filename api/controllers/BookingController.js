@@ -1349,9 +1349,9 @@ module.exports = {
 			}
 			var amountPaid=booking.amountPaid/booking.places;
 			var row={};   
-            if (!user) {
-                row.seq=parseInt(booking.ref.replace(prefix,""));
-            }                        
+            //if (!user) {
+            //    row.seq=parseInt(booking.ref.replace(prefix,""));
+            //}                        
 			row.tableNo=booking.tableNo || "";
 			row.ref=booking.ref || "";
 			row.salutation=booking.user.salutation || "";
@@ -1378,14 +1378,14 @@ module.exports = {
 			row.cost=booking.cost || "";
 			row.amountPaid=amountPaid || "";	
             row.bookingDate=booking.bookingDate;
-            row.createdAt=booking.createdAt;        
+            //row.createdAt=booking.createdAt;        
 			data.push(row);
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
 				var row={};
-                if (!user) {
-                    row.seq=parseInt(booking.ref.replace(prefix,""));
-                }    
+                //if (!user) {
+                //    row.seq=parseInt(booking.ref.replace(prefix,""));
+                //}    
 				row.tableNo=booking.tableNo || "";
 				row.ref=booking.ref || "";
 				row.salutation=addition.salutation || "";
@@ -1400,32 +1400,32 @@ module.exports = {
 				row.paid=booking.paid || "";
 				row.amountPaid=amountPaid || "";   
                 // If the createdAt date is later than the booking date for the main booking, use that for the booking date
-                var ca=new Date(addition.createdAt.getFullYear(), addition.createdAt.getMonth(), addition.createdAt.getDate());
-                var ba=new Date(booking.bookingDate.getFullYear(), booking.bookingDate.getMonth(), booking.bookingDate.getDate());
-                if (ca.getTime()>ba.getTime()) {
-                    row.bookingDate=addition.createAt;   // Use the additional booking creation date  
-                } 
-                else {
+                //var ca=new Date(addition.createdAt.getFullYear(), addition.createdAt.getMonth(), addition.createdAt.getDate());
+                //var ba=new Date(booking.bookingDate.getFullYear(), booking.bookingDate.getMonth(), booking.bookingDate.getDate());
+                //if (ca.getTime()>ba.getTime()) {
+                //    row.bookingDate=addition.createAt;   // Use the additional booking creation date  
+                //} 
+                //else {
                     row.bookingDate=booking.bookingDate;   // Use the main booking date    
-                }                          
-				row.createdAt=addition.createdAt;
+                //}                          
+				//row.createdAt=addition.createdAt;
                 data.push(row);
 			})
 		})
         // Sort by creation date if we are downloading bookings for an event
-        if (!user) {
-            data.sort(Utility.jsonSort("bookingDate", false))
-        }
+        //if (!user) {
+        //   data.sort(Utility.jsonSort("bookingDate", false))
+        //}
         // Re-process the rows and add a sequence number
-        var seq=0;
-        data.forEach(function(row,i){
-            seq+=1;
-            row.addedSeq=seq;
-        }); 
+        //var seq=0;
+        //data.forEach(function(row,i){
+        //    seq+=1;
+        //    row.addedSeq=seq;
+        //}); 
         // Go back to original booking ref sequence 
-        if (!user) {
-            data.sort(Utility.jsonSort("seq", false))
-        }        
+        //if (!user) {
+        //    data.sort(Utility.jsonSort("seq", false))
+        //}        
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
 	 },
