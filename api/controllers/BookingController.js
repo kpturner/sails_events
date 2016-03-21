@@ -624,7 +624,7 @@ module.exports = {
                                                     }
                                                     else {
                                                         _.forEach(existingBooking.additions,function(eba,a){
-                                                            if (eba.surname==elr.surname && eba.firstName==elr.firstName) {
+                                                            if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
                                                                 found=true;
                                                                 return false;
                                                             }
@@ -641,7 +641,7 @@ module.exports = {
                                                 _.forEach(existingBooking.additions,function(eba,a){
                                                     var found=false;
                                                     _.forEach(elrd,function(elr,l){
-                                                        if (eba.surname==elr.surname && eba.firstName==elr.firstName) {
+                                                        if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
                                                             found=true;
                                                             return false;
                                                         }
