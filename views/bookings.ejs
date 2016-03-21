@@ -89,7 +89,9 @@
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking">
           <span class="fa fa-download"></span><span> Download bookings</span>         
         </button>  
-         
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="eventBookings && user.isAdmin">
+          <span class="fa fa-download"></span><span> Download Lodge Room</span>         
+        </button>   
         
         </br> 
            

@@ -13,6 +13,21 @@ angular.module('EventsModule').controller('UserBookingsController', ['$scope', '
 				$scope.events.forEach(function(event,i){
 					event.selectedUserId=$scope.selectedUser.id
 					event.userBookings=true;
+                    // Calculate an appropriate width for the event name
+                    event.nameClass="event-name-100";
+                    if (event.logoRight) {
+                        if (event.logo) {
+                            event.nameClass="event-name-60";
+                        }
+                        else {
+                            event.nameClass="event-name-80";
+                        }
+                    }   
+                    else {
+                        if (event.logo) {
+                            event.nameClass="event-name-80";
+                        }
+                    } 		
 				})					
 			}
 			else {

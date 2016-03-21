@@ -7,14 +7,14 @@ var LodgeRoom = {
   schema: true,
   
   attributes: {
+         
+    event:{
+        model:'event'
+    },
     
     booking:{
         model:'booking'
-    },
-    
-    seq: {
-        type: 'integer'  
-    },
+    },   
     
     // Salutation
     salutation: {

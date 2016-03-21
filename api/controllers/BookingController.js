@@ -270,6 +270,7 @@ module.exports = {
 		var selectedUserId=req.param("selecteduserid");		
 		var bookingRef=null;
 		var bookingDate=null;
+        var lodgeRoomArr=[];
 				 
 		Event.findOne(eventId).populate("organiser").exec(function(err,event){
 			if (err) {
@@ -388,7 +389,15 @@ module.exports = {
 										if (err) {
 											return res.negotiate(err);
 										}
-																
+											
+                                        // Update and persist lodge room array for new bookings
+                                        if (!existingBooking && lodgeRoomArr.length>0) {
+                                            _.forEach(lodgeRoomArr,function(lr,l){
+                                                lodgeRoomArr[l].booking=booking.id
+                                            })
+                                            LodgeRoom.create(lodgeRoomArr).exec(function(){})
+                                        }    
+                                            					
 										// Create linked bookings
 										if (linkedBookings) {
 											linkedBookings.forEach(function(linkedBooking,index){
@@ -401,13 +410,22 @@ module.exports = {
 													linkedBooking.lodge=""
 												if (!linkedBooking.lodgeNo)
 													linkedBooking.lodgeNo=""
-												LinkedBooking.create(linkedBooking).exec(function(err,lb){
-													if (err)
-														console.log(err)	
-												})
+												//LinkedBooking.create(linkedBooking).exec(function(err,lb){
+												//	if (err)
+												//		console.log(err)	
+												//})
 											})
-										}
-				 						
+                                            LinkedBooking.create(linkedBookings).exec(function(err,lb){
+												if (err)
+														console.log(err)	
+											    else {
+                                                    if (existingBooking) {
+                                                        existingBooking.additions=linkedBookings;
+                                                        lodgeRoom(existingBooking);	
+                                                    }
+                                                }	
+                                            })
+										}				 						
 										var finalise=function(){
 											// If the user has previously sent an apology, delete it
 											Apology.destroy({event:booking.event,user:booking.user}).exec(function(err, deleted){
@@ -568,17 +586,97 @@ module.exports = {
 										
 									})
 								}
+                                
+                                function lodgeRoom(existingBooking,cb) {
+                                    // If we don't have a booking id its a simple case of writing out the details as they are                                    
+                                    if (!existingBooking) {
+                                        var lr={
+                                            event:eventId,
+                                            salutation:user.salutation,
+                                            surname:user.surname,
+                                            firstName:user.firstName,
+                                            rank:user.rank,
+                                            cancelled:false,
+                                        }
+                                        lodgeRoomArr.push(lr);
+                                        _.forEach(linkedBookings,function(lb,l){
+                                            var lr={
+                                                event:eventId,
+                                                salutation:lb.salutation,
+                                                surname:lb.surname,
+                                                firstName:lb.firstName,
+                                                rank:lb.rank,
+                                                cancelled:false,
+                                            }
+                                            lodgeRoomArr.push(lr);
+                                        })
+                                        if (cb) cb();
+                                    }
+                                    else {
+                                        // Get the existing lodge room data
+                                        LodgeRoom.find({event:eventId,booking:existingBooking.id}).exec(function(err,elrd){
+                                            if (!err && elrd) {
+                                                // Flag any that are no longer on the booking as cancelled
+                                                _.forEach(elrd,function(elr,l){
+                                                    var found=false;
+                                                    if (elr.surname==existingBooking.user.surname && elr.firstName==existingBooking.user.firstName) {
+                                                        found=true;
+                                                    }
+                                                    else {
+                                                        _.forEach(existingBooking.additions,function(eba,a){
+                                                            if (eba.surname==elr.surname && eba.firstName==elr.firstName) {
+                                                                found=true;
+                                                                return false;
+                                                            }
+                                                        })    
+                                                    }                                                    
+                                                    if (!found) {
+                                                        LodgeRoom.update(elr.id,{cancelled:true}).exec(function(){})
+                                                    }
+                                                    else {
+                                                        LodgeRoom.update(elr.id,{cancelled:false}).exec(function(){})
+                                                    }
+                                                })
+                                                // Add any that did not exist before
+                                                _.forEach(existingBooking.additions,function(eba,a){
+                                                    var found=false;
+                                                    _.forEach(elrd,function(elr,l){
+                                                        if (eba.surname==elr.surname && eba.firstName==elr.firstName) {
+                                                            found=true;
+                                                            return false;
+                                                        }
+                                                    })
+                                                    if (!found) {
+                                                        var lr={
+                                                            event:eventId,
+                                                            booking:existingBooking.id,
+                                                            salutation:eba.salutation,
+                                                            surname:eba.surname,
+                                                            firstName:eba.firstName,
+                                                            rank:eba.rank,
+                                                            cancelled:false,
+                                                        }
+                                                        LodgeRoom.create(lr).exec(function(){})
+                                                    }
+                                                })
+                                                if (cb) cb(); 
+                                            }
+                                        }) 
+                                        
+                                    }                                    
+                                }
+                                
 							
 								// If we have an existing booking, zap it before making the new booking
 								if (bookingId) {
-									Booking.destroy(bookingId,function(err){
-										LinkedBooking.destroy({booking:bookingId},function(err){
-											processBooking();
-										})
-									})
+                                    Booking.destroy(bookingId,function(err){
+                                        LinkedBooking.destroy({booking:bookingId},function(err){
+                                            processBooking();
+                                        })
+                                    }) 							
 								}
 								else {
-									processBooking();
+                                    lodgeRoom(null,processBooking);
 								}
 								
 								
@@ -601,7 +699,7 @@ module.exports = {
 				Booking.findOne({
 									event: eventId,
 									user:userId
-								}).exec(function(err, existingBooking) {
+								}).populate("additions").populate("user").exec(function(err, existingBooking) {
 					if (existingBooking) {
 						if (existingBooking.id==bookingId) {
 							// OK
@@ -1077,6 +1175,9 @@ module.exports = {
 						if (err) {
 							return res.negotiate(err)
 						}
+                        // Cancel lodge room details
+                        LodgeRoom.update({booking:bookingId},{cancelled:true}).exec(function(){})
+                        // Deal with linked bookings
 						LinkedBooking.destroy({booking:bookingId}).exec(function(err){
 													
 							if (bookingId)
@@ -1428,6 +1529,42 @@ module.exports = {
         //}        
 		// Send CSV						
 		sails.controllers.booking.sendCsv(req, res, data, options)				
+	 },
+     
+     /**
+	 * Download lodge room
+	 */
+	 lodgeRoom: function(req, res) {
+        
+        
+        var options={};
+         
+        // Get the event
+        Event.findOne(req.param("eventid")).exec(function(err,event){
+            if (event) {
+                var seq=0;
+                options.filename=event.name+'_lr_' + ((new Date().getTime().toString())) + '.csv';
+                LodgeRoom.find({event:event.id}).sort('createdAt').exec(function(err,data){
+                    _.forEach(data,function(d,i){
+                        seq++;
+                        // Add the sequence number and remove confusing extras
+                        d.seq=seq;
+                        d.attending=!d.cancelled;
+                        d.rank=(d.rank || "");
+                        delete d.id;
+                        delete d.event;
+                        delete d.booking;
+                        delete d.cancelled;
+                    })
+                    sails.controllers.booking.sendCsv(req, res, data, options);	
+                }) 
+            }
+            else {
+                sails.controllers.booking.sendCsv(req, res, [], options);	
+            }
+        }) 
+         
+        		
 	 },
 	
 	/**

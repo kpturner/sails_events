@@ -136,6 +136,13 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			window.location=$scope.downloadUrl;
 		
 		}	
+		/**
+		 * Download lodge room
+		 */  
+		$scope.downloadLodgeRoom = function(){
 		
+			window.location='/lodgeroom?eventid='+$scope.event.id;
+		
+		}	
 		 
 }])
