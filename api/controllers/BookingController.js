@@ -622,7 +622,7 @@ module.exports = {
                                                 elrd=elrds;
                                                 _.forEach(elrd,function(elr,l){
                                                     var found=false;
-                                                    if (elr.surname==existingBooking.user.surname && elr.firstName==existingBooking.user.firstName) {
+                                                    if (elr.surname.toLowerCase()==existingBooking.user.surname.toLowerCase() && elr.firstName.toLowerCase()==existingBooking.user.firstName.toLowerCase()) {
                                                         found=true;
                                                         existingMain=true;
                                                     }
@@ -642,42 +642,42 @@ module.exports = {
                                                     }
                                                 })                                                
                                             }
-                                        })                                                                 
-                                        // Add any that did not exist before
-                                        if (!existingMain) {
-                                            var lr={
-                                                event:eventId,
-                                                booking:existingBooking.id,
-                                                salutation:existingBooking.user.salutation,
-                                                surname:existingBooking.user.surname,
-                                                firstName:existingBooking.user.firstName,
-                                                rank:existingBooking.user.rank,
-                                                cancelled:false,
-                                            }
-                                            LodgeRoom.create(lr).exec(function(){})
-                                        }          
-                                        _.forEach(existingBooking.additions,function(eba,a){
-                                            var found=false;
-                                            _.forEach(elrd,function(elr,l){
-                                                if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
-                                                    found=true;
-                                                    return false;
-                                                }
-                                            })
-                                            if (!found) {
+                                            // Add any that did not exist before
+                                            if (!existingMain) {
                                                 var lr={
                                                     event:eventId,
                                                     booking:existingBooking.id,
-                                                    salutation:eba.salutation,
-                                                    surname:eba.surname,
-                                                    firstName:eba.firstName,
-                                                    rank:eba.rank,
+                                                    salutation:existingBooking.user.salutation,
+                                                    surname:existingBooking.user.surname,
+                                                    firstName:existingBooking.user.firstName,
+                                                    rank:existingBooking.user.rank,
                                                     cancelled:false,
                                                 }
                                                 LodgeRoom.create(lr).exec(function(){})
-                                            }
-                                        })
-                                        if (cb) cb(); 
+                                            }          
+                                            _.forEach(existingBooking.additions,function(eba,a){
+                                                var found=false;
+                                                _.forEach(elrd,function(elr,l){
+                                                    if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
+                                                        found=true;
+                                                        return false;
+                                                    }
+                                                })
+                                                if (!found) {
+                                                    var lr={
+                                                        event:eventId,
+                                                        booking:existingBooking.id,
+                                                        salutation:eba.salutation,
+                                                        surname:eba.surname,
+                                                        firstName:eba.firstName,
+                                                        rank:eba.rank,
+                                                        cancelled:false,
+                                                    }
+                                                    LodgeRoom.create(lr).exec(function(){})
+                                                }
+                                            })
+                                            if (cb) cb(); 
+                                        })  
                                     }                                    
                                 }
                                 
