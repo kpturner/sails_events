@@ -88,6 +88,11 @@ module.exports = {
     tableNo: {
       type: 'integer'
     }, 
+    
+    // Created by
+    createdBy: {
+        model:  'user',
+    }
 
   }
 };

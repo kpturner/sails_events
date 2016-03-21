@@ -349,6 +349,7 @@ module.exports = {
 									}
 									booking.user=user.id;
 									booking.event=eventId;
+                                    booking.createdBy=req.user.id;
 									booking.info=req.param("info");
 									if (req.param("places")) {
 										booking.places=req.param("places")
