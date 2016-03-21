@@ -269,7 +269,6 @@ module.exports = {
 		var action=req.param("action");		
 		var selectedUserId=req.param("selecteduserid");		
 		var bookingRef=null;
-		var bookingDate=null;
         var lodgeRoomArr=[];
 				 
 		Event.findOne(eventId).populate("organiser").exec(function(err,event){
@@ -347,9 +346,12 @@ module.exports = {
 									if (existingBooking) {
 										_.extend(booking, existingBooking);
 									}
+                                    else {
+                                         booking.createdBy=req.user.id; 
+                                         booking.bookingDate=new Date();   
+                                    }
 									booking.user=user.id;
-									booking.event=eventId;
-                                    booking.createdBy=req.user.id;
+									booking.event=eventId;                                   
 									booking.info=req.param("info");
 									if (req.param("places")) {
 										booking.places=req.param("places")
@@ -380,11 +382,8 @@ module.exports = {
 									
 									// Use pre-existing booking ref if it exists
 									if (bookingRef)
-										booking.ref=bookingRef;
-									if (bookingDate)
-										booking.bookingDate=bookingDate;
-									else
-										booking.bookingDate=new Date();
+										booking.ref=bookingRef; 
+										
 									
 									Booking.create(booking,function(err, booking){
 										if (err) {
