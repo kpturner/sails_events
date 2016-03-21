@@ -615,6 +615,7 @@ module.exports = {
                                     else {
                                         // Get the existing lodge room data
                                         var elrd=[];
+                                        existingMain=false;
                                         LodgeRoom.find({event:eventId,booking:existingBooking.id}).exec(function(err,elrds){
                                             if (!err && elrds) {
                                                 // Flag any that are no longer on the booking as cancelled
@@ -623,6 +624,7 @@ module.exports = {
                                                     var found=false;
                                                     if (elr.surname==existingBooking.user.surname && elr.firstName==existingBooking.user.firstName) {
                                                         found=true;
+                                                        existingMain=true;
                                                     }
                                                     else {
                                                         _.forEach(existingBooking.additions,function(eba,a){
@@ -640,8 +642,20 @@ module.exports = {
                                                     }
                                                 })                                                
                                             }
-                                        }) 
+                                        })                                                                 
                                         // Add any that did not exist before
+                                        if (!existingMain) {
+                                            var lr={
+                                                event:eventId,
+                                                booking:existingBooking.id,
+                                                salutation:existingBooking.user.salutation,
+                                                surname:existingBooking.user.surname,
+                                                firstName:existingBooking.user.firstName,
+                                                rank:existingBooking.user.rank,
+                                                cancelled:false,
+                                            }
+                                            LodgeRoom.create(lr).exec(function(){})
+                                        }          
                                         _.forEach(existingBooking.additions,function(eba,a){
                                             var found=false;
                                             _.forEach(elrd,function(elr,l){
