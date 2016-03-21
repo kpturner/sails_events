@@ -29,17 +29,22 @@ module.exports.bootstrap = function(cb) {
       
     // Start the late payment daemon
     if (sails.config.events.latePaymentDaemon) {
-        var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
-        var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
+        // Do this 30 minutes after start just in case we restart lots of times to fix things.
+        // We don't want to SPAM organisers
+        setTimeout(function(){
+            var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
+            var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
+            
+            // Detect it exiting
+            latePaymentDaemon.on("exit", function(code, signal){
+                var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
+                Utility.diagnosticEmail(msg,"Late payment daemon");	
+                sails.log.debug(msg);
+                latePaymentDaemon=null;     
+            });  
+             
+        },(1000 * 60 * 30))
         
-        // Detect it exiting
-        latePaymentDaemon.on("exit", function(code, signal){
-            var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
-            Utility.diagnosticEmail(msg,"Late payment daemon");	
-            sails.log.debug(msg);
-            latePaymentDaemon=null;     
-        });  
-         
     }         
   }); 
     
