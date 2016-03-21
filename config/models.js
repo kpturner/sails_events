@@ -28,5 +28,36 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
   // migrate: 'alter'
+  
+  // Define indexes that need to exist. These are composite keys that Waterline
+    // doesn't support
+    indexes: {
+        lodgeroom_key:    { 
+            table:      "lodgeroom",
+            columns:    ["event","booking"]
+        },
+        
+        lodgeroom_booking:    { 
+            table:      "lodgeroom",
+            columns:    ["booking"]
+        }, 
+         
+        booking_user:    { 
+            table:      "booking",
+            columns:    ["user"]
+        },  
+        
+        booking_event:    { 
+            table:      "booking",
+            columns:    ["event"]
+        },  
+        
+        linkedbooking_booking:    { 
+            table:      "linkedbooking",
+            columns:    ["booking"]
+        },  
+         
+    },
+
 
 };

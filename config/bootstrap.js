@@ -18,6 +18,14 @@ module.exports.bootstrap = function(cb) {
   sails.on('lifted', function() {
       
     //Utility.diagnosticEmail("Provincial events app started OK","Developers Paranoia!");	  
+    
+    // Build indexes asyncronously if need before
+    if (sails.config.models.migrate=="alter") {
+        // Asynchronously build any indexes required for this environment
+        Utility.buildIndexes("squareevents",function(){
+            sails.log.debug("indexes rebuilt")
+        })
+    }    
       
     // Start the late payment daemon
     if (sails.config.events.latePaymentDaemon) {

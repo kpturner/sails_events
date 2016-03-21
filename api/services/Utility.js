@@ -15,10 +15,64 @@
 //var util = require('util'),
 //    _ = require('lodash');
 var util = require('util');
+var async       = require("async");
  
 
 module.exports = { 
 
+    /**
+     * @name         buildIndexes
+     * @memberOf     Utility
+     * @description  Build missing indexes
+     * @param  {String}   db  Database (or environment) name
+     * @param  {Function} callback
+     */
+    buildIndexes: function(db,cb){
+        var self=this;
+
+        if (sails.config.models.indexes) {
+            async.forEachOf(sails.config.models.indexes,function(indexInfo,index,next){
+                // Only deal with indexes for the db we are interested in
+                var connections=sails.models[indexInfo.table].connections;
+                _.forEach(connections,function(conn){
+                    if (conn.config.database==db) {
+                        // Drop the index and ignore any errors (it might not exist)
+                        var cmd="DROP INDEX "+index+" ON "+indexInfo.table+";";
+                        sails.log.debug("Running "+cmd);
+                        sails.models[indexInfo.table].query(cmd,function(err,res){
+                            if (err) {
+                                // Probably means it doesn't exist yet   
+                            }                                
+                            // Build the index
+                            cmd="CREATE INDEX "+index+" ON "+indexInfo.table+" (";
+                            indexInfo.columns.forEach(function(col,c){
+                                if (c>0)
+                                    cmd+=","
+                                cmd+='`'+col+'`';
+                            })
+                            cmd+=");";
+                            sails.log.debug("Running "+cmd); 
+                            sails.models[indexInfo.table].query(cmd,function(err,res){
+                                if (err) {
+                                    sails.log.error(err);   
+                                    next(err)
+                                }
+                                else {
+                                    next();
+                                }     
+                            });   
+                        })
+                    }
+                })
+                
+            },
+            function(err){
+                // Here when all done
+                cb();                 
+            })
+        }  
+        
+    },   
     
   isAdmin: function(user) {
     var isAdmin=false;
