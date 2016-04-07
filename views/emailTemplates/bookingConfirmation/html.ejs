@@ -17,7 +17,10 @@
     <% } %>
     <br>Menu: <%-eventMenu%> 
 	<br>Dress code: <%-eventDressCode%> 
-	<br><br><b>Your details:</b> 
+	<br><br><b>Your details:</b>
+    <br>Salutation: <%=salutation%>
+    <br>First name: <%=firstName%>
+    <br>Surname: <%=surname%> 
     <% if (addressReqd) {%>
 	  <br><i>Address</i>       
 	  	<br><%=address1%>
@@ -30,8 +33,7 @@
     <br>Contact no: <%=phone%> 
 	<br>Lodge: <%=lodge%>
 	<br>Lodge no: <%=lodgeNo%>
-	<br>Area: <%=area%>
-	<br>Salutation: <%=salutation%>
+	<br>Area: <%=area%>	
 	<br>Rank: <%=rank%>
 	<br>Dietary reqs: <%=dietary%>
 	<br>Email address: <%=email%>

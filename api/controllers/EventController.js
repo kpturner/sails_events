@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var async=require("async");
+
 module.exports = {
 	
 	/**
@@ -82,7 +84,35 @@ module.exports = {
 				  	if (!events) {
 				    	return res.json({});
 				  	}
-					  
+					
+                    function addCapacity(events) {
+                        // For each event, add capacity before returning JSON
+                        var modifiedEvents=[];
+                        async.each(events,function(event,next){                            
+                            // Get all the bookings for the event
+                            _.bind(function(){
+                                var event=this;
+                                var places=0;
+                                Booking.find({event:event.id}).exec(function(err,bookings){
+                                    if (!err) {
+								        bookings.forEach(function(booking,index){
+									        places+=booking.places
+								        })
+                                        event.capacity-=places;
+                                        if (event.capacity<0) {
+                                            event.capacity=0;
+                                        }	
+							        }
+                                    modifiedEvents.push(event);
+                                    next();
+                                })
+                            },event)();                            
+                        },
+                        function(err){
+                            return res.json(modifiedEvents);  	    
+                        })                        
+                    } 
+                      
 					// If we have a selectedUserId then only include events that the user is NOT booked into already
 					if (selectedUserId && !sails.config.events.multipleBookings) {
 						var particularEvents=[];
@@ -101,13 +131,13 @@ module.exports = {
 								}
 								if (index==events.length-1) {
 									// End of the list of events
-									return res.json(particularEvents);  	
+									return addCapacity(particularEvents);  	
 								}
 							})
 						})						
 					}					
 					else {
-						return res.json(events);  	
+						return addCapacity(events);  	
 					}  					
 				}
 			)
