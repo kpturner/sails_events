@@ -67,10 +67,10 @@ module.exports = {
 								open:true,
 								closingDate: { '>=': today } 
 							}, 
-					sort: 	{
-								date:'desc',
-								time:'desc'
-							}
+                    // Sorted later        
+					//sort: 	{
+					//			date:'desc',
+					//		}
 					})
 					.populate('organiser')
 			.exec(
@@ -114,6 +114,22 @@ module.exports = {
                         function(err){
                             if (err) {
                                 sails.log.error(err)
+                            }
+                            else {
+                                // Sort in descending date order
+                                modifiedEvents.sort(
+                                    function(a,b){
+                                        if (a.date>b.date) {
+                                            return -1
+                                        }
+                                        else if (a.date==b.date) {
+                                            return 0
+                                        }
+                                        else {
+                                            return 1
+                                        }
+                                    }
+                                )
                             }
                             return res.json(modifiedEvents);  	    
                         })                        
