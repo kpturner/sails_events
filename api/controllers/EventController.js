@@ -103,12 +103,18 @@ module.exports = {
                                             event.capacity=0;
                                         }	
 							        }
+                                    else {
+                                        next(err)
+                                    }
                                     modifiedEvents.push(event);
                                     next();
                                 })
                             },event)();                            
                         },
                         function(err){
+                            if (err) {
+                                sails.log.error(err)
+                            }
                             return res.json(modifiedEvents);  	    
                         })                        
                     } 
