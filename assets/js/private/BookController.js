@@ -75,7 +75,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					$scope.bookingForm=data;
 					$scope.paidMsg="";
 					// Convert lodge no to numeric
-					$scope.bookingForm.lodgeNo = parseInt($scope.user.lodgeNo); 
+					$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo); 
 					// Initialise confirmation email
 					$scope.bookingForm.confirmemail = $scope.bookingForm.email;	                    
 					$scope.bookingForm.places=$scope.placesMin;
