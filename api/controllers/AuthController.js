@@ -472,7 +472,7 @@ var AuthController = {
           
           Passport.findOne({user:user.id}).exec(function(err,passport){
             
-            var newPassword;
+            var newPassword="";
             var resetInstructions="Your reset instructions are shown below:";
             
             if (passport.provider) {
@@ -482,7 +482,18 @@ var AuthController = {
             }
             else {
               // Create new password
-              newPassword = crypto.randomBytes(8).toString('base64');
+              while (newPassword.length<8) {
+                  var tempPassword = crypto.randomBytes(32).toString('base64');
+                // We only want the first 8 letters of the alphabet
+                for (var i=0;i<31;i++) {
+                    if (('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ').indexOf(tempPassword.substr(i,1))>=0) {
+                        newPassword+=tempPassword.substr(i,1);
+                        if (newPassword.length==8) {
+                            i=31; //exits loop
+                        }
+                    }
+                } 
+              }
               //var token = crypto.randomBytes(48).toString('base64'); 
               Passport.update(passport.id,{
                 password    : newPassword
