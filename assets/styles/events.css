@@ -157,11 +157,11 @@
 .omb_login .omb_loginOr .omb_spanManual {
 	display: block;
 	position: absolute;
-	left: 50%;
+	left: 47%;
 	top: -0.7em;
-	margin-left: -4em;
+	margin-left: -4.5em;
 	background-color: #eee;
-	width: 8em;
+	width: 10em;
 	text-align: center;
 }	
 .omb_login .omb_loginForm .input-group.i {
