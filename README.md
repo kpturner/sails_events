@@ -15,7 +15,7 @@ The following screen will be displayed:
 
 ![]
 
-If you use Social Media regularly, you may find it convenient to register with your Twitter, Facebook or Google account simply by clicking the relevant button and following the instructions. This is known as using a “Social Media passport” Alternatively you can register manually by clicking “**Register**”.
+If you use Social Media regularly, you may find it convenient to register with your Twitter, Facebook or Google account simply by clicking the relevant button and following the instructions. This is known as using a “Social Media passport” Alternatively you can register manually by clicking “**Create an account**”.
 
 The following screen is then shown. You must complete all the fields whose label is flagged with an asterisk. Some fields will be already filled in if you have used a Social Media passport.
 
