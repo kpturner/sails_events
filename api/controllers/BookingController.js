@@ -1316,6 +1316,7 @@ module.exports = {
 		Event	.find({
 					where:	{
 								open:true,
+								latePaymentChecking:true,
 								closingDate: { '>=': today },
 								grace: {'>': 0} 
 							}, 

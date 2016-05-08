@@ -363,7 +363,18 @@
                 <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace"></input>
              </div>
              
-             <!-- S H O W  A P O L O G Y  B U T T O N ? -->
+            <!-- L A T E  P A Y M E N T  C H E C K I N G ?-->
+  
+            <div class="control-group form-group col-md-7"
+              ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
+                                    eventdetails.latePaymentChecking.$dirty}">
+               <label>
+                <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" ></input>
+                &nbsp;&nbsp;&nbsp;Show 'Late payment checking?
+               </label>
+             </div> 
+             
+            <!-- S H O W  A P O L O G Y  B U T T O N ? -->
   
             <div class="control-group form-group col-md-7"
               ng-class="{'has-error':eventdetails.showapologybutton.$invalid &&

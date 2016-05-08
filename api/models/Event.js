@@ -144,6 +144,10 @@ module.exports = {
       type: 'string'
     },
     
+    latePaymentChecking: {
+      type: 'boolean'
+    },        
+    
     lastBookingRef: {
       type: 'integer',
       defaultsTo: 0
