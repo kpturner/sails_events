@@ -240,7 +240,9 @@ module.exports = {
 		else {
 			return res.view("eventdetails",{
 				mode:mode,
-				event:{}
+				event:{
+					latePaymentChecking:true,
+				}
 			})	
 		}	
 	},
