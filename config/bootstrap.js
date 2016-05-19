@@ -17,6 +17,11 @@ module.exports.bootstrap = function(cb) {
   
   sails.on('lifted', function() {
       
+    // Memory leak testing?
+    if (sails.config.heapdumpInterval) {
+        Utility.memoryLeakCheck();
+    }     
+      
     //Utility.diagnosticEmail("Provincial events app started OK","Developers Paranoia!");	  
     
     // Build indexes asyncronously if need before

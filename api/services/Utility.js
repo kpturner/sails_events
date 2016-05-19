@@ -14,8 +14,11 @@
  */
 //var util = require('util'),
 //    _ = require('lodash');
-var util = require('util');
+var util        = require('util');
 var async       = require("async");
+var heapdump    = require("heapdump");
+var path        = require("path");
+var fs          = require('fs');
  
 
 module.exports = { 
@@ -199,5 +202,61 @@ module.exports = {
 
       if (associationActions.length > 0) return associationActions[0];
     }
-  }
+  },
+  
+    /**
+     * @name            service.Utility.clearDir
+     * @method
+     * @description     Clear out the contents of a directory
+     * @param {String}  dirPath Directory path
+     * @param {Boolean} [RemoveSelf=false] Remove the target directory as well as its contents
+     */
+    clearDir: function(dirPath,removeSelf) {
+        try { 
+             var files = fs.readdirSync(dirPath); 
+        }
+        catch(err) { 
+            sails.log.error(err)
+            return; 
+        }
+        if (files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+                var filePath = path.join(dirPath,files[i]);
+                if (fs.statSync(filePath).isFile()) {
+                     fs.unlinkSync(filePath);
+                }
+                else {
+                    this.clearDir(filePath,true);
+                }                    
+            }
+        }
+        if (removeSelf)  {
+            fs.rmdirSync(dirPath);    
+        }                 
+    }, 
+  
+    /**
+     * @name            service.Utility.memoryLeakCheck
+     * @method
+     * @description     Periodically produce a heapdump for memory leak analysis
+     *  
+     */
+    memoryLeakCheck: function(){
+        if (sails.config.heapdumpInterval) {
+            // Clear out heapdumps first
+            var xpath=path.join(sails.config.appPath,"heapdump");
+            this.clearDir(xpath);
+            var hd=path.join(xpath,"0.baseline.heapsnapshot");        
+            heapdump.writeSnapshot(hd,function(err, filename) {
+                sails.log.debug('Dump written to', filename);
+            });
+            setInterval(function(){
+                var hd=path.join(xpath,Date.now().toString()+".heapsnapshot");        
+                heapdump.writeSnapshot(hd,function(err, filename) {
+                    sails.log.debug('Dump written to', filename);
+                });
+            },sails.config.heapdumpInterval)  
+        }
+    },
+  
 };

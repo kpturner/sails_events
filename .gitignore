@@ -123,3 +123,6 @@ nbproject
 /logs/*.log
 /ssl
 /config/ssl
+
+heapdump/*
+!heapdump/.gitkeep
