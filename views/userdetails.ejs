@@ -102,7 +102,7 @@
         <br/>
   
         <!-- Disable button until something has been edited and the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (userdetails.$invalid || !detailsComplete())) || userdetailsForm.loading">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (!detailsComplete() || userdetails.$invalid)) || userdetailsForm.loading">
           <span ng-show="!userdetailsForm.loading && mode!='delete'">Save Details</span>
           <span ng-show="!userdetailsForm.loading && mode=='delete'">Delete</span>
           <span class="fa-pulse fa fa-spinner" ng-show="userdetailsForm.loading" ></span>
