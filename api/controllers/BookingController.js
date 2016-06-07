@@ -953,6 +953,7 @@ module.exports = {
 							{user:{lodge: {contains: filter}}},
 							{user:{lodgeNo: {contains: filter}}},
 							{ref: {contains: filter}},
+							{email: {contains: filter}},
 						]
 			if (filter.toLowerCase()=="paid") {
 				where.or.push({paid:true})
