@@ -74,6 +74,7 @@ module.exports = {
 					{lodge: {contains: filter}},
 					{lodgeNo: {contains: filter}}, 
 					{area: {contains: filter}}, 
+					{centre: {contains: filter}}, 
 				]
 			}
 			
