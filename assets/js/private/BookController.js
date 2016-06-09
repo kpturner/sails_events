@@ -63,6 +63,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// Convert lodge no to numeric
 		if ($scope.bookingForm.lodgeNo)
 		 	$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo); 
+		if ($scope.bookingForm.voLodgeNo)
+		 	$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
 		// Initialise confirmation email
 		$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
 	}	
@@ -407,7 +409,13 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					phone: $scope.bookingForm.phone,
 					lodge: $scope.bookingForm.lodge,
 					lodgeNo: $scope.bookingForm.lodgeNo,
+					isVO: $scope.bookingForm.isVO,
+					voLodge: $scope.bookingForm.voLodge,
+					voLodgeNo: $scope.bookingForm.voLodgeNo,
+					voCentre: $scope.bookingForm.voCentre,
+					voArea: $scope.bookingForm.voArea,
 					tableNo: $scope.bookingForm.tableNo,
+					centre: $scope.bookingForm.centre,
 					area: $scope.bookingForm.area,
 					rank: $scope.bookingForm.rank,
 					dietary: $scope.bookingForm.dietary,

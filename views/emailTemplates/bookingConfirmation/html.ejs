@@ -33,7 +33,14 @@
     <br>Contact no: <%=phone%> 
 	<br>Lodge: <%=lodge%>
 	<br>Lodge no: <%=lodgeNo%>
+	<br>Centre: <%=centre%>	
 	<br>Area: <%=area%>	
+	<% if  (isVO) {%>
+    <br>VO lodge: <%=voLodge%>
+    <br>VO lodge no: <%=voLodgeNo%>
+    <br>VO lodge centre: <%=voCentre%>
+    <br>VO lodge area: <%=voArea%>
+    <% } %>
 	<br>Rank: <%=rank%>
 	<br>Dietary reqs: <%=dietary%>
 	<br>Email address: <%=email%>
@@ -52,6 +59,7 @@
 		<br>&nbsp;&nbsp;First name: <%=linkedBooking.firstName%>
 		<br>&nbsp;&nbsp;Lodge: <%=linkedBooking.lodge%>
 		<br>&nbsp;&nbsp;Lodge no: <%=linkedBooking.lodgeNo%>
+		<br>&nbsp;&nbsp;Centre: <%=linkedBooking.centre%>
 		<br>&nbsp;&nbsp;Area: <%=linkedBooking.area%>
 		<br>&nbsp;&nbsp;Rank: <%=linkedBooking.rank%>
 		<br>&nbsp;&nbsp;Dietary reqs: <%=linkedBooking.dietary%>

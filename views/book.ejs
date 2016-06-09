@@ -107,7 +107,7 @@
         <!--
         <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !myBookings && !eventBookings && !userBookings" disable-contents="(!user.isAdmin && !eventBookings && !userBookings && paid) || mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to 
         -->
-        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !myBookings && !eventBookings && !userBookings" disable-contents="mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to 
+        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !myBookings && !eventBookings && !userBookings" disable-contents="mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to EventsModule -->
            
            <% include partials/bookingDetails.ejs %>  
           
@@ -120,7 +120,7 @@
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || (!eventBookings && !userBookings && paid) || bookingForm.loading">
         -->
         
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || bookingForm.loading || event.capacity<=0">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (!detailsComplete() || booking.$invalid)) || bookingForm.loading || event.capacity<=0">
           <span ng-show="!bookingForm.loading && mode=='delete'">Cancel booking</span>
           <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete'">Book now</span>
           <span ng-show="!bookingForm.loading && existingBooking && mode!='delete'">Update booking</span>

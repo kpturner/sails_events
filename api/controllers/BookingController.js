@@ -284,7 +284,13 @@ module.exports = {
 			user.firstName=req.param("firstName");
 			user.lodge=req.param("lodge");
 			user.lodgeNo=req.param("lodgeNo");
+			user.centre=req.param("centre");
 			user.area=req.param("area");
+			user.isVO=req.param("isVO");
+			user.voLodge=req.param("voLodge");
+			user.voLodgeNo=req.param("voLodgeNo");
+			user.voCentre=req.param("voCentre");
+			user.voArea=req.param("voArea");
 			user.rank=req.param("rank");
 			user.dietary=req.param("dietary");
 			user.email=req.param("email");
@@ -410,6 +416,10 @@ module.exports = {
 													linkedBooking.lodge=""
 												if (!linkedBooking.lodgeNo)
 													linkedBooking.lodgeNo=""
+												if (!linkedBooking.area)
+													linkedBooking.area=""
+												if (!linkedBooking.centre)
+													linkedBooking.centre=""
 												//LinkedBooking.create(linkedBooking).exec(function(err,lb){
 												//	if (err)
 												//		console.log(err)	
@@ -477,9 +487,15 @@ module.exports = {
                                                             postcode: user.postcode || "",
                                                             phone: user.phone || "",
 															lodge: user.lodge || "",
-															lodgeNo: user.lodgeNo || "",															
+															lodgeNo: user.lodgeNo || "",
+															centre: user.centre || "",																
 															area: user.area || "",															
 															rank: user.rank || "",
+															isVO: user.isVO,
+															voLodge: user.voLodge || "",
+															voLodgeNo: user.voLodgeNo || "",
+															voCentre: user.voCentre || "",
+															voArea: user.voArea || "",
 															dietary: user.dietary || "",
 															bookingRef: bookingRef,
 															info: (booking.info || "n/a").replace(/[\n\r]/g, '<br>'),  
@@ -1230,7 +1246,13 @@ module.exports = {
 										  	lodge: booking.user.lodge || "",
 											lodgeNo: booking.user.lodgeNo || "",
 											salutation: booking.user.salutation || "",
+											centre: booking.user.centre,
 											area: booking.user.area || "",
+											isVO: booking.user.isVO,
+											voLodge: booking.user.voLodge || "",
+											voLodgeNo: booking.user.voLodgeNo || "",
+											voCentre: booking.user.voCentre || "",
+											voArea: booking.user.voArea || "",
 											surname: booking.user.surname || "",
 											firstName: booking.user.firstName || "",
 										  	rank: booking.user.rank || "",
@@ -1487,6 +1509,7 @@ module.exports = {
 			row.rank=booking.user.rank || "";
 			row.lodge=booking.user.lodge || "";
 			row.lodgeNo=booking.user.lodgeNo || "";
+			row.centre=booking.user.centre || "";
 			row.area=booking.user.area || "";
             row.email=booking.user.email || "";
             row.phone=(booking.user.phone)?"Tel: "+booking.user.phone:""; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
@@ -1497,6 +1520,12 @@ module.exports = {
 			row.cost=booking.cost || "";
 			row.amountPaid=amountPaid || "";	
             row.bookingDate=booking.bookingDate;
+			//if (booking.user.isVO) {
+				row.voLodge=booking.user.voLodge;
+				row.voLodgeNo=booking.user.voLodgeNo;
+				row.voCentre=booking.user.voCentre;
+				row.voArea=booking.user.voArea;
+			//}
             //row.createdAt=booking.createdAt;        
 			data.push(row);
 			// Add additional places as rows also
@@ -1514,6 +1543,7 @@ module.exports = {
 				row.rank=addition.rank || "";
 				row.lodge=addition.lodge || "";
 				row.lodgeNo=addition.lodgeNo || "";
+				row.centre=addition.centre || booking.user.centre || "";
 				row.area=addition.area || booking.user.area || "";
 				row.dietary=addition.dietary || "";
 				row.paid=booking.paid || "";
@@ -1643,7 +1673,6 @@ module.exports = {
 	        res.download(fullpath, filename, function(err){
 	          if(err) {
 	            throw err;
-	            return;
 	          }
 	
 	          //delete the file after we are done with it.

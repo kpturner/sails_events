@@ -37,6 +37,11 @@ var LinkedBooking = {
       type: 'string'
     },
     
+    // The user's centre
+    centre: {
+      type: 'string'
+    },
+
     // The user's area
     area: {
       type: 'string'

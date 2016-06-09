@@ -195,7 +195,7 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
                         <%-form%>.volodgeno.$dirty}" ng-hide="!<%-form%>Form.isVO">
   <label>VO lodge number</label>
   <input type="number" class="form-control"  name="volodgeno" ng-model="<%-form%>Form.voLodgeNo" ng-maxlength="5" >
-  <span class="help-block has-error" ng-if="<%-form%>.lodgeno.$dirty">
+  <span class="help-block has-error" ng-if="<%-form%>.volodgeno.$dirty">
     <span ng-show="<%-form%>.volodgeno.$error.maxlength">The VO lodge number cannot be more than 5 characters.</span>
   </span>
 </div>
@@ -203,8 +203,8 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 
 <!-- V O  C E N T R E -->
 <div class="control-group form-group col-xs-10" 
-  ng-class="{'has-error':<%-form%>.centre.$invalid &&
-                        <%-form%>.centre.$dirty}" ng-hide="!<%-form%>Form.isVO">
+  ng-class="{'has-error':<%-form%>.vocentre.$invalid &&
+                        <%-form%>.vocentre.$dirty}" ng-hide="!<%-form%>Form.isVO">
   <label>VO centre</label>  
   <input type="text" class="form-control" placeholder="e.g. Woolston" name="vocentre" ng-model="<%-form%>Form.voCentre" ng-maxlength="50">
   <span class="help-block has-error" ng-if="<%-form%>.vocentre.$dirty">
