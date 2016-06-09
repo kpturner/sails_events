@@ -153,6 +153,12 @@ module.exports = {
 		var user=req.param("data");
 		var userId=user.id;
 		
+		if (!user.isVO) {
+			user.voLodge="";
+			user.voLodgeNo="";
+			user.voCentre="";
+			user.voArea="";
+		}
 				
 		// Decide what to do based on the action
 		if (action=="edit") {
@@ -193,7 +199,7 @@ module.exports = {
                 if (user[0].area==null)
 					user[0].area=""
                 
-				if (!user[0].isVO)
+				if (!user[0].isVO) 
 					user[0].isVO=false
 				if (!user[0].isAdmin)
 					user[0].isAdmin=false

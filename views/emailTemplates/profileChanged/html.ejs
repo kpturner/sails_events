@@ -26,7 +26,14 @@
 	<br>Contact no: <%=details.phone%>	
 	<br>Lodge: <%=details.lodge%>
 	<br>Lodge no: <%=details.lodgeNo%>
+    <br>Centre: <%=details.centre%>
 	<br>Area: <%=details.area%>
+    <% if  (details.isVO) {%>
+    <br>VO lodge: <%=details.voLodge%>
+    <br>VO lodge no: <%=details.voLodgeNo%>
+    <br>VO lodge centre: <%=details.voCentre%>
+    <br>VO lodge area: <%=details.voArea%>
+    <% } %>
 	<br>Salutation: <%=details.salutation%>
 	<br>Rank: <%=details.rank%>
 	<br>Dietary reqs: <%=details.dietary%>

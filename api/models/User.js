@@ -41,8 +41,13 @@ var User = {
     // The user's lodge no
     lodgeNo: {
       type: 'string'
+    },       
+    
+    // The user's masonic centre
+    centre: {
+      type: 'string'
     },
-        
+
     // The user's area
     area: {
       type: 'string'
@@ -98,23 +103,33 @@ var User = {
     // Organiser?
     isOrganiser: {
       type: 'boolean' 
-    },
-    
-    // Visiting Officer?
-    //isVO: {
-    //  type: 'boolean'
-    //},
+    },      
+
+    // VO?
+    isVO: {
+      type: 'boolean' 
+    },     
     
     // VO Lodge
-    //voLodge: {
-    //  type: 'string'
-    //},
+    voLodge: {
+      type: 'string'
+    },    
     
     // VO lodge number
-    //voLodgeNo: {
-    //  type: 'string'
-    //},
+    voLodgeNo: {
+      type: 'string'
+    },
     
+    // The VO masonic centre
+    voCentre: {
+      type: 'string'
+    },
+
+    // The VO area
+    voArea: {
+      type: 'string'
+    },
+
     // Authentication provider (some redundancy here as we can get this from the passport, but takes
     // the additional I/O out of each request)
     authProvider: {

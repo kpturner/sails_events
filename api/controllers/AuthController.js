@@ -292,6 +292,13 @@ var AuthController = {
        
         // Always treat the email as changed so the gravatar is updated after a social media sign-up
         delta.email=profile.email;  
+
+        if (!profile.isVO) {
+          delta.voLodge="";
+          delta.voLodgeNo="";
+          delta.voCentre="";
+          delta.voArea="";
+        }
 				  
 			var handleDelta=function(req,delta){
 				if (delta.email) {					 
