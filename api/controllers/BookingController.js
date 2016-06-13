@@ -1299,11 +1299,19 @@ module.exports = {
     transferBookings: function(req, res) {
         var from=req.param("id");
         var to=req.param("newuser");
+		var booking=req.param("booking");
         
         // Here we are going to build an array of promises for each update and only return 
         // to the client when .all() the updates are complete
         var updates=[];
-        Booking.find({user:from})
+		var criteria={};
+		if (booking) {
+			criteria.id=booking;
+		}
+		else {
+			criteria.user=from;
+		}
+        Booking.find(criteria)
             .then(function(bookings){
                 bookings.forEach(function(booking,b){
                     updates.push(

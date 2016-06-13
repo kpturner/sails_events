@@ -452,16 +452,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					// For my bookings or ordinary bookings we will issue a confirmation dialog, 
 					// otherwise we will return to where we came from
 					if ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id || $scope.selectedUserId) {
-						setTimeout(function(){
-							if ($scope.myBookings)
-								window.location='/mybookings'
-							else if ($scope.eventBookings)
-								window.location='/eventbookings?eventid='+$scope.event.id;
-							else if ($scope.userBookings)
-								window.location='/userbookings?userid='+$scope.selectedUserId;
-							else
-								window.location = '/'
-						},1000);	
+						$scope.finish();
 					}	
 					else {
 						var opts={
@@ -593,6 +584,69 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			
 		}				
 		
+	}
+
+	$scope.transferBooking = function() {
+        // Get a list of users that excludes this user
+        $http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent($scope.selectedUserId.toString())+'"}}&sort=surname')
+            .then(function onSuccess(sailsResponse){
+                if (typeof sailsResponse.data == 'object') {
+                    $scope.users = sailsResponse.data;
+                    // Prompt the user to select a user to transfer
+                    // the bookings to
+                    var opts={
+                        template:"/templates/bookingTransfer.html",
+                        className: 'ngdialog-theme-default',
+                        scope: $scope
+                        };
+                    // Pop the dialog
+                    ngDialog.openConfirm(opts)
+                        .then(function (value) {
+                            // Transfer bookings and try again
+                            $http.post('/booking/transfer',{
+                                _csrf: SAILS_LOCALS._csrf,
+                                id:$scope.selectedUserId,
+                                newuser:$scope.bookingForm.newuser,
+								booking: SAILS_LOCALS.booking.id,
+                            })
+                            .then(function(){
+                                $scope.finish();
+                            })
+                            .catch(function(sailsResponse){
+                                 toastr.error(sailsResponse.data, 'Error');
+                            })
+                        }, 
+                        function (reason) {
+                            // Do nothing
+                        });						
+                }
+                else {
+                     toastr.error(origResponse.data, 'Error');  
+                }
+            })
+            .catch(function onError(sailsResponse){
+    
+                // Handle known error type(s).
+                toastr.error(sailsResponse.data, 'Error');
+                
+    
+            })
+            .finally(function eitherWay(){
+                // Nothing to do
+            })
+    }
+
+	$scope.finish = function(){
+		setTimeout(function(){
+			if ($scope.myBookings)
+				window.location='/mybookings'
+			else if ($scope.eventBookings)
+				window.location='/eventbookings?eventid='+$scope.event.id;
+			else if ($scope.userBookings)
+				window.location='/userbookings?userid='+$scope.selectedUserId;
+			else
+				window.location = '/'
+		},1000);	
 	}
 
 }])

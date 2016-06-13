@@ -129,6 +129,10 @@
           <span ng-show="bookingForm.loading && existingBooking  && mode!='delete'">Updating your booking...</span>
           <span ng-show="bookingForm.loading && mode=='delete'">Cancelling your booking...</span>
         </button>
+
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="transferBooking()" ng-show="(mode!='delete' && mode!='create' && selectedUserId)">
+          <span>Transfer booking</span>          
+        </button>
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form>
