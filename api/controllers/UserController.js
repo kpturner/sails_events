@@ -126,7 +126,7 @@ module.exports = {
 							.then(function(usrs){
 								if (usrs && usrs.length>0) {
 									dups.push(user);
-									dups.push(usrs)
+									dups=dups.concat(usrs)
 								}
 								next();
 							})						
