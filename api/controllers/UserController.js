@@ -128,7 +128,7 @@ module.exports = {
 							var dup=false;
 							_.forEach(duplicates,function(already,a){
 								if (dp.id==already.id) {
-									sails.log.debug("User '"+dp.name+"' already listed as a duplicate")
+									//sails.log.debug("User '"+dp.name+"' already listed as a duplicate")
 									dup=true;
 									return false;
 								}
