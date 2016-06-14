@@ -107,18 +107,33 @@ module.exports = {
 				if (filter=="duplicates") {
 					var dups=[];
 					async.each(users,function(user,next){
-						// For this user, see if there are any others with the same name
+						// Ignore if user is already tagged as a duplicate
 						var dup=false;
-						_.forEach(users,function(usr,u){
-							if (usr.id!=user.id && usr.firstName.toLowerCase()==user.firstName.toLowerCase() && usr.surname.toLowerCase()==user.surname.toLowerCase()) {
-								dups.push(usr);
+						_.forEach(dups,function(dp,d){
+							if (dp.id==user.id) {
 								dup=true;
-							}
-							if (dup) {
-								dups.push(user);
+								return false;
 							}
 						})
-						next();
+						if (!dup) {
+							// For this user, see if there are any others with the same name
+							User.find({where:{
+									id:	{"!":user.id},
+									firstName: 	user.firstName,
+									surname: 	user.surname,
+								}
+							})
+							.then(function(usrs){
+								if (usrs && usrs.length>0) {
+									dups.push(user);
+									dups.push(usrs)
+								}
+								next();
+							})						
+						}
+						else {
+							next();
+						}
 					},function(err){
 						// All done
 						return res.json(dups); 
