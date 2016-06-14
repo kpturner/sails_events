@@ -107,36 +107,37 @@ module.exports = {
 				if (filter=="duplicates") {
 					var dups=[];
 					async.each(users,function(user,next){
-						// Ignore if user is already tagged as a duplicate
-						var dup=false;
-						_.forEach(dups,function(dp,d){
-							if (dp.id==user.id) {
-								dup=true;
-								return false;
+						// For this user, see if there are any others with the same name
+						User.find({where:{
+								id:	{"!":user.id},
+								firstName: 	user.firstName,
+								surname: 	user.surname,
 							}
 						})
-						if (!dup) {
-							// For this user, see if there are any others with the same name
-							User.find({where:{
-									id:	{"!":user.id},
-									firstName: 	user.firstName,
-									surname: 	user.surname,
+						.then(function(usrs){
+							if (usrs && usrs.length>0) {
+								dups.push(user);
+								dups=dups.concat(usrs)
+							}
+							next();
+						})
+					},function(err){
+						// All done - now strip out duplicate duplicates 
+						var duplicates=[];
+						_.forEach(dups,function(dp,d){
+							var dup=false;
+							_.forEach(duplicates,function(already,a){
+								if (dp.id==already.id) {
+									sails.log.debug("User '"+dp.name+"' already listed as a duplicate")
+									dup=true;
+									return false;
 								}
 							})
-							.then(function(usrs){
-								if (usrs && usrs.length>0) {
-									dups.push(user);
-									dups=dups.concat(usrs)
-								}
-								next();
-							})						
-						}
-						else {
-							next();
-						}
-					},function(err){
-						// All done
-						return res.json(dups); 
+							if (!dup) {
+								duplicates.push(dp);
+							}							
+						})
+						return res.json(duplicates); 
 					})
 				}
 				else {
