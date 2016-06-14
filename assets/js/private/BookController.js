@@ -2,7 +2,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	
 	$scope.bookingForm = {
-		loading: false
+		loading: false,
+		transferring: false,
 	}
 
 		
@@ -587,6 +588,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	}
 
 	$scope.transferBooking = function() {
+		$scope.bookingForm.transferring=true;
         // Get a list of users that excludes this user
         $http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent($scope.selectedUserId.toString())+'"}}&sort=surname')
             .then(function onSuccess(sailsResponse){
@@ -610,14 +612,16 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 								booking: SAILS_LOCALS.booking.id,
                             })
                             .then(function(){
-                                $scope.finish();
+								$scope.finish();
                             })
                             .catch(function(sailsResponse){
                                  toastr.error(sailsResponse.data, 'Error');
+								 $scope.bookingForm.transferring=false;
                             })
                         }, 
                         function (reason) {
                             // Do nothing
+							$scope.bookingForm.transferring=false;
                         });						
                 }
                 else {
@@ -628,7 +632,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     
                 // Handle known error type(s).
                 toastr.error(sailsResponse.data, 'Error');
-                
+                $scope.bookingForm.transferring=false;
     
             })
             .finally(function eitherWay(){
@@ -638,6 +642,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	$scope.finish = function(){
 		setTimeout(function(){
+			$scope.bookingForm.transferring=false;
 			if ($scope.myBookings)
 				window.location='/mybookings'
 			else if ($scope.eventBookings)

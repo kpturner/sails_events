@@ -131,7 +131,8 @@
         </button>
 
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="transferBooking()" ng-show="(mode!='delete' && mode!='create' && selectedUserId)">
-          <span>Transfer booking</span>          
+          <span ng-show="!bookingForm.transferring">Transfer booking</span>  
+          <span ng-show="bookingForm.transferring">Transferring booking...</span>          
         </button>
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
