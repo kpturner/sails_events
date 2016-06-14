@@ -95,11 +95,12 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
             }  
             else {
                 // Handle known error type(s).
-                toastr.error(sailsResponse.data, 'Error');   
+                toastr.error(sailsResponse.data, 'Error');  
+                $scope.userdetailsForm.loading = false; 
             }
 		})
 		.finally(function eitherWay(){
-			$scope.userdetailsForm.loading = false;
+			
 		})
 	}
     
@@ -130,10 +131,12 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
                                 $scope.submitUserForm();
                             })
                             .catch(function(sailsResponse){
-                                 toastr.error(sailsResponse.data, 'Error');
+                                $scope.userdetailsForm.loading = false;
+                                toastr.error(sailsResponse.data, 'Error');
                             })
                         }, 
                         function (reason) {
+                            $scope.userdetailsForm.loading = false;
                             toastr.error(origResponse.data, 'Error');  
                         });						
                 }
@@ -145,7 +148,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
     
                 // Handle known error type(s).
                 toastr.error(sailsResponse.data, 'Error');
-                
+                $scope.userdetailsForm.loading = false;
     
             })
             .finally(function eitherWay(){

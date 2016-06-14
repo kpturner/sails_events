@@ -60,7 +60,7 @@ module.exports = {
 		req.session.bookingFilter="";				
 		var where = {};
 		
-		if (filter && filter.length>0) {
+		if (filter && filter.length>0 && filter!="duplicates") {
 			where = {
 				or: [
 					{salutation: {contains: filter}},
@@ -103,7 +103,30 @@ module.exports = {
 			    	return res.json({});
 			  	}
 				  
-				return res.json(users);  
+				// If we are looking for duplicates then we have more to do  
+				if (filter=="duplicates") {
+					var dups=[];
+					async.each(users,function(user,next){
+						// For this user, see if there are any others with the same name
+						var dup=false;
+						_.forEach(users,function(usr,u){
+							if (usr.id!=user.id && usr.firstName.toLowerCase()==user.firstName.toLowerCase() && usr.surname.toLowerCase()==user.surname.toLowerCase()) {
+								dups.push(usr);
+								dup=true;
+							}
+							if (dup) {
+								dups.push(user);
+							}
+						})
+						next();
+					},function(err){
+						// All done
+						return res.json(dups); 
+					})
+				}
+				else {
+					return res.json(users);  	
+				}				
 			}
 		)
 			
