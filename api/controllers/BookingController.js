@@ -1261,7 +1261,7 @@ module.exports = {
 											info: (booking.info || "").replace(/[\n\r]/g, '<br>'),  
 											places: booking.places,
 											linkedBookings: linkedBookings,
-											paymentDetails: booking.event.paymentDetails.replace(/[\n\r]/g, '<br>'),
+											paymentDetails: (booking.event.paymentDetails)?booking.event.paymentDetails.replace(/[\n\r]/g, '<br>'):"",
 											total: (booking.places * booking.event.price),
 											deadline: deadline
 								    },

@@ -234,23 +234,103 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	 * Test if the details are complete on the booking
 	 */
 	$scope.detailsComplete = function() {
+		errors=[];
 		var complete=true;
-		if (   (!$scope.bookingForm.name || $scope.bookingForm.name.length==0)
-			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0))
-			//|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.lodgeNo || isNaN($scope.bookingForm.lodgeNo)))
-			|| (!$scope.bookingForm.salutation || $scope.bookingForm.salutation.length==0)			
-			|| (!$scope.eventBookings && !$scope.userBookings && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))			
-            || ($scope.event.addressReqd && (!$scope.bookingForm.address1 || !$scope.bookingForm.postcode || $scope.bookingForm.address1.length==0 || $scope.bookingForm.postcode.length==0))			
-			// Don't allow people to book themselves in if there is an opening date and we having got there yet!
-			|| (!$scope.openForBookings)	
-		
-		) {
+		if (!$scope.bookingForm.salutation || $scope.bookingForm.salutation.length==0) {
 			complete=false;
+			errors.push("Salutation")
 		}
+		if (!$scope.bookingForm.name || $scope.bookingForm.name.length==0) {
+			complete=false;
+			errors.push("Full name")
+		}
+		if (!$scope.bookingForm.surname || $scope.bookingForm.surname.length==0) {
+			complete=false;
+			errors.push("Surname")
+		}
+		if (!$scope.bookingForm.firstName || $scope.bookingForm.firstName.length==0) {
+			complete=false;
+			errors.push("First name")
+		} 
+		if ($scope.event.addressReqd && (!$scope.bookingForm.address1 || $scope.bookingForm.address1.length==0)) {
+			complete=false;
+			errors.push("Address line 1")
+		}
+		if ($scope.event.addressReqd && (!$scope.bookingForm.postcode || $scope.bookingForm.postcode.length==0)) {
+			complete=false;
+			errors.push("Postcode")
+		}
+		if (!$scope.eventBookings && !$scope.userBookings) {
+			if (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0) {
+				complete=false;
+				errors.push("Lodge")
+			}
+			if (!$scope.bookingForm.lodgeNo || $scope.bookingForm.lodge==0) {
+				complete=false;
+				errors.push("Lodge number")
+			}
+			if (!$scope.bookingForm.email || $scope.bookingForm.email.length==0) {
+				complete=false;
+				errors.push("Email address")
+			}	
+			//if (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0) {
+			//	complete=false;
+			//	errors.push("Email confirmation ()")
+			//}	
+		}
+		if ($scope.bookingForm.places>1) {
+			if (!$scope.linkedbookings || $scope.linkedbookings.length==0) {
+				complete=false;
+				errors.push("Additional attendee information")
+			}
+			else {
+				$.each($scope.linkedbookings,function(index,value){
+					if (index<($scope.bookingForm.places-1)) {
+						if (!this.salutation || this.salutation.length==0) {
+							complete=false;
+							errors.push("Salutation for additional attendee "+(index+1).toString())
+						}
+						if (!this.surname || this.surname.length==0) {
+							complete=false;
+							errors.push("Surname for additional attendee "+(index+1).toString())
+						}
+						if (!this.firstName || this.firstName.length==0) {
+							complete=false;
+							errors.push("First name for additional attendee "+(index+1).toString())
+						}
+					}
+				})
+			}
 			
+		} 
+			
+		if (!complete) {
+			$scope.validationErrors(errors);
+			$scope.bookingForm.loading=false;
+		}
+
 		return complete;
 	}		
 	
+
+	/**
+	 * Validation errors
+	 */
+	$scope.validationErrors = function(errors){
+		// Prompt the user to highlight validation errors (missing mandatory fields)
+		if (errors && errors.length>0) {
+			$scope.errors=errors;
+			// Give the user the chance to pull out
+			var opts={
+				template:"/templates/validationErrors.html",
+				className: 'ngdialog-theme-default',
+				scope: $scope
+			};
+			// Pop the dialog
+			ngDialog.open(opts);
+		}
+	}
+
 	/**
 	 * Submit booking
 	 */	
@@ -272,59 +352,60 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				})	
 			}	
 			
-			
-			
-			// If we have additional linked bookings, do a quick check that that are not
-			// potentially double booked before proceeding
-			if ($scope.bookingForm.places<2) {
-				$scope.proceed()
-			}	
-			else {
-				$http.post("/validateadditions",{
-                    _csrf: SAILS_LOCALS._csrf,
-					eventId: $scope.event.id,	
-					linkedBookings: $scope.linkedbookings,
-					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
-				})
-				.then(function onSuccess(sailsResponse){	
-					if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {
-						toastr.error("Your session has expired. Please log in again")	
-						setTimeout(function(){
-							window.location="/homepage";
-						},1000);
-						return;
-					}		 
-					if (sailsResponse.data.length==0) {
-						// No potential problems
-						$scope.proceed()
-					}
-					else {
-						$scope.duplicates=sailsResponse.data;
-						// Give the user the chance to pull out
-						var opts={
-							template:"/templates/bookingDialog.html",
-						 	className: 'ngdialog-theme-default',
-							scope: $scope
-						};
-						// Pop the dialog
-						ngDialog.openConfirm(opts)
-							.then(function (value) {
-								// Continue with booking
-			                    $scope.proceed()
-			                }, function (reason) {
-								// They bottled it
-			                    $scope.bookingForm.loading = false;
-			                });
-							
-					}
-				})
-				.catch(function onError(sailsResponse){			 
-					// Cannot do much here
-				})
-				.finally(function eitherWay(){
-					// Nothing to do
-				})
-			}	
+			// Validation checking
+			if ($scope.detailsComplete()) {
+				// If we have additional linked bookings, do a quick check that that are not
+				// potentially double booked before proceeding
+				if ($scope.bookingForm.places<2) {
+					$scope.proceed()
+				}	
+				else {
+					$http.post("/validateadditions",{
+						_csrf: SAILS_LOCALS._csrf,
+						eventId: $scope.event.id,	
+						linkedBookings: $scope.linkedbookings,
+						bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
+					})
+					.then(function onSuccess(sailsResponse){	
+						if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {
+							toastr.error("Your session has expired. Please log in again")	
+							setTimeout(function(){
+								window.location="/homepage";
+							},1000);
+							return;
+						}		 
+						if (sailsResponse.data.length==0) {
+							// No potential problems
+							$scope.proceed()
+						}
+						else {
+							$scope.duplicates=sailsResponse.data;
+							// Give the user the chance to pull out
+							var opts={
+								template:"/templates/bookingDialog.html",
+								className: 'ngdialog-theme-default',
+								scope: $scope
+							};
+							// Pop the dialog
+							ngDialog.openConfirm(opts)
+								.then(function (value) {
+									// Continue with booking
+									$scope.proceed()
+								}, function (reason) {
+									// They bottled it
+									$scope.bookingForm.loading = false;
+								});
+								
+						}
+					})
+					.catch(function onError(sailsResponse){			 
+						// Cannot do much here
+					})
+					.finally(function eitherWay(){
+						// Nothing to do
+					})
+				}	
+			} 
 		}
 		
 	}

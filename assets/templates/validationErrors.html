@@ -1,0 +1,11 @@
+<div class="ngdialog-message">
+    <h3>VALIDATION ERRORS</h3>
+    <p>Please complete the following mandatory fields:</p>   
+    <div ng-repeat="error in errors">
+        <label>{{error}}</label>
+    </div>   
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">OK</button>   
+</div>
+ 
