@@ -115,7 +115,7 @@ exports.register = function (req, res, next) {
                   Email.send(
                         "signupConfirmation",
                         {
-                            recipientName: newUser.salutation + " " + newUser.firstName,
+                            recipientName: Utility.recipient(newUser.salutation,newUser.firstName,newUser.surname),
                             senderName: sails.config.events.title,
                             details: newUser,        								 
       						//domain:	sails.config.events.domain,

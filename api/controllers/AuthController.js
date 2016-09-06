@@ -379,37 +379,38 @@ var AuthController = {
 						 return res.negotiate(err);
 					}
 					// Success
-                    if (updatedUser[0].area==null)
-                        updatedUser[0].area=""
-                    if (updatedUser[0].address1==null)
-                        updatedUser[0].address1=""
-                    if (updatedUser[0].address2==null)
-                        updatedUser[0].address2=""
-                    if (updatedUser[0].address3==null)
-                        updatedUser[0].address3=""
-                    if (updatedUser[0].address4==null)
-                        updatedUser[0].address4=""
-                    if (updatedUser[0].postcode==null)
-                        updatedUser[0].postcode=""    
-                    if (updatedUser[0].dietary==null)
-                        updatedUser[0].dietary=""
-                    if (updatedUser[0].rank==null)
-                        updatedUser[0].rank=""
-                    if (updatedUser[0].phone==null)
-                        updatedUser[0].phone=""
-                    if (!updatedUser[0].isVO)
-                        updatedUser[0].isVO=false
-                    if (!updatedUser[0].isAdmin)
-                        updatedUser[0].isAdmin=false
-                    if (!updatedUser[0].isOrganiser)
-                        updatedUser[0].isOrganiser=false  
-                    if (updatedUser[0].authProvider!="local")
-                        updatedUser[0].username="N/A"
-                    
-                    // Send confirmation email
+          if (updatedUser[0].area==null)
+              updatedUser[0].area=""
+          if (updatedUser[0].address1==null)
+              updatedUser[0].address1=""
+          if (updatedUser[0].address2==null)
+              updatedUser[0].address2=""
+          if (updatedUser[0].address3==null)
+              updatedUser[0].address3=""
+          if (updatedUser[0].address4==null)
+              updatedUser[0].address4=""
+          if (updatedUser[0].postcode==null)
+              updatedUser[0].postcode=""    
+          if (updatedUser[0].dietary==null)
+              updatedUser[0].dietary=""
+          if (updatedUser[0].rank==null)
+              updatedUser[0].rank=""
+          if (updatedUser[0].phone==null)
+              updatedUser[0].phone=""
+          if (!updatedUser[0].isVO)
+              updatedUser[0].isVO=false
+          if (!updatedUser[0].isAdmin)
+              updatedUser[0].isAdmin=false
+          if (!updatedUser[0].isOrganiser)
+              updatedUser[0].isOrganiser=false  
+          if (updatedUser[0].authProvider!="local")
+              updatedUser[0].username="N/A"
+ 
+          
+          // Send confirmation email
 					Email.send(
 						"profileChanged", {
-    				      recipientName: updatedUser[0].salutation + " " + updatedUser[0].firstName,
+    				      recipientName: Utility.recipient(updatedUser[0].salutation,updatedUser[0].firstName,updatedUser[0].surname),
     				      senderName: sails.config.events.title,
     			        details: updatedUser[0]
 							  
@@ -460,7 +461,7 @@ var AuthController = {
            // Send confirmation email
   					Email.send(
   						"passwordReset", {
-      				    recipientName: user.salutation + " " + user.firstName,
+      				    recipientName: Utility.recipient(user.salutation,user.firstName,user.surname),
                         senderName: sails.config.events.title,
   				        resetInstructions: resetInstructions,
                         newPassword: newPassword,

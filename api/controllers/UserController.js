@@ -248,7 +248,7 @@ module.exports = {
 				// Send confirmation email
 				Email.send(
 					"profileChanged", {
-				            recipientName: user[0].salutation + " " + user[0].firstName,
+				            recipientName:Utility.recipient(user[0].salutation,user[0].firstName,user[0].surname),
 				            senderName: sails.config.events.title,
 			                details: user[0]						  
 					    },

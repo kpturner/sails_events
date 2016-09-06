@@ -258,5 +258,25 @@ module.exports = {
             },sails.config.heapdumpInterval)  
         }
     },
+
+     /**
+     * @name            service.Utility.recipient
+     * @method
+     * @description     Return appropriate recipient text
+     * @param {String}  Salutation
+     * @param {String}  First name
+     * @param {String}  Surname
+     * @return {String} 
+     */
+    recipient: function(salutation,firstName,surname) {
+        var recip;
+        if (['Mr', 'Mrs', 'Ms', 'Miss'].indexOf(salutation)>=0) {
+            recip=salutation + " " + surname;
+        }
+        else {
+            recip=salutation + " " + firstName;
+        }
+        return recip;
+    }
   
 };
