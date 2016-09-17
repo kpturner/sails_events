@@ -43,6 +43,32 @@ get the nano editor: "yum install nano"
 
 INSTALLS NOW COMPLETE
 
+
+Plesk
+=====
+Ensure that nginx is installed. We need this to create a reverse proxy to the sails.js application in the
+squareevents.org domain.
+
+In Plesk, create the squareevents.org domain and add a MySql database and user - usually called 
+"squareevents" but double check the localhostMySqlServer settings in /usr/sails/projects/events/config/connections.js
+
+In the squareevents.org domain settings take the "Apache and nginx settings" option.
+
+In "Additional nginx directives" we need to reverse proxy to sails by adding the following (remembering to change the IP address):
+
+##################################################
+## Set the location routing to our Sails.js application.
+location ~ / {
+
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-IP $remote_addr;
+
+	##Use the domain.tld here.
+	proxy_pass http://<insert IP address>:1337;
+}
+##################################################
+
+
 First time in
 =============
 Make a new folder structure in /usr:   /sails/projects 
@@ -55,12 +81,6 @@ cd /usr/sails/projects/events
 Install missing modules:  "npm install"
 
 Look in "events-service" file for instructions on installing a service to run this application.
-
-In Plesk, create the squareevents.org domain and add a MySql database and user - usually called 
-"squareevents" but double check the localhostMySqlServer settings in /usr/sails/projects/events/config/connections.js
-
-In the squareevents.org file system replace the default index.html file with one that redirects 
-to our node app.  There is an example in our root called "index.example".
 
 run "sails lift" to fire everything up for the first time - this will also set up the database. 
 
