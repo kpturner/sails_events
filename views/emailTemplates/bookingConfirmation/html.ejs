@@ -46,8 +46,10 @@
 	<br>Email address: <%=email%>
 	<br>Additional info: <%-info%>
 	<br>Places: <%=places%>
+	<% if  (!eventFree) {%>
 	<br>Payment deadline: <%=deadline%>	
 	<br>Amount to pay: £<%=total%>
+	<% } %>
 	<br>
 	
 	<% if (linkedBookings.length>0) {%>
@@ -66,9 +68,10 @@
       <% }) %>
     <% } %>
 	
-	
+	<% if  (!eventFree) {%>
 	<p> Payment details: <b><%-paymentDetails%></b>
-
+	<% } %>
+	
 <p>Yours S&F,<br/><%=senderName%></p>
 
 <p><i>Do not reply to this email. The recipient is not a human!</i></p>

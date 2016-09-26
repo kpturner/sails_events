@@ -98,7 +98,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			|| (!$scope.eventForm.venue || $scope.eventForm.venue.length==0)
 			|| (!$scope.eventForm.date || $scope.eventForm.date.length==0)
 			|| (!$scope.eventForm.time || $scope.eventForm.time.length==0)
-			|| (!$scope.eventForm.price || isNaN($scope.eventForm.price))
+			|| (!$scope.eventForm.free && (!$scope.eventForm.price || isNaN($scope.eventForm.price)))
 			|| (!$scope.eventForm.minBookingPlaces || isNaN($scope.eventForm.minBookingPlaces))
 			|| (!$scope.eventForm.maxBookingPlaces || isNaN($scope.eventForm.maxBookingPlaces))
 			|| (!$scope.eventForm.openingDate || $scope.eventForm.openingDate.length==0)

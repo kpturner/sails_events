@@ -101,7 +101,12 @@ module.exports = {
     addressReqd: {
       type: 'boolean',
     },
-        
+
+    // Free event? 
+    free: {
+      type: 'boolean',
+    },   
+
     // Visiting Officers only 
     //voOnly: {
     //  type: 'boolean',
