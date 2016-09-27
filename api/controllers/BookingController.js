@@ -931,6 +931,7 @@ module.exports = {
 			)
 			//.paginate(pag)
 			.populate('event').populate('additions',{sort:{surname:'asc'}}) 
+			.paginate(pag)
 			.exec(function(err, bookings){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve bookings.');
@@ -1024,9 +1025,8 @@ module.exports = {
 							//}
 						}
 				)
-				.paginate(pag)
 				.populate('user').populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
-				
+				.paginate(pag)
 				.exec(function(err, bookings){
 					if (err) {
 						sails.log.verbose('Error occurred trying to retrieve bookings.');
@@ -1136,8 +1136,8 @@ module.exports = {
 							}
 						}
 				)
-				.paginate(pag)
-				.populate('event').populate('additions',{sort:{surname:'asc'}}) 
+				.populate('event').populate('additions',{sort:{surname:'asc'}})
+				.paginate(pag)				 
 				.exec(function(err, bookings){
 					if (err) {
 						sails.log.verbose('Error occurred trying to retrieve bookings.');
