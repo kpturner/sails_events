@@ -931,7 +931,7 @@ module.exports = {
 						}
 					}
 			)
-			.paginate(pag)
+			//.paginate(pag)
 			.populate('event').populate('additions',{sort:{surname:'asc'}}) 
 			.exec(function(err, bookings){
 				if (err) {

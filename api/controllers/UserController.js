@@ -106,7 +106,7 @@ module.exports = {
 						}
 					}
 			)
-			.paginate(pag)
+			//.paginate(pag)
 			.exec(
 			function(err, users){
 				if (err) {
