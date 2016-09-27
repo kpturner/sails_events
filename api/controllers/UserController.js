@@ -61,18 +61,16 @@ module.exports = {
 		var where = {};
 
 		// Filter may be a special notation for pagination - i.e. {page: 2, limit: 10}
-		var pag;
+		var pag={"page":1,"limit":999999999};
 		if (filter && filter.substr(0,1)=="{" && filter.substr(filter.length-1,1)=="}") {
 			try {
-				pag=JSON.parse(filter)
+				pag=JSON.parse(filter);
+				filter=null;
 			}
 			catch(e) {
 				// It is junk
 			}
-		}
-		if (pag && pag.page && pag.limit) {
-			filter=null;
-		}
+		} 
 		
 		if (filter && filter.length>0 && filter!="duplicates") {
 			where = {
