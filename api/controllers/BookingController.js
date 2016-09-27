@@ -889,6 +889,20 @@ module.exports = {
 								
 		var where = {};
 		where.user=req.user.id;
+
+		// Filter may be a special notation for pagination - i.e. {page: 2, limit: 10}
+		var pag;
+		if (filter && filter.substr(0,1)=="{" && filter.substr(filter.length-1,1)=="}") {
+			try {
+				pag=JSON.parse(filter)
+			}
+			catch(e) {
+				// It is junk
+			}
+		}
+		if (pag && pag.page && pag.limit) {
+			filter=null;
+		}
 				
 		if (filter && filter.length>0) {
 			where.or= 	[
@@ -916,7 +930,9 @@ module.exports = {
 								}		
 						}
 					}
-			).populate('event').populate('additions',{sort:{surname:'asc'}}) 
+			)
+			.paginate(pag)
+			.populate('event').populate('additions',{sort:{surname:'asc'}}) 
 			.exec(function(err, bookings){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve bookings.');

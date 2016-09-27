@@ -107,6 +107,11 @@ module.exports = {
       type: 'boolean',
     },   
 
+    // Registering interest only event? 
+    regInterest: {
+      type: 'boolean',
+    },   
+
     // Visiting Officers only 
     //voOnly: {
     //  type: 'boolean',

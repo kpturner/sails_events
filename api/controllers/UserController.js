@@ -59,6 +59,20 @@ module.exports = {
 		req.session.userFilter=filter;
 		req.session.bookingFilter="";				
 		var where = {};
+
+		// Filter may be a special notation for pagination - i.e. {page: 2, limit: 10}
+		var pag;
+		if (filter && filter.substr(0,1)=="{" && filter.substr(filter.length-1,1)=="}") {
+			try {
+				pag=JSON.parse(filter)
+			}
+			catch(e) {
+				// It is junk
+			}
+		}
+		if (pag && pag.page && pag.limit) {
+			filter=null;
+		}
 		
 		if (filter && filter.length>0 && filter!="duplicates") {
 			where = {
@@ -91,7 +105,9 @@ module.exports = {
 								firstName:'asc'
 						}
 					}
-			).exec(
+			)
+			.paginate(pag)
+			.exec(
 			function(err, users){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve users.');
