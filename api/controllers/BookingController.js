@@ -896,6 +896,7 @@ module.exports = {
 			try {
 				pag=JSON.parse(filter);
 				filter=null;
+				req.session.bookingFilter="";
 			}
 			catch(e) {
 				// It is junk
@@ -984,6 +985,7 @@ module.exports = {
 			try {
 				pag=JSON.parse(filter);
 				filter=null;
+				req.session.bookingFilter="";
 			}
 			catch(e) {
 				// It is junk
@@ -1104,6 +1106,7 @@ module.exports = {
 				try {
 					pag=JSON.parse(filter);
 					filter=null;
+					req.session.bookingFilter="";
 				}
 				catch(e) {
 					// It is junk

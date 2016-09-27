@@ -66,6 +66,7 @@ module.exports = {
 			try {
 				pag=JSON.parse(filter);
 				filter=null;
+				req.session.userFilter="";
 			}
 			catch(e) {
 				// It is junk
