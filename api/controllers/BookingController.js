@@ -158,7 +158,7 @@ module.exports = {
 					res.locals.mops=sails.config.events.mops;
 					res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
 					res.locals.salutations=sails.config.events.salutations;
-					res.locals.areas=sails.config.events.areas;
+					res.locals.areas=Utility.areas();
 					res.locals.potentialDuplicates=potentialDuplicates;
 						
 					// Get the data for the event and the user and then navigate to the booking view
