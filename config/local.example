@@ -53,7 +53,7 @@ module.exports = {
   proxyHost: 'http://squareevents.org:1337/',  
     
   // Email configuration
-  email: {
+  eventemail: {
    //service: "Gmail",
    //auth: {
    //  user:  "me@gmail.com",
@@ -62,7 +62,7 @@ module.exports = {
    /**
 	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
 	  */
-	transporter:	{
+	  transporter:	{
       host: 'localhost',
       port: 25,
     	tls:{rejectUnauthorized: false},
@@ -70,9 +70,9 @@ module.exports = {
         user: "xxxxx",
         pass: "yyyyy"
       }
-	 },
-   from: 'Provincial Events <noreply@squareevents.org>', // sender address
-   testMode:  false 
+	  },
+    from:  process.env.SMTP_SENDER || 'Provincial Events <noreply@squareevents.org>', // sender address
+    testMode:  false 
   },
   
   log: {
