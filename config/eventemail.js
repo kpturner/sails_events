@@ -1,10 +1,10 @@
 /**
  * Events Email configuration for api\hooks\events-hook-email
- * (sails.config.eventsemail)
+ * (sails.config.eventemail)
  *
  * Override settings in config/env/development.js or config/end/production.js or in config/locals.js
  * using:
- *   email:  {}
+ *   eventemail:  {}
  * 
  * 
  */

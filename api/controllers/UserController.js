@@ -182,7 +182,7 @@ module.exports = {
 				return res.view("userdetails",{
 					mode:mode,
 					salutations: sails.config.events.salutations,
-					areas: sails.config.events.areas,
+					areas: Utility.areas(),
 					form:'userdetails',
 					userDetails:user
 				})	
@@ -192,7 +192,7 @@ module.exports = {
 			return res.view("userdetails",{
 				mode:mode,
 				salutations: sails.config.events.salutations,
-				areas: sails.config.events.areas,
+				areas: Utility.areas(),
 				form:'userdetails',
 				userDetails:{}
 			})	

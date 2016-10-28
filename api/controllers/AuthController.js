@@ -102,7 +102,7 @@ var AuthController = {
     res.view({
       form: 'signup',
       salutations: sails.config.events.salutations,
-      areas: sails.config.events.areas,
+      areas: Utility.areas(),
       errors: req.flash('error')
     });
   },
@@ -248,7 +248,7 @@ var AuthController = {
     res.view('profile',{
       form: 'profile',
       salutations: sails.config.events.salutations,
-      areas: sails.config.events.areas,
+      areas: Utility.areas(),
       errors: req.flash('error')
     });  
   }, 
