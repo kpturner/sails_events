@@ -1538,7 +1538,7 @@ module.exports = {
 		
 		// Build a custom JSON for the CSV
 		var data=[];
-		var count;
+		var count=0;
 		bookings.forEach(function(booking,i){ 
 			if (user && !booking.user.surname) {
 				booking.user=user
