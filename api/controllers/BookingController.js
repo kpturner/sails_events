@@ -1538,7 +1538,7 @@ module.exports = {
 		
 		// Build a custom JSON for the CSV
 		var data=[];
-		
+		var count;
 		bookings.forEach(function(booking,i){ 
 			if (user && !booking.user.surname) {
 				booking.user=user
@@ -1547,7 +1547,9 @@ module.exports = {
 			var row={};   
             //if (!user) {
             //    row.seq=parseInt(booking.ref.replace(prefix,""));
-            //}                        
+            //}      
+			count++;
+			row.count=count;                  
 			row.tableNo=booking.tableNo || "";
 			row.ref=booking.ref || "";
 			row.salutation=booking.user.salutation || "";
@@ -1589,6 +1591,8 @@ module.exports = {
                 //if (!user) {
                 //    row.seq=parseInt(booking.ref.replace(prefix,""));
                 //}    
+				count++;
+				row.count=count; 
 				row.tableNo=booking.tableNo || "";
 				row.ref=booking.ref || "";
 				row.salutation=addition.salutation || "";
