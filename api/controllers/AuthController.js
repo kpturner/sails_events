@@ -54,7 +54,11 @@ var AuthController = {
     AuthController.resetAuth(req, res);    
     
     // Render the `auth/login.ext` view
-    res.view('homepage',{
+    var view="homepage";
+    if (sails.config.events.maintenance) {
+      view="maintenance"
+    }
+    res.view(view,{
       providers : providers
     , errors    : req.flash('error')
     });

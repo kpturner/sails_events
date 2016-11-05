@@ -11,6 +11,9 @@
 module.exports.events = {
     
     developer: process.env.DEVELOPER || null,
+
+	// Maintenance mode?
+	maintenance: false,
     
 	// Expire session after this many milliseconds
 	sessionExpiry:  30 * 60 * 1000,
