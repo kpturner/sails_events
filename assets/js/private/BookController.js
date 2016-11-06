@@ -22,8 +22,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.makeArray = function(){
 		$scope.linkedbookingsArr.length=0;
 		for (var i=0;i<(parseInt($scope.bookingForm.places)-1);i++) {
-			$scope.linkedbookingsArr.push(i)
+			$scope.linkedbookingsArr.push(i);
 		} 
+	}
+
+	// addGuest - a button to simply increment the number of places
+	$scope.addGuest = function(){
+		$scope.bookingForm.places+=1;
+		$scope.makeArray();
 	}
 	
 	// Build a list of MOPs from the config for the MOP dropdown

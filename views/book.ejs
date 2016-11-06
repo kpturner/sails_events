@@ -120,7 +120,11 @@
         <!--
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || (!eventBookings && !userBookings && paid) || bookingForm.loading">
         -->
-        
+
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addGuest()" ng-show="(bookingForm.places<placesMax && mode!='delete' && mode!='create')">
+          <span>Add guest</span>     
+        </button>
+
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && booking.$invalid) || bookingForm.loading || event.capacity<=0">
           <span ng-show="!bookingForm.loading && mode=='delete'">Cancel booking</span>
           <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete'">Book now</span>
