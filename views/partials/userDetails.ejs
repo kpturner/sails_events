@@ -167,6 +167,48 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
   </select>
 </div>
 
+
+
+<!-- D I E T A R Y -->
+
+<div class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-form%>.dietary.$invalid &&
+                        <%-form%>.dietary.$dirty}">
+  <label>Dietary requirements</label>
+  <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="<%-form%>Form.dietary" ng-maxlength="50" >
+  <span class="help-block has-error" ng-if="<%-form%>.dietary.$dirty">
+    <span ng-show="<%-form%>.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+  </span>
+</div>
+
+<!-- E M A I L -->
+
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-form%>.email.$invalid &&
+                      <%-form%>.email.$dirty}">
+                        
+  <label><span ng-hide="<%-form%>Form.authProvider=='dummy'">* </span>Email address</label>
+  <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-form%>Form.email" compare-to="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'">
+  <span class="help-block has-error" ng-if="<%-form%>.email.$dirty">
+    <span ng-show="<%-form%>.email.$error.required">Email address is required.</span>
+    <span ng-show="<%-form%>.email.$error.email">Not a valid email address.</span>
+  </span>
+</div>
+
+ <!-- C O N F I R M  E M A I L -->
+
+<div class="control-group form-group col-xs-10"
+ng-class="{'has-error':<%-form%>.confirmemail.$invalid &&
+                      <%-form%>.confirmemail.$dirty}">
+  <label>Re-enter your email address</label>
+  <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'" >
+  <span class="help-block has-error" ng-if="<%-form%>.confirmemail.$dirty">
+    <span ng-show="<%-form%>.email.$error.compareTo">Email address must match.</span>
+    <span ng-show="<%-form%>.confirmemail.$error.required">Confirmation email address is required.</span>
+    <span ng-show="<%-form%>.confirmemail.$error.email">Not a valid email address.</span>
+  </span>
+</div>
+
 <!-- V O ? -->
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':userdetails.isvo.$invalid &&
@@ -218,44 +260,4 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
   <select class="form-control" placeholder="e.g. South Central" name="voarea" ng-options="area for area in areas" ng-model="<%-form%>Form.voArea">
     <option value="">-- choose area --</option>
   </select>
-</div>
-
-<!-- D I E T A R Y -->
-
-<div class="control-group form-group col-xs-10"
-  ng-class="{'has-error':<%-form%>.dietary.$invalid &&
-                        <%-form%>.dietary.$dirty}">
-  <label>Dietary requirements</label>
-  <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="<%-form%>Form.dietary" ng-maxlength="50" >
-  <span class="help-block has-error" ng-if="<%-form%>.dietary.$dirty">
-    <span ng-show="<%-form%>.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
-  </span>
-</div>
-
-<!-- E M A I L -->
-
-<div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-form%>.email.$invalid &&
-                      <%-form%>.email.$dirty}">
-                        
-  <label><span ng-hide="<%-form%>Form.authProvider=='dummy'">* </span>Email address</label>
-  <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-form%>Form.email" compare-to="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'">
-  <span class="help-block has-error" ng-if="<%-form%>.email.$dirty">
-    <span ng-show="<%-form%>.email.$error.required">Email address is required.</span>
-    <span ng-show="<%-form%>.email.$error.email">Not a valid email address.</span>
-  </span>
-</div>
-
- <!-- C O N F I R M  E M A I L -->
-
-<div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-form%>.confirmemail.$invalid &&
-                      <%-form%>.confirmemail.$dirty}">
-  <label>Re-enter your email address</label>
-  <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'" >
-  <span class="help-block has-error" ng-if="<%-form%>.confirmemail.$dirty">
-    <span ng-show="<%-form%>.email.$error.compareTo">Email address must match.</span>
-    <span ng-show="<%-form%>.confirmemail.$error.required">Confirmation email address is required.</span>
-    <span ng-show="<%-form%>.confirmemail.$error.email">Not a valid email address.</span>
-  </span>
 </div>
