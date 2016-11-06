@@ -1,6 +1,6 @@
 cd /usr/sails/projects/events
-gitupdate.sh
+bash gitupdate.sh
 cd /usr/sails/projects/eventstest
-gitupdate.sh
+bash gitupdate.sh
 cd /usr/sails/projects/surrey
-gitupdate.sh
+bash gitupdate.sh
