@@ -112,10 +112,10 @@ module.exports = {
       type: 'boolean',
     },   
 
-    // Visiting Officers only 
-    //voOnly: {
-    //  type: 'boolean',
-    //},
+    // Visiting Officers details required? 
+    voReqd: {
+      type: 'boolean',
+    },
     
     price: {
       type: 'float',

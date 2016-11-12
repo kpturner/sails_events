@@ -492,6 +492,7 @@ module.exports = {
 															centre: user.centre || "",																
 															area: user.area || "",															
 															rank: user.rank || "",
+															voReqd: event.voReqd,
 															isVO: user.isVO,
 															voLodge: user.voLodge || "",
 															voLodgeNo: user.voLodgeNo || "",
@@ -1048,7 +1049,7 @@ module.exports = {
 					  		
 					if (download) {					
 						Event.findOne(req.param("eventid")).exec(function(err,event){
-							sails.controllers.booking.download(req, res, event.code, event.addressReqd, bookings);		
+							sails.controllers.booking.download(req, res, event.code, event.addressReqd, event.voReqd, bookings);		
 						})									
 					}
 					else {
@@ -1295,6 +1296,7 @@ module.exports = {
 										salutation: booking.user.salutation || "",
 										centre: booking.user.centre,
 										area: booking.user.area || "",
+										voReqd: event.voReqd,
 										isVO: booking.user.isVO,
 										voLodge: booking.user.voLodge || "",
 										voLodgeNo: booking.user.voLodgeNo || "",
@@ -1526,7 +1528,7 @@ module.exports = {
 	/**
 	 * Download bookings
 	 */
-	 download: function(req, res, prefix, addressReqd, bookings, user) {
+	 download: function(req, res, prefix, addressReqd, voReqd, bookings, user) {
 	 	if (!bookings) {
 			bookings=[]
 		}
@@ -1577,12 +1579,12 @@ module.exports = {
 			row.cost=booking.cost || "";
 			row.amountPaid=amountPaid || "";	
             row.bookingDate=booking.bookingDate;
-			//if (booking.user.isVO) {
+			if (voReqd && booking.user.isVO) {
 				row.voLodge=booking.user.voLodge;
 				row.voLodgeNo=booking.user.voLodgeNo;
 				row.voCentre=booking.user.voCentre;
 				row.voArea=booking.user.voArea;
-			//}
+			}
             //row.createdAt=booking.createdAt;        
 			data.push(row);
 			// Add additional places as rows also
