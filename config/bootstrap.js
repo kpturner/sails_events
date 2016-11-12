@@ -27,7 +27,7 @@ module.exports.bootstrap = function(cb) {
     // Build indexes asyncronously if need before
     if (sails.config.models.migrate=="alter") {
         // Asynchronously build any indexes required for this environment
-        Utility.buildIndexes("squareevents",function(){
+        Utility.buildIndexes(sails.config.connections.localhostMysqlServer.database,function(){
             sails.log.debug("indexes rebuilt")
         })
     }    
