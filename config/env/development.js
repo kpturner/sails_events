@@ -37,7 +37,7 @@ module.exports = {
   proxyPort: process.env.PROXYPORT || null, 
 
   // Increase hook timeout
-  hookTimeout: 60000, // 60 seconds 
+  hookTimeout: 90000, // 90 seconds 
    
   
   // Switch CSRF on
