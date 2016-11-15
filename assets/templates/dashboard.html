@@ -1,5 +1,5 @@
 <div class="photo ng-scope">
-   <a href="/booking?eventid={{card.id}}&selecteduserid={{card.selectedUserId}}&userbookings={{card.userBookings}}" title="Click here to book in" class="a-unstyled">        
+   <a href="/booking?eventid={{card.id}}&selecteduserid={{card.selectedUserId}}&userbookings={{card.userBookings}}" title="Click here to {{card.titleAugmentation}}" class="a-unstyled">        
         <div class="photo-description">
             <div>
                 <div ng-show="card.logo" class="event-logo">
@@ -23,7 +23,7 @@
     </div>    
     <div class="photo-description" > 
             <button type="button" class="hidden-xs hidden-sm btn btn-primary card-btn" onclick="$(this).closest('.photo').find('a')[0].click()">
-                <span>Book in</span>
+                <span>{{card.bookInText}}</span>
             </button>     
         </div>
     <div class="photo-description" ng-show="card.showApologyButton">

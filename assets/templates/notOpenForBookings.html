@@ -1,6 +1,6 @@
 <div class="ngdialog-message">
     <h3>FOR INFORMATION</h3>
-    <p>This event is not open for online bookings until <br> {{event.openingDate | date : 'EEE, MMM dd, yyyy'}}</p>
+    <p>This event is not open until <br> {{event.openingDate | date : 'EEE, MMM dd, yyyy'}}</p>
     <div ng-hide="!event.bypassCode">
         <p>unless you have been issued with a code:</p>
         <input type="text" class="form-control" placeholder="enter your code" name="bypasscode" ng-model="bookingForm.bypassCode" />             

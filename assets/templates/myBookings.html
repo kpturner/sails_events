@@ -1,5 +1,5 @@
 <div class="photo ng-scope">
-    <a href="/booking?bookingid={{card.id}}&mybookings={{mother.myBookings}}" class="a-unstyled" title="Click here to edit booking">        
+    <a href="/booking?bookingid={{card.id}}&mybookings={{mother.myBookings}}" class="a-unstyled" title="Click here to edit {{card.event.bookingText}}">        
         <div class="photo-description">
             <h3>{{card.event.name}}</h3> 
               
@@ -13,7 +13,8 @@
     <div class="photo-description">
         <a href="/booking/delete?bookingid={{card.id}}&mybookings={{mother.myBookings}}" class="a-unstyled">     
             <button type="button" class="btn btn-danger card-btn">
-                <span>Cancel booking</span>
+                <span ng-hide="card.event.regInterest">Cancel booking</span>
+                <span ng-show="card.event.regInterest">Cancel interest</span>
             </button>
         </a>          
     </div>

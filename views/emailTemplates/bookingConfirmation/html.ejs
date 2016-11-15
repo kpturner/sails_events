@@ -2,11 +2,19 @@
 
 <p>Dear <%=recipientName%>,</p>
 
-<p>This is a courtesy email to confirm your booking<%-updated%>:</p>
- 
-
+<% if (regInterest) {%>
+	<p>This is a courtesy email to confirm your interest<%-updated%>:</p>
+<% } %> 
+<% if (!regInterest) {%>
+	<p>This is a courtesy email to confirm your booking<%-updated%>:</p>
+<% } %> 
 <p>
+	<% if (regInterest) {%>
+	Interest ref: <b><%=bookingRef%></b>
+	<% } %> 
+	<% if (!regInterest) {%>
 	Booking ref: <b><%=bookingRef%></b>
+	<% } %> 
 	<br>Event: <%=eventName%>
 	<br>On: <%=eventDate%> at <%=eventTime%>
 	<br>At: <%-eventVenue%> 
@@ -46,7 +54,7 @@
 	<br>Email address: <%=email%>
 	<br>Additional info: <%-info%>
 	<br>Places: <%=places%>
-	<% if  (!eventFree) {%>
+	<% if  (!eventFree && !regInterest) {%>
 	<br>Payment deadline: <%=deadline%>	
 	<br>Amount to pay: £<%=total%>
 	<% } %>
@@ -68,7 +76,7 @@
       <% }) %>
     <% } %>
 	
-	<% if  (!eventFree) {%>
+	<% if  (!eventFree && !regInterest) {%>
 	<p> Payment details: <b><%-paymentDetails%></b>
 	<% } %>
 	

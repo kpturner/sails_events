@@ -33,10 +33,11 @@
         </a>   
         <a href="/eventbookings/?eventid={{card.id}}" class="a-unstyled">     
             <button type="button" class="btn btn-info card-btn">
-                <span>Bookings</span>
+                <span ng-show="!card.regInterest">Bookings</span>
+                <span ng-show="card.regInterest">Interest</span>
             </button>
         </a>       
-        <a href="/eventapologies/?eventid={{card.id}}" class="a-unstyled">     
+        <a ng-show="card.showApologyButton" href="/eventapologies/?eventid={{card.id}}" class="a-unstyled">     
             <button type="button" class="btn btn-warning card-btn">
                 <span>Apologies</span>
             </button>

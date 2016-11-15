@@ -453,10 +453,21 @@ module.exports = {
 												var deadline=sails.controllers.booking.paymentDeadline(event,booking);		
 												
 												var updated = "";
-												var subject = "Event booking confirmation";
+												var subject = "";
+												if (!event.regInterest) {
+													subject="Event booking confirmation";
+												}
+												else {
+													subject="Event interest confirmation";
+												}
 												if (bookingId) {
 													updated=' has been updated';
-													subject='Event booking update confirmation'
+													if (event.regInterest) {
+														subject='Event interest update confirmation'
+													}
+													else {
+														subject='Event booking update confirmation'
+													}													
 												}	
 												Email.send(
 													"bookingConfirmation",
@@ -464,6 +475,7 @@ module.exports = {
 													recipientName: Utility.recipient(user.salutation,user.firstName,user.surname),
 													senderName: sails.config.events.title,
 															updated: updated,
+															regInterest: event.regInterest,
 															eventFree: event.free,
 															eventName: event.name,
 															eventDate: formattedDate,
@@ -1271,6 +1283,7 @@ module.exports = {
 								      	recipientName: Utility.recipient(booking.user.salutation,booking.user.firstName,booking.user.surname),
 										senderName: sails.config.events.title,
 										updated: updated,
+										regInterest: booking.event.regInterest,
 										eventName: booking.event.name,
 										eventFree: booking.event.free,
 										eventDate: formattedDate,
@@ -1296,7 +1309,7 @@ module.exports = {
 										salutation: booking.user.salutation || "",
 										centre: booking.user.centre,
 										area: booking.user.area || "",
-										voReqd: event.voReqd,
+										voReqd: booking.event.voReqd,
 										isVO: booking.user.isVO,
 										voLodge: booking.user.voLodge || "",
 										voLodgeNo: booking.user.voLodgeNo || "",
@@ -1318,7 +1331,7 @@ module.exports = {
 								      from: booking.event.name + ' <noreply@squareevents.org>',
 									  to: booking.user.email,
 									  bcc: [organiser.email || "",sails.config.events.developer || ""],
-								      subject: "Event booking cancellation confirmation"
+								      subject: booking.event.regInterest?"Event interest cancellation confirmation":"Event booking cancellation confirmation"
 								    },
 								    function(err) {if (err) console.log(err);}
 							   	)    			
@@ -1397,6 +1410,8 @@ module.exports = {
 		Event	.find({
 					where:	{
 								open:true,
+								free: false,
+								regInterest: false,
 								latePaymentChecking:true,
 								closingDate: { '>=': today },
 								grace: {'>': 0} 
@@ -1578,7 +1593,7 @@ module.exports = {
 			row.paid=booking.paid || "";
 			row.cost=booking.cost || "";
 			row.amountPaid=amountPaid || "";	
-            row.bookingDate=booking.bookingDate;
+            row.creationDate=booking.bookingDate;
 			if (voReqd && booking.user.isVO) {
 				row.voLodge=booking.user.voLodge;
 				row.voLodgeNo=booking.user.voLodgeNo;
@@ -1616,7 +1631,7 @@ module.exports = {
                 //    row.bookingDate=addition.createAt;   // Use the additional booking creation date  
                 //} 
                 //else {
-                    row.bookingDate=booking.bookingDate;   // Use the main booking date    
+                    row.creationDate=booking.bookingDate;   // Use the main booking date    
                 //}                          
 				//row.createdAt=addition.createdAt;
                 data.push(row);
