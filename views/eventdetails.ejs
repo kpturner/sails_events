@@ -228,7 +228,7 @@
   
           <div class="control-group form-group col-md-8"
             ng-class="{'has-error':eventdetails.price.$invalid &&
-                                  eventdetails.price.$dirty}">
+                                  eventdetails.price.$dirty}" ng-hide="eventForm.free">
               <label><span ng-hide="eventForm.free">* </span>Price</label>       
               <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-required="!eventForm.free"></input>
               <span class="help-block has-error" ng-if="eventdetails.price.$dirty">
@@ -360,7 +360,7 @@
   
             <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.paymentdetails.$invalid &&
-                                    eventdetails.paymentdetails.$dirty}">
+                                    eventdetails.paymentdetails.$dirty}" ng-hide="eventForm.free">
               <label>Payment details</label>
               <textarea type="text" class="form-control" placeholder="e.g. Bank details for BACS payments" name="paymentdetails" ng-model="eventForm.paymentDetails" rows="4"></textarea>
             
