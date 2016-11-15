@@ -85,10 +85,10 @@ module.exports = {
 				    	return res.json({});
 				  	}
 					
-                    function addCapacity(events) {
-                        // For each event, add capacity before returning JSON
+                    function augmentEvents(events) {
+                        // For each event, add capacity and booking text before returning JSON
                         var modifiedEvents=[];
-                        async.each(events,function(event,next){                            
+                        async.each(events,function(event,next){ 							       
                             // Get all the bookings for the event
                             _.bind(function(){
                                 var event=this;
@@ -106,6 +106,9 @@ module.exports = {
                                     else {
                                         next(err)
                                     }
+									// Appropriate text
+									event.bookInText=(event.regInterest)?"Register interest":"Book in"; 
+						            event.titleAugmentation=(event.regInterest)?"register interest":"book in";        
                                     modifiedEvents.push(event);
                                     next();
                                 })
@@ -153,13 +156,13 @@ module.exports = {
 								}
 								if (index==events.length-1) {
 									// End of the list of events
-									return addCapacity(particularEvents);  	
+									return augmentEvents(particularEvents);  	
 								}
 							})
 						})						
 					}					
 					else {
-						return addCapacity(events);  	
+						return augmentEvents(events);  	
 					}  					
 				}
 			)

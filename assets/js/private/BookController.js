@@ -49,7 +49,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.deadline=SAILS_LOCALS.booking.deadline;
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
-    var maxPlaces=($scope.user.isAdmin || $scope.user.isOrganiser)?($scope.event.maxBookingPlaces*2):$scope.event.maxBookingPlaces;
+    var maxPlaces=($scope.event.maxBookingPlaces==1)?$scope.event.maxBookingPlaces:
+					($scope.user.isAdmin || $scope.user.isOrganiser)?($scope.event.maxBookingPlaces*2):$scope.event.maxBookingPlaces;
 	$scope.placesMax=($scope.event.capacity>maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
 	if ($scope.placesMin>$scope.placesMax)
@@ -431,10 +432,22 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					bookingid: SAILS_LOCALS.booking.id			 
 				})
 				.then(function onSuccess(sailsResponse){
-					if ($scope.myBookings)
-						toastr.success("You have successfully cancelled your booking")	
-					else
-						toastr.success("You have successfully cancelled the booking")	
+					if ($scope.event.regInterest) {
+						if ($scope.myBookings) {
+							toastr.success("You have successfully cancelled your interest")	
+						}
+						else {
+							toastr.success("You have successfully cancelled the interest")	
+						}
+					}
+					else {
+						if ($scope.myBookings) {
+							toastr.success("You have successfully cancelled your booking")	
+						}
+						else {
+							toastr.success("You have successfully cancelled the booking")	
+						}
+					}					
 					setTimeout(function(){
 						if ($scope.myBookings)
 							window.location='/mybookings'
@@ -524,19 +537,39 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				.then(function onSuccess(sailsResponse){	
 					//console.log(sailsResponse)
 					$scope.booking=sailsResponse.data;
-					if (SAILS_LOCALS.booking.id)	{
-						// An update rather than a new booking
-						if ($scope.eventBookings || $scope.userBookings)
-							toastr.success("The booking has been updated successfully")								
-						else
-							toastr.success("Your booking has been updated successfully")
+					if ($scope.event.regInterest) {
+						if (SAILS_LOCALS.booking.id)	{
+							// An update rather than a new booking
+							if ($scope.eventBookings || $scope.userBookings) {
+								toastr.success("The interest has been updated successfully")								
+							}
+							else {
+								toastr.success("Your interest has been updated successfully")
+							}	
+						}
+						else {							
+							toastr.success("Interest registration was successful")
+						}
 					}
 					else {
-						if ($scope.eventBookings || $scope.userBookings)
-							toastr.success("The booking was successful")							
-						else
-							toastr.success("Your booking was successful")
-					}
+						if (SAILS_LOCALS.booking.id)	{
+							// An update rather than a new booking
+							if ($scope.eventBookings || $scope.userBookings) {
+								toastr.success("The booking has been updated successfully")								
+							}
+							else {
+								toastr.success("Your booking has been updated successfully")
+							}	
+						}
+						else {
+							if ($scope.eventBookings || $scope.userBookings) {
+								toastr.success("The booking was successful")
+							}							
+							else {
+ 								toastr.success("Your booking was successful")
+							}		 
+						}
+					}					
 					// For my bookings or ordinary bookings we will issue a confirmation dialog, 
 					// otherwise we will return to where we came from
 					if ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id || $scope.selectedUserId) {

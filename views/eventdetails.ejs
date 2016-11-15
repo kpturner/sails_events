@@ -83,6 +83,17 @@
              </label>
           </div>
           
+          
+          <!-- R E G I S T E R   I N T E R E S T  O N L Y? -->
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':eventdetails.reginterest.$invalid &&
+                                  eventdetails.reginterest.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="voreginterest" ng-model="eventForm.regInterest"></input>
+              &nbsp;&nbsp;&nbsp;Register interest?
+             </label>
+          </div>
+          
            
           <!-- V O  D E T A I L S  R E Q D ? -->
           <div class="control-group form-group col-md-5"
@@ -93,6 +104,7 @@
               &nbsp;&nbsp;&nbsp;VO details reqd?
              </label>
           </div>
+
           
   
           <!-- N A M E -->

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= sails.config.events.title %> - Bookings</title>
+    <title><%= sails.config.events.title %></title>
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
@@ -50,7 +50,7 @@
       <!--BOOKING FORM --> 
       <form ng-submit="filterBookings()" id="filter-form" name="filterform" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span>Bookings <span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
+        <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span><span ng-hide="event.regInterest">Bookings </span><span ng-show="event.regInterest">Interest </span><span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
         
         <div ng-show="userBookings">
           <h5 ng-hide="!selectedUser.email"><a href="mailto:{{selectedUser.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
@@ -77,19 +77,19 @@
         </div>
          
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading">
-          <span class="fa fa-filter"></span> <span ng-show="!filterForm.loading"> Filter bookings</span>
+          <span class="fa fa-filter"></span> <span ng-show="!filterForm.loading"> Filter </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="createNewBooking()" ng-disabled="newBooking" ng-show="eventBookings || userBookings">
-          <span ng-show="!newBooking">Create booking</span>
+          <span ng-show="!newBooking">Create </span><span ng-hide="newBooking || event.regInterest">booking </span><span ng-show="!newBooking && event.regInterest">interest </span>
           <span class="fa-pulse fa fa-spinner" ng-show="newBooking" ></span>
           <span ng-show="newBooking">Please wait...</span>
         </button>
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking">
-          <span class="fa fa-download"></span><span> Download bookings</span>         
+          <span class="fa fa-download"></span><span> Download </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>         
         </button>  
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="eventBookings && user.isAdmin">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="eventBookings && user.isAdmin && !event.regInterest">
           <span class="fa fa-download"></span><span> Download Lodge Room</span>         
         </button>   
         
@@ -108,11 +108,12 @@
                   <span class="fa fa-envelope"></span> Email all below
             </a>
           </h4>    
-          <h4 class="hidden-md hidden-lg">Tap a booking to edit</h4>  
-          <h4 class="hidden-xs hidden-sm">Click a booking to edit</h4>  
+          <h4 class="hidden-md hidden-lg">Tap to edit</h4>  
+          <h4 class="hidden-xs hidden-sm">Click to edit</h4>  
         </div>    
         <div ng-show="bookings.length==0">   
-          <h4>There are no bookings to show you!</h4>  
+          <h4 ng-hide="event.regInterest">There are no bookings to show you!</h4>  
+          <h4 ng-show="event.regInterest">There is no interest yet!</h4>  
         </div>      
         <span class="fa fa-spinner fa-pulse fa-3x fa-fw" ng-hide="!bookingsLoading"></span>    
         <% if (myBookings) {%> 
