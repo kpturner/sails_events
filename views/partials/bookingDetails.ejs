@@ -313,8 +313,8 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 <!-- P L A C E S-->
 
 <div class="control-group form-group col-xs-6 col-md-4"
-ng-class="{'has-error':<%-model%>.places.$invalid &&
-                      <%-model%>.places.$dirty}">
+  ng-class="{'has-error':<%-model%>.places.$invalid &&
+                      <%-model%>.places.$dirty}" ng-show="placesMax>1">
 <label>* Places</label>
 <input type="number" class="form-control" placeholder="places required" name="places" ng-model="<%-model%>Form.places" min="{{placesMin}}" max="{{placesMax}}"
   ng-change="makeArray()"  ng-disabled="!openForBookings || (!user.isAdmin && !eventBookings && !userBookings && paid)">
