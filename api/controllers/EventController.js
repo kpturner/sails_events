@@ -303,6 +303,7 @@ module.exports = {
 		}
 		else if (action=="copy" || action=="create") {
 			delete event.id;
+			event.lastBookingRef=0;
 			Event.create(event).exec(function(err,event){
 				if (err) {
 					// If this is a uniqueness error about the code attribute,
