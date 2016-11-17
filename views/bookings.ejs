@@ -31,7 +31,7 @@
        user: <%- JSON.stringify(res.locals.user) %>,
        event: <%- JSON.stringify(res.locals.event) %>,
        selectedUser: <%- JSON.stringify(res.locals.selectedUser) %>,
-       filter: "<%- filter %>",
+       criteria: <%- JSON.stringify(res.locals.criteria) %>,
        myBookings: <%- myBookings %>,
        eventBookings: <%- eventBookings %>,
        userBookings: <%- userBookings %>,
@@ -71,7 +71,7 @@
            
           <div class="control-group form-group col-xs-12">
              
-            <input type="text" class="form-control" placeholder="filter (hint: 'paid'/'unpaid'/'late' will work)" name="filter" ng-model="filterForm.filter" ng-change="filterChanged()">  
+            <input type="text" class="form-control" placeholder="filter (hint: 'paid'/'unpaid'/'late' will work)" name="filter" ng-model="filterForm.criteria.filter" ng-change="filterChanged()">  
           </div>                    
          
         </div>
@@ -91,9 +91,30 @@
         </button>  
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="eventBookings && user.isAdmin && !event.regInterest">
           <span class="fa fa-download"></span><span> Download Lodge Room</span>         
-        </button>   
-        
-        </br> 
+        </button>  
+        </br>  
+        <!-- P A G I N A T I O N -->
+        <!-- Only show this on desktops etc -->
+        <div class="form-horizontal hidden-sm hidden-xs">
+          
+          <div class="form-group">
+            <label for="page" class="col-lg-1 control-label text-left">Page</label>
+            <div class="col-lg-3">
+              <input type="number" class="form-control" id="page" placeholder="page" ng-change="filterChanged();filterBookings(true)" ng-model="filterForm.criteria.page" min="1">
+            </div>
+            <label for="limit" class="col-lg-1 control-label text-left">Limit</label>
+            <div class="col-lg-3">
+              <input type="number" class="form-control" id="limit" placeholder="limit" ng-change="filterChanged();" title="Maximum number of items to show per page" ng-model="filterForm.criteria.limit" min="1">
+            </div>
+             
+            <button class="btn btn-primary" type="button" ng-click="filterBookings(true)" ng-disabled="filterForm.paging || filterForm.loading">
+              <span class="fa fa-arrow-right"></span><span ng-show="!filterForm.paging"> Go</span>
+              <span class="fa-pulse fa fa-spinner" ng-show="filterForm.paging" ></span>
+              <span ng-show="filterForm.paging">Paging...</span>
+            </button>
+          
+          </div>
+       </div>
            
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />

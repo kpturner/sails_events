@@ -7,7 +7,8 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		 
 		$scope.filterForm = {
 			loading: false,
-			filter:	SAILS_LOCALS.filter,
+			paging: false,			
+			criteria:SAILS_LOCALS.criteria,
 			
 		}
 		
@@ -21,13 +22,13 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		// Get the bookings
 		var route;
 		if (SAILS_LOCALS.myBookings) {
-			route='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1'			
+			route='/allmybookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?mybookings=1'			
 		}
 		else if (SAILS_LOCALS.eventBookings) {
-			route='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id;
+			route='/alleventbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?eventid='+$scope.event.id;
 		}	
 		else if (SAILS_LOCALS.userBookings) {
-			route='/alluserbookings/'+encodeURIComponent($scope.filterForm.filter)+'?userid='+$scope.selectedUser.id;
+			route='/alluserbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?userid='+$scope.selectedUser.id;
 		}	
 		$scope.downloadUrl=route+'&download=1';
 		$http.get(route)
@@ -58,19 +59,24 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		/**
 		 * Filter bookings
 		 */  
-		$scope.filterBookings = function(){
-			$scope.filterForm.loading=true;
+		$scope.filterBookings = function(paging){
+			if (paging) {
+				$scope.filterForm.paging=true;
+			}
+			else {
+				$scope.filterForm.loading=true;
+			}
 			$scope.bookingsLoading=true;
 			// Submit request to Sails.
 			var route;
 			if (SAILS_LOCALS.myBookings) {
-				route='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1'
+				route='/allmybookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?mybookings=1'
 			}
 			else if (SAILS_LOCALS.eventBookings){
-				route='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id;
+				route='/alleventbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?eventid='+$scope.event.id;
 			}	
 			else if (SAILS_LOCALS.userBookings) {
-				route='/alluserbookings/'+encodeURIComponent($scope.filterForm.filter)+'?userid='+$scope.selectedUser.id;
+				route='/alluserbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?userid='+$scope.selectedUser.id;
 			}	
 			$http.get(route)
 				.then(function onSuccess(sailsResponse){
@@ -96,6 +102,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				})
 				.finally(function eitherWay(){
 					$scope.filterForm.loading = false;
+					$scope.filterForm.paging = false;
 					$scope.bookingsLoading=false;
 				})
 		}
@@ -121,10 +128,10 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		 */
 		$scope.filterChanged = function(){
 			if (SAILS_LOCALS.myBookings) {
-				$scope.downloadUrl='/allmybookings/'+encodeURIComponent($scope.filterForm.filter)+'?mybookings=1&download=1'
+				$scope.downloadUrl='/allmybookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?mybookings=1&download=1'
 			}
 			else {
-				$scope.downloadUrl='/alleventbookings/'+encodeURIComponent($scope.filterForm.filter)+'?eventid='+$scope.event.id+'&download=1';
+				$scope.downloadUrl='/alleventbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?eventid='+$scope.event.id+'&download=1';
 			}	
 		}
 		

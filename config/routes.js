@@ -62,11 +62,11 @@ module.exports.routes = {
   'get /booking' : 'BookingController.prepareBooking',
   'get /booking/:action': 'BookingController.prepareBooking',
   'get /mybookings': 'BookingController.myBookings',
-  'get /allmybookings/:filter?': 'BookingController.allMyBookings',  // the ? in :filter? means that the filter part or the URL is optional
+  'get /allmybookings/:criteria?': 'BookingController.allMyBookings',  // the ? in :filter? means that the filter part or the URL is optional
   'get /eventbookings': 'BookingController.eventBookings',
-  'get /alleventbookings/:filter?': 'BookingController.allEventBookings',
+  'get /alleventbookings/:criteria?': 'BookingController.allEventBookings',
   'get /userbookings': 'BookingController.userBookings',
-  'get /alluserbookings/:filter?': 'BookingController.allUserBookings',
+  'get /alluserbookings/:criteria?': 'BookingController.allUserBookings',
   'post /makebooking': 'BookingController.makeBooking',
   'post /makebooking/:action?': 'BookingController.makeBooking',
   'get /linkedbooking/:bookingid': 'LinkedBookingController.linkedBookings',
@@ -85,7 +85,7 @@ module.exports.routes = {
   
   // Users
   'get /users': 'UserController.users',
-  'get /allusers/:filter?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional
+  'get /allusers/:criteria?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional
   'get /usermaint/:action': 'UserController.prepareUser',
   'post /updateuser/:action': 'UserController.updateUser',
   'get /organisers': 'UserController.organisers',

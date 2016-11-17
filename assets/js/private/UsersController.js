@@ -8,11 +8,12 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		 
 		$scope.filterForm = {
 			loading: false,
-			filter:SAILS_LOCALS.filter
+			paging: false,			
+			criteria:SAILS_LOCALS.criteria,
 		}
 
 		// Get the users
-		$http.get('/allusers/'+$scope.filterForm.filter)
+		$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 			.success(function(data, status) {
 				$scope.usersLoading=false;
 				if (typeof data == 'object') {
@@ -32,11 +33,16 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		/**
 		 * Filter users
 		 */  
-		$scope.filterUsers = function(){
-			$scope.filterForm.loading=true;
+		$scope.filterUsers = function(paging){
+			if (paging) {
+				$scope.filterForm.paging=true;
+			}
+			else {
+				$scope.filterForm.loading=true;
+			}
 			$scope.usersLoading=true;
 			// Submit request to Sails.
-			$http.get('/allusers/'+encodeURIComponent($scope.filterForm.filter))
+			$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
 						$scope.users = sailsResponse.data;					
@@ -54,6 +60,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 				})
 				.finally(function eitherWay(){
 					$scope.filterForm.loading = false;
+					$scope.filterForm.paging = false;
 					$scope.usersLoading=false;
 				})
 		}

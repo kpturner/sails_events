@@ -1,4 +1,6 @@
-
+.form-horizontal .control-label.text-left{
+    text-align: left;
+}
 
 @media (min-width: 768px) {
     .omb_row-sm-offset-3 div:first-child[class*="col-"] {

@@ -15,8 +15,24 @@ module.exports = {
 	 * @param {Object} res
 	*/
 	users: function(req, res) {
+		var criteria=req.session.userCriteria;
+		if (criteria) {
+			criteria=JSON.parse(criteria)
+		}
+		else {
+			criteria={}
+		}
+		if (!criteria.page) {
+			criteria.page=1;
+		}
+		if (!criteria.limit) {
+			criteria.limit=99999;
+		}
+		if (!criteria.filter) {
+			criteria.filter="";
+		}
 		res.view('users',{
-		  filter: req.session.userFilter,
+		  criteria: criteria,
 		  errors: req.flash('error')
 		});  
 	}, 
@@ -55,24 +71,27 @@ module.exports = {
 	 */
 	allUsers: function (req, res) {
 		
-		var filter=req.param('filter');
-		req.session.userFilter=filter;
-		req.session.bookingFilter="";				
-		var where = {};
-
-		// Filter may be a special notation for pagination - i.e. {page: 2, limit: 10}
-		var pag={"page":1,"limit":999999999};
-		if (filter && filter.substr(0,1)=="{" && filter.substr(filter.length-1,1)=="}") {
+		var criteria=req.param('criteria');
+		if (criteria) {
 			try {
-				pag=JSON.parse(filter);
-				filter=null;
-				req.session.userFilter="";
+				criteria=JSON.parse(criteria)
 			}
 			catch(e) {
-				// It is junk
+				criteria={}
 			}
-		} 
-		
+		}
+		else {
+			criteria={}
+		}
+		req.session.userCriteria=JSON.stringify(criteria);
+		req.session.bookingCriteria="{}";				
+		var where = {};
+		var pag={
+			"page": 	(criteria.page || 1),
+			"limit": 	(criteria.limit || 99999)
+		}
+		var filter=criteria.filter;
+
 		if (filter && filter.length>0 && filter!="duplicates") {
 			where = {
 				or: [

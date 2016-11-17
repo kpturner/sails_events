@@ -26,7 +26,30 @@ module.exports = {
 		}
 		return deadline;
 	 },
-		  
+
+	/**
+	 * Booking criteria 
+	 */	
+	criteria: function(req){
+		var criteria=req.session.bookingCriteria;
+		if (criteria) {
+			criteria=JSON.parse(criteria)
+		}
+		else {
+			criteria={}
+		}
+		if (!criteria.page) {
+			criteria.page=1;
+		}
+		if (!criteria.limit) {
+			criteria.limit=99999;
+		}
+		if (!criteria.filter) {
+			criteria.filter="";
+		}
+		return criteria;
+	},
+
 	/**
 	 * My bookings
 	 *
@@ -40,7 +63,7 @@ module.exports = {
 		res.locals.event={};
 		res.locals.selectedUser={};
 		res.view('bookings',{			
-		  filter: req.session.bookingFilter,
+		  criteria: sails.controllers.booking.criteria(req),
 		  myBookings: true,
 		  eventBookings: false,
 		  userBookings: false,
@@ -62,7 +85,7 @@ module.exports = {
 		Event.findOne(req.param("eventid")).populate("organiser").exec(function(err,event){
 			res.locals.event=event;
 			res.view('bookings',{			
-			  filter: req.session.bookingFilter,
+			  criteria: sails.controllers.booking.criteria(req),
 			  myBookings: false,
 			  eventBookings: true,
 			  userBookings: false,
@@ -88,7 +111,7 @@ module.exports = {
 			}
 			res.locals.selectedUser=user;
 			res.view('bookings',{			
-			  filter: req.session.bookingFilter,
+			  criteria: sails.controllers.booking.criteria(req),
 			  myBookings: false,
 			  eventBookings: false,
 			  userBookings: true,
@@ -895,26 +918,29 @@ module.exports = {
 	 */
 	allMyBookings: function (req, res) {
 		
-		var filter=req.param('filter');
-		req.session.bookingFilter=filter;
-        req.session.userFilter="";
+		var criteria=req.param('criteria');
+		if (criteria) {
+			try {
+				criteria=JSON.parse(criteria)
+			}
+			catch(e) {
+				criteria={}
+			}
+		}
+		else {
+			criteria={}
+		}
+		req.session.bookingCriteria=JSON.stringify(criteria);
+		req.session.userCriteria="{}";	
 		var download=req.param('download');
 								
 		var where = {};
 		where.user=req.user.id;
-
-		// Filter may be a special notation for pagination - i.e. {page: 2, limit: 10}
-		var pag={"page":1,"limit":999999999};
-		if (filter && filter.substr(0,1)=="{" && filter.substr(filter.length-1,1)=="}") {
-			try {
-				pag=JSON.parse(filter);
-				filter=null;
-				req.session.bookingFilter="";
-			}
-			catch(e) {
-				// It is junk
-			}
-		} 
+		var pag={
+			"page": 	(criteria.page || 1),
+			"limit": 	(criteria.limit || 99999)
+		}
+		var filter=criteria.filter;
 				
 		if (filter && filter.length>0) {
 			where.or= 	[
@@ -942,8 +968,7 @@ module.exports = {
 								}		
 						}
 					}
-			)
-			//.paginate(pag)
+			)			
 			.populate('event').populate('additions',{sort:{surname:'asc'}}) 
 			.paginate(pag)
 			.exec(function(err, bookings){
@@ -982,28 +1007,32 @@ module.exports = {
 	 * @param {Object} req
 	 * @param {Object} res
 	 */
-	allEventBookings: function (req, res) {
-		
+	allEventBookings: function (req, res) {		
 				
-		var filter=req.param('filter');
-		req.session.bookingFilter=filter;
+		var criteria=req.param('criteria');
+		if (criteria) {
+			try {
+				criteria=JSON.parse(criteria)
+			}
+			catch(e) {
+				criteria={}
+			}
+		}
+		else {
+			criteria={}
+		}
+		req.session.bookingCriteria=JSON.stringify(criteria);
+		req.session.userCriteria="{}";	
 		var download=req.param('download');
 								
 		var where = {};
 		where.event=req.param("eventid");
 
-		// Filter may be a special notation for pagination - i.e. {page: 2, limit: 10}
-		var pag={"page":1,"limit":999999999};
-		if (filter && filter.substr(0,1)=="{" && filter.substr(filter.length-1,1)=="}") {
-			try {
-				pag=JSON.parse(filter);
-				filter=null;
-				req.session.bookingFilter="";
-			}
-			catch(e) {
-				// It is junk
-			}
-		} 
+		var pag={
+			"page": 	(criteria.page || 1),
+			"limit": 	(criteria.limit || 99999)
+		}
+		var filter=criteria.filter; 
 
 		if (filter && filter.length>0) {
 			where.or= 	[
@@ -1055,9 +1084,13 @@ module.exports = {
 					
 					// Sort response by user surname (case insensitive) unless it is for a download, in which
                     // case we will sort it later in the download function
-                    if (!download)
+					// BIG HAIRY NOTE:  If we are using pagination this will be confusing.  For example, we may get the 
+					//                  first page of 10 and that will be in "createdAt" order and then we will sort that 
+					//                  set by surname.  So what you might see in the first 10 records on an unpaginated
+					//                  set might be different to what you see in a paginated set
+                    if (!download) {
 					   bookings.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
-					 
+					} 
 					  		
 					if (download) {					
 						Event.findOne(req.param("eventid")).exec(function(err,event){
@@ -1101,9 +1134,27 @@ module.exports = {
 	 */
 	allUserBookings: function (req, res) {
 		
-		var filter=req.param('filter');
-		req.session.bookingFilter=filter;
+		var criteria=req.param('criteria');
+		if (criteria) {
+			try {
+				criteria=JSON.parse(criteria)
+			}
+			catch(e) {
+				criteria={}
+			}
+		}
+		else {
+			criteria={}
+		}
+		req.session.bookingCriteria=JSON.stringify(criteria);
+		req.session.userCriteria="{}";
 		var download=req.param('download');
+
+		var pag={
+			"page": 	(criteria.page || 1),
+			"limit": 	(criteria.limit || 99999)
+		}
+		var filter=criteria.filter; 
 								
 		User.findOne(req.param("userid")).exec(function(err,user){
 			if (err) {
@@ -1111,20 +1162,7 @@ module.exports = {
 				return res.negotiate(err);
 		  	}	
 			var where = {};
-			where.user=user.id;
-
-			// Filter may be a special notation for pagination - i.e. {page: 2, limit: 10}
-			var pag={"page":1,"limit":999999999};
-			if (filter && filter.substr(0,1)=="{" && filter.substr(filter.length-1,1)=="}") {
-				try {
-					pag=JSON.parse(filter);
-					filter=null;
-					req.session.bookingFilter="";
-				}
-				catch(e) {
-					// It is junk
-				}
-			} 
+			where.user=user.id;			
 					
 			if (filter && filter.length>0) {
 				where.or= 	[

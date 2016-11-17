@@ -29,7 +29,7 @@
     window.SAILS_LOCALS = {
       _csrf: "<%= _csrf %>",
        user: <%- JSON.stringify(res.locals.user) %>,
-       filter: "<%- filter %>"
+       criteria: <%- JSON.stringify(res.locals.criteria) %>
     };
     
     </script>
@@ -42,7 +42,7 @@
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %>  
        
-      <!-- PROFILE FORM --> 
+      <!-- FILTER FORM --> 
       <form ng-submit="filterUsers()" id="filter-form" name="filterform" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h3 class="form-signin-heading">User Maintenance</h3>
@@ -51,24 +51,46 @@
   
           <!-- F I L T E R -->
            
-          <div class="control-group form-group col-xs-10">
-             
-            <input type="text" class="form-control" placeholder="key text to filter users" name="filter" ng-model="filterForm.filter">  
+          <div class="control-group form-group col-xs-10">             
+            <input type="text" class="form-control" placeholder="key text to filter users" name="filter" ng-model="filterForm.criteria.filter">  
           </div>                    
          
         </div>
          
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading || filterForm.paging">
           <span class="fa fa-filter"></span><span ng-show="!filterForm.loading"> Filter users</span>
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
         </br> 
-           
-  
+
+        <!-- P A G I N A T I O N -->
+        <!-- Only show this on desktops etc -->
+        <div class="form-horizontal hidden-sm hidden-xs">
+          
+          <div class="form-group">
+            <label for="page" class="col-lg-1 control-label text-left">Page</label>
+            <div class="col-lg-3">
+              <input type="number" class="form-control" id="page" placeholder="page" ng-change="filterUsers(true)" ng-model="filterForm.criteria.page" min="1">
+            </div>
+            <label for="limit" class="col-lg-1 control-label text-left">Limit</label>
+            <div class="col-lg-3">
+              <input type="number" class="form-control" id="limit" placeholder="limit"  title="Maximum number of items to show per page" ng-model="filterForm.criteria.limit" min="1">
+            </div>
+             
+            <button class="btn btn-primary" type="button" ng-click="filterUsers(true)" ng-disabled="filterForm.paging || filterForm.loading">
+              <span class="fa fa-arrow-right"></span><span ng-show="!filterForm.paging"> Go</span>
+              <span class="fa-pulse fa fa-spinner" ng-show="filterForm.paging" ></span>
+              <span ng-show="filterForm.paging">Paging...</span>
+            </button>
+          
+          </div>
+         
+        </div>
+
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form> 
-        
+
       
       <div class="container">     
         <h4 class="hidden-md hidden-lg">Tap a user to edit</h4>  
