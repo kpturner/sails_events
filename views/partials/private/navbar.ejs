@@ -28,13 +28,13 @@
     <div class="nav navbar-nav navbar-right navbar-form btn-toolbar">
       <!-- navbar-right pulls this element right -->
       
-          <!-- Only show this button if the user isAdmin, and then only on desktops -->
-          <button type="button" class="btn btn-success" onclick="window.location='/events'" ng-hide="!user.isAdmin" ng-class="{'nav-btn-space':!navCollapsed}">
+          <!-- Only show this button if the user is an admin or organiser -->
+          <button type="button" class="btn btn-success" onclick="window.location='/events'" ng-show="user.isAdmin || user.isOrganiser" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Events</span>
           </button>
           
           <!-- Only show this button if the user isAdmin, and then only on desktops -->
-          <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-hide="!user.isAdmin" ng-class="{'nav-btn-space':!navCollapsed}">
+          <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-show="user.isAdmin || user.isOrganiser" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Users</span>
           </button>
           

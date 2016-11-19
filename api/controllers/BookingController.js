@@ -1089,7 +1089,7 @@ module.exports = {
 					//                  set by surname.  So what you might see in the first 10 records on an unpaginated
 					//                  set might be different to what you see in a paginated set
                     if (!download) {
-					   bookings.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
+					   bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
 					} 
 					  		
 					if (download) {					
@@ -1192,12 +1192,20 @@ module.exports = {
 				)
 				.populate('event').populate('additions',{sort:{surname:'asc'}})
 				.paginate(pag)				 
-				.exec(function(err, bookings){
+				.exec(function(err, theBookings){
 					if (err) {
 						sails.log.verbose('Error occurred trying to retrieve bookings.');
 						return res.negotiate(err);
 				  	}	
 					  
+					// Only show bookings for events where the user is the organiser or if they are an admin  
+					var bookings=[];
+					_.forEach(theBookings,function(booking){
+						if (Utility.isAdmin(req.user,booking.event)) {
+							bookings.push(booking)
+						}
+					})
+
 					// If we only want late bookings, filter the list
 					if (filter && filter.toLowerCase()=="late") {
 						bookings=sails.controllers.booking.filterLate(bookings);

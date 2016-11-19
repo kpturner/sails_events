@@ -95,24 +95,30 @@ module.exports = {
         return areas
     },
 
-    isAdmin: function(user) {
+    isAdmin: function(user,event) {
         var isAdmin=false;
         // Allow for users configured in locals.js to be admins even if their profile says otherwise
         if (user) {
-        if (user.isAdmin) {
-            isAdmin=true;
-        }
-        else {        
-            var admins=sails.config.events.admins;
-            if (admins) {
-            if (Array.isArray(admins)) {
-                isAdmin=(admins.indexOf(user.username)>=0 || admins.indexOf(user.email)>=0)
+            if (user.isAdmin) {
+                isAdmin=true;
             }
-            else {
-                isAdmin=((user.username==admins || user.email==admins))
-            }  
-            }        
+            else {        
+                var admins=sails.config.events.admins;
+                if (admins) {
+                    if (Array.isArray(admins)) {
+                        isAdmin=(admins.indexOf(user.username)>=0 || admins.indexOf(user.email)>=0)
+                    }
+                    else {
+                        isAdmin=((user.username==admins || user.email==admins))
+                    }  
+                }        
+            }
         }
+        if (!isAdmin) {
+            if (event) {
+                // If we have an event then the user can be admin of the event if they are its organiser
+                isAdmin=(event.organiser && event.organiser.id==user.id);
+            }
         }
         return isAdmin 
     },
@@ -152,8 +158,8 @@ module.exports = {
         f=s[1];  
         
     var key = primer ? 
-        function(x) {return primer(f?x[o][f]:x[o])} : 
-        function(x) {return f?x[o][f]:x[o]};
+        function(x) {return primer(f&&x[o]?x[o][f]:x[o])} : 
+        function(x) {return f&&x[o]?x[o][f]:x[o]};
 
     reverse = !reverse ? 1 : -1;
 

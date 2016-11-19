@@ -110,7 +110,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     
     // Check whether or not the booking has been paid for
 	$scope.chkPaid=function(){
-        if(!$scope.user.isAdmin && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
+        if(!$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
             var opts={
                 template:"/templates/paidWarning.html",
                 className: 'ngdialog-theme-default',

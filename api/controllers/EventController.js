@@ -139,27 +139,58 @@ module.exports = {
                     } 
                       
 					// If we have a selectedUserId then only include events that the user is NOT booked into already
+					// AND only if teh current user is either an admin or the organiser of the event
 					if (selectedUserId && !sails.config.events.multipleBookings) {
 						var particularEvents=[];
+						async.each(events,function(event,next){
+							if (Utility.isAdmin(req.user,event)) {
+								Booking.find(
+									{
+										where: {
+											event: event.id,
+											user: selectedUserId
+										},
+										limit: 1
+									}
+								).exec(function(err,bookings){
+									particularEvents.push(event);
+									next();									
+								})
+							}
+							else {
+								next()
+							}				
+						}
+						,function(err){
+							// End of the list of events
+							if (err) {
+                                sails.log.error(err)
+                            }
+							return augmentEvents(particularEvents);  	
+						})
+						/*
 						events.forEach(function(event,index){
-							Booking.find(
-								{
-									where: {
-										event: event.id,
-										user: selectedUserId
-									},
-									limit: 1
-								}
-							).exec(function(err,bookings){
-								if (bookings.length<=0) {
-									particularEvents.push(event)
-								}
-								if (index==events.length-1) {
-									// End of the list of events
-									return augmentEvents(particularEvents);  	
-								}
-							})
-						})						
+							if (Utility.isAdmin(req.user,event)) {
+								Booking.find(
+									{
+										where: {
+											event: event.id,
+											user: selectedUserId
+										},
+										limit: 1
+									}
+								).exec(function(err,bookings){
+									if (bookings.length<=0) {
+										particularEvents.push(event)
+									}
+									if (index==events.length-1) {
+										// End of the list of events
+										return augmentEvents(particularEvents);  	
+									}
+								})
+							}							
+						})
+						*/						
 					}					
 					else {
 						return augmentEvents(events);  	
@@ -211,8 +242,16 @@ module.exports = {
 			  	if (!events) {
 			    	return res.json({});
 			  	}
-				  
-				return res.json(events);  
+
+				// If the user is not ad administrator then filter out events that they are not an organiser of
+				var filteredEvents=[];				
+				_.forEach(events,function(event){
+					if (Utility.isAdmin(req.user,event)) {
+						filteredEvents.push(event)
+					}
+				}) 
+
+				return res.json(filteredEvents);  
 			}
 		)
 			
