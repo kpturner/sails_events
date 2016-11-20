@@ -60,7 +60,7 @@
         <div ng-show="eventBookings">
           <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
           <h4>{{event.venue}}<h4>
-          <h5>Places remaining: {{event.capacity}}</h5>  
+          <h5 ng-hide="event.regInterest">Places remaining: {{event.capacity}}</h5>  
           <h5><a href="mailto:{{event.organiser.email}}?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}" target="_top"><span class="fa fa-envelope"></span> Organiser: {{event.organiser.name}}</a></h5>     
         </div>
          
