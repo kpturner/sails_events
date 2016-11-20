@@ -99,7 +99,7 @@
                                 signup.password.$dirty}">
             <label>* Choose a password</label>
             <!-- Added the compareTo directive that compares the passwords -->
-            <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="signupForm.password" id="password" ng-minlength="8" compare-to="signupForm.confirmPassword" >
+            <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="signupForm.password" id="password" ng-minlength="8" compare-to="signupForm.confirmPassword" required>
             <span class="help-block has-error" ng-if="signup.password.$dirty">
               <span ng-show="signup.password.$error.required">Password is required.</span>
               <span ng-show="signup.password.$error.minlength">Password must be at least 8 characters.</span>
@@ -108,12 +108,14 @@
   
           <!-- C O N F I R M  P A S S W O R D -->
   
-          <div class="control-group form-group col-xs-7">
+          <div class="control-group form-group col-xs-7"
+             ng-class="{'has-error':signup.confirmation.$invalid &&
+                                signup.confirmation.$dirty}">
             <label>Re-enter your password</label>
             <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="signupForm.confirmPassword" required>
             <span class="help-block has-error" ng-if="signup.confirmation.$dirty">
               <span ng-show="signup.password.$error.compareTo">Password must match.</span>
-              <span ng-show="signup.confirmPassword.$error.required">Confirmation password is required.</span>
+              <span ng-show="signup.confirmation.$error.required">Confirmation password is required.</span>
             </span>
           </div>
         </div>

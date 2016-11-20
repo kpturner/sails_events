@@ -49,6 +49,7 @@ module.exports = {
            form:'profile',
            salutations: sails.config.events.salutations,
            areas: Utility.areas(),
+           signup: true,
          }); 
   		}
       

@@ -20,7 +20,10 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	$scope.salutations=SAILS_LOCALS.salutations;
 		
 	// Areas
-	$scope.areas=SAILS_LOCALS.areas;	
+	$scope.areas=SAILS_LOCALS.areas;
+
+	// Signup mode?
+	$scope.signup=SAILS_LOCALS.signup;	
  
  	// Set elements that have validity checking to dirty straight away 
  	angular.element(document).ready(function () {

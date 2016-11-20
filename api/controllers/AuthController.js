@@ -253,7 +253,8 @@ var AuthController = {
       form: 'profile',
       salutations: sails.config.events.salutations,
       areas: Utility.areas(),
-      errors: req.flash('error')
+      errors: req.flash('error'),
+      signup: false,
     });  
   }, 
    
