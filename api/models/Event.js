@@ -18,8 +18,9 @@ module.exports = {
       required: true 
     },
     
-    // Organiser
+    // Organiser(s)
     organiser: { model: 'User', required: true },
+    organiser2: { model: 'User' },
     
     // Code (for booking references)
     code : {
