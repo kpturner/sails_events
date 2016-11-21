@@ -62,6 +62,17 @@
               &nbsp;&nbsp;&nbsp;Show on dashboard?
              </label>
            </div>
+
+          <!-- H I D E  U N T I L  O P E N I N G  D A T E? -->
+  
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':eventdetails.hide.$invalid &&
+                                  eventdetails.hide.$dirty}" ng-show="eventForm.open">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="hide" ng-model="eventForm.hide" title="Hide on dashboard until opening"></input>
+              &nbsp;&nbsp;&nbsp;Hide until opening date?
+             </label>
+           </div>
            
           <!-- A D D R E S S   R E Q D ? -->
           <div class="control-group form-group col-md-5"

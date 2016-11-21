@@ -66,7 +66,11 @@ module.exports = {
 		Event.find({
 					where:	{
 								open:true,
-								closingDate: { '>=': today } 
+								closingDate: { '>=': today }, 
+								or: [
+									{hide: false},
+									{hide: true, openingDate:{ '<=' : today}}
+								]
 							}, 
                     // Sorted later        
 					//sort: 	{

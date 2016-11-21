@@ -97,7 +97,12 @@ module.exports = {
     open: {
       type: 'boolean',
     },
-        
+
+    // Hide event (even if open) until opening date 
+    hide: {
+      type: 'boolean',
+    },  
+
     // Address details are required 
     addressReqd: {
       type: 'boolean',
