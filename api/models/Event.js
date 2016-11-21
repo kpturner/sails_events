@@ -120,8 +120,7 @@ module.exports = {
     
     price: {
       type: 'float',
-      size: 15.2, // Decimal
-      required: true
+      size: 15.2, // Decimal 
     }, 
          
     minBookingPlaces: {

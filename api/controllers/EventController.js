@@ -300,7 +300,7 @@ module.exports = {
 	},
 	
 	/**
-	 * Update event (copy/edit/delete)
+	 * Update event (create/copy/edit/delete)
 	 */	
 	updateEvent: function(req, res) {
 		
@@ -316,6 +316,10 @@ module.exports = {
 			catch (e) {
 				// Mmmm, whats going on?   Let the database throw the error
 			}		
+		}
+
+		if (event.free) {
+			event.price=0;
 		}
 		
 		// Decide what to do based on the action
