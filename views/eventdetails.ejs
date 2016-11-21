@@ -133,13 +133,25 @@
           <div class="control-group form-group col-md-7"
             ng-class="{'has-error':eventdetails.organiser.$invalid &&
                                   eventdetails.organiser.$dirty}">
-            <label>* Organiser</label>
+            <label>* Organiser(s)</label>
             <select type="text" class="form-control" placeholder="event organiser" name="organiser" ng-options="a.id as a.name for a in organisers" ng-model="eventForm.organiser"   required>
                 <option value="">-- choose organiser --</option>
             </select>
             <span class="help-block has-error" ng-if="eventdetails.organiser.$dirty">
               <span ng-show="eventdetails.organiser.$error.required">Organiser is required.</span> 
             </span>
+          </div>
+
+           
+          <!-- O R G A N I S E R  2 -->
+          
+          <div class="control-group form-group col-md-7"
+            ng-class="{'has-error':eventdetails.organiser2.$invalid &&
+                                  eventdetails.organiser2.$dirty}">
+            <select type="text" class="form-control" placeholder="event organiser" name="organiser2" ng-options="a.id as a.name for a in organisers" ng-model="eventForm.organiser2">
+                <option value="">-- choose organiser --</option>
+            </select>
+           
           </div>
          
          
