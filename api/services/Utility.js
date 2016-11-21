@@ -117,7 +117,7 @@ module.exports = {
         if (!isAdmin) {
             if (event) {
                 // If we have an event then the user can be admin of the event if they are its organiser
-                isAdmin=(event.organiser && event.organiser.id==user.id);
+                isAdmin=((event.organiser && event.organiser.id==user.id)||(event.organiser2 && event.organiser2.id==user.id));
             }
         }
         return isAdmin 

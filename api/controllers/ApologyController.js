@@ -14,7 +14,7 @@ module.exports = {
 	 * @param {Object} res
 	 */
 	eventApologies: function(req, res) {
-		Event.findOne(req.param("eventid")).populate("organiser").exec(function(err,event){
+		Event.findOne(req.param("eventid")).populate("organiser").populate("organiser2").exec(function(err,event){
 			res.locals.event=event;
 			res.view('apologies',{			
 			  filter: req.session.apologyFilter,
@@ -35,7 +35,7 @@ module.exports = {
 		Apology.create(apology).exec(function(err, newApology){
 			
 			// Email the organiser
-			Event.findOne(apology.event).populate("organiser").exec(function(err,event){
+			Event.findOne(apology.event).populate("organiser").populate("organiser2").exec(function(err,event){
 				if (!err && event) {
 					var formattedDate=event.date.toString();
 					formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
@@ -89,7 +89,7 @@ module.exports = {
 					});		
 		}
 		
-		Event.findOne(eventId).populate('organiser')
+		Event.findOne(eventId).populate('organiser').populate("organiser2")
 			.then(function(event){
 				// Return a promise, or rather an array that can be used by a .spread
 				if (event) {

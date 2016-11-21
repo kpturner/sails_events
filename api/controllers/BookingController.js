@@ -82,7 +82,7 @@ module.exports = {
 		req.session.eventBookings=true;
 		req.session.userBookings=false;
 		res.locals.selectedUser={};
-		Event.findOne(req.param("eventid")).populate("organiser").exec(function(err,event){
+		Event.findOne(req.param("eventid")).populate("organiser").populate("organiser2").exec(function(err,event){
 			res.locals.event=event;
 			res.view('bookings',{			
 			  criteria: sails.controllers.booking.criteria(req),
@@ -245,14 +245,14 @@ module.exports = {
 									errors: req.flash('error')
 									});  
 						}
-						Event.findOne(existingBooking.event).populate("organiser").exec(function(err,event){
+						Event.findOne(existingBooking.event).populate("organiser").populate("organiser2").exec(function(err,event){
 							initialiseBooking(event,existingBooking);			
 						})					
 					}					
 				})
 			}	
 			else {	
-				Event.findOne(eventId).populate('organiser').exec(function(err,event){
+				Event.findOne(eventId).populate('organiser').populate("organiser2").exec(function(err,event){
 					if (err) {
 						return res.negotiate(err);
 					}	
@@ -294,7 +294,7 @@ module.exports = {
 		var bookingRef=null;
         var lodgeRoomArr=[];
 				 
-		Event.findOne(eventId).populate("organiser").exec(function(err,event){
+		Event.findOne(eventId).populate("organiser").populate("organiser2").exec(function(err,event){
 			if (err) {
 				return res.negotiate(err);
 			}
@@ -1468,6 +1468,7 @@ module.exports = {
 							}
 					})
 				.populate('organiser')
+				.populate("organiser2")
 				.then(function(events){
 					// Get a list of bookings for this event that are late with their payment
 					events.forEach(function(event,ev){

@@ -50,6 +50,7 @@ module.exports = {
 							}
 					})
 					.populate('organiser')
+					.populate("organiser2")
 					.then(function(events){
 						console.log(events.length)
 						 return events;
@@ -73,6 +74,7 @@ module.exports = {
 					//		}
 					})
 					.populate('organiser')
+					.populate("organiser2")
 			.exec(
 				function(err, events){
 					if (err) {
@@ -231,7 +233,7 @@ module.exports = {
 								time:'desc'
 						}
 					}
-			).populate('organiser').exec(
+			).populate('organiser').populate("organiser2").exec(
 			function(err, events){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve events.');
@@ -280,10 +282,18 @@ module.exports = {
 			})	
 		} 
 		else {
+			var organiser=null;
+			if (!Utility.isAdmin(req.user)) {
+				// This user is not an admin so make sure
+				// they are the initial organisers of the event
+				// so they can see it after creation
+				organiser=req.user.id;
+			}
 			return res.view("eventdetails",{
 				mode:mode,
 				event:{
 					latePaymentChecking:true,
+					organiser: organiser,
 				}
 			})	
 		}	
