@@ -23,8 +23,10 @@
     <% if (eventAdditionalInfo) {%>
 	<br>Additional info: <%-eventAdditionalInfo%>
     <% } %>
+	<% if  (!regInterest) {%>
     <br>Menu: <%-eventMenu%> 
 	<br>Dress code: <%-eventDressCode%> 
+	<% } %>
 	<br><br><b>Your details:</b>
     <br>Salutation: <%=salutation%>
     <br>First name: <%=firstName%>
@@ -50,13 +52,20 @@
     <br>VO lodge area: <%=voArea%>
     <% } %>
 	<br>Rank: <%=rank%>
+	<% if  (!regInterest) {%>
 	<br>Dietary reqs: <%=dietary%>
+	<% } %>
 	<br>Email address: <%=email%>
+	<% if  (!regInterest) {%>
 	<br>Additional info: <%-info%>
+	<% } %>
 	<br>Places: <%=places%>
 	<% if  (!eventFree && !regInterest) {%>
 	<br>Payment deadline: <%=deadline%>	
 	<br>Amount to pay: £<%=total%>
+	<% } %>
+	<% if  (regInterest) {%>
+	<br>Cost of event: £<%=total%>
 	<% } %>
 	<br>
 	

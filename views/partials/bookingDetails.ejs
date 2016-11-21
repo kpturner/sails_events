@@ -10,7 +10,7 @@
 <!-- A M O U N T  P A I D --> 
 <div class="control-group form-group col-md-5"
   ng-class="{'has-error':<%-model%>.paid.$invalid &&
-                        <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free">
+                        <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
   <label>Amount paid</label>       
     <input type="number" class="form-control" placeholder="e.g. 20.00" name="amountpaid" ng-model="<%-model%>Form.amountPaid" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" 
       ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
@@ -21,7 +21,7 @@
 <!-- P A I D ? -->
 <div class="control-group form-group col-md-5"
   ng-class="{'has-error':<%-model%>.paid.$invalid &&
-                        <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free">
+                        <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
    <label>
     <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
     &nbsp;&nbsp;&nbsp;Fully paid?
@@ -31,7 +31,7 @@
  <!-- M E T H O D  O F  P A Y M E N T -->
 <div class="control-group form-group col-md-5"
   ng-class="{'has-error':<%-model%>.mop.$invalid &&
-                        <%-model%>t.mop.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free">
+                        <%-model%>t.mop.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
   <label>Method of Payment</label>  
   <select class="form-control" placeholder="e.g. BACS" name="mop" ng-options="mop for mop in mops" ng-model="<%-model%>Form.mop">
     <option value="">-- choose mop --</option>
@@ -55,7 +55,7 @@
 
 <!-- P A Y M E N T   D E T A I L S -->
   
-<div class="control-group form-group col-md-10" ng-show="openForBookings && !event.free">
+<div class="control-group form-group col-md-10" ng-show="openForBookings && !event.free && !event.regInterest">
   <label>Payment details</label>
   <textarea type="text" class="form-control" name="paymentdetails" ng-model="<%-model%>Form.paymentDetails" rows="4" readonly></textarea>
 </div>
@@ -205,7 +205,7 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
 
 <div class="control-group form-group col-xs-10"
 ng-class="{'has-error':<%-model%>.dietary.$invalid &&
-                      <%-model%>.dietary.$dirty}">
+                      <%-model%>.dietary.$dirty}" ng-hide="event.regInterest">
 <label>Dietary requirements</label>
 <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="<%-model%>Form.dietary" ng-maxlength="50" >
 <span class="help-block has-error" ng-if="<%-model%>.dietary.$dirty">
@@ -305,9 +305,9 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 </div>
 
 <!-- A D D I T I O N A L  I N F O -->
-<div class="control-group form-group col-xs-10">
-<label><%-sails.config.events.additionalInfoLabel || 'Any additional info' %></label>
-<textarea class="form-control" placeholder="e.g. seating requests etc" name="info" ng-model="<%-model%>Form.info" ></textarea>            
+<div class="control-group form-group col-xs-10" ng-hide="event.regInterest">
+  <label><%-sails.config.events.additionalInfoLabel || 'Any additional info' %></label>
+  <textarea class="form-control" placeholder="e.g. seating requests etc" name="info" ng-model="<%-model%>Form.info" ></textarea>            
 </div>
 
 <!-- P L A C E S-->
@@ -390,7 +390,7 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 	  </div>
 	
 	  <!-- D I E T A R Y -->
-	  <div class="control-group form-group col-xs-10">
+	  <div class="control-group form-group col-xs-10" ng-hide="event.regInterest">
 	    <label>Dietary requirements</label>
 	    <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="{{place}}_dietary" ng-model="linked<%-model%>s[place].dietary" >
 	    

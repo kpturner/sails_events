@@ -391,7 +391,7 @@
              
              <!-- G R A C E   P E R I O D -->
   
-            <div class="control-group form-group col-md-7">
+            <div class="control-group form-group col-md-7" ng-hide="eventForm.free || eventForm.regInterest">
                 <label>Grace period for payment (days)</label>       
                 <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace"></input>
              </div>
@@ -400,7 +400,7 @@
   
             <div class="control-group form-group col-md-7"
               ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
-                                    eventdetails.latePaymentChecking.$dirty}">
+                                    eventdetails.latePaymentChecking.$dirty}" ng-hide="eventForm.free || eventForm.regInterest">
                <label>
                 <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" ></input>
                 &nbsp;&nbsp;&nbsp;Late payment checking?
