@@ -84,6 +84,27 @@
              </label>
           </div>
 
+          <!-- A R E A  R E Q D ? -->
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':eventdetails.areareqd.$invalid &&
+                                  eventdetails.areareqd.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="areareqd" ng-model="eventForm.areaReqd"></input>
+              &nbsp;&nbsp;&nbsp;Area reqd?
+             </label>
+          </div>
+
+          <!-- V O  D E T A I L S  R E Q D ? -->
+          <div class="control-group form-group col-md-5"
+            ng-class="{'has-error':eventdetails.voreqd.$invalid &&
+                                  eventdetails.voreqd.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="voreqd" ng-model="eventForm.voReqd"></input>
+              &nbsp;&nbsp;&nbsp;VO details reqd?
+             </label>
+          </div>
+
+
           <!-- F R E E  E V E N T ? -->
           <div class="control-group form-group col-md-5"
             ng-class="{'has-error':eventdetails.free.$invalid &&
@@ -103,19 +124,7 @@
               <input type="checkbox" class="bigcheckbox" name="voreginterest" ng-model="eventForm.regInterest"></input>
               &nbsp;&nbsp;&nbsp;Register interest?
              </label>
-          </div>
-          
-           
-          <!-- V O  D E T A I L S  R E Q D ? -->
-          <div class="control-group form-group col-md-5"
-            ng-class="{'has-error':eventdetails.voreqd.$invalid &&
-                                  eventdetails.voreqd.$dirty}">
-             <label>
-              <input type="checkbox" class="bigcheckbox" name="voreqd" ng-model="eventForm.voReqd"></input>
-              &nbsp;&nbsp;&nbsp;VO details reqd?
-             </label>
-          </div>
-
+          </div> 
           
   
           <!-- N A M E -->

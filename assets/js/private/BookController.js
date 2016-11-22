@@ -242,43 +242,58 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	 */
 	$scope.detailsComplete = function() {
 		errors=[];
+		validations=[]; 
 		var complete=true;
 		if (!$scope.bookingForm.salutation || $scope.bookingForm.salutation.length==0) {
 			complete=false;
-			errors.push("Salutation")
+			errors.push("Salutation");
+			validations.push($scope.booking.salutation);
 		}
 		if (!$scope.bookingForm.name || $scope.bookingForm.name.length==0) {
 			complete=false;
-			errors.push("Full name")
+			errors.push("Full name");
+			validations.push($scope.booking.name);
 		}
 		if (!$scope.bookingForm.surname || $scope.bookingForm.surname.length==0) {
 			complete=false;
-			errors.push("Surname")
+			errors.push("Surname");
+			validations.push($scope.booking.surname);
 		}
 		if (!$scope.bookingForm.firstName || $scope.bookingForm.firstName.length==0) {
 			complete=false;
-			errors.push("First name")
+			errors.push("First name");
+			validations.push($scope.booking.firstname);
 		} 
 		if ($scope.event.addressReqd && (!$scope.bookingForm.address1 || $scope.bookingForm.address1.length==0)) {
 			complete=false;
-			errors.push("Address line 1")
+			errors.push("Address line 1");
+			validations.push($scope.booking.address1);
 		}
 		if ($scope.event.addressReqd && (!$scope.bookingForm.postcode || $scope.bookingForm.postcode.length==0)) {
 			complete=false;
-			errors.push("Postcode")
+			errors.push("Postcode");
+			validations.push($scope.booking.postcode);
+		}
+		if ($scope.event.areaReqd && $scope.areas.length>0 && (!$scope.bookingForm.area || $scope.bookingForm.area.length==0)) {
+			complete=false;
+			errors.push("Area");	
+			validations.push($scope.booking.area);		
 		}
 		if (!$scope.eventBookings && !$scope.userBookings) {
 			if (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0) {
 				complete=false;
-				errors.push("Lodge")
+				errors.push("Lodge");
+				validations.push($scope.booking.lodge);
 			}
 			if (!$scope.bookingForm.lodgeNo || $scope.bookingForm.lodge==0) {
 				complete=false;
-				errors.push("Lodge number")
+				errors.push("Lodge number");
+				validations.push($scope.booking.lodgeno);
 			}
 			if (!$scope.bookingForm.email || $scope.bookingForm.email.length==0) {
 				complete=false;
-				errors.push("Email address")
+				errors.push("Email address");
+				validations.push($scope.booking.email);
 			}	
 			//if (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0) {
 			//	complete=false;
@@ -313,6 +328,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			
 		if (!complete) {
 			$scope.validationErrors(errors);
+			angular.forEach(validations,function(field){
+				field.$setDirty();	
+				field.$setValidity("required",false);	
+			})
 			$scope.bookingForm.loading=false;
 		}
 
@@ -335,6 +354,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			};
 			// Pop the dialog
 			ngDialog.open(opts);
+			
 		}
 	}
 

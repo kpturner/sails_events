@@ -108,6 +108,11 @@ module.exports = {
       type: 'boolean',
     },
 
+    // Area details are required 
+    areaReqd: {
+      type: 'boolean',
+    },
+
     // Free event? 
     free: {
       type: 'boolean',

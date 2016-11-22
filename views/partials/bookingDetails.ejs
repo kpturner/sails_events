@@ -61,7 +61,9 @@
 </div>
 
 <!-- S A L U T A T I O N -->
-<div class="control-group form-group col-xs-10">
+<div class="control-group form-group col-xs-10" 
+  ng-class="{'has-error':<%-model%>.salutation.$invalid &&
+                    <%-model%>.salutation.$dirty}">
   <label>* Salutation</label>  
   <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-model%>Form.salutation">
     <option value="">-- choose salutation --</option>
@@ -75,7 +77,7 @@
 insert the "has-error" class on the input field (i.e. insert a red border around the input field)
 -->
 <div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-model%>.name.$invalid &&
+  ng-class="{'has-error':<%-model%>.name.$invalid &&
                     <%-model%>.name.$dirty}">
 <label>* Full name (for <span class="hidden-xs">seating</span> reservation card)</label>  
 <!-- For this input field make it required, and have a max length of 50 -->
@@ -169,7 +171,7 @@ and/or maxlength) -->
   </span>
 </div>
 
-<!-- L O D G E  N U M B E R-->
+<!-- L O D G E  N U M B E R -->
 
 <div class="control-group form-group col-xs-6 col-md-4"
 ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
@@ -193,8 +195,10 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
 </div>
 
 <!-- A R E A -->
-<div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
-  <label>Area</label>  
+<div class="control-group form-group col-xs-10" ng-hide="areas.length==0"
+  ng-class="{'has-error':<%-model%>.area.$invalid &&
+                        <%-model%>.area.$dirty}">
+  <label><span ng-show="event.areaReqd && areas.length>0">* </span>Area</label>  
   <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-model%>Form.area">
     <option value="">-- choose area --</option>
   </select>
@@ -317,7 +321,7 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
                       <%-model%>.places.$dirty}" ng-show="placesMax>1">
 <label>* Places</label>
 <input type="number" class="form-control" placeholder="places required" name="places" ng-model="<%-model%>Form.places" min="{{placesMin}}" max="{{placesMax}}"
-  ng-change="makeArray()"  ng-disabled="!openForBookings || (!user.isAdmin !user.isOrganiser && !eventBookings && !userBookings && paid)">
+  ng-change="makeArray()"  ng-disabled="!openForBookings || (!user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid)">
 <span class="help-block has-error" ng-if="<%-model%>.places.$dirty"> 
   <span ng-show="<%-model%>.places.$error.min">Number of places cannot be less than {{placesMin}}.</span>
   <span ng-show="<%-model%>.places.$error.max">Number of places cannot exceed {{placesMax}}.</span>
