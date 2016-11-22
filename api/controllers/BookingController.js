@@ -1147,7 +1147,7 @@ module.exports = {
 			criteria={}
 		}
 		req.session.bookingCriteria=JSON.stringify(criteria);
-		req.session.userCriteria="{}";
+		/////req.session.userCriteria="{}";
 		var download=req.param('download');
 
 		var pag={
