@@ -985,8 +985,8 @@ module.exports = {
 				// Sort response by user surname and first name
 				bookings.sort(Utility.jsonSort("event.date", true));
 				  
-				if (download) {					
-					sails.controllers.booking.download(req, res, req.user.username, false, bookings, req.user);					
+				if (download) {	
+					sails.controllers.booking.download(req, res, req.user.username, false, false, bookings, req.user);					
 				}
 				else {
 					// If session refers to a user who no longer exists, still allow logout.
@@ -1212,7 +1212,7 @@ module.exports = {
 					}  
 					  
 					if (download) {					
-						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, bookings, user);					
+						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, false, bookings, user);					
 					}
 					else {
 						// If session refers to a user who no longer exists, still allow logout.
@@ -1591,6 +1591,7 @@ module.exports = {
 	 * Download bookings
 	 */
 	 download: function(req, res, prefix, addressReqd, voReqd, bookings, user) {
+		 
 	 	if (!bookings) {
 			bookings=[]
 		}
