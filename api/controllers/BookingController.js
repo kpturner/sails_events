@@ -1716,13 +1716,16 @@ module.exports = {
             if (event) {
                 var seq=0;
                 options.filename=event.name+'_lr_' + ((new Date().getTime().toString())) + '.csv';
-                LodgeRoom.find({event:event.id}).sort('createdAt').exec(function(err,data){
+                LodgeRoom.find({event:event.id}).sort('createdAt')
+					.populate("booking")
+					.exec(function(err,data){
                     _.forEach(data,function(d,i){
                         seq++;
                         // Add the sequence number and remove confusing extras
-                        d.seq=seq;
+						d.ref=d.booking.ref;
+                        d.seq=seq;						
                         d.attending=!d.cancelled;
-                        d.rank=(d.rank || "");
+                        d.rank=(d.rank || "");						
                         delete d.id;
                         delete d.event;
                         delete d.booking;
