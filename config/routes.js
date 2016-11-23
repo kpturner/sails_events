@@ -89,6 +89,7 @@ module.exports.routes = {
   'get /usermaint/:action': 'UserController.prepareUser',
   'post /updateuser/:action': 'UserController.updateUser',
   'get /organisers': 'UserController.organisers',
+  'get /dcs': 'UserController.dcs',
 
   // Events
   'get /events': 'EventController.events',

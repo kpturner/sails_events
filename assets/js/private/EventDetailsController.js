@@ -9,7 +9,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 	
 	$scope.eventForm=SAILS_LOCALS.event;
 		
-	// Get a list of users in name order
+	// Get a list of organisers in name order
 	$http.get("/organisers")
 		.then(function onSuccess(sailsResponse){
 			$scope.organisers=sailsResponse.data;			
@@ -20,6 +20,18 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			toastr.error(sailsResponse.data, 'Error');
 
 		})
+
+	// Get a list of DCs in name order
+	$http.get("/dcs")
+		.then(function onSuccess(sailsResponse){
+			$scope.dcs=sailsResponse.data;			
+		})
+		.catch(function onError(sailsResponse){
+
+			// Handle known error type(s).
+			toastr.error(sailsResponse.data, 'Error');
+
+		})	
 		
     
   	// Date handling functions

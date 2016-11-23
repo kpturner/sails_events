@@ -62,6 +62,29 @@ module.exports = {
 		
 	},
 	
+	/**
+	 * Get dcs in name order
+	 */	
+	dcs:function(req, res) {
+		
+			 
+		User.find({where:{isDC:true},sort:{name:1}}).exec(function(err,dcs){
+			 
+			if (err) {
+				sails.log.verbose('Error occurred trying to retrieve dcs.');
+				return res.negotiate(err);
+		  	}	
+		
+		  	// If session refers to a user who no longer exists, still allow logout.
+		  	if (!dcs) {
+		    	return res.json({});
+		  	}
+			  
+			return res.json(dcs);  
+			
+		})		
+		
+	},
 	
 	/**
 	 * Get all users for editing

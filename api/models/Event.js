@@ -21,6 +21,9 @@ module.exports = {
     // Organiser(s)
     organiser: { model: 'User', required: true },
     organiser2: { model: 'User' },
+
+    // Director of Ceremonies
+    dc: { model: 'User' },
     
     // Code (for booking references)
     code : {

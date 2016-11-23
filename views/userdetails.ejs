@@ -56,7 +56,7 @@
   
            <!-- A D M I N ? -->
   
-          <div class="control-group form-group col-md-5"
+          <div class="control-group form-group col-sm-5"
             ng-class="{'has-error':userdetails.isadmin.$invalid &&
                                   userdetails.isadmin.$dirty}">
              <label>
@@ -67,12 +67,23 @@
            
            <!-- E V E N T   O R G A N I S E R ? -->
   
-          <div class="control-group form-group col-md-5"
+          <div class="control-group form-group col-sm-5"
             ng-class="{'has-error':userdetails.isorganiser.$invalid &&
                                   userdetails.isorganiser.$dirty}">
              <label>
               <input type="checkbox" class="bigcheckbox" name="isorganiser" ng-model="userdetailsForm.isOrganiser"></input>
               &nbsp;&nbsp;&nbsp;Event organiser?
+             </label>
+           </div>   
+
+           <!-- E V E N T   D C  ? -->
+  
+          <div class="control-group form-group col-sm-5"
+            ng-class="{'has-error':userdetails.isdc.$invalid &&
+                                  userdetails.isdc.$dirty}">
+             <label>
+              <input type="checkbox" class="bigcheckbox" name="isdc" ng-model="userdetailsForm.isDC"></input>
+              &nbsp;&nbsp;&nbsp;Event DC?
              </label>
            </div>   
   

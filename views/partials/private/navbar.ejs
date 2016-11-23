@@ -29,7 +29,7 @@
       <!-- navbar-right pulls this element right -->
       
           <!-- Only show this button if the user is an admin or organiser -->
-          <button type="button" class="btn btn-success" onclick="window.location='/events'" ng-show="user.isAdmin || user.isOrganiser" ng-class="{'nav-btn-space':!navCollapsed}">
+          <button type="button" class="btn btn-success" onclick="window.location='/events'" ng-show="user.isAdmin || user.isOrganiser || user.isDC" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Events</span>
           </button>
           

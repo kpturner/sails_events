@@ -103,7 +103,12 @@ var User = {
     // Organiser?
     isOrganiser: {
       type: 'boolean' 
-    },      
+    }, 
+
+    // DC?
+    isDC: {
+      type: 'boolean' 
+    },         
 
     // VO?
     isVO: {

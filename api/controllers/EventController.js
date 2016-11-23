@@ -237,7 +237,7 @@ module.exports = {
 								time:'desc'
 						}
 					}
-			).populate('organiser').populate("organiser2").exec(
+			).populate('organiser').populate("organiser2").populate("dc").exec(
 			function(err, events){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve events.');
