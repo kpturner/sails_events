@@ -1722,7 +1722,10 @@ module.exports = {
                     _.forEach(data,function(d,i){
                         seq++;
                         // Add the sequence number and remove confusing extras
-						d.ref=d.booking.ref;
+						d.ref="";
+						if (d.booking) {
+							d.ref=d.booking.ref;
+						}						
                         d.seq=seq;						
                         d.attending=!d.cancelled;
                         d.rank=(d.rank || "");						
