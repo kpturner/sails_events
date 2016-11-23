@@ -1720,13 +1720,13 @@ module.exports = {
 					.populate("booking")
 					.exec(function(err,data){
                     _.forEach(data,function(d,i){
-                        seq++;
-                        // Add the sequence number and remove confusing extras
+                        seq++;                        			
+                        d.seq=seq;
+						// Add the sequence number and remove confusing extras
 						d.ref="";
 						if (d.booking) {
 							d.ref=d.booking.ref;
-						}						
-                        d.seq=seq;						
+						}									
                         d.attending=!d.cancelled;
                         d.rank=(d.rank || "");						
                         delete d.id;
