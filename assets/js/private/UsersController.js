@@ -17,7 +17,8 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 			.success(function(data, status) {
 				$scope.usersLoading=false;
 				if (typeof data == 'object') {
-					$scope.users = data;					
+					$scope.users = data; 
+                	$scope.augment($scope.users);	
 				}
 				else {
 					window.location = '/';
@@ -30,6 +31,23 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		  	}
 		);
 		  
+		/**
+		 * Augment data 
+		 **/  
+		$scope.augment=function(data){
+			// Traverse the events and calculate an appropriate width
+			// for each event name
+			angular.forEach($scope.users,function(user){
+				// Calculate an appropriate width for the event name
+				user.nameClass="user-name-100";
+				console.log(user.gravatarUrl) 
+				if (user.authProvider=="facebook" && user.gravatarUrl && user.gravatarUrl.indexOf("www.gravatar.com")<0) {
+					user.showPicture=true;
+					user.nameClass="user-name-70";                            
+				}                          
+			})				
+		};
+
 		/**
 		 * Filter users
 		 */  
@@ -45,7 +63,8 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 			$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
-						$scope.users = sailsResponse.data;					
+						$scope.users = sailsResponse.data;	
+						$scope.augment($scope.users);					
 					}
 					else {
 						window.location="/";

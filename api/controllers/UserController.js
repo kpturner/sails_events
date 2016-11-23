@@ -7,6 +7,8 @@
 
 
 module.exports = {
+
+	 graph: require('fbgraph'),
 	
 	/**
 	 * Users
@@ -115,7 +117,7 @@ module.exports = {
 		}
 		var filter=criteria.filter;
 
-		if (filter && filter.length>0 && filter!="duplicates") {
+		if (filter && filter.length>0 && filter!="duplicates" && filter!="facebook") {
 			where = {
 				or: [
 					{salutation: {contains: filter}},
@@ -146,7 +148,7 @@ module.exports = {
 								firstName:'asc'
 						}
 					}
-			)
+			) 
 			.paginate(pag)
 			.exec(
 			function(err, users){
@@ -161,45 +163,58 @@ module.exports = {
 			  	}
 				  
 				// If we are looking for duplicates then we have more to do  
-				if (filter=="duplicates") {
-					var dups=[];
-					async.each(users,function(user,next){
-						// For this user, see if there are any others with the same name
-						User.find({where:{
-								id:	{"!":user.id},
-								firstName: 	user.firstName,
-								surname: 	user.surname,
-							}
-						})
-						.then(function(usrs){
-							if (usrs && usrs.length>0) {
-								dups.push(user);
-								dups=dups.concat(usrs)
-							}
-							next();
-						})
-					},function(err){
-						// All done - now strip out duplicate duplicates 
-						var duplicates=[];
-						_.forEach(dups,function(dp,d){
-							var dup=false;
-							_.forEach(duplicates,function(already,a){
-								if (dp.id==already.id) {
-									//sails.log.debug("User '"+dp.name+"' already listed as a duplicate")
-									dup=true;
-									return false;
+				switch (filter) {
+					case "duplicates":
+						var dups=[];
+						async.each(users,function(user,next){
+							// For this user, see if there are any others with the same name
+							User.find({where:{
+									id:	{"!":user.id},
+									firstName: 	user.firstName,
+									surname: 	user.surname,
 								}
 							})
-							if (!dup) {
-								duplicates.push(dp);
-							}							
+							.then(function(usrs){
+								if (usrs && usrs.length>0) {
+									dups.push(user);
+									dups=dups.concat(usrs)
+								}
+								next();
+							})
+						},function(err){
+							// All done - now strip out duplicate duplicates 
+							var duplicates=[];
+							_.forEach(dups,function(dp,d){
+								var dup=false;
+								_.forEach(duplicates,function(already,a){
+									if (dp.id==already.id) {
+										//sails.log.debug("User '"+dp.name+"' already listed as a duplicate")
+										dup=true;
+										return false;
+									}
+								})
+								if (!dup) {
+									duplicates.push(dp);
+								}							
+							})
+							return res.json(duplicates); 
 						})
-						return res.json(duplicates); 
-					})
+						break;
+					case "facebook":
+						var fb=[];
+						_.forEach(users,function(user){
+							if (user.authProvider=="facebook") {
+								fb.push(user)
+							}
+						})
+						return res.json(fb);  
+						break;
+					default: 
+						return res.json(users);
+						break;  
 				}
-				else {
-					return res.json(users);  	
-				}				
+
+				
 			}
 		)
 			
@@ -302,6 +317,8 @@ module.exports = {
 					user[0].isAdmin=false
 				if (!user[0].isOrganiser)
 					user[0].isOrganiser=false
+				if (!user[0].isDC)
+              		user[0].isDC=false
 				// Send confirmation email
 				Email.send(
 					"profileChanged", {

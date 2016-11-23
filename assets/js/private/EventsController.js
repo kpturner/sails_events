@@ -14,25 +14,7 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 			.success(function(data, status) {
 				if (typeof data == 'object') {
 					$scope.events = data;
-                    // Traverse the events and calculate an appropriate width
-                    // for each event name
-                    angular.forEach($scope.events,function(event){
-                        // Calculate an appropriate width for the event name
-                        event.nameClass="event-name-100";
-                        if (event.logoRight) {
-                            if (event.logo) {
-                                event.nameClass="event-name-60";
-                            }
-                            else {
-                                event.nameClass="event-name-80";
-                            }
-                        }   
-                        else {
-                            if (event.logo) {
-                                event.nameClass="event-name-80";
-                            }
-                        } 		
-                    })
+                    $scope.augment($scope.events);
 				}
 				else {
 					window.location = '/';
@@ -45,6 +27,32 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 		  	}
 		);
 		  
+
+		/**
+		 * Augment data 
+		 **/  
+		$scope.augment=function(data){
+			// Traverse the events and calculate an appropriate width
+			// for each event name
+			angular.forEach(data,function(event){
+				// Calculate an appropriate width for the event name
+				event.nameClass="event-name-100";
+				if (event.logoRight) {
+					if (event.logo) {
+						event.nameClass="event-name-60";
+					}
+					else {
+						event.nameClass="event-name-80";
+					}
+				}   
+				else {
+					if (event.logo) {
+						event.nameClass="event-name-80";
+					}
+				} 		
+            })
+		};
+
 		/**
 		 * Filter events
 		 */  
@@ -65,7 +73,8 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 			$http.get('/allevents/'+encodeURIComponent($scope.filterForm.filter))
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
-						$scope.events = sailsResponse.data;					
+						$scope.events = sailsResponse.data;	
+						$scope.augment($scope.events);				
 					}
 					else {
 						window.location="/";

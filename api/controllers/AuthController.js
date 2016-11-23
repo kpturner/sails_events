@@ -6,6 +6,8 @@
  * the basics of Passport.js to work.
  */
 var AuthController = {
+
+  graph: require('fbgraph'),
       
   /**
    * Reset authentication.  Basically removes any additional user information
@@ -270,43 +272,93 @@ var AuthController = {
 		// First get the original record for comparison purposes
 		// Look up the user record from the database which is
 		// referenced by the id in the user session (req.session.me)
-		User.findOne(req.user.id, function foundUser(err, currentUser) {
+		User.findOne(req.user.id).populate("passports").exec(function foundUser(err, currentUser) {
 			//if (err) return res.negotiate(err);
-		  	if (err) {
-				sails.log.verbose('Error occurred trying to retrieve user.');
-				req.session.authenticated=false;
-		    	return res.backToHomePage();
-		  	}	
-		
-		  	// If session refers to a user who no longer exists, still allow logout.
-		  	if (!currentUser) {
-		    	sails.log.verbose('Session refers to a user who no longer exists.');
-				  req.session.authenticated=false;
-		    	return res.backToHomePage();
-		  	}
-		  
-		  	// Build the update JSON specifying only the deltas
-		  	var delta={};
-        
-        var profile=req.param("profile");
-        for(var field in profile) {
-          if (!(profile[field]==undefined) && profile[field]!=currentUser[field])
-            delta[field]=profile[field];
-        }
-        
-       
-        // Always treat the email as changed so the gravatar is updated after a social media sign-up
-        delta.email=profile.email;  
+      if (err) {
+      sails.log.verbose('Error occurred trying to retrieve user.');
+      req.session.authenticated=false;
+        return res.backToHomePage();
+      }	
+  
+      // If session refers to a user who no longer exists, still allow logout.
+      if (!currentUser) {
+        sails.log.verbose('Session refers to a user who no longer exists.');
+        req.session.authenticated=false;
+        return res.backToHomePage();
+      }
+    
+      // Build the update JSON specifying only the deltas
+      var delta={};
+      
+      var profile=req.param("profile");
+      for(var field in profile) {
+        if (!(profile[field]==undefined) && profile[field]!=currentUser[field])
+          delta[field]=profile[field];
+      }
+      
+      /*
+      // Always treat the email as changed so the gravatar is updated after a social media sign-up
+      delta.email=profile.email;  
+      */
 
-        if (!profile.isVO) {
-          delta.voLodge="";
-          delta.voLodgeNo="";
-          delta.voCentre="";
-          delta.voArea="";
-        }
-				  
+      if (!profile.isVO) {
+        delta.voLodge="";
+        delta.voLodgeNo="";
+        delta.voCentre="";
+        delta.voArea="";
+      }
+
+      // Deal with the avatar retrieval depending on provider
+      var provider=currentUser.authProvider;
+      var passport;
+      if (currentUser.passports.length>0) {
+        // There will only be one passport per user in this system
+        passport=currentUser.passports[0];
+        provider=passport.authProvider;
+      }
+
+      switch (provider) {
+        case "facebook": 
+          // Get the access token
+          //Passport.findOne({ user: req.user.id })
+          //  .then(function(passport) {
+              if (passport && passport.tokens) {               
+                try {
+                  // Get the piccie
+                  sails.controllers.auth.graph.get("me/picture?height=32&width=32&access_token="+passport.tokens.accessToken,function(err,res){
+                    if (err) {
+                      sails.log.error(err)
+                    }
+                    else {
+                      delta.gravatarUrl=res.location;
+                    }
+                    return handlePassword(req,delta);
+                  }) 
+                }
+                catch(err) {
+                  sails.log.error(err);
+                  return handlePassword(req,delta);
+                }
+              }
+              else {
+                sails.log.error("Cannot find passport for facebook user "+req.user.id)
+                return handlePassword(req,delta);
+              }
+            //})
+            //.catch(function(err){
+            //  sails.log.error(err);
+            //  return handlePassword(req,delta);
+            //})
+          break;
+        default:
+          return handlePassword(req,delta);
+      }      
+
+      /*	  
 			var handleDelta=function(req,delta){
-				if (delta.email) {					 
+
+        if (delta.email) {				
+          	 
 					var Gravatar = require('machinepack-gravatar');
 					// Build the URL of a gravatar image for a particular email address.
 					Gravatar.getImageUrl({
@@ -322,14 +374,16 @@ var AuthController = {
 							delta.gravatarUrl=gravatarUrl;
 							return handlePassword(req,delta);
 						}	
-					});				 			
+					});
+              
 				}
 				else {
 					return handlePassword(req,delta)
 				}
 			}	
-			
-			var handlePassword=function(req,delta){
+			*/
+
+			function handlePassword(req,delta){
         if (delta.password) {
 					// Get the existing passport
 					Passport.findOne({ user: req.user.id }, function(err, passport) {
@@ -364,7 +418,7 @@ var AuthController = {
 				}						
 			}  
 			
-			var updateUser=function(delta) {
+			function updateUser(delta) {
 				User.update(req.user.id,delta).exec(function afterwards(err, updatedUser){
 					if (err) {
 															
@@ -404,6 +458,8 @@ var AuthController = {
               updatedUser[0].phone=""
           if (!updatedUser[0].isVO)
               updatedUser[0].isVO=false
+          if (!updatedUser[0].isDC)
+              updatedUser[0].isDC=false
           if (!updatedUser[0].isAdmin)
               updatedUser[0].isAdmin=false
           if (!updatedUser[0].isOrganiser)
@@ -432,7 +488,7 @@ var AuthController = {
 						  // Wipe out the session (log out)
 						  req.logout();
 						  // Reset authentication 
-                          AuthController.resetAuth(req, res);  
+              AuthController.resetAuth(req, res);  
 						  // Either send a 200 OK or redirect to the home page
 						  return res.backToHomePage();
 					   }
@@ -442,9 +498,6 @@ var AuthController = {
 				})
         
       }
-		
-  		// Handle the delta model
-  		return handleDelta(req,delta);				
 			 
 		});
 	},
