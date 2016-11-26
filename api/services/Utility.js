@@ -18,8 +18,8 @@ var util        = require('util');
 var async       = require("async");
 var heapdump    = require("heapdump");
 var path        = require("path");
-var fs          = require('fs');
- 
+var fs          = require("fs");
+var graph       = require("fbgraph"); 
 
 module.exports = { 
 
@@ -305,6 +305,63 @@ module.exports = {
                 recip=salutation + " " + firstName;
             }
             return recip;
+        },
+
+        /**
+         * @name            service.Utility.getAvatar
+         * @method
+         * @description     Return avatar for profile
+         * @param {Object}  User
+         * @param {Function} Callback - passed the avatar url
+         */
+        getAvatar: function(user,cb) {
+            var avatar="";
+            var passport;
+            if (!user.passports) {
+                Passport.findOne({ user: user.id })
+                    .then(function(pp) {
+                        passport=pp;         
+                        getIt();
+                    });
+            }
+            else {
+                if (user.passports.length>0) {
+                    // There will only be one passport per user in this system
+                    passport=user.passports[0];
+                }
+                getIt();     
+            }
+           
+            function getIt(){
+                if (passport && passport.tokens) {               
+                    try {
+                        // Get the piccie
+                        switch (user.authProvider) {
+                            case "facebook":
+                                graph.get("me/picture?height=32&width=32&access_token="+passport.tokens.accessToken,function(err,res){
+                                    if (err) {
+                                        sails.log.error(err)
+                                    }
+                                    avatar=res.location;
+                                    cb(err,avatar);
+                                }) 
+                                break;
+                            default:
+                                cb(null,avatar);
+                        }
+                    }
+                    catch(err) {
+                        sails.log.error(err);
+                        cb(err,avatar);
+                    }
+                }
+                else {
+                    sails.log.error("Cannot find passport for user "+user.name+" ("+user.id+")")
+                    cb(null,avatar);
+                }
+            }
+            
         }
+
   
 };

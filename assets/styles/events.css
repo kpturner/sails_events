@@ -115,6 +115,12 @@
 }
 
 
+.user-avatar {
+    height:32px;
+    width: 32px;
+}
+
+
 .user-name {
     font-size: 24px;
     font-family: inherit;

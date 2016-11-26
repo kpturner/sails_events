@@ -18,6 +18,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.event 		= SAILS_LOCALS.event;
 		$scope.selectedUser	= SAILS_LOCALS.selectedUser;
 		$scope.allAddresses = "";
+		$scope.event.bookInText=($scope.event.regInterest)?"register interest":"book in"; 
 		
 		// Get the bookings
 		var route;
@@ -35,13 +36,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			.success(function(data, status) {
 				if (typeof data == 'object') {
 					$scope.bookings = data;
-					// Calculate capacity and add user details if needed
-					$scope.bookings.forEach(function(b,i){
-						$scope.event.capacity-=b.places;
-						if (b.user.email) 
-							$scope.allAddresses+=b.user.email+";"								
-					})
-					 				
+					$scope.augment($scope.bookings,true);					
 				}
 				else {
 					window.location = '/';
@@ -55,7 +50,34 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			.finally(function(){
 				$scope.bookingsLoading=false;
 			})
-		  
+
+		/**
+		 * Augment data 
+		 **/  
+		$scope.augment=function(data,calcCapacity){
+			// Calculate all addresses
+			$scope.allAddresses = "";
+			// Traverse the events and calculate an appropriate width
+			// for each event name and accumulate email addresses
+			angular.forEach(data,function(booking){
+				// Calculate an appropriate width for the booking name
+				if (booking.user) {
+					booking.user.nameClass="user-name-100";
+					if (booking.user.authProvider=="facebook" && booking.user.gravatarUrl && booking.user.gravatarUrl.indexOf("www.gravatar.com")<0) {
+						booking.user.showPicture=true;
+						booking.user.nameClass="user-name-70";                            
+					}    
+					if (booking.user.email) {
+						$scope.allAddresses+=booking.user.email+";"		                      
+					}
+				}			
+				if (calcCapacity) {
+					$scope.event.capacity-=booking.places;
+				}
+			})				
+		};
+ 
+
 		/**
 		 * Filter bookings
 		 */  
@@ -82,12 +104,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
 						$scope.bookings = sailsResponse.data;	
-						// Calculate all addresses
-						$scope.allAddresses = "";
-						$scope.bookings.forEach(function(b,i){
-							if (b.user.email) 
-								$scope.allAddresses+=b.user.email+";"								
-						})				
+						$scope.augment($scope.bookings);									
 					}
 					else {
 						window.location="/";

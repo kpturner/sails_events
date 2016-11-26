@@ -9,11 +9,11 @@
                     <h5 ng-hide="!card.phone"><a href="tel:{{card.phone}}"><span class="fa fa-phone"></span> {{card.phone}}</a></h5>  
                 </div> 
                 <div ng-show="card.showPicture" class="user-picture-right">
-                    <img src="{{card.gravatarUrl}}"></img>
+                    <img src="{{card.gravatarUrl}}" class="user-avatar"></img>
                 </div>
             </div>  
         </div>        
-    </a>  
+    </a>   
     <div class="photo-description">
         <!--
         <a href="/usermaint/copy?userid={{card.id}}" class="a-unstyled">      

@@ -1,0 +1,6 @@
+I found that my server was sending uot a load of spam as "root".  I have not found out what was sending
+it yet, but I was able to block it at least in the SMTP server config.  My SMTP server is postfix
+so I edited /etc/postfix/main.cf and added this line:
+
+authorized_submit_users = !root, static:anyone
+

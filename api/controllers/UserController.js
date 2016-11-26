@@ -274,67 +274,74 @@ module.exports = {
 				
 		// Decide what to do based on the action
 		if (action=="edit") {
-			User.update(userId,user).exec(function(err,user){
-				if (err) {
-					// If this is a uniqueness error about the email attribute,
-				    // send back an easily parseable status code.
-				    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-				      && err.invalidAttributes.email[0].rule === 'unique') {
-				       return res.genericErrorResponse(409,"Email address is already in use");
-				    }
-					// If this is a uniqueness error about the username attribute,
-			      	// send back an easily parseable status code.
-			      	if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
-			          && err.invalidAttributes.username[0].rule === 'unique') {
-			          return res.genericErrorResponse(410,"User name is already in use");
-			      	}
-					// Else unknown error
-					return res.negotiate(err)
-				}
-				// Success
-				if (user[0].address1==null)
-					user[0].address1=""
-                if (user[0].address2==null)
-					user[0].address2=""
-                if (user[0].address3==null)
-					user[0].address3=""
-                if (user[0].address4==null)
-					user[0].address4=""
-                if (user[0].postcode==null)
-					user[0].postcode=""
-                if (user[0].dietary==null)
-					user[0].dietary=""
-				if (user[0].rank==null)
-					user[0].rank=""
-				if (user[0].phone==null)
-					user[0].phone=""
-                if (user[0].area==null)
-					user[0].area=""
-                
-				if (!user[0].isVO) 
-					user[0].isVO=false
-				if (!user[0].isAdmin)
-					user[0].isAdmin=false
-				if (!user[0].isOrganiser)
-					user[0].isOrganiser=false
-				if (!user[0].isDC)
-              		user[0].isDC=false
-				// Send confirmation email
-				Email.send(
-					"profileChanged", {
-				            recipientName:Utility.recipient(user[0].salutation,user[0].firstName,user[0].surname),
-				            senderName: sails.config.events.title,
-			                details: user[0]						  
-					    },
-					    {
-					      to:user[0].email,
-						  bcc: sails.config.events.developer || "",
-					      subject: sails.config.events.title + " - Your details have been changed by the Administrator"
-					    },
-					    function(err) {if (err) console.log(err);}
-				   )     
-				return res.ok();	
-			})
+
+			// Get the avatar (if applicable) then update
+			Utility.getAvatar(user,function(err,avatar){
+				user.gravatarUrl=avatar;
+				User.update(userId,user).exec(function(err,user){
+					if (err) {
+						// If this is a uniqueness error about the email attribute,
+						// send back an easily parseable status code.
+						if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+						&& err.invalidAttributes.email[0].rule === 'unique') {
+						return res.genericErrorResponse(409,"Email address is already in use");
+						}
+						// If this is a uniqueness error about the username attribute,
+						// send back an easily parseable status code.
+						if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
+						&& err.invalidAttributes.username[0].rule === 'unique') {
+						return res.genericErrorResponse(410,"User name is already in use");
+						}
+						// Else unknown error
+						return res.negotiate(err)
+					}
+					// Success
+					/* Don't inform the user by email. Can cause confusion
+					if (user[0].address1==null)
+						user[0].address1=""
+					if (user[0].address2==null)
+						user[0].address2=""
+					if (user[0].address3==null)
+						user[0].address3=""
+					if (user[0].address4==null)
+						user[0].address4=""
+					if (user[0].postcode==null)
+						user[0].postcode=""
+					if (user[0].dietary==null)
+						user[0].dietary=""
+					if (user[0].rank==null)
+						user[0].rank=""
+					if (user[0].phone==null)
+						user[0].phone=""
+					if (user[0].area==null)
+						user[0].area=""
+					
+					if (!user[0].isVO) 
+						user[0].isVO=false
+					if (!user[0].isAdmin)
+						user[0].isAdmin=false
+					if (!user[0].isOrganiser)
+						user[0].isOrganiser=false
+					if (!user[0].isDC)
+						user[0].isDC=false
+					// Send confirmation email
+					Email.send(
+						"profileChanged", {
+								recipientName:Utility.recipient(user[0].salutation,user[0].firstName,user[0].surname),
+								senderName: sails.config.events.title,
+								details: user[0]						  
+							},
+							{
+							to:user[0].email,
+							bcc: sails.config.events.developer || "",
+							subject: sails.config.events.title + " - Your details have been changed by the Administrator"
+							},
+							function(err) {if (err) console.log(err);}
+					) 
+					*/    
+					return res.ok();	
+				})
+			}) 
 		}
 		else if (action=="delete") {
 			// Make sure there are no bookings!

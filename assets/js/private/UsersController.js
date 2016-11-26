@@ -37,10 +37,9 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		$scope.augment=function(data){
 			// Traverse the events and calculate an appropriate width
 			// for each event name
-			angular.forEach($scope.users,function(user){
-				// Calculate an appropriate width for the event name
+			angular.forEach(data,function(user){
+				// Calculate an appropriate width for the user name
 				user.nameClass="user-name-100";
-				console.log(user.gravatarUrl) 
 				if (user.authProvider=="facebook" && user.gravatarUrl && user.gravatarUrl.indexOf("www.gravatar.com")<0) {
 					user.showPicture=true;
 					user.nameClass="user-name-70";                            

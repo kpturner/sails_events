@@ -7,7 +7,7 @@
  */
 var AuthController = {
 
-  graph: require('fbgraph'),
+
       
   /**
    * Reset authentication.  Basically removes any additional user information
@@ -308,80 +308,12 @@ var AuthController = {
         delta.voArea="";
       }
 
-      // Deal with the avatar retrieval depending on provider
-      var provider=currentUser.authProvider;
-      var passport;
-      if (currentUser.passports.length>0) {
-        // There will only be one passport per user in this system
-        passport=currentUser.passports[0];
-        provider=passport.authProvider;
-      }
-
-      switch (provider) {
-        case "facebook": 
-          // Get the access token
-          //Passport.findOne({ user: req.user.id })
-          //  .then(function(passport) {
-              if (passport && passport.tokens) {               
-                try {
-                  // Get the piccie
-                  sails.controllers.auth.graph.get("me/picture?height=32&width=32&access_token="+passport.tokens.accessToken,function(err,res){
-                    if (err) {
-                      sails.log.error(err)
-                    }
-                    else {
-                      delta.gravatarUrl=res.location;
-                    }
-                    return handlePassword(req,delta);
-                  }) 
-                }
-                catch(err) {
-                  sails.log.error(err);
-                  return handlePassword(req,delta);
-                }
-              }
-              else {
-                sails.log.error("Cannot find passport for facebook user "+req.user.id)
-                return handlePassword(req,delta);
-              }
-            //})
-            //.catch(function(err){
-            //  sails.log.error(err);
-            //  return handlePassword(req,delta);
-            //})
-          break;
-        default:
+      // Get the avatar
+      Utility.getAvatar(currentUser,function(err,avatar){
+          delta.gravatarUrl=avatar;
           return handlePassword(req,delta);
-      }      
+      })      
 
-      /*	  
-			var handleDelta=function(req,delta){
-
-        if (delta.email) {				
-          	 
-					var Gravatar = require('machinepack-gravatar');
-					// Build the URL of a gravatar image for a particular email address.
-					Gravatar.getImageUrl({
-						emailAddress: delta.email,
-						gravatarSize: 400,
-						rating: 'g',
-						useHttps: true,
-					}).exec({
-						error: function(err) {
-							return res.negotiate(err)
-						},
-						success: function(gravatarUrl) {
-							delta.gravatarUrl=gravatarUrl;
-							return handlePassword(req,delta);
-						}	
-					});
-              
-				}
-				else {
-					return handlePassword(req,delta)
-				}
-			}	
-			*/
 
 			function handlePassword(req,delta){
         if (delta.password) {
