@@ -50,7 +50,15 @@
       <form ng-submit="submitUserForm()" id="profile-form" name="userdetails" 
           ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
         <h3 class="form-signin-heading">User - <%=mode%></h3>
+
         <h5>Items marked with * are mandatory</h5>
+
+                
+        <!-- A V A T A R -->
+        <div class="control-group form-group" ng-show="<%-form%>Form.gravatarUrl.indexOf('gravatar')<0">
+            <img ng-src="{{<%-form%>Form.gravatarUrl}}"></img>
+        </div>   
+
         
         <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->
   
