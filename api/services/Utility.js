@@ -315,7 +315,7 @@ module.exports = {
          * @param {Function} Callback - passed the avatar url
          */
         getAvatar: function(user,cb) {
-            var avatar="";
+            var avatar=user.gravatarUrl;
             var passport;
             if (!user.passports) {
                 Passport.findOne({ user: user.id })
@@ -342,7 +342,9 @@ module.exports = {
                                     if (err) {
                                         sails.log.error(err)
                                     }
-                                    avatar=res.location;
+                                    else {
+                                        avatar=res.location;
+                                    }                                    
                                     cb(err,avatar);
                                 }) 
                                 break;
@@ -356,7 +358,7 @@ module.exports = {
                     }
                 }
                 else {
-                    sails.log.error("Cannot find passport for user "+user.name+" ("+user.id+")")
+                    sails.log.debug("Cannot find passport for user "+user.name+" ("+user.id+")")
                     cb(null,avatar);
                 }
             }
