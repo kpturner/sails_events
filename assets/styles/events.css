@@ -99,8 +99,8 @@
     width: 100%
 }
 
-.user-name-70 {
-    width: 70%
+.user-name-65 {
+    width: 65%
 }
  
 
@@ -110,14 +110,14 @@
     margin-left:6px;
     margin-right:5px;
     height:52px;
-    width: 15%;
+    width: 25%;
     
 }
 
 
 .user-avatar {
-    height:32px;
-    width: 32px;
+    height:48px;
+    width: 48px;
 }
 
 

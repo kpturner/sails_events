@@ -74,7 +74,8 @@ module.exports.passport = {
       clientID: '1044760933538-h91m7atpd59n9ieurq49msne5p98sbsb.apps.googleusercontent.com',
       clientSecret: 'PGEGQRLVeEeyP_5Ah3HqDig7',
       max_auth_age: '0',
-      scope: ['email'] /* email is necessary for login behavior */
+      scope: ['email'] /* email is necessary for login behavior */,
+      apiKey: 'AIzaSyDd-uWS_YzY_dUoYbL6N4_Zf8P6RvX7anQ'
     }
   },
 

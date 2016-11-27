@@ -40,9 +40,9 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 			angular.forEach(data,function(user){
 				// Calculate an appropriate width for the user name
 				user.nameClass="user-name-100";
-				if (user.authProvider=="facebook" && user.gravatarUrl && user.gravatarUrl.indexOf("www.gravatar.com")<0) {
+				if (user.gravatarUrl && user.gravatarUrl.indexOf("www.gravatar.com")<0) {
 					user.showPicture=true;
-					user.nameClass="user-name-70";                            
+					user.nameClass="user-name-65";                            
 				}                          
 			})				
 		};

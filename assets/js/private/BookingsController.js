@@ -63,9 +63,9 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				// Calculate an appropriate width for the booking name
 				if (booking.user) {
 					booking.user.nameClass="user-name-100";
-					if (booking.user.authProvider=="facebook" && booking.user.gravatarUrl && booking.user.gravatarUrl.indexOf("www.gravatar.com")<0) {
+					if (booking.user.gravatarUrl && booking.user.gravatarUrl.indexOf("www.gravatar.com")<0) {
 						booking.user.showPicture=true;
-						booking.user.nameClass="user-name-70";                            
+						booking.user.nameClass="user-name-65";                            
 					}    
 					if (booking.user.email) {
 						$scope.allAddresses+=booking.user.email+";"		                      

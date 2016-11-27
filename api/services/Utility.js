@@ -20,6 +20,10 @@ var heapdump    = require("heapdump");
 var path        = require("path");
 var fs          = require("fs");
 var graph       = require("fbgraph"); 
+var Twit        = require("twit");
+var google      = require('googleapis');
+var plus        = google.plus('v1'); 
+
 
 module.exports = { 
 
@@ -308,6 +312,43 @@ module.exports = {
         },
 
         /**
+         * @name            service.Utility.updateAvatars
+         * @method
+         * @description     Update all user avatars
+         
+         */
+        updateAvatars: function(){
+            User.find({
+                where: {
+                    or: [
+                        {authProvider:"facebook"},
+                        {authProvider:"twitter"},
+                        {authProvider:"google"},
+                    ]
+                }
+            })
+            .populate("passports")
+            .then(function(users){
+                _.forEach(users,function(user){
+                    Utility.getAvatar(user,function(err,avatar){
+                        if (!err && avatar) {
+                            User.update(user.id,{
+                                gravatarUrl: avatar
+                            }).exec(function(err,updatedUsers){
+                                if (err) {
+                                    sails.log.error(err.message)
+                                }
+                                else {
+                                    sails.log.debug("Avatar updated for "+updatedUsers[0].name)
+                                }                                
+                            })
+                        }
+                    })
+                })
+            })
+        },
+
+        /**
          * @name            service.Utility.getAvatar
          * @method
          * @description     Return avatar for profile
@@ -338,9 +379,9 @@ module.exports = {
                         // Get the piccie
                         switch (user.authProvider) {
                             case "facebook":
-                                graph.get("me/picture?height=32&width=32&access_token="+passport.tokens.accessToken,function(err,res){
+                                graph.get("me/picture?height=48&width=48&access_token="+passport.tokens.accessToken,function(err,res){
                                     if (err) {
-                                        sails.log.error(err)
+                                        sails.log.error("Cannot get avatar for Facebook user "+user.name+": "+err.message)
                                     }
                                     else {
                                         avatar=res.location;
@@ -348,6 +389,38 @@ module.exports = {
                                     cb(err,avatar);
                                 }) 
                                 break;
+                            case "twitter":
+                                // Create twitter interface 
+                                twitter=new Twit({
+                                    consumer_key:       sails.config.passport.twitter.options.consumerKey,
+                                    consumer_secret:    sails.config.passport.twitter.options.consumerSecret,
+                                    access_token:       passport.tokens.token,
+                                    access_token_secret:passport.tokens.tokenSecret
+                                })
+                                twitter.get("users/show",{user_id:passport.identifier},function(err,data,res){
+                                    if (err) {
+                                        sails.log.error("Cannot get avatar for Twitter user "+user.name+": "+err.message)
+                                    }
+                                    else {
+                                        avatar=data.profile_image_url;
+                                    }                                    
+                                    cb(err,avatar);
+                                }) 
+                                break;
+                            case "google":
+                                plus.people.get({
+                                    userId: passport.identifier,
+                                    auth:   sails.config.passport.google.options.apiKey      
+                                },function(err, data){
+                                    if (err) {
+                                        sails.log.error("Cannot get avatar for Google user "+user.name+": "+err.message)
+                                    }
+                                    else {
+                                       avatar=data.image.url;
+                                    }                                    
+                                    cb(err,avatar);
+                                })                                
+                                break;    
                             default:
                                 cb(null,avatar);
                         }

@@ -117,7 +117,7 @@ module.exports = {
 		}
 		var filter=criteria.filter;
 
-		if (filter && filter.length>0 && filter!="duplicates" && filter!="facebook") {
+		if (filter && filter.length>0 && filter!="duplicates" && filter!="facebook" && filter!="twitter" && filter!="google") {
 			where = {
 				or: [
 					{salutation: {contains: filter}},
@@ -203,7 +203,25 @@ module.exports = {
 					case "facebook":
 						var fb=[];
 						_.forEach(users,function(user){
-							if (user.authProvider=="facebook") {
+							if (user.authProvider==filter) {
+								fb.push(user)
+							}
+						})
+						return res.json(fb);  
+						break;
+					case "twitter":
+						var fb=[];
+						_.forEach(users,function(user){
+							if (user.authProvider==filter) {
+								fb.push(user)
+							}
+						})
+						return res.json(fb);  
+						break;
+					case "google":
+						var fb=[];
+						_.forEach(users,function(user){
+							if (user.authProvider==filter) {
 								fb.push(user)
 							}
 						})

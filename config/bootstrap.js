@@ -31,6 +31,11 @@ module.exports.bootstrap = function(cb) {
             sails.log.debug("indexes rebuilt")
         })
     }    
+
+    // Update all avatars if required
+    if (sails.config.events.updateAvatars) {
+        Utility.updateAvatars();
+    }
       
     // Start the late payment daemon
     if (sails.config.events.latePaymentDaemon) {
