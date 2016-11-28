@@ -148,7 +148,11 @@ var User = {
       defaultsTo: new Date(0)
     },
 
-    // url for gravatar
+    useGravatar: {
+      type: 'boolean' 
+    },
+
+    // url for gravatar (unless the user is using Social Media, in which case we will get it from there)
     gravatarUrl: {
       type: 'string'
     },

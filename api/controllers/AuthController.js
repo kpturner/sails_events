@@ -309,7 +309,7 @@ var AuthController = {
       }
 
       // Get the avatar
-      Utility.getAvatar(currentUser,function(err,avatar){
+      Utility.getAvatar(profile,function(err,avatar){
           delta.gravatarUrl=avatar;
           return handlePassword(req,delta);
       })      

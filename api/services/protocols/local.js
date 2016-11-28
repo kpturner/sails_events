@@ -25,190 +25,154 @@ var crypto    = require('crypto');
  */
 exports.register = function (req, res, next) {
   
-  var Gravatar = require('machinepack-gravatar');
-  
+
   var user=req.param('user');
+  user.authProvider  = 'local';
+  user.lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  user.gravatarUrl   = "";
+ 
   
-  // Build the URL of a gravatar image for a particular email address.
-	Gravatar.getImageUrl({
-		//emailAddress: req.param('email'),
-		emailAddress:user.email,
-    gravatarSize: 400,
-		rating: 'g',
-		useHttps: true,
-	}).exec({
-      error: function(err) {
-						return res.negotiate(err)
-			},
-      success: function(gravatarUrl) {
-        //var name          = req.param('name')
-        //  , email         = req.param('email')
-        //  , username      = req.param('username')
-        //  , password      = req.param('password')
-        //  , lodge         = req.param('lodge')
-        //  , lodgeNo       = req.param('lodgeNo')
-        //  , rank          = req.param('rank')
-        //  , dietary       = req.param('dietary')
-        //  , email         = req.param('email')
-        //  , surname       = req.param('surname')
-        //  , firstName     = req.param('firstName')
-        //  , isVO          = req.param('isVO')
-        //  , voLodge       = req.param('voLodge')
-        //  , voLodgeNo     = req.param('voLodgeNo')
-        //  , authProvider  = 'local'
-        //  , lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ')
-        //  , gravatarUrl   = gravatarUrl;
-        
-          user.authProvider  = 'local';
-          user.lastLoggedIn  = new Date().toISOString().slice(0, 19).replace('T', ' ');
-          user.gravatarUrl   = gravatarUrl;
+  // It is possible that a dummy user already exists with this email address.  This would be where
+  // a booking has been created on behalf of this user by the administrator. In this case we need to use that
+  // user record (and update it) rather than create a new one.
+  User.findOne({email:user.email}).exec(function(err,existingUser){
+      if (err || !existingUser) {
+          // Normal situation so proceed with creation
+          User.create(user,
+            function(err, newUser) {
+                if (err) {
+                    // If this is a uniqueness error about the email attribute,
+                    // send back an easily parseable status code.
+                    if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
+                      && err.invalidAttributes.email[0].rule === 'unique') {
+                      return res.genericErrorResponse(409,"Email address is already in use");
+                    }
+                    // If this is a uniqueness error about the username attribute,
+                    // send back an easily parseable status code.
+                    if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
+                      && err.invalidAttributes.username[0].rule === 'unique') {
+                      return res.genericErrorResponse(410,"User name is already in use");
+                    }
+                }
+                // Complete registration
+                completeReg(newUser,user.password); 
+            })                      
+      }
+      else {
+          // Pre-existing user with this email address.  We can use it, but only if the authProvider is "dummy".  Otherwise
+          // this registration is invalid
+          if (existingUser.authProvider=="dummy") {
+            User.update(existingUser.id,user).exec(function(err,newUsers){
+              
+              // Asynchronously email the developer
+              if (sails.config.events.developer) {
+                newUsers[0].authProvider="local";
+                Email.send(
+                "dummyUserConversion", {
+                      convertedUser: newUsers[0]                      
+                    },
+                    {
+                      to: sails.config.events.developer,
+                      subject: sails.config.events.title + " - Dummy user conversion"
+                    },
+                    function(err) {if (err) console.log(err);}
+                )       
+              }                    
+              
+              // Complete registration
+              completeReg(newUsers[0],user.password);         
+            })
+          } 
+          else {
+            return res.genericErrorResponse(409,"Email address is already in use");
+          }               
+      }
+  })    
 
-          /**
-           * Private function to complete the registration
-           */
-           var completeReg=function(newUser,password) {
-              // Generate passport
-              // Generating accessToken for API authentication
-              var token = crypto.randomBytes(48).toString('base64'); 
-              Passport.create({
-                  protocol    : 'local'
-                , password    : password
-                , user        : newUser.id
-                , accessToken : token
-                }, function (err, passport) {
-                  if (err) {
-                    if (err.code === 'E_VALIDATION') {
-                      //req.flash('error', 'Error.Passport.Password.Invalid');
-                      //return user.destroy(function (destroyErr) {
-                      //  next(destroyErr || err);
-                      //});
-                      newUser.destroy();
-                      return res.genericErrorResponse(411,"Passport password is invalid");
-                    }         
-                    
-                  }
+   /**
+   * Private function to complete the registration
+   */
+  function completeReg(newUser,password) {
+      // Generate passport
+      // Generating accessToken for API authentication
+      var token = crypto.randomBytes(48).toString('base64'); 
+      Passport.create({
+            protocol    : 'local'
+          , password    : password
+          , user        : newUser.id
+          , accessToken : token
+      }, function (err, passport) {
+          if (err) {
+            if (err.code === 'E_VALIDATION') {
+              //req.flash('error', 'Error.Passport.Password.Invalid');
+              //return user.destroy(function (destroyErr) {
+              //  next(destroyErr || err);
+              //});
+              newUser.destroy();
+              return res.genericErrorResponse(411,"Passport password is invalid");
+            }         
             
-                  if (newUser.area==null)
-                      newUser.area=""
-                  if (newUser.address1==null)
-                      newUser.address1=""
-                  if (newUser.address2==null)
-                      newUser.address2=""
-                  if (newUser.address3==null)
-                      newUser.address3=""
-                  if (newUser.address4==null)
-                      newUser.address4=""
-                  if (newUser.postcode==null)
-                      newUser.postcode=""    
-                  if (newUser.dietary==null)
-                    newUser.dietary=""
-                  if (newUser.rank==null)
-                    newUser.rank=""
-                  if (newUser.phone==null)
-                    newUser.phone=""
-                  if (newUser.rank==null)
-                    newUser.rank=""
-                  if (newUser.area==null)
-                    newUser.area=""  
+          }
+    
+          if (newUser.area==null)
+              newUser.area=""
+          if (newUser.address1==null)
+              newUser.address1=""
+          if (newUser.address2==null)
+              newUser.address2=""
+          if (newUser.address3==null)
+              newUser.address3=""
+          if (newUser.address4==null)
+              newUser.address4=""
+          if (newUser.postcode==null)
+              newUser.postcode=""    
+          if (newUser.dietary==null)
+            newUser.dietary=""
+          if (newUser.rank==null)
+            newUser.rank=""
+          if (newUser.phone==null)
+            newUser.phone=""
+          if (newUser.rank==null)
+            newUser.rank=""
+          if (newUser.area==null)
+            newUser.area=""  
+    
+          // Send confirmation email
+          Email.send(
+                "signupConfirmation",
+                {
+                    recipientName: Utility.recipient(newUser.salutation,newUser.firstName,newUser.surname),
+                    senderName: sails.config.events.title,
+                    details: newUser,        								 
+                    //domain:	sails.config.events.domain,
+                    domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
+                },
+                {
+                    to: newUser.email,
+                    bcc: sails.config.events.developer || "", 
+                    subject: "Welcome to "+sails.config.events.title
+                },
+                function(err) {if (err) console.log(err);}
+          )     
             
-                  // Send confirmation email
-                  Email.send(
-                        "signupConfirmation",
-                        {
-                            recipientName: Utility.recipient(newUser.salutation,newUser.firstName,newUser.surname),
-                            senderName: sails.config.events.title,
-                            details: newUser,        								 
-      						//domain:	sails.config.events.domain,
-                            domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
-      					},
-      					{
-      					    to: newUser.email,
-                            bcc: sails.config.events.developer || "", 
-      						subject: "Welcome to "+sails.config.events.title
-      					},
-      					function(err) {if (err) console.log(err);}
-                  )     
-                    
-                    // Success
-                    // Mark the session as authenticated to work with default Sails sessionAuth.js policy
-                    req.login(newUser, function (err) {
-                      if (err) {
-                        return res.genericErrorResponse(412,"Failed to login after registration");
-                      }
-                      // Mark the session as authenticated to work with default Sails sessionAuth.js policy
-                      req.session.authenticated = true;   
-                      req.session.lastRequest=null;                     
-                      return res.json({
-      				      id:	newUser.id
-      				  })
-                    });
-      				
-                    
-                });
-           }
-           /**********************************************/
-          
-          // It is possible that a dummy user already exists with this email address.  This would be where
-          // a booking has been created on behalf of this user by the administrator. In this case we need to use that
-          // user record (and update it) rather than create a new one.
-          User.findOne({email:user.email}).exec(function(err,existingUser){
-              if (err || !existingUser) {
-                 // Normal situation so proceed with creation
-                 User.create(user,
-                    function(err, newUser) {
-                        if (err) {
-                            // If this is a uniqueness error about the email attribute,
-        				            // send back an easily parseable status code.
-        				            if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
-        				              && err.invalidAttributes.email[0].rule === 'unique') {
-        				              return res.genericErrorResponse(409,"Email address is already in use");
-        				            }
-        								    // If this is a uniqueness error about the username attribute,
-        				            // send back an easily parseable status code.
-        				            if (err.invalidAttributes && err.invalidAttributes.username && err.invalidAttributes.username[0]
-        				              && err.invalidAttributes.username[0].rule === 'unique') {
-        				              return res.genericErrorResponse(410,"User name is already in use");
-        				            }
-                        }
-                        // Complete registration
-                        completeReg(newUser,user.password); 
-                    })                      
-              }
-              else {
-                  // Pre-existing user with this email address.  We can use it, but only if the authProvider is "dummy".  Otherwise
-                  // this registration is invalid
-                  if (existingUser.authProvider=="dummy") {
-                    User.update(existingUser.id,user).exec(function(err,newUsers){
-                      
-                      // Asynchronously email the developer
-                      if (sails.config.events.developer) {
-                        newUsers[0].authProvider="local";
-                        Email.send(
-                        "dummyUserConversion", {
-                              convertedUser: newUsers[0]                      
-                            },
-                            {
-                              to: sails.config.events.developer,
-                              subject: sails.config.events.title + " - Dummy user conversion"
-                            },
-                            function(err) {if (err) console.log(err);}
-                        )       
-                      }                    
-                      
-                      // Complete registration
-                      completeReg(newUsers[0],user.password);         
-                    })
-                  } 
-                  else {
-                    return res.genericErrorResponse(409,"Email address is already in use");
-                  }               
-              }
-          })        
+          // Success
+          // Mark the session as authenticated to work with default Sails sessionAuth.js policy
+          req.login(newUser, function (err) {
+            if (err) {
+              return res.genericErrorResponse(412,"Failed to login after registration");
+            }
+            // Mark the session as authenticated to work with default Sails sessionAuth.js policy
+            req.session.authenticated = true;   
+            req.session.lastRequest=null;                     
+            return res.json({
+              id:	newUser.id
+            })
+          });
+      
+            
+        });
+    }
 
-      }   
-  })
-  
-  
 
 };
 

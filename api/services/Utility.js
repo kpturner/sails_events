@@ -23,7 +23,7 @@ var graph       = require("fbgraph");
 var Twit        = require("twit");
 var google      = require('googleapis');
 var plus        = google.plus('v1'); 
-
+var Gravatar    = require('machinepack-gravatar');
 
 module.exports = { 
 
@@ -318,20 +318,21 @@ module.exports = {
          
          */
         updateAvatars: function(){
-            User.find({
-                where: {
-                    or: [
-                        {authProvider:"facebook"},
-                        {authProvider:"twitter"},
-                        {authProvider:"google"},
-                    ]
-                }
+            User.find({               
+                //where: {
+                //    or: [
+                //        {authProvider:"facebook"},
+                //        {authProvider:"twitter"},
+                //        {authProvider:"google"},
+                //    ]
+                //}
             })
+            .sort("surname")
             .populate("passports")
             .then(function(users){
                 _.forEach(users,function(user){
                     Utility.getAvatar(user,function(err,avatar){
-                        if (!err && avatar) {
+                        if (!err) {
                             User.update(user.id,{
                                 gravatarUrl: avatar
                             }).exec(function(err,updatedUsers){
@@ -357,7 +358,7 @@ module.exports = {
          */
         getAvatar: function(user,cb) {
             var avatar=user.gravatarUrl;
-            var passport;
+            var passport,e;
             if (!user.passports) {
                 Passport.findOne({ user: user.id })
                     .then(function(pp) {
@@ -374,55 +375,100 @@ module.exports = {
             }
            
             function getIt(){
-                if (passport && passport.tokens) {               
+                if (passport) {               
                     try {
                         // Get the piccie
-                        switch (user.authProvider) {
+                        switch (user.authProvider) {                            
                             case "facebook":
-                                graph.get("me/picture?height=48&width=48&access_token="+passport.tokens.accessToken,function(err,res){
-                                    if (err) {
-                                        sails.log.error("Cannot get avatar for Facebook user "+user.name+": "+err.message)
-                                    }
-                                    else {
-                                        avatar=res.location;
-                                    }                                    
-                                    cb(err,avatar);
-                                }) 
+                                avatar="";
+                                if (passport.tokens) {
+                                     graph.get("me/picture?height=48&width=48&access_token="+passport.tokens.accessToken,function(err,res){
+                                        if (err) {
+                                            e=err;
+                                            sails.log.error("Cannot get avatar for Facebook user "+user.name+": "+err.message);
+                                        }
+                                        else {
+                                            avatar=res.location;                                              
+                                        } 
+                                        cb(e,avatar); 
+                                    }) 
+                                }
+                                else {
+                                    sails.log.debug("Cannot find passport tokens for user "+user.name+" ("+user.id+")");
+                                    cb(e,avatar); 
+                                }               
                                 break;
                             case "twitter":
-                                // Create twitter interface 
-                                twitter=new Twit({
-                                    consumer_key:       sails.config.passport.twitter.options.consumerKey,
-                                    consumer_secret:    sails.config.passport.twitter.options.consumerSecret,
-                                    access_token:       passport.tokens.token,
-                                    access_token_secret:passport.tokens.tokenSecret
-                                })
-                                twitter.get("users/show",{user_id:passport.identifier},function(err,data,res){
-                                    if (err) {
-                                        sails.log.error("Cannot get avatar for Twitter user "+user.name+": "+err.message)
-                                    }
-                                    else {
-                                        avatar=data.profile_image_url;
-                                    }                                    
-                                    cb(err,avatar);
-                                }) 
+                                avatar="";
+                                if (passport.tokens) {
+                                    // Create twitter interface 
+                                    twitter=new Twit({
+                                        consumer_key:       sails.config.passport.twitter.options.consumerKey,
+                                        consumer_secret:    sails.config.passport.twitter.options.consumerSecret,
+                                        access_token:       passport.tokens.token,
+                                        access_token_secret:passport.tokens.tokenSecret
+                                    })
+                                    twitter.get("users/show",{user_id:passport.identifier},function(err,data,res){
+                                        if (err) {
+                                            e=err;
+                                            sails.log.error("Cannot get avatar for Twitter user "+user.name+": "+err.message);                                           
+                                        }
+                                        else {
+                                            avatar=data.profile_image_url;
+                                        }
+                                        cb(e,avatar); 
+                                    }) 
+                                }
+                                else {
+                                    sails.log.debug("Cannot find passport tokens for user "+user.name+" ("+user.id+")");
+                                    cb(e,avatar); 
+                                }                        
                                 break;
                             case "google":
-                                plus.people.get({
-                                    userId: passport.identifier,
-                                    auth:   sails.config.passport.google.options.apiKey      
-                                },function(err, data){
-                                    if (err) {
-                                        sails.log.error("Cannot get avatar for Google user "+user.name+": "+err.message)
-                                    }
-                                    else {
-                                       avatar=data.image.url;
-                                    }                                    
-                                    cb(err,avatar);
-                                })                                
+                                avatar="";
+                                if (passport.tokens) {
+                                    plus.people.get({
+                                        userId: passport.identifier,
+                                        auth:   sails.config.passport.google.options.apiKey      
+                                    },function(err, data){
+                                        if (err) {
+                                            e=err;
+                                            sails.log.error("Cannot get avatar for Google user "+user.name+": "+err.message);                                            
+                                        }
+                                        else {
+                                            avatar=data.image.url;
+                                        } 
+                                        cb(e,avatar); 
+                                    })  
+                                }
+                                else {
+                                    sails.log.debug("Cannot find passport tokens for user "+user.name+" ("+user.id+")");
+                                    cb(e,avatar);  
+                                }                                                                                            
                                 break;    
                             default:
-                                cb(null,avatar);
+                                if (user.useGravatar) {
+                                    Gravatar.getImageUrl({
+                                        emailAddress: user.email,
+                                        gravatarSize: 48,
+                                        rating: 'g',
+                                        useHttps: true,
+                                    }).exec({
+                                        error: function(err) {
+                                            sails.log.error("Cannot get gravatar for user "+user.name+": "+err.message);
+                                            cb(err,avatar);
+                                        },
+                                        success: function(gravatar) {
+                                            sails.log.debug("Gravatar for user "+user.name+" set to: "+gravatar)
+                                            avatar=gravatar;
+                                            cb(null,avatar);
+                                        }	
+                                    });	
+                                }
+                                else {
+                                    sails.log.debug("Removing Gravatar for user "+user.name)
+                                    cb(null,"");
+                                }
                         }
                     }
                     catch(err) {
@@ -432,7 +478,7 @@ module.exports = {
                 }
                 else {
                     sails.log.debug("Cannot find passport for user "+user.name+" ("+user.id+")")
-                    cb(null,avatar);
+                    cb(null,"");
                 }
             }
             

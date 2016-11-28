@@ -55,8 +55,11 @@
 
                 
         <!-- A V A T A R -->
-        <div class="control-group form-group" ng-show="<%-form%>Form.gravatarUrl.indexOf('gravatar')<0">
-            <img ng-src="{{<%-form%>Form.gravatarUrl}}"></img>
+        <div class="control-group form-group" ng-show="<%-form%>Form.gravatarUrl">
+            <img ng-show="<%-form%>Form.authProvider!='local'" ng-src="{{<%-form%>Form.gravatarUrl}}"></img>
+            <a ng-show="<%-form%>Form.authProvider=='local'" target="_blank" href="https://en.gravatar.com/" title="Click to manage Gravatars">
+               <img ng-src="{{<%-form%>Form.gravatarUrl}}"></img>
+            </a>
         </div>   
 
 

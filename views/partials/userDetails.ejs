@@ -182,3 +182,14 @@ ng-class="{'has-error':<%-form%>.confirmemail.$invalid &&
   </span>
 </div>
 
+ <!-- U S E   G R A V A T A R -->
+
+<div class="control-group form-group col-xs-12"
+    ng-class="{'has-error':<%-form%>.usegravatar.$invalid &&
+                          <%-form%>.usegravatar.$dirty}" ng-show="<%-form%>Form.authProvider=='local'">
+    <label>
+        <input type="checkbox" class="bigcheckbox" name="usegravatar" ng-model="<%-form%>Form.useGravatar"></input>
+          &nbsp;&nbsp;&nbsp;Use email address for Gravatar image?
+     </label>
+    
+ </div>

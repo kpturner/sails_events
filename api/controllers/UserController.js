@@ -288,12 +288,12 @@ module.exports = {
 			user.voLodgeNo="";
 			user.voCentre="";
 			user.voArea="";
-		}
-				
+		} 
+
 		// Decide what to do based on the action
 		if (action=="edit") {
 
-			// Get the avatar (if applicable) then update
+			// Get the avatar (if applicable) then update			
 			Utility.getAvatar(user,function(err,avatar){
 				user.gravatarUrl=avatar;
 				User.update(userId,user).exec(function(err,user){
