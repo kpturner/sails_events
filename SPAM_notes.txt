@@ -4,3 +4,11 @@ so I edited /etc/postfix/main.cf and added this line:
 
 authorized_submit_users = !root, static:anyone
 
+To purge messages in the root mailbox I ran
+> /var/spool/mail/root
+(remember the >)
+
+To delete all deferred messages in the queue I used
+postuser -d ALL deferred
+
+
