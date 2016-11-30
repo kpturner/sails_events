@@ -66,7 +66,7 @@
   
           <div class="control-group form-group col-sm-5"
             ng-class="{'has-error':userdetails.isadmin.$invalid &&
-                                  userdetails.isadmin.$dirty}">
+                                  userdetails.isadmin.$dirty}" ng-show="user.isAdmin">
              <label>
               <input type="checkbox" class="bigcheckbox" name="isadmin" ng-model="userdetailsForm.isAdmin"></input>
               &nbsp;&nbsp;&nbsp;System administrator?
