@@ -1,0 +1,46 @@
+module.exports = {
+
+  // Events management details
+  events: {
+     maintenance: false,
+     admins:['kevin.p.turner@googlemail.com','kevin.turner@coraltree.co.uk'],
+     developer:'kevin.turner@coraltree.co.uk',
+     reminderTestMode: false,
+     //latePaymentInterval: 30000,  
+     latePaymentDaemon: true,
+     title: 'H&IoW Events',
+     heading: 'H&IoW Events',
+     updateAvatars: false,
+  },
+  
+  proxyHost: 'http://squareevents.org/',  
+    
+  // Email configuration
+  eventemail: {
+   //service: "Gmail",
+   //auth: {
+   //  user:  "me@gmail.com",
+   //  pass:  "xxxxxxxxxx"
+   //},
+   /**
+	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
+	  */
+	transporter:	{
+      
+      host: 'mail.squareevents.org',
+      port: 25,
+    	tls:{rejectUnauthorized: false},
+      auth: {
+        user: "noreply@squareevents.org",        
+        pass: "klaatuberada"
+      }
+	 },
+   from: 'H&IoW Event Management <noreply@squareevents.org>', // sender address
+   testMode:  false 
+  },
+  
+  log: {
+    level: 'debug'
+  }
+  
+};

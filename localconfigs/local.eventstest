@@ -1,0 +1,59 @@
+module.exports = {
+
+  // Events management details
+  events: {
+     admins:['kevin.p.turner@googlemail.com','kevin.turner@coraltree.co.uk'],
+     developer:'kevin.turner@coraltree.co.uk',
+     reminderTestMode: true,
+     //latePaymentInterval: 30000,  
+     latePaymentDaemon: false,
+     heading: "Test System",
+     title: "Test System",
+     domain: "http://test.squareevents.org",
+     updateAvatars: true,
+  },
+  
+  session: {
+    secret: 'b6d843339ae032a03af593ca4a98298g',
+  },
+
+  proxyHost: 'http://test.squareevents.org/',  
+  port: 1338,
+  connections: {
+     localhostMysqlServer: {
+       adapter: 'sails-mysql',
+       host: 'localhost',
+       user: 'squaretest',
+       password: 'Hercule2',
+       database: 'squaretest',
+     }
+  }, 
+  
+  // Email configuration
+  eventemail: {
+   //service: "Gmail",
+   //auth: {
+   //  user:  "me@gmail.com",
+   //  pass:  "xxxxxxxxxx"
+   //},
+   /**
+	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
+	  */
+	transporter:	{
+      host: 'mail.squareevents.org',
+      port: 25,
+    	tls:{rejectUnauthorized: false},
+      auth: {
+        user: "noreply@squareevents.org",
+        pass: "klaatuberada"
+      }
+	 },
+   from: 'Test System <noreply@squareevents.org>', // sender address
+   testMode:  false 
+  },
+  
+  log: {
+    level: 'debug'
+  }
+  
+};

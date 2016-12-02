@@ -1,0 +1,63 @@
+module.exports = {
+
+  // Events management details
+  events: {
+     maintenance: false,
+     admins:['kevin.p.turner@googlemail.com','kevin.turner@coraltree.co.uk'],
+     developer:'kevin.turner@coraltree.co.uk',
+     reminderTestMode: false,
+     //latePaymentInterval: 30000,  
+     latePaymentDaemon: true,
+     title: 'Surrey Events',
+     heading: 'Surrey Events',
+     domain: 'surrey.squareevents.org',
+     areas: 'Surrey',
+     logoLink: 'http://surreymason.org.uk',
+     logo: '/images/surrey/crest-small.png',
+     updateAvatars: false,
+  },
+  
+  proxyHost: 'http://surrey.squareevents.org/',  
+  port: 1339,
+  connections: {
+     localhostMysqlServer: {
+        adapter: 'sails-mysql',
+        host: 'localhost',
+        user: 'surrey',
+        password: 'Hercule2',
+        database: 'squareevents_surrey',
+     }
+  },
+
+  session: {
+     secret: 'b6d843339ae032a03af593ca4a98298h',  
+  },
+     
+  // Email configuration
+  eventemail: {
+   //service: "Gmail",
+   //auth: {
+   //  user:  "me@gmail.com",
+   //  pass:  "xxxxxxxxxx"
+   //},
+   /**
+	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
+	  */
+	transporter:	{
+      host: 'mail.squareevents.org',
+      port: 25,
+    	tls:{rejectUnauthorized: false},
+      auth: {
+        user: "noreply@squareevents.org",
+        pass: "klaatuberada"
+      }
+	 },
+   from: 'Surrey Events Management <noreply@squareevents.org>', // sender address
+   testMode:  false 
+  },
+  
+  log: {
+    level: 'debug'
+  }
+  
+};
