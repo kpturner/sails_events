@@ -10,6 +10,7 @@ sudo curl http://linuxsoft.cern.ch/cern/scl/slc6-scl.repo > /etc/yum.repos.d/slc
 sudo rpm --import http://ftp.mirrorservice.org/sites/ftp.scientificlinux.org/linux/scientific/51/i386/RPM-GPG-KEYs/RPM-GPG-KEY-cern
 sudo yum install -y devtoolset-3
 scl enable devtoolset-3 bash
+yum install gcc kernel-devel
 
 ====================================================================================
 Now create node (at the time of writing there is no nice install for node on centos so we have to build it):
