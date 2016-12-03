@@ -16,7 +16,6 @@
 //    _ = require('lodash');
 var util        = require('util');
 var async       = require("async");
-var heapdump    = require("heapdump");
 var path        = require("path");
 var fs          = require("fs");
 var graph       = require("fbgraph"); 
@@ -276,6 +275,7 @@ module.exports = {
         memoryLeakCheck: function(){
             if (sails.config.heapdumpInterval) {
                 // Clear out heapdumps first
+                var heapdump    = require("heapdump");
                 var xpath=path.join(sails.config.appPath,"heapdump");
                 this.clearDir(xpath);
                 var hd=path.join(xpath,"0.baseline.heapsnapshot");        
