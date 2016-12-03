@@ -11,10 +11,11 @@ sudo rpm --import http://ftp.mirrorservice.org/sites/ftp.scientificlinux.org/lin
 sudo yum install -y devtoolset-3
 scl enable devtoolset-3 bash
 
-With node 7.x I had to do this
-wget http://people.centos.org/tru/devtools-2/devtools-2.repo -O /etc/yum.repos.d/devtools-2.repo
-yum install devtoolset-2-gcc devtoolset-2-binutils devtoolset-2-gcc-c++
-scl enable devtoolset-2 bash
+# Make this setting permanent!
+nano ~/.bashrc
+# Add the following line at the end and save it
+source scl_source enable devtoolset-3
+
 
 ====================================================================================
 Now create node (at the time of writing there is no nice install for node on centos so we have to build it):
