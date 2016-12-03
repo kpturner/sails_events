@@ -333,14 +333,13 @@ module.exports = {
 				User.update(userId,user).exec(
 					function(err,users) {
 						if (err) {
-							
+							sails.log.error(err);
 							// If this is a uniqueness error about the email attribute,
 							// send back an easily parseable status code.
 							if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0]
 								&& err.invalidAttributes.email[0].rule === 'unique') {
 								return res.genericErrorResponse(409,"Email address is already in use");
-							}
-							
+							}							
 							return res.negotiate(err);
 						}
 						
@@ -416,6 +415,7 @@ module.exports = {
 									
 									Booking.create(booking,function(err, booking){
 										if (err) {
+											sails.log.error(err);
 											return res.negotiate(err);
 										}
 											
@@ -449,8 +449,9 @@ module.exports = {
 												//})
 											})
                                             LinkedBooking.create(linkedBookings).exec(function(err,lb){
-												if (err)
-														console.log(err)	
+												if (err){
+													sails.log.error(err);
+												}	
 											    else {
                                                     if (existingBooking) {
                                                         existingBooking.additions=linkedBookings;
