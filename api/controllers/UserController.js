@@ -153,7 +153,7 @@ module.exports = {
 			.exec(
 			function(err, users){
 				if (err) {
-					sails.log.verbose('Error occurred trying to retrieve users.');
+					sails.log.error(err);
 					return res.negotiate(err);
 			  	}	
 			
