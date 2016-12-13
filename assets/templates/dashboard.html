@@ -17,7 +17,7 @@
     <div class="photo-description">     
         <h5>{{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}</h5>
             <p ng-hide="card.regInterest">Places remaining: {{card.capacity}}</p>
-            <p ng-show="card.regInterest && (mother.user.isAdmin || mother.user.id==card.dc">Interested: {{card.interest}}</p>
+            <p ng-show="card.regInterest && (mother.user.isAdmin || mother.user.id==card.dc)">Interested: {{card.interest}}</p>
             <p>{{card.venue}}</p>
             <p><a href="mailto:{{card.organiser.email}}?Subject={{card.name}}: {{ card.date | date : 'EEE, MMM dd, yyyy'}} at {{card.time}}" target="_top"><span class="fa fa-envelope"></span> {{card.organiser.name}}</a></p> 
             <p ng-hide="!card.organiser.phone"><a href="tel:{{card.organiser.phone}}"><span class="fa fa-phone"></span> {{card.organiser.phone}}</a></p>                  
