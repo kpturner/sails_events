@@ -42,7 +42,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 	// Convert the date/time
 	$scope.eventForm.date = new Date($scope.eventForm.date);
 	if ($scope.eventForm.time) {
-		var timeArr=$scope.eventForm.time.split(":");
+		var timeArr=$scope.eventForm.time.split(":");		
 		$scope.eventForm.date.setHours(timeArr[0]); 
 		$scope.eventForm.date.setMinutes(timeArr[1]); 
 		$scope.eventForm.date.setSeconds(timeArr[2]); 
@@ -128,7 +128,8 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 						
 		if ($scope.eventForm.maxBookingPlaces<$scope.eventForm.minBookingPlaces)
 			$scope.eventForm.maxBookingPlaces=$scope.eventForm.minBookingPlaces;		
-				
+
+		$scope.eventForm.time=$scope.eventForm.time.toTimeString().split(" ")[0]		
 						
 		// Submit request to Sails.
 		$http.post('/updateevent/'+$scope.mode, {
