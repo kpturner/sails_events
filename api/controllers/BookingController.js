@@ -325,6 +325,13 @@ module.exports = {
 			if (req.param("phone"))
 				user.phone=req.param("phone");
 			var linkedBookings=req.param("linkedBookings");
+
+			// Sort out placeholders
+			_.forEach(linkedBookings,function(lb,l){
+				if (lb.surname.toLowerCase()=="*placeholder*") {
+					lb.firstName=(l+1).toString();
+				}
+			})
 			
 			/**
 			 * Private function to create booking
