@@ -455,6 +455,7 @@ module.exports = {
 											    else {
                                                     if (existingBooking) {
                                                         existingBooking.additions=linkedBookings;
+														existingBooking.user=user;
                                                         lodgeRoom(existingBooking);	
                                                     }
                                                 }	
