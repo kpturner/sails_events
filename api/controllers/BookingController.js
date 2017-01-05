@@ -1728,9 +1728,9 @@ module.exports = {
 						if (d.booking) {
 							d.ref=d.booking.ref;
 						}									
-                        d.attending=!d.cancelled;
-                        d.rank=(d.rank || "");						
-                        delete d.id;
+						d.rank=(d.rank || "");						
+                        d.status=(d.cancelled)?"Cancelled":"";
+						delete d.id;
                         delete d.event;
                         delete d.booking;
                         delete d.cancelled;
