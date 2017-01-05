@@ -884,26 +884,30 @@ module.exports = {
 					bookings.forEach(function(booking,b){
 						// Check the main bookee first
 						linkedBookings.forEach(function(ob,m){
-							if (
-									booking.user.surname.toLowerCase()==ob.surname.toLowerCase()
-								&&	booking.user.firstName.toLowerCase()==ob.firstName.toLowerCase()	
-							) {
-									if (!booking.user.lodge || (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase()==ob.lodge.toLowerCase()))
-										duplicates.push(ob)
-							}	
+							if (ob.surname.toLowerCase()!="*placeholder*") {
+								if (
+										booking.user.surname.toLowerCase()==ob.surname.toLowerCase()
+									&&	booking.user.firstName.toLowerCase()==ob.firstName.toLowerCase()	
+								) {
+										if (!booking.user.lodge || (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase()==ob.lodge.toLowerCase()))
+											duplicates.push(ob)
+								}	
+							}							
 						})
 						// Additions		
 						booking.additions.forEach(function(lb,l){
-							// Possible duplicate?
-							linkedBookings.forEach(function(ob,m){
-								if (
-										lb.surname.toLowerCase()==ob.surname.toLowerCase()
-									&&	lb.firstName.toLowerCase()==ob.firstName.toLowerCase()	
-								) {
-										if (!lb.lodge || (lb.lodge && ob.lodge && lb.lodge.toLowerCase()==ob.lodge.toLowerCase()))
-											duplicates.push(ob)
-								}	
-							})						
+							if (lb.surname.toLowerCase()!="*placeholder*") {
+								// Possible duplicate?
+								linkedBookings.forEach(function(ob,m){
+									if (
+											lb.surname.toLowerCase()==ob.surname.toLowerCase()
+										&&	lb.firstName.toLowerCase()==ob.firstName.toLowerCase()	
+									) {
+											if (!lb.lodge || (lb.lodge && ob.lodge && lb.lodge.toLowerCase()==ob.lodge.toLowerCase()))
+												duplicates.push(ob)
+									}	
+								})			
+							}										
 						})
 					})	
 				}				
