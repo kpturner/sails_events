@@ -54,7 +54,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		if (   (!$scope.profileForm.name || $scope.profileForm.name.length==0)
 			|| (!$scope.profileForm.salutation || $scope.profileForm.salutation.length==0)
 			|| (!$scope.profileForm.lodge || $scope.profileForm.lodge.length==0)
-			|| (!$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo))
+			|| ($scope.lodgeMandatory && (!$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo)))
 			|| (!$scope.profileForm.email || $scope.profileForm.email.length==0)
 			|| (!$scope.profileForm.surname || $scope.profileForm.surname.length==0)
 			|| (!$scope.profileForm.firstName || $scope.profileForm.firstName.length==0)

@@ -46,9 +46,11 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 		if (   (!$scope.userdetailsForm.name || $scope.userdetailsForm.name.length==0)
 			|| (!$scope.userdetailsForm.salutation || $scope.userdetailsForm.salutation.length==0)
 			|| (($scope.userdetailsForm.authProvider!="dummy")
+					&& (!$scope.userdetailsForm.email || $scope.userdetailsForm.email.length==0)
+				)
+            || (($scope.userdetailsForm.authProvider!="dummy" && $scope.lodgeMandatory)
 					&& (
-							(!$scope.userdetailsForm.email || $scope.userdetailsForm.email.length==0)
-						|| 	(!$scope.userdetailsForm.lodge || $scope.userdetailsForm.lodge.length==0)
+						 	(!$scope.userdetailsForm.lodge || $scope.userdetailsForm.lodge.length==0)
 						|| 	(!$scope.userdetailsForm.lodgeNo || isNaN($scope.userdetailsForm.lodgeNo))
 					)
 				)
