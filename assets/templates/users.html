@@ -4,7 +4,7 @@
              <div>                 
                 <div class="user-name {{card.nameClass}}">
                     <h4>{{card.surname}}, {{card.firstName}} ({{card.salutation}})</h4> 
-                    <h4>Lodge: {{card.lodge}} {{card.lodgeNo}}</h4> 
+                    <h4 ng-hide="!card.lodge">Lodge: {{card.lodge}} {{card.lodgeNo}}</h4> 
                     <h5 ng-hide="!card.email"><a href="mailto:{{card.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>      
                     <h5 ng-hide="!card.phone"><a href="tel:{{card.phone}}"><span class="fa fa-phone"></span> {{card.phone}}</a></h5>  
                 </div> 

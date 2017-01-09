@@ -2,7 +2,7 @@
     <h3>TRANSFER</h3>
     <p>Transfer booking to another account.</p>
     <p>Select new account for this booking:<p> 
-    <select type="text" class="form-control" placeholder="transfer to user" name="newuser" ng-options="a.id as (a.surname + ', '+a.firstName+' ('+a.lodge+' '+a.lodgeNo+')') for a in users" ng-model="bookingForm.newuser" required>
+    <select type="text" class="form-control" placeholder="transfer to user" name="newuser" ng-options="a.id as (a.surname + ', '+a.firstName+((a.lodge)?' ('+a.lodge+' '+a.lodgeNo+')':'')) for a in users" ng-model="bookingForm.newuser" required>
         <option value="">-- choose new user --</option>
     </select>        
 </div>
