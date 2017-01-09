@@ -35,19 +35,22 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		
     
   	// Date handling functions
-  
+	convertTime=function(){
+		if ($scope.eventForm.time) {
+			var timeArr=$scope.eventForm.time.split(":");		
+			$scope.eventForm.date.setHours(timeArr[0]); 
+			$scope.eventForm.date.setMinutes(timeArr[1]); 
+			$scope.eventForm.date.setSeconds(timeArr[2]); 
+			$scope.eventForm.time = new Date($scope.eventForm.date);	
+		}
+	}  
+
 	// Calculate "today"
 	$scope.today=new Date();
 	
 	// Convert the date/time
 	$scope.eventForm.date = new Date($scope.eventForm.date);
-	if ($scope.eventForm.time) {
-		var timeArr=$scope.eventForm.time.split(":");		
-		$scope.eventForm.date.setHours(timeArr[0]); 
-		$scope.eventForm.date.setMinutes(timeArr[1]); 
-		$scope.eventForm.date.setSeconds(timeArr[2]); 
-		$scope.eventForm.time = new Date($scope.eventForm.date);	
-	}
+	convertTime();	
 	
 	// Convert the opening date 
 	if ($scope.eventForm.openingDate)
@@ -140,7 +143,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			window.location = '/events';
 		})
 		.catch(function onError(sailsResponse){
-
+			convertTime();
 			// Handle known error type(s).
 			toastr.error(sailsResponse.data, 'Error');
 
@@ -148,6 +151,6 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		.finally(function eitherWay(){
 			$scope.eventForm.loading = false;
 		})
-	}
+	}	
 
 }])

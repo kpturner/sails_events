@@ -1,7 +1,8 @@
 angular.module('EventsModule').controller('SignupController', ['$scope', '$http', '$timeout', 'toastr', function($scope, $http, $timeout, toastr){
 
 	$scope.signupForm = {
-		loading: false
+		loading: false,
+		authProvider: "local",
 	}
 
 	/**
@@ -24,6 +25,9 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
+
+	// Lodge required?
+	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
 	 
 	// Set elements that have validity checking to dirty straight away 
  	angular.element(document).ready(function () {

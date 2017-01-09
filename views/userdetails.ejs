@@ -32,7 +32,8 @@
       userDetails: <%- JSON.stringify(userDetails) %>,
       salutations: <%- JSON.stringify(res.locals.salutations) %>,
       areas: <%- JSON.stringify(res.locals.areas) %>,
-      mode: "<%= mode.toLowerCase() %>"
+      mode: "<%= mode.toLowerCase() %>",
+      lodgeMandatory: <%- res.locals.lodgeMandatory %>,
     };
     
     </script>

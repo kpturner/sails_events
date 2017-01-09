@@ -100,8 +100,8 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 <div class="control-group form-group col-xs-10 col-md-6"
   ng-class="{'has-error':<%-form%>.lodge.$invalid &&
                         <%-form%>.lodge.$dirty}">
-  <label><span ng-hide="<%-form%>Form.authProvider=='dummy'">* </span>Lodge name</label>
-  <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-form%>Form.lodge" ng-maxlength="50" ng-required="<%-form%>Form.authProvider!='dummy'">
+  <label><span ng-hide="<%-form%>Form.authProvider=='dummy' || !lodgeMandatory">* </span>Lodge name</label>
+  <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-form%>Form.lodge" ng-maxlength="50" ng-required="<%-form%>Form.authProvider!='dummy' && lodgeMandatory">
   <span class="help-block has-error" ng-if="<%-form%>.lodge.$dirty">
     <span ng-show="<%-form%>.lodge.$error.required">Lodge name is required.</span>
     <span ng-show="<%-form%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
@@ -113,11 +113,12 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 <div class="control-group form-group col-xs-6 col-md-4"
   ng-class="{'has-error':<%-form%>.lodgeno.$invalid &&
                         <%-form%>.lodgeno.$dirty}">
-  <label><span ng-hide="<%-form%>Form.authProvider=='dummy'">* </span>Lodge number</label>
-  <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-form%>Form.lodgeNo" ng-maxlength="5" min="(<%-form%>Form.authProvider!='dummy')?1:0" ng-required="<%-form%>Form.authProvider!='dummy'">
+  <label><span ng-hide="<%-form%>Form.authProvider=='dummy' || !lodgeMandatory">* </span>Lodge number</label>
+  <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-form%>Form.lodgeNo" ng-maxlength="5" ng-min="(<%-form%>Form.authProvider!='dummy' && lodgeMandatory)?1:0" ng-required="<%-form%>Form.authProvider!='dummy' && lodgeMandatory">
   <span class="help-block has-error" ng-if="<%-form%>.lodgeno.$dirty">
     <span ng-show="<%-form%>.lodgeno.$error.required">Lodge number is required.</span>
     <span ng-show="<%-form%>.lodgeno.$error.maxlength">The lodge number cannot be more than 5 digits.</span>
+    <span ng-show="<%-form%>.lodgeno.$error.min">The lodge number must be greater than zero.</span>
   </span>
 </div>
 

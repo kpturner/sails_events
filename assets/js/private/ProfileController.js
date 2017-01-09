@@ -22,6 +22,9 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
 
+	// Lodge required
+	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
+
 	// Signup mode?
 	$scope.signup=SAILS_LOCALS.signup;	
  
@@ -37,7 +40,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		angular.forEach($scope.profile.$error.required, function(field) {
 			field.$setDirty();
 		}); 
-		if (!$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo)) {
+		if (lodgeMandatory && !$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo)) {
 			$scope.profile.lodgeno.$setDirty();	
 			$scope.profile.lodgeno.$setValidity("required",false);	
 		}				

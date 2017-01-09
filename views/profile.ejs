@@ -31,6 +31,7 @@
       user: <%- JSON.stringify(res.locals.user) %>,
       salutations: <%- JSON.stringify(res.locals.salutations) %>,
       areas: <%- JSON.stringify(res.locals.areas) %>,
+      lodgeMandatory: <%- res.locals.lodgeMandatory %>,
       spamDomains: <%- JSON.stringify(sails.config.events.spamDomains) %>,
       sender: "<%- sails.config.events.email %>",
       signup: <%- res.locals.signup %>,

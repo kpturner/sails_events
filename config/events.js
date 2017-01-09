@@ -47,6 +47,9 @@ module.exports.events = {
 	
 	// Areas
 	areas: ['North Central', 'North East', 'Solent', 'South Central', 'South East', 'South West'],
+
+	// Lodge is mandatory
+	lodgeMandatory: true,
 	
 	// Domain (for signup email confirmations)
 	domain: "http://squareevents.org",

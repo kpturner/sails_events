@@ -32,8 +32,11 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
     
-    // New user for transfering bookings
-    $scope.userdetailsForm.newuser="HELLO";
+	// Lodge required
+	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
+    
+    // New user for transferring bookings
+    $scope.userdetailsForm.newuser="";
 	
 	/**
 	 * Test if the details are complete on the user

@@ -50,6 +50,7 @@ module.exports = {
            salutations: sails.config.events.salutations,
            areas: Utility.areas(),
            signup: true,
+           lodgeMandatory: sails.config.events.lodgeMandatory,
          }); 
   		}
       
