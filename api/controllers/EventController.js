@@ -300,6 +300,7 @@ module.exports = {
 			return res.view("eventdetails",{
 				mode:mode,
 				event:{
+					hide:	false,
 					latePaymentChecking:true,
 					organiser: organiser,
 				}
