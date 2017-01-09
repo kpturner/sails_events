@@ -4,3 +4,5 @@ cd /usr/sails/projects/eventstest
 bash gitupdate.sh
 cd /usr/sails/projects/surrey
 bash gitupdate.sh
+cd /usr/sails/projects/mtsfc
+bash gitupdate.sh

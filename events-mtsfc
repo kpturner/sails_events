@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# /etc/init.d/events-mtsfc
+# chkconfig: 35 99 99
+# description: SailsJS Event Management Service
+#
+# Save in /etc/init.d
+# then "cd /etc/init.d"
+# Switch it on: chkconfig --level 345 events-mtsfc on
+# Set the permissions: chmod a+rwx events-mtsfc
+# Confirm: chkconfig --list | grep events-mtsfc
+#    should show -> events-mtsfc    0:off   1:off   2:off   3:on   4:on   5:on   6:off
+#
+# Start the service using 
+#   service events-mtsfc start
+#
+# Stop the service using
+#   service events-mtsfc stop
+#
+#
+#
+
+. /etc/rc.d/init.d/functions
+
+USER="root"
+
+DAEMON="/root/local/bin/forever"
+ROOT_DIR="/usr/sails/projects/events"
+OPTS="--prod"
+
+SERVER="$ROOT_DIR/app.js"
+LOG_FILE="$ROOT_DIR/app.js.log"
+
+LOCK_FILE="/var/lock/subsys/events-mtsfc"
+
+do_start()
+{
+        if [ ! -f "$LOCK_FILE" ] ; then
+                echo -n $"Running $DAEMON start $SERVER $OPTS: "
+                runuser -l "$USER" -c "$DAEMON start $SERVER $OPTS >> $LOG_FILE &" && echo_success || echo_failure
+                RETVAL=$?
+                echo
+                [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+        else
+                echo "$SERVER is locked."
+                RETVAL=1
+        fi
+}
+do_stop()
+{
+        echo -n $"Stopping $SERVER: "
+        # pid=`ps -aefw | grep "$DAEMON $SERVER" | grep -v " grep " | awk '{print $2}'`
+        #kill -9 $pid > /dev/null 2>&1 && echo_success || echo_failure
+        echo -n $"$DAEMON stop $SERVER "
+        runuser -l "$USER" -c "$DAEMON stop $SERVER >> $LOG_FILE &" && echo_success || echo_failure
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+}
+
+case "$1" in
+        start)
+                do_start
+                ;;
+        stop)
+                do_stop
+                ;;
+        restart)
+                do_stop
+                do_start
+                ;;
+        *)
+                echo "Usage: $0 {start|stop|restart}"
+                RETVAL=1
+esac
+
+exit $RETVAL
