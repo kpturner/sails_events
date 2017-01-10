@@ -25,7 +25,7 @@
 USER="root"
 
 DAEMON="/root/local/bin/forever"
-ROOT_DIR="/usr/sails/projects/events"
+ROOT_DIR="/usr/sails/projects/mtsfc"
 OPTS="--prod"
 
 SERVER="$ROOT_DIR/app.js"
