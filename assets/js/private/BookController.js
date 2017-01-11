@@ -283,7 +283,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			errors.push("Area");	
 			validations.push($scope.booking.area);		
 		}
-		if (!$scope.eventBookings && !$scope.userBookings && !lodgeMandatory) {
+		if (!$scope.eventBookings && !$scope.userBookings && !$scope.lodgeMandatory) {
 			if (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0) {
 				complete=false;
 				errors.push("Lodge");
