@@ -194,6 +194,7 @@ module.exports = {
 									}
 								})
 								if (!dup) {
+									dp.surname=dp.surname+" ("+dp.authProvider+")";
 									duplicates.push(dp);
 								}							
 							})
