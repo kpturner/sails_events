@@ -13,6 +13,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.mode=SAILS_LOCALS.mode;
 	$scope.selectedUserId=SAILS_LOCALS.selectedUserId; // Only populated when the administrator is making a booking on behalf of another user
 	
+	// Lodge required
+	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
 	
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
@@ -65,7 +67,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			}
 		}
 		else {
-			$scope.bookingForm = $scope.user;							
+			$scope.bookingForm = angular.extend($scope.bookingForm,$scope.user);							
 		}		
 		$scope.paidMsg="";
 		// Convert lodge no to numeric
@@ -82,10 +84,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			$scope.userBookings=true;			
 			$http.get("/user/"+	$scope.selectedUserId)
 				.success(function(data,status){
-					$scope.bookingForm=data;
+					$scope.bookingForm=angular.extend($scope.bookingForm,data);
 					$scope.paidMsg="";
 					// Convert lodge no to numeric
 					$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo); 
+					if ($scope.bookingForm.voLodgeNo)
+						$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
 					// Initialise confirmation email
 					$scope.bookingForm.confirmemail = $scope.bookingForm.email;	                    
 					$scope.bookingForm.places=$scope.placesMin;
@@ -279,7 +283,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			errors.push("Area");	
 			validations.push($scope.booking.area);		
 		}
-		if (!$scope.eventBookings && !$scope.userBookings) {
+		if (!$scope.eventBookings && !$scope.userBookings && !lodgeMandatory) {
 			if (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0) {
 				complete=false;
 				errors.push("Lodge");

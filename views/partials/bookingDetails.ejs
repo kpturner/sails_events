@@ -164,7 +164,7 @@ and/or maxlength) -->
 <div class="control-group form-group col-xs-10 col-md-6"
   ng-class="{'has-error':<%-model%>.lodge.$invalid &&
                         <%-model%>.lodge.$dirty}">
-  <label><span ng-hide="eventBookings || userBookings">* </span>Lodge name</label>
+  <label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span>Lodge name</label>
   <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-model%>Form.lodge" ng-maxlength="50">
   <span class="help-block has-error" ng-if="<%-model%>.lodge.$dirty">
     <span ng-show="<%-model%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
@@ -176,7 +176,7 @@ and/or maxlength) -->
 <div class="control-group form-group col-xs-6 col-md-4"
 ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
                       <%-model%>.lodgeno.$dirty}">
-<label><span ng-hide="eventBookings || userBookings">* </span>Lodge number</label>
+<label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span>Lodge number</label>
 <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-model%>Form.lodgeNo" ng-maxlength="5" min="(!eventBookings && !userBookings)?1:0">
 <span class="help-block has-error" ng-if="<%-model%>.lodgeno.$dirty">
   <span ng-show="<%-model%>.lodgeno.$error.maxlength">The lodge no cannot be more than 5 digits.</span>

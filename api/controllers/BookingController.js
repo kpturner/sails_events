@@ -183,6 +183,7 @@ module.exports = {
 					res.locals.salutations=sails.config.events.salutations;
 					res.locals.areas=Utility.areas();
 					res.locals.potentialDuplicates=potentialDuplicates;
+					res.locals.lodgeMandatory=sails.config.events.lodgeMandatory;
 						
 					// Get the data for the event and the user and then navigate to the booking view
 					if (req.wantsJSON)
