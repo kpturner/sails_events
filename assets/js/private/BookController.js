@@ -311,7 +311,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			}
 			else {
 				$.each($scope.linkedbookings,function(index,value){
-					if (index<($scope.bookingForm.places-1)) {
+					if (index<=($scope.bookingForm.places-1)) {
 						if (!this.salutation || this.salutation.length==0) {
 							complete=false;
 							errors.push("Salutation for additional attendee "+(index+1).toString())
