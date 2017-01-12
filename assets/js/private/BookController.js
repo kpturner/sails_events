@@ -310,8 +310,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				errors.push("Additional attendee information")
 			}
 			else {
+				var lbcount=($scope.bookingForm.places-1);
 				$.each($scope.linkedbookings,function(index,value){
-					if (index<=($scope.bookingForm.places-1)) {
+					if (index<($scope.bookingForm.places-1)) {
+						lbcount--;
 						if (!this.salutation || this.salutation.length==0) {
 							complete=false;
 							errors.push("Salutation for additional attendee "+(index+1).toString())
@@ -326,6 +328,16 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						}
 					}
 				})
+				if (lbcount>0) {
+					var m=$scope.linkedbookings.length;
+					complete=false;
+					while (lbcount--) {
+						m++;
+						errors.push("Salutation for additional attendee "+(m).toString());
+						errors.push("Surname for additional attendee "+(m).toString());
+						errors.push("First name for additional attendee "+(m).toString());
+					}
+				}
 			}
 			
 		} 
