@@ -1484,17 +1484,6 @@ module.exports = {
 				.populate("organiser2")
 				.then(function(events){
 					//console.log(events)
-					Email.send(
-							"diagnostic",
-						{
-							err:events.toString()
-						},
-						{
-							to: sails.config.events.developer,
-							subject: "Late payment events"
-						},
-						function(){}
-					)
 					// Get a list of bookings for this event that are late with their payment
 					events.forEach(function(event,ev){
 						// Format some data for the email
