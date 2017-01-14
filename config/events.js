@@ -10,7 +10,7 @@
 
 module.exports.events = {
     
-    developer: process.env.DEVELOPER || null,
+    developer: process.env.DEVELOPER || "kevin.turner@netcracker.com",
 
 	// Maintenance mode?
 	maintenance: false,

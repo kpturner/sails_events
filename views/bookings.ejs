@@ -89,13 +89,13 @@
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking">
           <span class="fa fa-download"></span><span> Download </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>         
         </button>  
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-hide="newBooking" ng-show="eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest">
           <span class="fa fa-download"></span><span> Download Lodge Room</span>         
         </button>  
         </br>  
         <!-- P A G I N A T I O N -->
         <!-- Only show this on desktops etc -->
-        <div class="form-horizontal hidden-sm hidden-xs">
+        <div ng-hide="newBooking" class="form-horizontal hidden-sm hidden-xs">
           
           <div class="form-group">
             <label for="page" class="col-md-1 control-label text-left">Page</label>

@@ -555,11 +555,10 @@ module.exports = {
 													{
 													from: event.name + ' <'+sails.config.events.email+'>',
 													to: user.email,
-													bcc: [event.organiser.email || "",sails.config.events.developer || ""],
+													bcc: [event.organiser.email || "",event.organiser2.email || "",sails.config.events.developer || ""],
 													subject: subject
 													},
 													function(err) {
-														//err={"foo":"bar"};
 														if (err) {
 															var errStr;
 															if (typeof err=="string")
@@ -1484,6 +1483,7 @@ module.exports = {
 				.populate('organiser')
 				.populate("organiser2")
 				.then(function(events){
+					//console.log(events)
 					// Get a list of bookings for this event that are late with their payment
 					events.forEach(function(event,ev){
 						// Format some data for the email
@@ -1517,7 +1517,7 @@ module.exports = {
 									if (nw.length>0) {
 										// Send a list to the organiser warning of bookings that will get late payment reminders within
 										// 48 hours
-										var to=event.organiser.email; 
+										var to=[event.organiser.email,event.organiser2.email || ""]; 
 										/////if (sails.config.events.reminderTestMode) 
 										/////	to=""; 
 										Email.send(
@@ -1553,7 +1553,7 @@ module.exports = {
                                         sails.log.debug("Late booking reminder issued for "+event.name+" for "+booking.user.name+((sails.config.events.reminderTestMode)?" in test mode":" "))
                                         // Update the booking so we don't spam them
                                         var to=booking.user.email;
-                                        var cc=(event.organiser.email || "");
+										var cc=[(event.organiser.email || ""),(event.organiser2.email || "")];
                                         // Update the booking whether we are in test mode or not
                                         var howMany=(!booking.remindersSent)?1:booking.remindersSent+1;
                                         Booking.update(booking.id,{

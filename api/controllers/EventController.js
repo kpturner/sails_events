@@ -301,6 +301,8 @@ module.exports = {
 				mode:mode,
 				event:{
 					hide:	false,
+					free:	false,
+					regInterest: false,
 					latePaymentChecking:true,
 					organiser: organiser,
 				}
