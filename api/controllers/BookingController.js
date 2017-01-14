@@ -1468,11 +1468,10 @@ module.exports = {
 		today=new Date(today.setSeconds(0));
 		Event	.find({
 					where:	{
-								open:true,
 								or: [
-									{hide: false},
-									{hide: null},
-									{hide: true, openingDate:{ '<=' : today}}
+									{open:true},
+									{open:false,closingDate: { '>=': today }},
+									{open:null,closingDate: { '>=': today }},
 								],
 								or: [{free: false},{free:null}],
 								or: [{regInterest: false},{regInterest:null}],
