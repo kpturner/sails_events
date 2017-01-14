@@ -1522,8 +1522,9 @@ module.exports = {
 										// Send a list to the organiser warning of bookings that will get late payment reminders within
 										// 48 hours
 										var to=[event.organiser.email,(event.organiser2?event.organiser2.email || "":"")]; 
-										/////if (sails.config.events.reminderTestMode) 
-										/////	to=""; 
+										////if (sails.config.events.reminderTestMode) {
+										////	to=""; 
+										////} 											
 										Email.send(
 											"latePaymentWarning", {
 												recipientName: Utility.recipient(event.organiser.salutation,event.organiser.firstName,event.organiser.surname),
@@ -1567,8 +1568,7 @@ module.exports = {
                                                                 
                                         // In test mode, make sure only the developer gets an email
                                         ///if (sails.config.events.reminderTestMode) {
-                                        ///    to="";
-                                        ///    cc="";
+                                        ///    to="";                                       
                                         ///}
                                                                             
                                         var dl=new Date(booking.bookingDate);
