@@ -1280,10 +1280,29 @@ module.exports = {
 				return res.genericErrorResponse('470','This booking no longer exists!')
 			}
 			
-			User.findOne(booking.event.organiser).exec(function(err, organiser){
+			var where={
+				or: [
+					{id:booking.event.organiser}
+				]
+			}
+			if (booking.event.organiser2) {
+				where.or.push({id:booking.event.organiser2})
+			}
 			
-				if (!organiser)
-					organiser={}
+			//User.findOne(booking.event.organiser).exec(function(err, organiser){
+			User.find(where).exec(function(err, organisers){ 
+				if (!organisers) {
+					organisers=[]
+				}
+				var bcc=[];
+				if (sails.config.events.developer) {
+					bcc.push(sails.config.events.developer)
+				}
+				organisers.forEach(function(organiser,o){
+					if (organiser.email) {
+						bcc.push(organiser.email)
+					}
+				})
 			
 				// Create linked bookings
 				var linkedBookings=booking.additions;
@@ -1349,9 +1368,9 @@ module.exports = {
 										eventTime: booking.event.time,
 										eventVenue: booking.event.venue.replace(/[\n\r]/g, '<br>'),
 										eventAdditionalInfo: booking.event.additionalInfo,
-										eventOrganiser: organiser.name || "",
-										organiserEmail: organiser.email || "",
-										organiserContactNo: organiser.phone || "",
+										eventOrganiser: booking.event.organiser.name || "",
+										organiserEmail: booking.event.organiser.email || "",
+										organiserContactNo: booking.event.organiser.phone || "",
 										eventBlurb: (booking.event.blurb || "").replace(/[\n\r]/g, '<br>'),
 										eventMenu: (booking.event.menu || "").replace(/[\n\r]/g, '<br>'),
 										eventDressCode: (booking.event.dressCode || "").replace(/[\n\r]/g, '<br>'),
@@ -1389,7 +1408,7 @@ module.exports = {
 								    {
 								      from: booking.event.name + ' <noreply@squareevents.org>',
 									  to: booking.user.email,
-									  bcc: [organiser.email || "",sails.config.events.developer || ""],
+									  bcc: bcc,
 								      subject: booking.event.regInterest?"Event interest cancellation confirmation":"Event booking cancellation confirmation"
 								    },
 								    function(err) {if (err) console.log(err);}
