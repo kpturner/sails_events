@@ -1469,8 +1469,8 @@ module.exports = {
 		Event	.find({
 					where:	{
 								open:true,
-								free: false,
-								regInterest: false,
+								or: [{free: false},{paid:null}],
+								or: [{regInterest: false},{regInterest:null}],
 								latePaymentChecking:true,
 								closingDate: { '>=': today },
 								grace: {'>': 0} 

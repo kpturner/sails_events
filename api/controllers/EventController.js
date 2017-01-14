@@ -69,6 +69,7 @@ module.exports = {
 								closingDate: { '>=': today }, 
 								or: [
 									{hide: false},
+									{hide: null},
 									{hide: true, openingDate:{ '<=' : today}}
 								]
 							}, 
@@ -300,9 +301,6 @@ module.exports = {
 			return res.view("eventdetails",{
 				mode:mode,
 				event:{
-					hide:	false,
-					free:	false,
-					regInterest: false,
 					latePaymentChecking:true,
 					organiser: organiser,
 				}
