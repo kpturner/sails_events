@@ -1469,7 +1469,12 @@ module.exports = {
 		Event	.find({
 					where:	{
 								open:true,
-								or: [{free: false},{paid:null}],
+								or: [
+									{hide: false},
+									{hide: null},
+									{hide: true, openingDate:{ '<=' : today}}
+								],
+								or: [{free: false},{free:null}],
 								or: [{regInterest: false},{regInterest:null}],
 								latePaymentChecking:true,
 								closingDate: { '>=': today },
