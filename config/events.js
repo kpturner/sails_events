@@ -10,7 +10,7 @@
 
 module.exports.events = {
     
-    developer: process.env.DEVELOPER || "kevin.turner@netcracker.com",
+    developer: process.env.DEVELOPER || "kevin@kpturner.co.uk",
 
 	// Maintenance mode?
 	maintenance: false,
@@ -19,7 +19,7 @@ module.exports.events = {
 	sessionExpiry:  30 * 60 * 1000,
 
 	// Admins can be a single string or an array, each representing a user name or email address
-	admins: ['kturner'],
+	admins: ['kturner','kevin@kpturner.co.uk'],
 	
 	// Browser tab title
 	title: "Provincial Events",
