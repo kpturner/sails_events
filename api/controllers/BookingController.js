@@ -1022,7 +1022,8 @@ module.exports = {
 	 * @param {Object} res
 	 */
 	allEventBookings: function (req, res) {		
-				
+
+		var pagLimit=99999;		
 		var criteria=req.param('criteria');
 		if (criteria) {
 			try {
@@ -1044,7 +1045,7 @@ module.exports = {
 
 		var pag={
 			"page": 	(criteria.page || 1),
-			"limit": 	(criteria.limit || 99999)
+			"limit": 	(criteria.limit || pagLimit)
 		}
 		var filter=criteria.filter; 
 
@@ -1067,7 +1068,21 @@ module.exports = {
 			}
 		}
 			
-		var getBookings=function(req, res, grace) {
+		var result={
+			bookings:[]
+		};
+
+		// Drive the data from the main event
+		Event.findOne(req.param("eventid")).exec(function(err,event){
+			if (err) {
+				sails.log.error(err);
+				return res.json({});
+			}
+			// Do we need to filter late bookings?			
+			getBookings(req,res,event);			
+		});
+		
+		function getBookings(req, res, event) {
 					
 			
 			Booking.find({
@@ -1089,11 +1104,19 @@ module.exports = {
 					if (err) {
 						sails.log.verbose('Error occurred trying to retrieve bookings.');
 						return res.negotiate(err);
-				  	}	
-									 
+					}	
+	
+					// Calculate remaining capacity if not paging or filtering
+					if (!filter && pag.limit==pagLimit) {
+						result.capacity=event.capacity;
+						_.forEach(bookings,function(booking){
+							result.capacity-=booking.places;
+						})						
+					}
+
 					// If we only want late bookings, filter the list
 					if (filter && filter.toLowerCase()=="late") {
-						bookings=sails.controllers.booking.filterLate(bookings,grace);
+						bookings=sails.controllers.booking.filterLate(bookings,event.grace);
 					}    
 					
 					// Sort response by user surname (case insensitive) unless it is for a download, in which
@@ -1107,36 +1130,17 @@ module.exports = {
 					} 
 					  		
 					if (download) {					
-						Event.findOne(req.param("eventid")).exec(function(err,event){
+						////Event.findOne(req.param("eventid")).exec(function(err,event){
 							sails.controllers.booking.download(req, res, event.code, event.addressReqd, event.voReqd, bookings);		
-						})									
+						////})									
 					}
 					else {
 						// If session refers to a user who no longer exists, still allow logout.
-					  	if (!bookings) {
-					    	return res.json({});
-					  	}
-						  
-						return res.json(bookings);  	
+						result.bookings=bookings;										  
+						return res.json(result);  	
 					}			  	
 				})
 		}	
-		
-		// Do we need to filter late bookings?
-		if (filter && filter.toLowerCase()=="late") {
-			// We need to know the grace period from the event
-			Event.findOne(req.param("eventid")).exec(function(err,event){
-				if (err) {
-					sails.log.error(err);
-					return res.json({});
-				}
-				getBookings(req,res,event.grace)
-			})
-		}
-		else {
-			getBookings(req,res)
-		}									
-		
 			
 	},
 	

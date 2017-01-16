@@ -4,12 +4,12 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.user=SAILS_LOCALS.user;
 		 
 		$scope.bookingsLoading=true;
+		$scope.hideCapacity=false;
 		 
 		$scope.filterForm = {
 			loading: false,
 			paging: false,			
-			criteria:SAILS_LOCALS.criteria,
-			
+			criteria:SAILS_LOCALS.criteria,			
 		}
 		
 		$scope.myBookings 	= SAILS_LOCALS.myBookings;
@@ -35,8 +35,16 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$http.get(route)
 			.success(function(data, status) {
 				if (typeof data == 'object') {
-					$scope.bookings = data;
-					$scope.augment($scope.bookings,true);					
+					if (data.bookings) {
+						$scope.bookings = data.bookings;
+						$scope.hideCapacity=!data.capacity;	
+						$scope.capacity=data.capacity;
+					}
+					else {
+						$scope.bookings = data;
+						$scope.hideCapacity=true;	
+					}									
+					$scope.augment($scope.bookings);					
 				}
 				else {
 					window.location = '/';
@@ -54,7 +62,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		/**
 		 * Augment data 
 		 **/  
-		$scope.augment=function(data,calcCapacity){
+		$scope.augment=function(data){
 			// Calculate all addresses
 			$scope.allAddresses = "";
 			// Traverse the events and calculate an appropriate width
@@ -70,9 +78,6 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 					if (booking.user.email) {
 						$scope.allAddresses+=booking.user.email+";"		                      
 					}
-				}			
-				if (calcCapacity) {
-					$scope.event.capacity-=booking.places;
 				}
 			})				
 		};
@@ -103,7 +108,15 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			$http.get(route)
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
-						$scope.bookings = sailsResponse.data;	
+						if (sailsResponse.data.bookings) {
+							$scope.bookings = sailsResponse.data.bookings;
+							$scope.hideCapacity=!sailsResponse.data.capacity;	
+							$scope.capacity=sailsResponse.data.capacity;
+						}
+						else {
+							$scope.bookings = sailsResponse.data;
+							$scope.hideCapacity=true;	
+						}																	
 						$scope.augment($scope.bookings);									
 					}
 					else {
