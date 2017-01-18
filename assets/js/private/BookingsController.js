@@ -4,6 +4,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.user=SAILS_LOCALS.user;
 		 
 		$scope.bookingsLoading=true;
+		$scope.newBooking=false;
 		 
 		$scope.filterForm = {
 			loading: false,

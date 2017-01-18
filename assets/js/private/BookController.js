@@ -59,7 +59,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.placesMin=$scope.placesMax
 	if ($scope.mode!="create") {
 		if (SAILS_LOCALS.booking.id) {
-			$scope.bookingForm = SAILS_LOCALS.booking.user;	
+			$scope.bookingForm = SAILS_LOCALS.booking.user;			
 			// Is the administrator managing a booking for somebody else?
 			if (SAILS_LOCALS.booking.user.id!=$scope.user.id) {
 				$scope.userBookings=true;	
@@ -84,6 +84,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			$scope.userBookings=true;			
 			$http.get("/user/"+	$scope.selectedUserId)
 				.success(function(data,status){
+					if (!SAILS_LOCALS.booking.id) {
+						$scope.bookingForm.places=$scope.placesMin;
+					}
+					else {
+						$scope.bookingForm.places = $scope.booking.places;	
+					}              					
+					if ($scope.bookingForm.places>1)
+						$scope.makeArray();			
 					$scope.bookingForm=angular.extend($scope.bookingForm,data);
 					$scope.paidMsg="";
 					// Convert lodge no to numeric
@@ -91,10 +99,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					if ($scope.bookingForm.voLodgeNo)
 						$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
 					// Initialise confirmation email
-					$scope.bookingForm.confirmemail = $scope.bookingForm.email;	                    
-					$scope.bookingForm.places=$scope.placesMin;
-					if ($scope.bookingForm.places>1)
-						$scope.makeArray();			
+					$scope.bookingForm.confirmemail = $scope.bookingForm.email;					
 				})
 				.error(function(data, status, headers, config) {
 					console.log("Error retrieving selected user for booking "+$scope.selectedUserId)
