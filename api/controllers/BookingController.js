@@ -130,7 +130,7 @@ module.exports = {
 		var userId=req.param("userid");
 		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making a booking on behalf of someone else
 		var action=req.param("action");
-		var mode=(selectedUserId)?"create":"edit";
+		var mode=(selectedUserId && !bookingId)?"create":"edit";
 		if (action)
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
 		var myBookings=(req.param("mybookings"))?true:false;
@@ -202,7 +202,8 @@ module.exports = {
 			// Return prepared booking
 			if (existingBooking) {
 				criteria.id={"!":existingBooking.id} // Exclude the existing booking details from the calcs
-				existingBooking.deadline=sails.controllers.booking.paymentDeadline(event,existingBooking);				
+				existingBooking.deadline=sails.controllers.booking.paymentDeadline(event,existingBooking);	
+				mode="edit";			
 				return preparedBooking(existingBooking.user,criteria);
 			}
 			else {
@@ -892,13 +893,15 @@ module.exports = {
 						// Check the main bookee first
 						linkedBookings.forEach(function(ob,m){
 							if (ob.surname.toLowerCase()!="*placeholder*") {
-								if (
+								if (booking.user) {
+										if (
 										booking.user.surname.toLowerCase()==ob.surname.toLowerCase()
-									&&	booking.user.firstName.toLowerCase()==ob.firstName.toLowerCase()	
-								) {
-										if (!booking.user.lodge || (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase()==ob.lodge.toLowerCase()))
-											duplicates.push(ob)
-								}	
+										&&	booking.user.firstName.toLowerCase()==ob.firstName.toLowerCase()	
+									) {
+											if (!booking.user.lodge || (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase()==ob.lodge.toLowerCase()))
+												duplicates.push(ob)
+									}	
+								}							
 							}							
 						})
 						// Additions		

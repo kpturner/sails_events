@@ -154,8 +154,18 @@ module.exports = {
 					if (selectedUserId && !sails.config.events.multipleBookings) {
 						var particularEvents=[];
 						async.each(events,function(event,next){
-							if (Utility.isAdmin(req.user,event)) {
-								Booking.find(
+							// Is is a full admin so the event can be shown
+							if (req.user.isAdmin) {
+								particularEvents.push(event);
+								next();
+							}
+							else {
+								// Not an administrator, so only show the event of the user is the 
+								// event organiser (the Utility.isAdmin function will deal with that)
+								if (Utility.isAdmin(req.user,event)) {
+									// User is an organiser of this event so it can be shown IF the user is not 
+									// already booked in
+									Booking.find(
 									{
 										where: {
 											event: event.id,
@@ -163,14 +173,18 @@ module.exports = {
 										},
 										limit: 1
 									}
-								).exec(function(err,bookings){
-									particularEvents.push(event);
-									next();									
-								})
-							}
-							else {
-								next()
-							}				
+									).exec(function(err,bookings){
+										if (err || !bookings || (bookings && bookings.length==0)) {
+											particularEvents.push(event);
+										}										
+										next();									
+									})	
+								}
+								else {
+									// Ignore the event
+									next();
+								}								
+							}							
 						}
 						,function(err){
 							// End of the list of events
