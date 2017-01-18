@@ -50,7 +50,8 @@ module.exports = {
   //   cert: require('fs').readFileSync(__dirname + '/ssl/cert.pem')
   //},
   
-  proxyHost: 'http://squareevents.org:1337/',  
+  // IMPORTANT: Uncomment and correct the next line
+  //proxyHost: 'http://squareevents.org:1337/',  
     
   // Email configuration
   eventemail: {

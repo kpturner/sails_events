@@ -555,11 +555,10 @@ module.exports = {
 													{
 													from: event.name + ' <'+sails.config.events.email+'>',
 													to: user.email,
-													bcc: [event.organiser.email || "",sails.config.events.developer || ""],
+													bcc: [event.organiser.email || "",(event.organiser2)?(event.organiser2.email || ""):"",sails.config.events.developer || ""],
 													subject: subject
 													},
 													function(err) {
-														//err={"foo":"bar"};
 														if (err) {
 															var errStr;
 															if (typeof err=="string")
@@ -1285,10 +1284,29 @@ module.exports = {
 				return res.genericErrorResponse('470','This booking no longer exists!')
 			}
 			
-			User.findOne(booking.event.organiser).exec(function(err, organiser){
+			var where={
+				or: [
+					{id:booking.event.organiser}
+				]
+			}
+			if (booking.event.organiser2) {
+				where.or.push({id:booking.event.organiser2})
+			}
 			
-				if (!organiser)
-					organiser={}
+			//User.findOne(booking.event.organiser).exec(function(err, organiser){
+			User.find(where).exec(function(err, organisers){ 
+				if (!organisers) {
+					organisers=[]
+				}
+				var bcc=[];
+				if (sails.config.events.developer) {
+					bcc.push(sails.config.events.developer)
+				}
+				organisers.forEach(function(organiser,o){
+					if (organiser.email) {
+						bcc.push(organiser.email)
+					}
+				})
 			
 				// Create linked bookings
 				var linkedBookings=booking.additions;
@@ -1354,9 +1372,9 @@ module.exports = {
 										eventTime: booking.event.time,
 										eventVenue: booking.event.venue.replace(/[\n\r]/g, '<br>'),
 										eventAdditionalInfo: booking.event.additionalInfo,
-										eventOrganiser: organiser.name || "",
-										organiserEmail: organiser.email || "",
-										organiserContactNo: organiser.phone || "",
+										eventOrganiser: booking.event.organiser.name || "",
+										organiserEmail: booking.event.organiser.email || "",
+										organiserContactNo: booking.event.organiser.phone || "",
 										eventBlurb: (booking.event.blurb || "").replace(/[\n\r]/g, '<br>'),
 										eventMenu: (booking.event.menu || "").replace(/[\n\r]/g, '<br>'),
 										eventDressCode: (booking.event.dressCode || "").replace(/[\n\r]/g, '<br>'),
@@ -1394,7 +1412,7 @@ module.exports = {
 								    {
 								      from: booking.event.name + ' <noreply@squareevents.org>',
 									  to: booking.user.email,
-									  bcc: [organiser.email || "",sails.config.events.developer || ""],
+									  bcc: bcc,
 								      subject: booking.event.regInterest?"Event interest cancellation confirmation":"Event booking cancellation confirmation"
 								    },
 								    function(err) {if (err) console.log(err);}
@@ -1473,9 +1491,13 @@ module.exports = {
 		today=new Date(today.setSeconds(0));
 		Event	.find({
 					where:	{
-								open:true,
-								free: false,
-								regInterest: false,
+								or: [
+									{open:true},
+									{open:false,closingDate: { '>=': today }},
+									{open:null,closingDate: { '>=': today }},
+								],
+								or: [{free: false},{free:null}],
+								or: [{regInterest: false},{regInterest:null}],
 								latePaymentChecking:true,
 								closingDate: { '>=': today },
 								grace: {'>': 0} 
@@ -1488,6 +1510,7 @@ module.exports = {
 				.populate('organiser')
 				.populate("organiser2")
 				.then(function(events){
+					//console.log(events)
 					// Get a list of bookings for this event that are late with their payment
 					events.forEach(function(event,ev){
 						// Format some data for the email
@@ -1521,9 +1544,10 @@ module.exports = {
 									if (nw.length>0) {
 										// Send a list to the organiser warning of bookings that will get late payment reminders within
 										// 48 hours
-										var to=event.organiser.email; 
-										/////if (sails.config.events.reminderTestMode) 
-										/////	to=""; 
+										var to=[event.organiser.email,(event.organiser2?event.organiser2.email || "":"")]; 
+										////if (sails.config.events.reminderTestMode) {
+										////	to=""; 
+										////} 											
 										Email.send(
 											"latePaymentWarning", {
 												recipientName: Utility.recipient(event.organiser.salutation,event.organiser.firstName,event.organiser.surname),
@@ -1557,7 +1581,7 @@ module.exports = {
                                         sails.log.debug("Late booking reminder issued for "+event.name+" for "+booking.user.name+((sails.config.events.reminderTestMode)?" in test mode":" "))
                                         // Update the booking so we don't spam them
                                         var to=booking.user.email;
-                                        var cc=(event.organiser.email || "");
+										var cc=[(event.organiser.email || ""),(event.organiser?event.organiser2.email || "":"")];
                                         // Update the booking whether we are in test mode or not
                                         var howMany=(!booking.remindersSent)?1:booking.remindersSent+1;
                                         Booking.update(booking.id,{
@@ -1567,8 +1591,7 @@ module.exports = {
                                                                 
                                         // In test mode, make sure only the developer gets an email
                                         ///if (sails.config.events.reminderTestMode) {
-                                        ///    to="";
-                                        ///    cc="";
+                                        ///    to="";                                       
                                         ///}
                                                                             
                                         var dl=new Date(booking.bookingDate);

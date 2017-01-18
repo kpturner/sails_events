@@ -40,7 +40,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		angular.forEach($scope.profile.$error.required, function(field) {
 			field.$setDirty();
 		}); 
-		if (lodgeMandatory && !$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo)) {
+		if ($scope.lodgeMandatory && !$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo)) {
 			$scope.profile.lodgeno.$setDirty();	
 			$scope.profile.lodgeno.$setValidity("required",false);	
 		}				

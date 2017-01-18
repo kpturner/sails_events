@@ -69,6 +69,7 @@ module.exports = {
 								closingDate: { '>=': today }, 
 								or: [
 									{hide: false},
+									{hide: null},
 									{hide: true, openingDate:{ '<=' : today}}
 								]
 							}, 
@@ -149,7 +150,7 @@ module.exports = {
                     } 
                       
 					// If we have a selectedUserId then only include events that the user is NOT booked into already
-					// AND only if teh current user is either an admin or the organiser of the event
+					// AND only if the current user is either an admin or the organiser of the event
 					if (selectedUserId && !sails.config.events.multipleBookings) {
 						var particularEvents=[];
 						async.each(events,function(event,next){
@@ -300,7 +301,6 @@ module.exports = {
 			return res.view("eventdetails",{
 				mode:mode,
 				event:{
-					hide:	false,
 					latePaymentChecking:true,
 					organiser: organiser,
 				}

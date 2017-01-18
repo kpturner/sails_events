@@ -27,7 +27,7 @@
 			"port": 5858
 		},
 		{
-			"name": "Server",
+			"name": "Daemon",
 			"type": "node",
             "request": "attach",
 			"address": "localhost",

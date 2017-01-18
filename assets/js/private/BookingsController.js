@@ -5,6 +5,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		 
 		$scope.bookingsLoading=true;
 		$scope.hideCapacity=false;
+		$scope.newBooking=false;
 		 
 		$scope.filterForm = {
 			loading: false,
