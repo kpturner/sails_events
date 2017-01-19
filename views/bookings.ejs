@@ -35,13 +35,7 @@
         myBookings: <%- myBookings %>,
         eventBookings: <%- eventBookings %>,
         userBookings: <%- userBookings %>,
-      };
-      // Avoid caching
-      window.onpageshow = function(event) {
-        if (event.persisted) {
-            window.location.reload() 
-        }
-      };
+      };      
     </script>
     
   </head>

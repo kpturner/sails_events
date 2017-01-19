@@ -1,3 +1,14 @@
+// Nasty hack to force a page to reload in Safari iOS when the back button is used
+// This prevents the browser from loading a cached page and leaving all our scoped
+// data as it was when the user navigated away
+window.onpageshow = function(event) {
+	if (event.persisted) {
+		window.location.reload() 
+	}
+};
+
+
+
 angular.module('EventsModule', ['ngDialog', 'ui.bootstrap', 'toastr', 'compareTo', 'akoenig.deckgrid'])
 		.directive('disableContents', function() {
 		    return {
