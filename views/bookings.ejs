@@ -6,10 +6,7 @@
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Expires" content="0"/>
-		<meta http-equiv="Cache-Control" content="no-cache"/>
-		<meta http-equiv="Pragma" content="no-cache"/>	
-
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-deckgrid.css">
@@ -29,17 +26,22 @@
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
-    window.SAILS_LOCALS = {
-      _csrf: "<%= _csrf %>",
-       user: <%- JSON.stringify(res.locals.user) %>,
-       event: <%- JSON.stringify(res.locals.event) %>,
-       selectedUser: <%- JSON.stringify(res.locals.selectedUser) %>,
-       criteria: <%- JSON.stringify(res.locals.criteria) %>,
-       myBookings: <%- myBookings %>,
-       eventBookings: <%- eventBookings %>,
-       userBookings: <%- userBookings %>,
-    };
-    
+      window.SAILS_LOCALS = {
+        _csrf: "<%= _csrf %>",
+        user: <%- JSON.stringify(res.locals.user) %>,
+        event: <%- JSON.stringify(res.locals.event) %>,
+        selectedUser: <%- JSON.stringify(res.locals.selectedUser) %>,
+        criteria: <%- JSON.stringify(res.locals.criteria) %>,
+        myBookings: <%- myBookings %>,
+        eventBookings: <%- eventBookings %>,
+        userBookings: <%- userBookings %>,
+      };
+      // Avoid caching
+      $(window).bind("pageshow", function(event) {
+        if (event.originalEvent.persisted) {
+            window.location.reload() 
+        }
+      });
     </script>
     
   </head>
