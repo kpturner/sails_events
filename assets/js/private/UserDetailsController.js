@@ -37,6 +37,40 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
     
     // New user for transferring bookings
     $scope.userdetailsForm.newuser="";
+
+    // Enable a repeater for other orders
+	$scope.orders=SAILS_LOCALS.orders;
+	$scope.ordersArr=[];
+	$scope.ordersModel=[];
+	$scope.userdetailsForm.otherorders=0;
+
+	// makeOrdersArray is called every time the number of other orders changes
+	$scope.makeOrdersArray = function(){
+		$scope.ordersArr.length=0;
+		for (var i=0;i<(parseInt($scope.userdetailsForm.otherorders));i++) {
+			$scope.ordersArr.push(i);
+            if (!$scope.ordersModel[i]) {
+                $scope.ordersModel.push({
+                    code: $scope.orders[0].code
+                });
+            }
+		} 
+	}
+
+    // Get users other orders (if any)
+	$http.get("/otherorders/"+SAILS_LOCALS.userDetails.id).success(function(data, status) {
+		if (typeof data == 'object') {
+			$scope.ordersModel=data;	 	
+			$scope.ordersModel.forEach(function(v,i){
+				$scope.ordersModel[i].number=parseInt($scope.ordersModel[i].number)
+			});
+            $scope.userdetailsForm.otherorders=data.length;
+			$scope.makeOrdersArray();		
+		}				
+	})
+	.error(function(data, status, headers, config) {
+		console.log("Error retrieving other orders "+SAILS_LOCALS.userDetails.id)
+	});
 	
 	/**
 	 * Test if the details are complete on the user
@@ -86,7 +120,8 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 		// Submit request to Sails.
 		$http.post('/updateuser/'+$scope.mode, {
             _csrf: SAILS_LOCALS._csrf,
-			data: $scope.userdetailsForm			 
+			data: $scope.userdetailsForm,
+            orders: $scope.ordersModel			 
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/users';

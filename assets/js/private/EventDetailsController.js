@@ -6,7 +6,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		loading: false
 	}
 
-	
+	$scope.orders=SAILS_LOCALS.orders;
 	$scope.eventForm=SAILS_LOCALS.event;
 		
 	// Get a list of organisers in name order

@@ -91,6 +91,9 @@ module.exports.routes = {
   'get /organisers': 'UserController.organisers',
   'get /dcs': 'UserController.dcs',
 
+  // Other orders
+  'get /otherorders/:userid': 'OrderController.otherOrders',
+
   // Events
   'get /events': 'EventController.events',
   'get /openevents': 'EventController.openEvents',

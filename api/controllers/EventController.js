@@ -235,6 +235,15 @@ module.exports = {
 		
 		var filter=req.param('filter');
 		req.session.eventFilter=filter;
+		// Check for a filter by order
+		var orderFilter=null;
+		if (filter) {
+			_.forEach(sails.config.events.orders,function(order){
+				if (order.desc.toLowerCase()==filter.toLowerCase()) {
+					orderFilter=order.code
+				}
+			})
+		}		
 						
 		var where = {};
 		
@@ -244,7 +253,7 @@ module.exports = {
 					{name: {contains: filter}},
 					{venue: {contains: filter}},	
 					{blurb: {contains: filter}},
-				 
+					{order: orderFilter},
 				]
 			}
 		}
@@ -305,7 +314,7 @@ module.exports = {
 			})	
 		} 
 		else {
-			var organiser=null;
+			var organiser=null;			
 			if (!Utility.isAdmin(req.user)) {
 				// This user is not an admin so make sure
 				// they are the initial organisers of the event

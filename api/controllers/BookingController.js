@@ -131,8 +131,9 @@ module.exports = {
 		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making a booking on behalf of someone else
 		var action=req.param("action");
 		var mode=(selectedUserId && !bookingId)?"create":"edit";
-		if (action)
+		if (action) {
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
+		}			
 		var myBookings=(req.param("mybookings"))?true:false;
 		var eventBookings=(req.param("eventbookings"))?true:false;
 		var userBookings=(req.param("userbookings"))?true:false;
@@ -180,7 +181,6 @@ module.exports = {
 					res.locals.userBookings=userBookings;
 					res.locals.mops=sails.config.events.mops;
 					res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
-					res.locals.salutations=sails.config.events.salutations;
 					res.locals.areas=Utility.areas();
 					res.locals.potentialDuplicates=potentialDuplicates;
 					res.locals.lodgeMandatory=sails.config.events.lodgeMandatory;

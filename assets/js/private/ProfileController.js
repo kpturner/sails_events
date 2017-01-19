@@ -32,6 +32,41 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
  	angular.element(document).ready(function () {
 		 $timeout($scope.setDirty);
 	});
+
+	// Enable a repeater for other orders
+	$scope.orders=SAILS_LOCALS.orders;
+	$scope.ordersArr=[];
+	$scope.ordersModel=[];
+	$scope.profileForm.otherorders=0;
+	
+	// makeOrdersArray is called every time the number of other orders changes
+	$scope.makeOrdersArray = function(){
+		$scope.ordersArr.length=0;
+		for (var i=0;i<(parseInt($scope.profileForm.otherorders));i++) {
+			$scope.ordersArr.push(i);
+			if (!$scope.ordersModel[i]) {
+                 $scope.ordersModel.push({
+                    code: $scope.orders[0].code
+                });
+            }
+		} 
+	}
+
+	// Get users other orders (if any)
+	$http.get("/otherorders/"+SAILS_LOCALS.user.id).success(function(data, status) {
+		if (typeof data == 'object') {
+			$scope.ordersModel=data;	 	
+			$scope.ordersModel.forEach(function(v,i){
+				$scope.ordersModel[i].number=parseInt($scope.ordersModel[i].number)
+			});
+			$scope.profileForm.otherorders=data.length;
+			$scope.makeOrdersArray();		
+		}				
+	})
+	.error(function(data, status, headers, config) {
+		console.log("Error retrieving other orders "+SAILS_LOCALS.user.id)
+	});
+	
 	
 	/**
 	 * Make erroneous fields dirty
@@ -90,7 +125,8 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 			// Submit request to Sails.
 			$http.post('/updateprofile', {
                 _csrf: SAILS_LOCALS._csrf,
-				profile: $scope.profileForm
+				profile: $scope.profileForm,
+				orders: $scope.ordersModel
 			})
 			.then(function onSuccess(sailsResponse){
 				window.location = '/';

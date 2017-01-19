@@ -25,6 +25,10 @@ module.exports = {
     // Director of Ceremonies
     dc: { model: 'User' },
     
+    order: {
+      type:'string'
+    },
+
     // Code (for booking references)
     code : {
       type: 'string',

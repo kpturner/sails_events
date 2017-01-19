@@ -371,6 +371,7 @@ var AuthController = {
 						// Otherwise, send back something reasonable as our error response.
 						 return res.negotiate(err);
 					}
+          sails.controllers.order.updateOtherOrders(updatedUser[0].id,req.param("orders"));
 					// Success
           if (updatedUser[0].area==null)
               updatedUser[0].area=""
@@ -415,7 +416,11 @@ var AuthController = {
                                 bcc: sails.config.events.developer || "",
                                 subject: sails.config.events.title + " - Profile updated confirmation"
 						    },
-						    function(err) {if (err) console.log(err);}
+						    function(err) {if (err) {
+                    sails.log.error("Email sending error:");
+                    sails.log.error(err.message);
+                  }
+                }
 					   )     
 					   // Logout if the password has changed
 					   if (delta.password) {

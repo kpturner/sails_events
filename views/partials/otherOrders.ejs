@@ -1,0 +1,86 @@
+<!DOCTYPE html> 
+
+<!-- O T H E R  O R D E R S -->
+<div ng-show="orders.length>1">
+
+    <!-- O T H E R  O R D E R S -->
+
+    <div class="control-group form-group col-xs-6 col-md-4"
+        ng-class="{'has-error':<%-form%>Form.otherorders.$invalid &&
+                            <%-form%>Form.otherorders.$dirty}">
+        <label>Other orders</label>
+        <input type="number" class="form-control" placeholder="other orders" name="otherorders" ng-model="<%-form%>Form.otherorders"
+            ng-change="makeOrdersArray()"  ng-disabled="mode=='delete'">
+        <span class="help-block has-error" ng-if="<%-form%>Form.otherorders.$dirty"> 
+             
+        </span>
+    </div>
+
+    <div ng-repeat="order in ordersArr | limitTo:<%-form%>Form.otherorders">
+
+        <div class="control-group form-group col-xs-10">
+            <h4>Other order {{order+1}}</h4>  
+        </div>
+
+        <ng-model name="ordersModel">
+
+            <!-- O R D E R -->
+            <div class="control-group form-group col-xs-10">
+                <label>* Order</label>  
+                <select class="form-control" placeholder="e.g. Craft, Royal Arch etc" name="{{order}}_order" ng-options="order.code as order.desc for order in orders" 
+                        ng-model="ordersModel[order].code"> 
+                </select>
+            </div>    
+
+            <!-- S A L U T A T I O N -->
+            <div class="control-group form-group col-xs-10">
+                <label>Salutation</label>  
+                <input type="text" class="form-control" placeholder="e.g. Companion" name="{{order}}_salutation" 
+                        ng-model="ordersModel[order].salutation"  >    
+            </div>    
+                        
+            <!-- R A N K -->
+            <div class="control-group form-group col-xs-10">
+                <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
+                <input type="text" class="form-control" placeholder="e.g. Principal Sojourner" name="{{order}}_rank" 
+                        ng-model="ordersModel[order].rank"  >
+            </div>
+
+            <!-- O R D E R  N A M E -->
+            <div class="control-group form-group col-xs-10">
+                <label>Name</label>  
+                <input type="text" class="form-control" placeholder="e.g. Wolvesey" name="{{order}}_name" 
+                        ng-model="ordersModel[order].name"  >              
+                
+            </div>  
+
+            <!-- O R D E R  N U M B E R-->
+	        <div class="control-group form-group col-xs-6 col-md-4">
+	            <label>Number</label>
+	            <input type="number" class="form-control" placeholder="e.g. 6818" name="{{order}}_number" 
+                        ng-model="ordersModel[order].number">
+	   
+	        </div> 
+
+            <!-- C E N T R E -->
+            <div class="control-group form-group col-xs-10">
+                <label>Centre</label>  
+                <input type="text" class="form-control" placeholder="e.g. Winchester" name="{{order}}_centre" 
+                        ng-model="ordersModel[order].centre">            
+            </div>
+            
+            <!-- A R E A -->
+            <div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
+                <label>Area</label>  
+                <select class="form-control" placeholder="e.g. South Central" name="{{order}}_area" ng-options="area for area in areas" 
+                        ng-model="ordersModel[order].area">
+                    <option value="">-- choose area --</option>
+                </select>
+            </div>
+
+
+        </ng-model>      
+
+    </div>
+
+</div> 

@@ -29,12 +29,13 @@
     window.SAILS_LOCALS = {
       _csrf: "<%= _csrf %>",
       user: <%- JSON.stringify(res.locals.user) %>,
-      salutations: <%- JSON.stringify(res.locals.salutations) %>,
+      salutations: <%- JSON.stringify(sails.config.events.salutations) %>,
       areas: <%- JSON.stringify(res.locals.areas) %>,
       lodgeMandatory: <%- res.locals.lodgeMandatory %>,
       spamDomains: <%- JSON.stringify(sails.config.events.spamDomains) %>,
       sender: "<%- sails.config.events.email %>",
       signup: <%- res.locals.signup %>,
+      orders: <%- JSON.stringify(sails.config.events.orders) %>,
     };
     
     </script>
@@ -64,101 +65,14 @@
         </div>   
 
 
-        <div class="row">
-          
-          
+        <div class="row">         
            
           <% include partials/userDetails.ejs %>  
 
-          <div ng-hide="signup">
-
-            <!-- A D D R E S S -->
-
-            <div class="control-group form-group col-xs-10">
-              <label>Address (for postal correspondence)</label>  
-              <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-form%>Form.address1">  
-              <br>
-              <input type="text" class="form-control" placeholder="address line 2" name="address2" ng-model="<%-form%>Form.address2">  
-              <br>
-              <input type="text" class="form-control" placeholder="address line 3" name="address3" ng-model="<%-form%>Form.address3">  
-              <br>
-              <input type="text" class="form-control" placeholder="address line 4" name="address4" ng-model="<%-form%>Form.address4">  
-            </div>
-
-            <!-- P O S T   C O D E -->
-
-            <div class="control-group form-group col-xs-6">
-              <label>Postcode</label>  
-              <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-form%>Form.postcode">  
-            </div>
-
-
-            <!-- C O N T A C T   N U M B E R -->
-
-            <div class="control-group form-group col-xs-10">
-              <label>Contact number</label>
-              <input type="text" class="form-control" placeholder="e.g. your mobile number" name="phone" ng-model="<%-form%>Form.phone">   
-            </div>   
-
-            <!-- V O ? -->
-            <div class="control-group form-group col-xs-10"
-              ng-class="{'has-error':userdetails.isvo.$invalid &&
-                                    userdetails.isvo.$dirty}">
-                <label>
-                <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-form%>Form.isVO"></input>
-                &nbsp;&nbsp;&nbsp;Visiting Officer?
-                </label>
-            </div>
-                      
-            
-            <!-- V O  L O D G E -->
-            <div class="control-group form-group col-xs-10"
-              ng-class="{'has-error':<%-form%>.volodge.$invalid &&
-                                    <%-form%>.volodge.$dirty}" ng-hide="!<%-form%>Form.isVO">
-              <label>VO lodge (if applic.)</label>
-              <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="<%-form%>Form.voLodge" ng-maxlength="50" >
-              <span class="help-block has-error" ng-if="<%-form%>.volodge.$dirty">
-                <span ng-show="<%-form%>.volodge.$error.maxlength">VO lodge name cannot be more than 50 characters.</span>
-              </span>
-            </div>
-
-            <!-- V O  L O D G E  N U M B E R-->
-            <div class="control-group form-group col-xs-6 col-md-4"
-              ng-class="{'has-error':<%-form%>.volodgeno.$invalid &&
-                                    <%-form%>.volodgeno.$dirty}" ng-hide="!<%-form%>Form.isVO">
-              <label>VO lodge number</label>
-              <input type="number" class="form-control"  name="volodgeno" ng-model="<%-form%>Form.voLodgeNo" ng-maxlength="5" >
-              <span class="help-block has-error" ng-if="<%-form%>.volodgeno.$dirty">
-                <span ng-show="<%-form%>.volodgeno.$error.maxlength">The VO lodge number cannot be more than 5 characters.</span>
-              </span>
-            </div>
-
-
-            <!-- V O  C E N T R E -->
-            <div class="control-group form-group col-xs-10" 
-              ng-class="{'has-error':<%-form%>.vocentre.$invalid &&
-                                    <%-form%>.vocentre.$dirty}" ng-hide="!<%-form%>Form.isVO">
-              <label>VO centre</label>  
-              <input type="text" class="form-control" placeholder="e.g. Woolston" name="vocentre" ng-model="<%-form%>Form.voCentre" ng-maxlength="50">
-              <span class="help-block has-error" ng-if="<%-form%>.vocentre.$dirty">
-                <span ng-show="<%-form%>.vocentre.$error.maxlength">The centre name cannot be more than 50 characters.</span>
-              </span>
-            </div>
-
-            <!-- V O  A R E A -->
-            <div class="control-group form-group col-xs-10" ng-hide="areas.length==0 || !<%-form%>Form.isVO">
-              <label>VO area</label>  
-              <select class="form-control" placeholder="e.g. South Central" name="voarea" ng-options="area for area in areas" ng-model="<%-form%>Form.voArea">
-                <option value="">-- choose area --</option>
-              </select>
-            </div> 
-  
-          </div>
-            
           <!-- P A S S W O R D -->
   
           <div class="control-group form-group col-xs-7"
-          ng-class="{'has-error':profile.password.$invalid &&
+            ng-class="{'has-error':profile.password.$invalid &&
                                 profile.password.$dirty}" ng-hide="user.authProvider!='local'">
             <label>* Choose a password</label>
             <!-- Added the compareTo directive that compares the passwords -->
@@ -178,7 +92,15 @@
               <span ng-show="profile.password.$error.compareTo">Password must match.</span>
               <span ng-show="profile.confirmation.$error.required">Confirmation password is required.</span>
             </span>
-          </div>
+          </div>        
+
+          <div ng-hide="signup">
+
+            <% include partials/additionalUserDetails.ejs %>    
+            <% include partials/otherOrders.ejs %>          
+  
+          </div>  
+
         </div>
   
         <br/>

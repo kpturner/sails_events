@@ -316,6 +316,7 @@ module.exports = {
 						// Else unknown error
 						return res.negotiate(err)
 					}
+					sails.controllers.order.updateOtherOrders(userId,req.param("orders"));
 					// Success
 					/* Don't inform the user by email. Can cause confusion
 					if (user[0].address1==null)
@@ -380,6 +381,7 @@ module.exports = {
 						if (err) {
 							return res.negotiate(err)
 						}
+						Order.destroy({user:userId}).exec(function(err){});
 						Passport.destroy({user:userId}).exec(function(err){
 							return res.ok();	
 						})						
@@ -407,12 +409,15 @@ module.exports = {
 					// Else unknown error
 					return res.negotiate(err)
 				}
+				sails.controllers.order.updateOtherOrders(user[0].id,req.param("orders"));
 				return res.ok();	
 			})
 		}
 		
 		
-	}
+	},
+
+
 	
 };
 

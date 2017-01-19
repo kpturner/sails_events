@@ -49,7 +49,7 @@
     <script type="text/javascript">
     window.SAILS_LOCALS = {
        _csrf: "<%= _csrf %>",
-       salutations: <%- JSON.stringify(res.locals.salutations) %>,
+       salutations: <%- JSON.stringify(sails.config.events.salutations) %>,
        areas: <%- JSON.stringify(res.locals.areas) %>,
        lodgeMandatory: <%- res.locals.lodgeMandatory %>,
     };
