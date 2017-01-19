@@ -203,7 +203,9 @@ module.exports = {
 			if (existingBooking) {
 				criteria.id={"!":existingBooking.id} // Exclude the existing booking details from the calcs
 				existingBooking.deadline=sails.controllers.booking.paymentDeadline(event,existingBooking);	
-				mode="edit";			
+				if (mode=="create") {
+					mode="edit"
+				}			
 				return preparedBooking(existingBooking.user,criteria);
 			}
 			else {
