@@ -37,7 +37,7 @@
         userBookings: <%- userBookings %>,
       };
       // Avoid caching
-      $(window).bind("pageshow", function(event) {
+      window.onpageshow = function(event) {
         if (event.originalEvent.persisted) {
             window.location.reload() 
         }
