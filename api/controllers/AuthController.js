@@ -401,7 +401,16 @@ var AuthController = {
               updatedUser[0].isOrganiser=false  
           if (updatedUser[0].authProvider!="local")
               updatedUser[0].username="N/A"
- 
+          var orders=[];
+          _.forEach(req.param("orders"),function(order){
+            orders.push(order);
+            _.forEach(sails.config.events.orders,function(cfg){
+              if (order.code==cfg.code) {
+                order.desc=cfg.desc;
+                return false;
+              }
+            })
+          })    
           
           // Send confirmation email
 					Email.send(
@@ -409,7 +418,7 @@ var AuthController = {
     				      recipientName: Utility.recipient(updatedUser[0].salutation,updatedUser[0].firstName,updatedUser[0].surname),
     				      senderName: sails.config.events.title,
     			        details: updatedUser[0],
-							    orders: req.param("orders")
+							    orders: orders
 						    },
 						    {
 						        to: updatedUser[0].email,
