@@ -417,8 +417,7 @@ var AuthController = {
                                 subject: sails.config.events.title + " - Profile updated confirmation"
 						    },
 						    function(err) {if (err) {
-                    sails.log.error("Email sending error:");
-                    sails.log.error(err.message);
+                    sails.log.error("Email sending error: " +err.message);
                   }
                 }
 					   )     
