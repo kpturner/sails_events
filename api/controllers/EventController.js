@@ -36,10 +36,49 @@ module.exports = {
 		today=new Date(today.setMinutes(0));
 		today=new Date(today.setSeconds(0));
 		var selectedUserId=req.param("selecteduserid");  // If this exists, omit events for which this user is already booked in
+
+		// Get the orders that the user is a member of, then only pick 
+		// events that match the order. If the event order is blank
+		// then that means it is open regardless of order
+		if (sails.config.events.orders.length<=1) {
+			getEvents();
+		}
+		else {
+			var userId=req.user.id;
+			if (selectedUserId) {
+				userId=selectedUserId;
+			}
+			var clause={or:[]};
+			// Events with no particular order defined are included
+			clause.or.push({
+				order: ""
+			})
+			clause.or.push({
+				order: null
+			})
+			// Include the users orders
+			Order.find({user:userId})
+				.then(function(orders){
+					if (orders.length>0) {						
+						_.forEach(orders,function(order){
+							clause.or.push({
+								order: order.code
+							})
+						})					
+					}					
+				})
+				.catch(function(err){
+					sails.log.error(err)
+				})
+				.finally(function(){
+					getEvents(clause);
+				})				
+		}
 		
-		// An example using promises (bluebird)
-		/*				
-		Event.find({
+		function getEvents(clause) {
+			// An example using promises (bluebird)
+			/*				
+			Event.find({
 					where:	{
 								open:true,
 								closingDate: { '>=': today } 
@@ -53,7 +92,7 @@ module.exports = {
 					.populate("organiser2")
 					.then(function(events){
 						console.log(events.length)
-						 return events;
+						return events;
 					}).spread(function(event1,event2){
 						// Promises are awesome!
 						console.log(event1)
@@ -61,18 +100,23 @@ module.exports = {
 					}).catch(function(err){
 						// An error occurred
 					})
-		*/
-		
-		Event.find({
-					where:	{
-								open:true,
-								closingDate: { '>=': today }, 
-								or: [
-									{hide: false},
-									{hide: null},
-									{hide: true, openingDate:{ '<=' : today}}
-								]
-							}, 
+			*/
+			var where={
+				open:true,
+				closingDate: { '>=': today },								 
+				or: [
+					{hide: false},
+					{hide: null},
+					{hide: true, openingDate:{ '<=' : today}}
+				]
+			}
+
+			if (clause) {
+				where=_.extend(where,clause);
+			}
+
+			Event.find({
+					where:	where, 
                     // Sorted later        
 					//sort: 	{
 					//			date:'desc',
@@ -193,35 +237,14 @@ module.exports = {
                             }
 							return augmentEvents(particularEvents);  	
 						})
-						/*
-						events.forEach(function(event,index){
-							if (Utility.isAdmin(req.user,event)) {
-								Booking.find(
-									{
-										where: {
-											event: event.id,
-											user: selectedUserId
-										},
-										limit: 1
-									}
-								).exec(function(err,bookings){
-									if (bookings.length<=0) {
-										particularEvents.push(event)
-									}
-									if (index==events.length-1) {
-										// End of the list of events
-										return augmentEvents(particularEvents);  	
-									}
-								})
-							}							
-						})
-						*/						
+								
 					}					
 					else {
 						return augmentEvents(events);  	
 					}  					
 				}
 			)
+		}
 			
 	},
 	

@@ -408,8 +408,8 @@ var AuthController = {
 						"profileChanged", {
     				      recipientName: Utility.recipient(updatedUser[0].salutation,updatedUser[0].firstName,updatedUser[0].surname),
     				      senderName: sails.config.events.title,
-    			        details: updatedUser[0]
-							  
+    			        details: updatedUser[0],
+							    orders: req.param("orders")
 						    },
 						    {
 						        to: updatedUser[0].email,
