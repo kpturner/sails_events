@@ -285,6 +285,48 @@ module.exports = {
 		}
 		
 	},
+
+	/**
+	 * Order label
+	 */
+	orderLabel:function(order){
+		// Order label
+		var orderLabel;
+		if (order && order!="C") {
+			sails.config.events.orders.forEach(function(cfg){
+				if (order==cfg.code) {
+					orderLabel=(cfg.label)?cfg.label:"Lodge";
+					return false;
+				}
+			})
+			if (!orderLabel) {
+				orderLabel="Lodge";
+			}
+		}
+		else {
+			orderLabel="Lodge";
+		}
+		return orderLabel;
+	},
+
+	/**
+	 * Set email info
+	 */
+	setEmailInfo: function(event,user,orders) {
+		if (event.order && event.order!="C") {
+			_.forEach(orders,function(order){
+				if (event.order==order.code) {
+					user.lodge=	 order.name;
+					user.lodgeNo=order.number;
+					user.salutation=order.salutation;
+					user.rank=order.rank;
+					user.centre=order.centre;
+					user.area=order.area;
+					return false;
+				} 
+			})	
+		}		
+	},
 	
 	/**
 	 * Make booking
@@ -297,28 +339,38 @@ module.exports = {
 		var selectedUserId=req.param("selecteduserid");		
 		var bookingRef=null;
         var lodgeRoomArr=[];
+		
 				 
 		Event.findOne(eventId).populate("organiser").populate("organiser2").exec(function(err,event){
 			if (err) {
 				return res.negotiate(err);
 			}
 			
+			// Order label
+			var orderLabel=sails.controllers.booking.orderLabel(event.order);
+
 			// Update the user profile
 			var user={};
-			user.salutation=req.param("salutation");
+
+			// Careful with the user lodge details. This depends on the order
+			// for the event
+			if (!event.order || event.order=="C") {
+				// Craft
+				user.salutation=req.param("salutation");
+				user.lodge=req.param("lodge");
+				user.lodgeNo=req.param("lodgeNo");
+				user.centre=req.param("centre");
+				user.area=req.param("area");
+				user.rank=req.param("rank");
+			}
 			user.name=req.param("name");
 			user.surname=req.param("surname");
 			user.firstName=req.param("firstName");
-			user.lodge=req.param("lodge");
-			user.lodgeNo=req.param("lodgeNo");
-			user.centre=req.param("centre");
-			user.area=req.param("area");
 			user.isVO=req.param("isVO");
 			user.voLodge=req.param("voLodge");
 			user.voLodgeNo=req.param("voLodgeNo");
 			user.voCentre=req.param("voCentre");
-			user.voArea=req.param("voArea");
-			user.rank=req.param("rank");
+			user.voArea=req.param("voArea");			
 			user.dietary=req.param("dietary");
 			user.email=req.param("email");
             user.address1=req.param("address1");
@@ -361,412 +413,419 @@ module.exports = {
 							res.locals.user=req.user;	
 						}					
 						
-						// Before making the booking, make doubly sure we have capacity
-						var places=0;
-						var criteria={};
-						criteria.event=eventId;
-						if (bookingId) {
-							criteria.id={"!":bookingId} // Exclude the existing booking details from the calcs
-						}
-						Booking.find(criteria).exec(function(err,bookings){
-							if (!err) {
-								bookings.forEach(function(booking,index){
-									places+=booking.places
-								})	
+
+						Order.find({user:req.user.id}).exec(function(err, orders){
+							// Before making the booking, make doubly sure we have capacity
+							var places=0;
+							var criteria={};
+							criteria.event=eventId;
+							if (bookingId) {
+								criteria.id={"!":bookingId} // Exclude the existing booking details from the calcs
 							}
-							event.capacity-=places;
-							 
-							// Capacity must exceed (at least) places requested 
-							if (event.capacity>=req.param("places")) {
-							
-								// Private function to process booking
-								var processBooking=function(){
-									var booking={};
-									if (existingBooking) {
-										_.extend(booking, existingBooking);
-									}
-                                    else {
-                                         booking.createdBy=req.user.id; 
-                                         booking.bookingDate=new Date();   
-                                    }
-									booking.user=user.id;
-									booking.event=eventId;                                   
-									booking.info=req.param("info");
-									if (req.param("places")) {
-										booking.places=req.param("places")
-									}
-									else {
-										booking.places=1
-									}
-				      				booking.cost=booking.places*event.price;
-									booking.dietary=user.dietary;
-									
-									if(req.session.eventBookings || req.session.userBookings) {
-										booking.amountPaid=req.param("amountPaid");
-										booking.paid=req.param("paid");
-										booking.mop=req.param("mop");	
-										booking.tableNo=req.param("tableNo");
-									}
-									else {
-										if (!existingBooking) {
-											// New booking
-											booking.amountPaid=0;
-											booking.paid=false;	
-											booking.mop=null;	
-											booking.tableNo=null;
-										}																	
-									}
-									
-									//console.log(bookingRef)
-									
-									// Use pre-existing booking ref if it exists
-									if (bookingRef)
-										booking.ref=bookingRef; 
-										
-									
-									Booking.create(booking,function(err, booking){
-										if (err) {
-											sails.log.error(err);
-											return res.negotiate(err);
+							Booking.find(criteria).exec(function(err,bookings){
+								if (!err) {
+									bookings.forEach(function(booking,index){
+										places+=booking.places
+									})	
+								}
+								event.capacity-=places;
+								
+								// Capacity must exceed (at least) places requested 
+								if (event.capacity>=req.param("places")) {
+								
+									// Private function to process booking
+									var processBooking=function(){
+										var booking={};
+										if (existingBooking) {
+											_.extend(booking, existingBooking);
 										}
+										else {
+											booking.createdBy=req.user.id; 
+											booking.bookingDate=new Date();   
+										}
+										booking.user=user.id;
+										booking.event=eventId;                                   
+										booking.info=req.param("info");
+										if (req.param("places")) {
+											booking.places=req.param("places")
+										}
+										else {
+											booking.places=1
+										}
+										booking.cost=booking.places*event.price;
+										booking.dietary=user.dietary;
+										
+										if(req.session.eventBookings || req.session.userBookings) {
+											booking.amountPaid=req.param("amountPaid");
+											booking.paid=req.param("paid");
+											booking.mop=req.param("mop");	
+											booking.tableNo=req.param("tableNo");
+										}
+										else {
+											if (!existingBooking) {
+												// New booking
+												booking.amountPaid=0;
+												booking.paid=false;	
+												booking.mop=null;	
+												booking.tableNo=null;
+											}																	
+										}
+										
+										//console.log(bookingRef)
+										
+										// Use pre-existing booking ref if it exists
+										if (bookingRef)
+											booking.ref=bookingRef; 
 											
-                                        // Update and persist lodge room array for new bookings
-                                        if (!existingBooking && lodgeRoomArr.length>0) {
-                                            _.forEach(lodgeRoomArr,function(lr,l){
-                                                lodgeRoomArr[l].booking=booking.id
-                                            })
-                                            LodgeRoom.create(lodgeRoomArr).exec(function(){})
-                                        }    
-                                            					
-										// Create linked bookings
-										if (linkedBookings) {
-											linkedBookings.forEach(function(linkedBooking,index){
-												linkedBooking.booking=booking.id;
-												if (!linkedBooking.rank)
-													linkedBooking.rank=""
-												if (!linkedBooking.dietary)
-													linkedBooking.dietary=""
-												if (!linkedBooking.lodge)
-													linkedBooking.lodge=""
-												if (!linkedBooking.lodgeNo)
-													linkedBooking.lodgeNo=""
-												if (!linkedBooking.area)
-													linkedBooking.area=""
-												if (!linkedBooking.centre)
-													linkedBooking.centre=""
-												//LinkedBooking.create(linkedBooking).exec(function(err,lb){
-												//	if (err)
-												//		console.log(err)	
-												//})
-											})
-                                            LinkedBooking.create(linkedBookings).exec(function(err,lb){
-												if (err){
-													sails.log.error(err);
-												}	
-											    else {
-                                                    if (existingBooking) {
-                                                        existingBooking.additions=linkedBookings;
-														existingBooking.user=user;
-                                                        lodgeRoom(existingBooking);	
-                                                    }
-                                                }	
-                                            })
-										}				 						
-										var finalise=function(){
-											// If the user has previously sent an apology, delete it
-											Apology.destroy({event:booking.event,user:booking.user}).exec(function(err, deleted){
-												if (!err) {
-													//console.log(deleted)
-												}
-											})								
-											
-											// If this is the user making a booking, send them a confirmation email	
-											if(!req.session.eventBookings && !req.session.userBookings && user.email) {
-												var formattedDate=event.date.toString();
-												formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+										
+										Booking.create(booking,function(err, booking){
+											if (err) {
+												sails.log.error(err);
+												return res.negotiate(err);
+											}
 												
-												// Booking payment deadline
-												var deadline=sails.controllers.booking.paymentDeadline(event,booking);		
+											// Update and persist lodge room array for new bookings
+											if (!existingBooking && lodgeRoomArr.length>0) {
+												_.forEach(lodgeRoomArr,function(lr,l){
+													lodgeRoomArr[l].booking=booking.id
+												})
+												LodgeRoom.create(lodgeRoomArr).exec(function(){})
+											}    
+																	
+											// Create linked bookings
+											if (linkedBookings) {
+												linkedBookings.forEach(function(linkedBooking,index){
+													linkedBooking.booking=booking.id;
+													if (!linkedBooking.rank)
+														linkedBooking.rank=""
+													if (!linkedBooking.dietary)
+														linkedBooking.dietary=""
+													if (!linkedBooking.lodge)
+														linkedBooking.lodge=""
+													if (!linkedBooking.lodgeNo)
+														linkedBooking.lodgeNo=""
+													if (!linkedBooking.area)
+														linkedBooking.area=""
+													if (!linkedBooking.centre)
+														linkedBooking.centre=""
+													//LinkedBooking.create(linkedBooking).exec(function(err,lb){
+													//	if (err)
+													//		console.log(err)	
+													//})
+												})
+												LinkedBooking.create(linkedBookings).exec(function(err,lb){
+													if (err){
+														sails.log.error(err);
+													}	
+													else {
+														if (existingBooking) {
+															existingBooking.additions=linkedBookings;
+															existingBooking.user=user;
+															lodgeRoom(existingBooking);	
+														}
+													}	
+												})
+											}				 						
+											var finalise=function(){
+												// If the user has previously sent an apology, delete it
+												Apology.destroy({event:booking.event,user:booking.user}).exec(function(err, deleted){
+													if (!err) {
+														//console.log(deleted)
+													}
+												})								
 												
-												var updated = "";
-												var subject = "";
-												if (!event.regInterest) {
-													subject="Event booking confirmation";
-												}
-												else {
-													subject="Event interest confirmation";
-												}
-												if (bookingId) {
-													updated=' has been updated';
-													if (event.regInterest) {
-														subject='Event interest update confirmation'
+												// If this is the user making a booking, send them a confirmation email	
+												if(!req.session.eventBookings && !req.session.userBookings && user.email) {
+													var formattedDate=event.date.toString();
+													formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+													
+													// Booking payment deadline
+													var deadline=sails.controllers.booking.paymentDeadline(event,booking);		
+													
+													var updated = "";
+													var subject = "";
+													if (!event.regInterest) {
+														subject="Event booking confirmation";
 													}
 													else {
-														subject='Event booking update confirmation'
-													}													
-												}	
-												Email.send(
-													"bookingConfirmation",
-													{
-													recipientName: Utility.recipient(user.salutation,user.firstName,user.surname),
-													senderName: sails.config.events.title,
-															updated: updated,
-															regInterest: event.regInterest,
-															eventFree: event.free,
-															eventName: event.name,
-															eventDate: formattedDate,
-															eventTime: event.time,
-                                                            eventAdditionalInfo: event.additionalInfo,
-															eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
-															eventOrganiser: event.organiser.name,
-															organiserEmail: event.organiser.email,
-															organiserContactNo: event.organiser.phone || "",
-															eventBlurb: (event.blurb || "n/a").replace(/[\n\r]/g, '<br>'),
-															eventMenu: (event.menu || "n/a").replace(/[\n\r]/g, '<br>'),
-															eventDressCode: (event.dressCode || "n/a").replace(/[\n\r]/g, '<br>'),
-															email: user.email,
-                                                            salutation: user.salutation || "",
-                                                            firstName: user.firstName || "",
-                                                            surname: user.surname || "",
-                                                            addressReqd: event.addressReqd,
-                                                            address1: user.address1 || "",
-                                                            address2: user.address2 || "",
-                                                            address3: user.address3 || "",
-                                                            address4: user.address4 || "",
-                                                            postcode: user.postcode || "",
-                                                            phone: user.phone || "",
-															lodge: user.lodge || "",
-															lodgeNo: user.lodgeNo || "",
-															centre: user.centre || "",																
-															area: user.area || "",															
-															rank: user.rank || "",
-															voReqd: event.voReqd,
-															isVO: user.isVO,
-															voLodge: user.voLodge || "",
-															voLodgeNo: user.voLodgeNo || "",
-															voCentre: user.voCentre || "",
-															voArea: user.voArea || "",
-															dietary: user.dietary || "",
-															bookingRef: bookingRef,
-															info: (booking.info || "n/a").replace(/[\n\r]/g, '<br>'),  
-															places: booking.places,
-															linkedBookings: linkedBookings,
-															paymentDetails: (event.paymentDetails || "n/a").replace(/[\n\r]/g, '<br>'),
-															total: (booking.places * event.price),
-															deadline: deadline,
-													},
-													{
-													from: event.name + ' <'+sails.config.events.email+'>',
-													to: user.email,
-													bcc: [event.organiser.email || "",(event.organiser2)?(event.organiser2.email || ""):"",sails.config.events.developer || ""],
-													subject: subject
-													},
-													function(err) {
-														if (err) {
-															var errStr;
-															if (typeof err=="string")
-																errStr=err
-															else
-																errStr=JSON.stringify(err)
-															sails.log.error("Emailing error: "+errStr);
-															// Try to inform the developer
+														subject="Event interest confirmation";
+													}
+													if (bookingId) {
+														updated=' has been updated';
+														if (event.regInterest) {
+															subject='Event interest update confirmation'
+														}
+														else {
+															subject='Event booking update confirmation'
+														}													
+													}	
+
+													sails.controllers.booking.setEmailInfo(event,user,orders);
+
+													Email.send(
+														"bookingConfirmation",
+														{
+														recipientName: Utility.recipient(user.salutation,user.firstName,user.surname),
+														senderName: sails.config.events.title,
+																updated: updated,
+																regInterest: event.regInterest,
+																orderLabel: orderLabel,
+																eventFree: event.free,
+																eventName: event.name,
+																eventDate: formattedDate,
+																eventTime: event.time,
+																eventAdditionalInfo: event.additionalInfo,
+																eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
+																eventOrganiser: event.organiser.name,
+																organiserEmail: event.organiser.email,
+																organiserContactNo: event.organiser.phone || "",
+																eventBlurb: (event.blurb || "n/a").replace(/[\n\r]/g, '<br>'),
+																eventMenu: (event.menu || "n/a").replace(/[\n\r]/g, '<br>'),
+																eventDressCode: (event.dressCode || "n/a").replace(/[\n\r]/g, '<br>'),
+																email: user.email,
+																salutation: user.salutation || "",
+																firstName: user.firstName || "",
+																surname: user.surname || "",
+																addressReqd: event.addressReqd,
+																address1: user.address1 || "",
+																address2: user.address2 || "",
+																address3: user.address3 || "",
+																address4: user.address4 || "",
+																postcode: user.postcode || "",
+																phone: user.phone || "",
+																lodge: user.lodge || "",
+																lodgeNo: user.lodgeNo || "",
+																centre: user.centre || "",																
+																area: user.area || "",															
+																rank: user.rank || "",
+																voReqd: event.voReqd,
+																isVO: user.isVO,
+																voLodge: user.voLodge || "",
+																voLodgeNo: user.voLodgeNo || "",
+																voCentre: user.voCentre || "",
+																voArea: user.voArea || "",
+																dietary: user.dietary || "",
+																bookingRef: bookingRef,
+																info: (booking.info || "n/a").replace(/[\n\r]/g, '<br>'),  
+																places: booking.places,
+																linkedBookings: linkedBookings,
+																paymentDetails: (event.paymentDetails || "n/a").replace(/[\n\r]/g, '<br>'),
+																total: (booking.places * event.price),
+																deadline: deadline,
+														},
+														{
+														from: event.name + ' <'+sails.config.events.email+'>',
+														to: user.email,
+														bcc: [event.organiser.email || "",(event.organiser2)?(event.organiser2.email || ""):"",sails.config.events.developer || ""],
+														subject: subject
+														},
+														function(err) {
+															if (err) {
+																var errStr;
+																if (typeof err=="string")
+																	errStr=err
+																else
+																	errStr=JSON.stringify(err)
+																sails.log.error("Emailing error: "+errStr);
+																// Try to inform the developer
+																if (sails.config.events.developer) {
+																	setTimeout(function(){
+																		try {
+																			Email.send(
+																				"diagnostic",
+																				{
+																					err:errStr
+																				},
+																				{
+																					to: sails.config.events.developer,
+																					subject: "Email failure"
+																				},
+																				function(){}
+																			)	
+																		}
+																		catch(e) {
+																			// No dice!
+																		}
+																	},10)
+																}
+															};
+														}
+													)    		
+												
+												}
+												
+												// Return to caller with complete booking info
+												return res.json(booking);
+														
+											} 
+											
+											// If we don't have a booking ref, create and update now.
+											// Why on earth are we doing this now rather than before we create the
+											// booking??  You may well ask - but the reason is that prior to 
+											// creating the Event.incrementLastBookingRef function, we used the 
+											// incrementally generated key to the new booking (the "id") in the 
+											// booking reference, so we had to create the booking first.  
+											// The code is still in the same place so that we can fall back to that 
+											// method if the new atomic function fails for some reason (paranoia)
+											if (!bookingRef) {											
+												Event.incrementLastBookingRef(event.id,function(err, updatedEvent){
+													if (!err) {
+														bookingRef=updatedEvent.code+updatedEvent.lastBookingRef.toString()
+													}
+													else {
+														// Use the original event object as the update failed
+														bookingRef=event.code+booking.id.toString();
+														// Email developer for comfort
+														try {
 															if (sails.config.events.developer) {
-																setTimeout(function(){
-																	try {
-																		Email.send(
-																			"diagnostic",
-																			{
-																				err:errStr
-																			},
-																			{
-																				to: sails.config.events.developer,
-																				subject: "Email failure"
-																			},
-																			function(){}
-																		)	
-																	}
-																	catch(e) {
-																		// No dice!
-																	}
-																},10)
-															}
-														};
+															Email.send(
+																	"diagnostic",
+																	{
+																		err:"Booking id resorted to original method "+bookingRef
+																	},
+																	{
+																		to: sails.config.events.developer,
+																		subject: "Booking id resorted to original method "+bookingRef
+																	},
+																	function(){}
+																)
+															}						
+														}
+														catch(e) {}								
 													}
-												)    		
-											
-											}
-											
-											// Return to caller with complete booking info
-											return res.json(booking);
-													
-										} 
-										 
-										// If we don't have a booking ref, create and update now.
-										// Why on earth are we doing this now rather than before we create the
-										// booking??  You may well ask - but the reason is that prior to 
-										// creating the Event.incrementLastBookingRef function, we used the 
-										// incrementally generated key to the new booking (the "id") in the 
-										// booking reference, so we had to create the booking first.  
-										// The code is still in the same place so that we can fall back to that 
-										// method if the new atomic function fails for some reason (paranoia)
-										if (!bookingRef) {											
-											Event.incrementLastBookingRef(event.id,function(err, updatedEvent){
-												if (!err) {
-													bookingRef=updatedEvent.code+updatedEvent.lastBookingRef.toString()
-												}
-												else {
-													// Use the original event object as the update failed
-													bookingRef=event.code+booking.id.toString();
-													// Email developer for comfort
-													try {
-														if (sails.config.events.developer) {
-														Email.send(
-																"diagnostic",
-																{
-																	err:"Booking id resorted to original method "+bookingRef
-																},
-																{
-																	to: sails.config.events.developer,
-																	subject: "Booking id resorted to original method "+bookingRef
-																},
-																function(){}
-															)
-														}						
-													}
-													catch(e) {}								
-												}
-												// Update the booking ref
-												Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
-												booking.ref=bookingRef;
+													// Update the booking ref
+													Booking.update(booking.id,{ref:bookingRef}).exec(function(){});
+													booking.ref=bookingRef;
+													// Finalise booking
+													finalise();								
+												})											
+											} 												 
+											else {
 												// Finalise booking
-												finalise();								
-											})											
-										} 												 
-										else {
-											// Finalise booking
-											finalise();
-										}
+												finalise();
+											}
+										
+											
+											
+										})
+									}
 									
-										
-										
-									})
-								}
-                                
-                                function lodgeRoom(existingBooking,cb) {
-                                    // If we don't have a booking id its a simple case of writing out the details as they are                                    
-                                    if (!existingBooking) {
-                                        var lr={
-                                            event:eventId,
-                                            salutation:user.salutation,
-                                            surname:user.surname,
-                                            firstName:user.firstName,
-                                            rank:user.rank,
-                                            cancelled:false,
-                                        }
-                                        lodgeRoomArr.push(lr);
-                                        _.forEach(linkedBookings,function(lb,l){
-                                            var lr={
-                                                event:eventId,
-                                                salutation:lb.salutation,
-                                                surname:lb.surname,
-                                                firstName:lb.firstName,
-                                                rank:lb.rank,
-                                                cancelled:false,
-                                            }
-                                            lodgeRoomArr.push(lr);
-                                        })
-                                        if (cb) cb();
-                                    }
-                                    else {
-                                        // Get the existing lodge room data
-                                        var elrd=[];
-                                        existingMain=false;
-                                        LodgeRoom.find({event:eventId,booking:existingBooking.id}).exec(function(err,elrds){
-                                            if (!err && elrds) {
-                                                // Flag any that are no longer on the booking as cancelled
-                                                elrd=elrds;
-                                                _.forEach(elrd,function(elr,l){
-                                                    var found=false;
-                                                    if (elr.surname.toLowerCase()==existingBooking.user.surname.toLowerCase() && elr.firstName.toLowerCase()==existingBooking.user.firstName.toLowerCase()) {
-                                                        found=true;
-                                                        existingMain=true;
-                                                    }
-                                                    else {
-                                                        _.forEach(existingBooking.additions,function(eba,a){
-                                                            if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
-                                                                found=true;
-                                                                return false;
-                                                            }
-                                                        })    
-                                                    }                                                    
-                                                    if (!found) {
-                                                        LodgeRoom.update(elr.id,{cancelled:true}).exec(function(){})
-                                                    }
-                                                    else {
-                                                        LodgeRoom.update(elr.id,{cancelled:false}).exec(function(){})
-                                                    }
-                                                })                                                
-                                            }
-                                            // Add any that did not exist before
-                                            if (!existingMain) {
-                                                var lr={
-                                                    event:eventId,
-                                                    booking:existingBooking.id,
-                                                    salutation:existingBooking.user.salutation,
-                                                    surname:existingBooking.user.surname,
-                                                    firstName:existingBooking.user.firstName,
-                                                    rank:existingBooking.user.rank,
-                                                    cancelled:false,
-                                                }
-                                                LodgeRoom.create(lr).exec(function(){})
-                                            }          
-                                            _.forEach(existingBooking.additions,function(eba,a){
-                                                var found=false;
-                                                _.forEach(elrd,function(elr,l){
-                                                    if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
-                                                        found=true;
-                                                        return false;
-                                                    }
-                                                })
-                                                if (!found) {
-                                                    var lr={
-                                                        event:eventId,
-                                                        booking:existingBooking.id,
-                                                        salutation:eba.salutation,
-                                                        surname:eba.surname,
-                                                        firstName:eba.firstName,
-                                                        rank:eba.rank,
-                                                        cancelled:false,
-                                                    }
-                                                    LodgeRoom.create(lr).exec(function(){})
-                                                }
-                                            })
-                                            if (cb) cb(); 
-                                        })  
-                                    }                                    
-                                }
-                                
-							
-								// If we have an existing booking, zap it before making the new booking
-								if (bookingId) {
-                                    Booking.destroy(bookingId,function(err){
-                                        LinkedBooking.destroy({booking:bookingId},function(err){
-                                            processBooking();
-                                        })
-                                    }) 							
+									function lodgeRoom(existingBooking,cb) {
+										// If we don't have a booking id its a simple case of writing out the details as they are                                    
+										if (!existingBooking) {
+											var lr={
+												event:eventId,
+												salutation:user.salutation,
+												surname:user.surname,
+												firstName:user.firstName,
+												rank:user.rank,
+												cancelled:false,
+											}
+											lodgeRoomArr.push(lr);
+											_.forEach(linkedBookings,function(lb,l){
+												var lr={
+													event:eventId,
+													salutation:lb.salutation,
+													surname:lb.surname,
+													firstName:lb.firstName,
+													rank:lb.rank,
+													cancelled:false,
+												}
+												lodgeRoomArr.push(lr);
+											})
+											if (cb) cb();
+										}
+										else {
+											// Get the existing lodge room data
+											var elrd=[];
+											existingMain=false;
+											LodgeRoom.find({event:eventId,booking:existingBooking.id}).exec(function(err,elrds){
+												if (!err && elrds) {
+													// Flag any that are no longer on the booking as cancelled
+													elrd=elrds;
+													_.forEach(elrd,function(elr,l){
+														var found=false;
+														if (elr.surname.toLowerCase()==existingBooking.user.surname.toLowerCase() && elr.firstName.toLowerCase()==existingBooking.user.firstName.toLowerCase()) {
+															found=true;
+															existingMain=true;
+														}
+														else {
+															_.forEach(existingBooking.additions,function(eba,a){
+																if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
+																	found=true;
+																	return false;
+																}
+															})    
+														}                                                    
+														if (!found) {
+															LodgeRoom.update(elr.id,{cancelled:true}).exec(function(){})
+														}
+														else {
+															LodgeRoom.update(elr.id,{cancelled:false}).exec(function(){})
+														}
+													})                                                
+												}
+												// Add any that did not exist before
+												if (!existingMain) {
+													var lr={
+														event:eventId,
+														booking:existingBooking.id,
+														salutation:existingBooking.user.salutation,
+														surname:existingBooking.user.surname,
+														firstName:existingBooking.user.firstName,
+														rank:existingBooking.user.rank,
+														cancelled:false,
+													}
+													LodgeRoom.create(lr).exec(function(){})
+												}          
+												_.forEach(existingBooking.additions,function(eba,a){
+													var found=false;
+													_.forEach(elrd,function(elr,l){
+														if (eba.surname.toLowerCase()==elr.surname.toLowerCase() && eba.firstName.toLowerCase()==elr.firstName.toLowerCase()) {
+															found=true;
+															return false;
+														}
+													})
+													if (!found) {
+														var lr={
+															event:eventId,
+															booking:existingBooking.id,
+															salutation:eba.salutation,
+															surname:eba.surname,
+															firstName:eba.firstName,
+															rank:eba.rank,
+															cancelled:false,
+														}
+														LodgeRoom.create(lr).exec(function(){})
+													}
+												})
+												if (cb) cb(); 
+											})  
+										}                                    
+									}
+									
+								
+									// If we have an existing booking, zap it before making the new booking
+									if (bookingId) {
+										Booking.destroy(bookingId,function(err){
+											LinkedBooking.destroy({booking:bookingId},function(err){
+												processBooking();
+											})
+										}) 							
+									}
+									else {
+										lodgeRoom(null,processBooking);
+									}
+									
+									
 								}
 								else {
-                                    lodgeRoom(null,processBooking);
-								}
-								
-								
-							}
-							else {
-								//No capacity!
-								return res.genericErrorResponse("455","Booking failed. The event does not have capacity for the places requested")
-							}						
-		
-						})	
+									//No capacity!
+									return res.genericErrorResponse("455","Booking failed. The event does not have capacity for the places requested")
+								}						
+			
+							})	
+						});	
 					}
 				)
 			}
@@ -775,31 +834,58 @@ module.exports = {
 			 *  Private function to check and create the booking
 			 */
 			var checkAndbookIt=function(userId){
-				// Check existing booking before continuing
-				Booking.findOne({
-									event: eventId,
-									user:userId
-								}).populate("additions").populate("user").exec(function(err, existingBooking) {
-					if (existingBooking) {
-						if (existingBooking.id==bookingId) {
-							// OK
-							return bookIt(userId,existingBooking);
+				// If not Craft, update/create the users order details.
+				// If the user is in two orders of the same type
+				// we will ignore that and only cater for the first one
+				if (event.order && event.order!="C") {
+					Order.destroy({user:userId,code:event.order}).exec(function(err,deleted){
+						var order={
+							user:		userId,
+							code: 		event.order,
+							salutation: req.param("salutation"),    
+							name: 		req.param("lodge"),
+							number: 	req.param("lodgeNo"),
+							centre: 	req.param("centre"),
+							area: 		req.param("area"),
+							rank: 		req.param("rank"),
 						}
-						else {
-							if (!sails.config.events.multipleBookings) {
-								return res.genericErrorResponse("460","Booking failed. This user is already booked in to the event")
-							}
-							else {
+						Order.create(order).exec(function(err,newOrder){
+							checked();
+						})
+					})
+				}
+				else {
+					checked();
+				}
+			
+				function checked(){
+					// Check existing booking before continuing
+					Booking.findOne({
+										event: eventId,
+										user:userId
+									}).populate("additions").populate("user").exec(function(err, existingBooking) {
+						if (existingBooking) {
+							if (existingBooking.id==bookingId) {
 								// OK
 								return bookIt(userId,existingBooking);
-							}	
-						}						
-					}
-					else {
-						// OK
-						return bookIt(userId);
-					} 
-				})				
+							}
+							else {
+								if (!sails.config.events.multipleBookings) {
+									return res.genericErrorResponse("460","Booking failed. This user is already booked in to the event")
+								}
+								else {
+									// OK
+									return bookIt(userId,existingBooking);
+								}	
+							}						
+						}
+						else {
+							// OK
+							return bookIt(userId);
+						} 
+					})
+				}
+								
 					
 			} 
 			/********************************************* */
@@ -1289,153 +1375,161 @@ module.exports = {
 				return res.genericErrorResponse('470','This booking no longer exists!')
 			}
 			
-			var where={
-				or: [
-					{id:booking.event.organiser}
-				]
-			}
-			if (booking.event.organiser2) {
-				where.or.push({id:booking.event.organiser2})
-			}
-			
-			//User.findOne(booking.event.organiser).exec(function(err, organiser){
-			User.find(where).exec(function(err, organisers){ 
-				if (!organisers) {
-					organisers=[]
+			// Order label
+			var orderLabel=sails.controllers.booking.orderLabel(booking.event.order);
+
+			Order.find({user:booking.user.id}).exec(function(err, orders){
+				var where={
+					or: [
+						{id:booking.event.organiser}
+					]
 				}
-				var bcc=[];
-				if (sails.config.events.developer) {
-					bcc.push(sails.config.events.developer)
+				if (booking.event.organiser2) {
+					where.or.push({id:booking.event.organiser2})
 				}
-				organisers.forEach(function(organiser,o){
-					if (organiser.email) {
-						bcc.push(organiser.email)
+				
+				//User.findOne(booking.event.organiser).exec(function(err, organiser){
+				User.find(where).exec(function(err, organisers){ 
+					if (!organisers) {
+						organisers=[]
 					}
-				})
-			
-				// Create linked bookings
-				var linkedBookings=booking.additions;
-				if (linkedBookings) {
-					linkedBookings.forEach(function(linkedBooking,index){
-						if (!linkedBooking.rank)
-							linkedBooking.rank=""
-						if (!linkedBooking.dietary)
-							linkedBooking.dietary=""
-						if (!linkedBooking.lodge)
-							linkedBooking.lodge=""
-						if (!linkedBooking.lodgeNo)
-							linkedBooking.lodgeNo=""					
-					})
-				}
-							
-				var formattedDate=booking.event.date.toString();
-							formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
-							var updated="";
-							
-				// Booking payment deadline
-				var deadline="N/A";
-				if (booking.event.grace && booking.event.grace>0 && !booking.paid) {
-					var dl=new Date(booking.bookingDate);
-					dl.setDate(dl.getDate()+booking.event.grace);
-					dl=dl.toString();
-					deadline=dl.substr(0,dl.indexOf(":")-2);
-					 
-				}
-				
-				// Decide what to do based on the action
-				if (action=="edit") {
-					// Not supported
-				}
-				else if (action=="delete") {			
-					 
-					// Carry on and delete it
-					Booking.destroy(bookingId).exec(function(err){
-						if (err) {
-							return res.negotiate(err)
+					var bcc=[];
+					if (sails.config.events.developer) {
+						bcc.push(sails.config.events.developer)
+					}
+					organisers.forEach(function(organiser,o){
+						if (organiser.email) {
+							bcc.push(organiser.email)
 						}
-                        // Cancel lodge room details
-                        LodgeRoom.update({booking:bookingId},{cancelled:true}).exec(function(){})
-                        // Deal with linked bookings
-						LinkedBooking.destroy({booking:bookingId}).exec(function(err){
-													
-							if (bookingId)
-								updated=' has been cancelled'
-					
-							
-							if (booking.user.email) {
-							
-								Email.send(
-									"bookingConfirmation",
-								    {
-								      	recipientName: Utility.recipient(booking.user.salutation,booking.user.firstName,booking.user.surname),
-										senderName: sails.config.events.title,
-										updated: updated,
-										regInterest: booking.event.regInterest,
-										eventName: booking.event.name,
-										eventFree: booking.event.free,
-										eventDate: formattedDate,
-										eventTime: booking.event.time,
-										eventVenue: booking.event.venue.replace(/[\n\r]/g, '<br>'),
-										eventAdditionalInfo: booking.event.additionalInfo,
-										eventOrganiser: booking.event.organiser.name || "",
-										organiserEmail: booking.event.organiser.email || "",
-										organiserContactNo: booking.event.organiser.phone || "",
-										eventBlurb: (booking.event.blurb || "").replace(/[\n\r]/g, '<br>'),
-										eventMenu: (booking.event.menu || "").replace(/[\n\r]/g, '<br>'),
-										eventDressCode: (booking.event.dressCode || "").replace(/[\n\r]/g, '<br>'),
-										addressReqd: booking.event.addressReqd,
-										address1: booking.user.address1 || "",
-										address2: booking.user.address2 || "",
-										address3: booking.user.address3 || "",
-										address4: booking.user.address4 || "",
-										postcode: booking.user.postcode || "", 
-										phone: booking.user.phone || "",  
-										email: booking.user.email,
-										lodge: booking.user.lodge || "",
-										lodgeNo: booking.user.lodgeNo || "",
-										salutation: booking.user.salutation || "",
-										centre: booking.user.centre,
-										area: booking.user.area || "",
-										voReqd: booking.event.voReqd,
-										isVO: booking.user.isVO,
-										voLodge: booking.user.voLodge || "",
-										voLodgeNo: booking.user.voLodgeNo || "",
-										voCentre: booking.user.voCentre || "",
-										voArea: booking.user.voArea || "",
-										surname: booking.user.surname || "",
-										firstName: booking.user.firstName || "",
-										rank: booking.user.rank || "",
-										dietary: booking.user.dietary || "",
-										bookingRef: booking.ref,
-										info: (booking.info || "").replace(/[\n\r]/g, '<br>'),  
-										places: booking.places,
-										linkedBookings: linkedBookings,
-										paymentDetails: (booking.event.paymentDetails)?booking.event.paymentDetails.replace(/[\n\r]/g, '<br>'):"",
-										total: (booking.places * booking.event.price),
-										deadline: deadline
-								    },
-								    {
-								      from: booking.event.name + ' <noreply@squareevents.org>',
-									  to: booking.user.email,
-									  bcc: bcc,
-								      subject: booking.event.regInterest?"Event interest cancellation confirmation":"Event booking cancellation confirmation"
-								    },
-								    function(err) {if (err) console.log(err);}
-							   	)    			
-							
-							}
-							
-								
-							return res.ok();	
-						})						
 					})
-						 
-				}
-				else if (action=="copy" || action=="create") {
-					// Not supported
-				}
 				
-			})			
+					// Create linked bookings
+					var linkedBookings=booking.additions;
+					if (linkedBookings) {
+						linkedBookings.forEach(function(linkedBooking,index){
+							if (!linkedBooking.rank)
+								linkedBooking.rank=""
+							if (!linkedBooking.dietary)
+								linkedBooking.dietary=""
+							if (!linkedBooking.lodge)
+								linkedBooking.lodge=""
+							if (!linkedBooking.lodgeNo)
+								linkedBooking.lodgeNo=""					
+						})
+					}
+								
+					var formattedDate=booking.event.date.toString();
+								formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+								var updated="";
+								
+					// Booking payment deadline
+					var deadline="N/A";
+					if (booking.event.grace && booking.event.grace>0 && !booking.paid) {
+						var dl=new Date(booking.bookingDate);
+						dl.setDate(dl.getDate()+booking.event.grace);
+						dl=dl.toString();
+						deadline=dl.substr(0,dl.indexOf(":")-2);
+						
+					}
+					
+					// Decide what to do based on the action
+					if (action=="edit") {
+						// Not supported
+					}
+					else if (action=="delete") {			
+						
+						// Carry on and delete it
+						Booking.destroy(bookingId).exec(function(err){
+							if (err) {
+								return res.negotiate(err)
+							}
+							// Cancel lodge room details
+							LodgeRoom.update({booking:bookingId},{cancelled:true}).exec(function(){})
+							// Deal with linked bookings
+							LinkedBooking.destroy({booking:bookingId}).exec(function(err){
+														
+								if (bookingId)
+									updated=' has been cancelled'
+						
+								
+								if (booking.user.email) {
+
+									sails.controllers.booking.setEmailInfo(booking.event,booking.user,orders);
+								
+									Email.send(
+										"bookingConfirmation",
+										{
+											recipientName: Utility.recipient(booking.user.salutation,booking.user.firstName,booking.user.surname),
+											senderName: sails.config.events.title,
+											updated: updated,
+											orderLabel: orderLabel,
+											regInterest: booking.event.regInterest,
+											eventName: booking.event.name,
+											eventFree: booking.event.free,
+											eventDate: formattedDate,
+											eventTime: booking.event.time,
+											eventVenue: booking.event.venue.replace(/[\n\r]/g, '<br>'),
+											eventAdditionalInfo: booking.event.additionalInfo,
+											eventOrganiser: booking.event.organiser.name || "",
+											organiserEmail: booking.event.organiser.email || "",
+											organiserContactNo: booking.event.organiser.phone || "",
+											eventBlurb: (booking.event.blurb || "").replace(/[\n\r]/g, '<br>'),
+											eventMenu: (booking.event.menu || "").replace(/[\n\r]/g, '<br>'),
+											eventDressCode: (booking.event.dressCode || "").replace(/[\n\r]/g, '<br>'),
+											addressReqd: booking.event.addressReqd,
+											address1: booking.user.address1 || "",
+											address2: booking.user.address2 || "",
+											address3: booking.user.address3 || "",
+											address4: booking.user.address4 || "",
+											postcode: booking.user.postcode || "", 
+											phone: booking.user.phone || "",  
+											email: booking.user.email,
+											lodge: booking.user.lodge || "",
+											lodgeNo: booking.user.lodgeNo || "",
+											salutation: booking.user.salutation || "",
+											centre: booking.user.centre,
+											area: booking.user.area || "",
+											voReqd: booking.event.voReqd,
+											isVO: booking.user.isVO,
+											voLodge: booking.user.voLodge || "",
+											voLodgeNo: booking.user.voLodgeNo || "",
+											voCentre: booking.user.voCentre || "",
+											voArea: booking.user.voArea || "",
+											surname: booking.user.surname || "",
+											firstName: booking.user.firstName || "",
+											rank: booking.user.rank || "",
+											dietary: booking.user.dietary || "",
+											bookingRef: booking.ref,
+											info: (booking.info || "").replace(/[\n\r]/g, '<br>'),  
+											places: booking.places,
+											linkedBookings: linkedBookings,
+											paymentDetails: (booking.event.paymentDetails)?booking.event.paymentDetails.replace(/[\n\r]/g, '<br>'):"",
+											total: (booking.places * booking.event.price),
+											deadline: deadline
+										},
+										{
+										from: booking.event.name + ' <noreply@squareevents.org>',
+										to: booking.user.email,
+										bcc: bcc,
+										subject: booking.event.regInterest?"Event interest cancellation confirmation":"Event booking cancellation confirmation"
+										},
+										function(err) {if (err) console.log(err);}
+									)    			
+								
+								}
+								
+									
+								return res.ok();	
+							})						
+						})
+							
+					}
+					else if (action=="copy" || action=="create") {
+						// Not supported
+					}
+					
+				})
+			})
 			
 		})	
 		

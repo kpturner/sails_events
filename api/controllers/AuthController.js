@@ -406,6 +406,7 @@ var AuthController = {
             orders.push(order);
             _.forEach(sails.config.events.orders,function(cfg){
               if (order.code==cfg.code) {
+                order.label=(cfg.label)?cfg.label:"Lodge";
                 order.desc=cfg.desc;
                 return false;
               }

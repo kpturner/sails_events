@@ -43,14 +43,14 @@ module.exports = {
                 _.forEach(connections,function(conn){
                     if (conn.config.database==db) {
                         // Drop the index and ignore any errors (it might not exist)
-                        var cmd="DROP INDEX "+index+" ON "+indexInfo.table+";";
+                        var cmd="DROP INDEX `"+index+"` ON `"+indexInfo.table+"`;";
                         sails.log.debug("Running "+cmd);
                         sails.models[indexInfo.table].query(cmd,function(err,res){
                             if (err) {
                                 // Probably means it doesn't exist yet   
                             }                                
                             // Build the index
-                            cmd="CREATE INDEX "+index+" ON "+indexInfo.table+" (";
+                            cmd="CREATE INDEX `"+index+"` ON `"+indexInfo.table+"` (";
                             indexInfo.columns.forEach(function(col,c){
                                 if (c>0)
                                     cmd+=","

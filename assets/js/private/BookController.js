@@ -15,6 +15,22 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	
 	// Lodge required
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
+
+	// Order label
+	if ($scope.event.order && $scope.event.order!="C") {
+		SAILS_LOCALS.orders.forEach(function(cfg){
+			if ($scope.event.order==cfg.code) {
+				$scope.orderlabel=(cfg.label)?cfg.label:"Lodge";
+				return false;
+			}
+		})
+		if (!$scope.orderlabel) {
+			$scope.orderlabel="Lodge";
+		}
+	}
+	else {
+		$scope.orderlabel="Lodge";
+	}
 	
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
@@ -44,7 +60,55 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	//	$scope.mops.push(mopObj);
 	//});
 	$scope.mops=SAILS_LOCALS.mops;
-	 
+
+	/**
+	 * Initialise lodge info based on order
+	 */
+	$scope.initialiseLodgeInfo = function(userId,userOrders){
+
+		// First of all get the users orders if not passed
+		if (userOrders) {
+			setInfo(userOrders)
+		}
+		else {
+			// Get users other orders (if any)
+			$http.get("/otherorders/"+userId).success(function(data, status) {
+				if (typeof data == 'object') {
+					setInfo(data);
+				}				
+			})
+			.error(function(data, status, headers, config) {
+				console.log("Error retrieving other orders "+SAILS_LOCALS.userDetails.id)
+			});
+		}
+
+		function setInfo(userOrders){
+			$scope.userOrders=userOrders;
+			if ($scope.event.order && $scope.event.order!="C") {
+				// Overwrite the lodge info with the relevant order info
+				userOrders.forEach(function(order){
+					if ($scope.event.order==order.code) {
+						$scope.bookingForm.lodge=order.name;
+						$scope.bookingForm.lodgeNo = parseInt(order.number);
+						$scope.bookingForm.salutation=order.salutation;
+						$scope.bookingForm.centre=order.centre;
+						$scope.bookingForm.area=order.area;
+						$scope.bookingForm.rank=order.rank;	
+						return false;
+					}
+				})
+			}
+			else {
+				// Convert lodge no to numeric
+				$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo);								
+			}	
+			if ($scope.bookingForm.voLodgeNo) {
+				$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
+			} 			
+		}
+
+
+	} 
 	
 	// Do we have an existing booking to edit?
 	$scope.existingBooking=false;
@@ -65,16 +129,13 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				$scope.userBookings=true;	
 				$scope.selectedUserId=SAILS_LOCALS.booking.user.id;	
 			}
+			$scope.initialiseLodgeInfo(SAILS_LOCALS.booking.user.id);	
 		}
 		else {
-			$scope.bookingForm = angular.extend($scope.bookingForm,$scope.user);							
+			$scope.bookingForm = angular.extend($scope.bookingForm,$scope.user);
+			$scope.initialiseLodgeInfo($scope.user.id);							
 		}		
-		$scope.paidMsg="";
-		// Convert lodge no to numeric
-		if ($scope.bookingForm.lodgeNo)
-		 	$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo); 
-		if ($scope.bookingForm.voLodgeNo)
-		 	$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
+		$scope.paidMsg="";		
 		// Initialise confirmation email
 		$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
 	}	
@@ -94,16 +155,19 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						$scope.makeArray();			
 					$scope.bookingForm=angular.extend($scope.bookingForm,data);
 					$scope.paidMsg="";
-					// Convert lodge no to numeric
-					$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo); 
-					if ($scope.bookingForm.voLodgeNo)
-						$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
+
+					$scope.initialiseLodgeInfo($scope.selectedUserId,data.orders);
+					
 					// Initialise confirmation email
 					$scope.bookingForm.confirmemail = $scope.bookingForm.email;					
 				})
 				.error(function(data, status, headers, config) {
 					console.log("Error retrieving selected user for booking "+$scope.selectedUserId)
 				});
+		}
+		else {
+			/////Not necessary to do this because we are effectively bookingin a dummy user
+			/////$scope.initialiseLodgeInfo($scope.user.id);
 		}
 	}	
 
@@ -246,6 +310,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		ngDialog.open(opts);
 	}
 	
+
 	/**
 	 * Test if the details are complete on the booking
 	 */
@@ -291,12 +356,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		if (!$scope.eventBookings && !$scope.userBookings && !$scope.lodgeMandatory) {
 			if (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0) {
 				complete=false;
-				errors.push("Lodge");
+				errors.push($scope.orderlabel);
 				validations.push($scope.booking.lodge);
 			}
 			if (!$scope.bookingForm.lodgeNo || $scope.bookingForm.lodge==0) {
 				complete=false;
-				errors.push("Lodge number");
+				errors.push($scope.orderlabel+" number");
 				validations.push($scope.booking.lodgeno);
 			}
 			if (!$scope.bookingForm.email || $scope.bookingForm.email.length==0) {

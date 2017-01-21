@@ -13,6 +13,10 @@ var User = {
       collection: 'Passport', via: 'user' 
     },
     
+    orders : { 
+      collection: 'Order', via: 'user' 
+    },
+
     // Preferred name
     name: {
       type: 'string'

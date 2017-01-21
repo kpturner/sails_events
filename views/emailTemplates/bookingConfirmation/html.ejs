@@ -41,8 +41,8 @@
         <br> 
     <% } %>
     <br>Contact no: <%=phone%> 
-	<br>Lodge: <%=lodge%>
-	<br>Lodge no: <%=lodgeNo%>
+	<br><%=orderLabel%>: <%=lodge%>
+	<br><%=orderLabel%> no: <%=lodgeNo%>
 	<br>Centre: <%=centre%>	
 	<br>Area: <%=area%>	
 	<% if  (voReqd && isVO) {%>
@@ -76,8 +76,8 @@
 		<br>&nbsp;&nbsp;Salutation: <%=linkedBooking.salutation%>  
         <br>&nbsp;&nbsp;Surname: <%=linkedBooking.surname%>
 		<br>&nbsp;&nbsp;First name: <%=linkedBooking.firstName%>
-		<br>&nbsp;&nbsp;Lodge: <%=linkedBooking.lodge%>
-		<br>&nbsp;&nbsp;Lodge no: <%=linkedBooking.lodgeNo%>
+		<br>&nbsp;&nbsp;<%=orderLabel%>: <%=linkedBooking.lodge%>
+		<br>&nbsp;&nbsp;<%=orderLabel%> no: <%=linkedBooking.lodgeNo%>
 		<br>&nbsp;&nbsp;Centre: <%=linkedBooking.centre%>
 		<br>&nbsp;&nbsp;Area: <%=linkedBooking.area%>
 		<br>&nbsp;&nbsp;Rank: <%=linkedBooking.rank%>

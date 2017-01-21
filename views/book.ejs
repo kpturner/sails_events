@@ -41,6 +41,7 @@
       lodgeMandatory: <%- res.locals.lodgeMandatory %>,
       selectedUserId: <%- JSON.stringify(res.locals.selectedUserId) %>,
       potentialDuplicates: <%- JSON.stringify(res.locals.potentialDuplicates)%>,
+      orders: <%- JSON.stringify(sails.config.events.orders) %>,
     };
     
     </script>

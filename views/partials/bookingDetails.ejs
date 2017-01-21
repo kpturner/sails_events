@@ -65,10 +65,12 @@
   ng-class="{'has-error':<%-model%>.salutation.$invalid &&
                     <%-model%>.salutation.$dirty}">
   <label>* Salutation</label>  
-  <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-model%>Form.salutation"
+  <select ng-show="!event.order || event.order=='C'" class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-model%>Form.salutation"
     ng-disabled="mode!='create'">
     <option value="">-- choose salutation --</option>
   </select>
+  <input  ng-hide="!event.order || event.order=='C'" type="text" class="form-control" placeholder="salutation" name="salutation" ng-model="<%-model%>Form.salutation" ng-maxlength="50" 
+      ng-disabled="mode!='create'">  
 </div>
 
 
@@ -167,7 +169,7 @@ and/or maxlength) -->
 <div class="control-group form-group col-xs-10 col-md-6"
   ng-class="{'has-error':<%-model%>.lodge.$invalid &&
                         <%-model%>.lodge.$dirty}">
-  <label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span>Lodge name</label>
+  <label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span><span>{{orderlabel}}</span> name</label>
   <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-model%>Form.lodge" ng-maxlength="50" ng-disabled="mode!='create'">  
   <span class="help-block has-error" ng-if="<%-model%>.lodge.$dirty">
     <span ng-show="<%-model%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
@@ -179,7 +181,7 @@ and/or maxlength) -->
 <div class="control-group form-group col-xs-6 col-md-4"
 ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
                       <%-model%>.lodgeno.$dirty}">
-<label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span>Lodge number</label>
+<label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span><span>{{orderlabel}}</span> number</label>
 <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-model%>Form.lodgeNo" ng-maxlength="5" min="(!eventBookings && !userBookings)?1:0" 
   ng-disabled="mode!='create'">  
 <span class="help-block has-error" ng-if="<%-model%>.lodgeno.$dirty">
@@ -345,9 +347,11 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
     <!-- S A L U T A T I O N -->
     <div class="control-group form-group col-xs-10">
       <label>* Salutation</label>  
-      <select class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="{{place}}_salutation" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation">
+      <select ng-show="!event.order || event.order=='C'" class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="{{place}}_salutation" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation">
         <option value="">-- choose salutation --</option>
       </select>
+      <input  ng-hide="!event.order || event.order=='C'" type="text" class="form-control" placeholder="salutation" name="{{place}}_salutation" ng-model="linked<%-model%>s[place].salutation" ng-maxlength="50" 
+        ng-disabled="mode!='create'">  
     </div>     
             
 	  <!-- S U R N A M E -->
@@ -366,14 +370,14 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 	  
 	  <!-- L O D G E -->
 	  <div class="control-group form-group col-xs-10 col-md-6">
-	    <label>Lodge name</label>
+	    <label><span>{{orderlabel}}</span> name</label>
 	    <input type="text" class="form-control" placeholder="e.g. Hamtun" name="{{place}}_lodge" ng-model="linked<%-model%>s[place].lodge"  >
 	    
 	  </div>
 	  
 	  <!-- L O D G E  N U M B E R-->
 	  <div class="control-group form-group col-xs-6 col-md-4">
-	    <label>Lodge number</label>
+	    <label><span>{{orderlabel}}</span> number</label>
 	    <input type="number" class="form-control" placeholder="e.g. 7083" name="{{place}}_lodgeno" ng-model="linked<%-model%>s[place].lodgeNo">
 	   
 	  </div>
