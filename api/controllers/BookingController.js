@@ -1072,7 +1072,8 @@ module.exports = {
 								}		
 						}
 					}
-			)			
+			)		
+			.populate('user')	
 			.populate('event').populate('additions',{sort:{surname:'asc'}}) 
 			.paginate(pag)
 			.exec(function(err, bookings){
@@ -1090,7 +1091,7 @@ module.exports = {
 				bookings.sort(Utility.jsonSort("event.date", true));
 				  
 				if (download) {	
-					sails.controllers.booking.download(req, res, req.user.username, false, false, bookings, req.user);					
+					sails.controllers.booking.download(req, res, req.user.username, false, false, false, bookings, req.user);					
 				}
 				else {
 					// If session refers to a user who no longer exists, still allow logout.
@@ -1188,7 +1189,9 @@ module.exports = {
 							//}
 						}
 				)
-				.populate('user').populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
+				.populate('event')
+				.populate('user')
+				.populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
 				.paginate(pag)
 				.exec(function(err, bookings){
 					if (err) {
@@ -1221,7 +1224,7 @@ module.exports = {
 					  		
 					if (download) {					
 						////Event.findOne(req.param("eventid")).exec(function(err,event){
-							sails.controllers.booking.download(req, res, event.code, event.addressReqd, event.voReqd, bookings);		
+							sails.controllers.booking.download(req, res, event.code, true, event.addressReqd, event.voReqd, bookings);		
 						////})									
 					}
 					else {
@@ -1730,12 +1733,14 @@ module.exports = {
 	/**
 	 * Download bookings
 	 */
-	 download: function(req, res, prefix, addressReqd, voReqd, bookings, user) {
+	 download: function(req, res, prefix, eventBookings, addressReqd, voReqd, bookings, user) {
 		 
 	 	if (!bookings) {
 			bookings=[]
 		}
 		
+		var label,labelNo;		
+
 		// Create basic options
 		var options={};
 		options.filename=prefix+'_' + ((new Date().getTime().toString())) + '.csv';
@@ -1744,20 +1749,45 @@ module.exports = {
 		// Build a custom JSON for the CSV
 		var data=[];
 		var count=0;
-		bookings.forEach(function(booking,i){ 
+
+		async.each(bookings,function(booking,next){
 			if (user && !booking.user.surname) {
 				booking.user=user
 			}
+			// Label for the lodge entity
+			if (eventBookings) {
+				// All the bookings are for the same event so we only need to work out the labels
+				// once
+				if (!label) {
+					if (!booking.event.order || booking.event.order=="C") {
+						label="lodge";
+						labelNo="lodgeNo";
+					}
+					else {
+						_.forEach(sails.config.events.orders,function(cfg){
+							if (booking.event.order==cfg.code) {
+								label=(cfg.label)?cfg.label.toLowerCase():"lodge";
+								labelNo=label+"No";
+								return false;
+							}	
+						})
+					}			
+				}				
+			}
+			else {
+				// We cannot know what the order might be from booking to booking 
+				// so use a generic label
+				label="order";
+				labelNo="orderNo";
+			}		
 			var amountPaid=booking.amountPaid/booking.places;
 			var row={};   
             //if (!user) {
             //    row.seq=parseInt(booking.ref.replace(prefix,""));
-            //}      
-			count++;
-			row.count=count;                  
+            //}	
+			row.count=null;		              
 			row.tableNo=booking.tableNo || "";
-			row.ref=booking.ref || "";
-			row.salutation=booking.user.salutation || "";
+			row.ref=booking.ref || "";			
 			row.surname=booking.user.surname || "";
 			row.firstName=booking.user.firstName || "";
 			row.displayName=booking.user.salutation+" "+booking.user.name;
@@ -1768,12 +1798,7 @@ module.exports = {
                 row.address4=booking.user.address4 || "";
                 row.postcode=booking.user.postcode || "";
             }
-			row.rank=booking.user.rank || "";
-			row.lodge=booking.user.lodge || "";
-			row.lodgeNo=booking.user.lodgeNo || "";
-			row.centre=booking.user.centre || "";
-			row.area=booking.user.area || "";
-            row.email=booking.user.email || "";
+			row.email=booking.user.email || "";
             row.phone=(booking.user.phone)?"Tel: "+booking.user.phone:""; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
 			row.dietary=booking.dietary || "";
 			row.info=booking.info || "";
@@ -1789,6 +1814,73 @@ module.exports = {
 				row.voArea=booking.user.voArea;
 			}
             //row.createdAt=booking.createdAt;        
+			
+
+			// Craft or other order?
+			if (!booking.event.order || booking.event.order=="C") {
+				// Craft
+				row.salutation=booking.user.salutation || "";
+				row.rank=booking.user.rank || "";
+				row[label]=booking.user.lodge || "";
+				row[labelNo]=booking.user.lodgeNo || "";	
+				row.centre=booking.user.centre || "";
+				row.area=booking.user.area || "";
+				pushRow(booking,amountPaid,row);			
+				// Next booking
+				next();
+			}
+			else {
+
+				// Create a callback for the retrieval of the users orders
+				var cb=_.bind(function(err,orders){
+					_.forEach(orders,function(order){
+						if (booking.event.order==order.code) {
+							row.salutation=order.salutation || "";
+							row.rank=order.rank || "";							 
+							row[label]=order.name || "";
+							row[labelNo]=order.number || "";							 						
+							row.centre=order.centre || "";
+							row.area=order.area || "";		
+						}
+						return false;
+					})
+					pushRow(this.booking,this.amountPaid,this.row);
+					// Next booking
+					next(err);
+				},{
+					booking:booking,
+					amountPaid: amountPaid,
+					row:row
+				})
+				
+				// Other order, so we need to get this user orders and pick the right one
+				Order.find({user:booking.user.id}).exec(cb)
+
+			}
+
+		},function(err){
+			// Finally
+			// Sort by creation date if we are downloading bookings for an event
+			//if (!user) {
+			//   data.sort(Utility.jsonSort("bookingDate", false))
+			//}
+			// Re-process the rows and add a sequence number
+			//var seq=0;
+			//data.forEach(function(row,i){
+			//    seq+=1;
+			//    row.addedSeq=seq;
+			//}); 
+			// Go back to original booking ref sequence 
+			//if (!user) {
+			//    data.sort(Utility.jsonSort("seq", false))
+			//}        
+			// Send CSV						
+			sails.controllers.booking.sendCsv(req, res, data, options)			
+		})
+
+		function pushRow(booking,amountPaid,row){
+			count++;
+			row.count=count;    
 			data.push(row);
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
@@ -1805,8 +1897,8 @@ module.exports = {
 				row.firstName=addition.firstName || "";
 				row.displayName=row.salutation+" "+row.firstName+" "+row.surname;
 				row.rank=addition.rank || "";
-				row.lodge=addition.lodge || "";
-				row.lodgeNo=addition.lodgeNo || "";
+				row[label]=addition.lodge || "";
+				row[labelNo]=addition.lodgeNo || "";
 				row.centre=addition.centre || booking.user.centre || "";
 				row.area=addition.area || booking.user.area || "";
 				row.dietary=addition.dietary || "";
@@ -1822,25 +1914,10 @@ module.exports = {
                     row.creationDate=booking.bookingDate;   // Use the main booking date    
                 //}                          
 				//row.createdAt=addition.createdAt;
-                data.push(row);
+                data.push(row);				
 			})
-		})
-        // Sort by creation date if we are downloading bookings for an event
-        //if (!user) {
-        //   data.sort(Utility.jsonSort("bookingDate", false))
-        //}
-        // Re-process the rows and add a sequence number
-        //var seq=0;
-        //data.forEach(function(row,i){
-        //    seq+=1;
-        //    row.addedSeq=seq;
-        //}); 
-        // Go back to original booking ref sequence 
-        //if (!user) {
-        //    data.sort(Utility.jsonSort("seq", false))
-        //}        
-		// Send CSV						
-		sails.controllers.booking.sendCsv(req, res, data, options)				
+		}
+       	
 	 },
      
      /**
