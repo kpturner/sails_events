@@ -8,6 +8,10 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 
 	$scope.orders=SAILS_LOCALS.orders;
 	$scope.eventForm=SAILS_LOCALS.event;
+
+	if (SAILS_LOCALS.mode=="create") {
+		$scope.eventForm.logo=SAILS_LOCALS.logo;
+	}
 		
 	// Get a list of organisers in name order
 	$http.get("/organisers")
