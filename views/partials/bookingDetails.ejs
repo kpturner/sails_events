@@ -205,7 +205,8 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
   ng-class="{'has-error':<%-model%>.area.$invalid &&
                         <%-model%>.area.$dirty}">
   <label><span ng-show="event.areaReqd && areas.length>0">* </span>Area</label>  
-  <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-model%>Form.area" ng-disabled="mode!='create'">  
+  <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-model%>Form.area" 
+    ng-disabled="mode=='delete' || (mode!='create' && (!event.areaReqd || areas.length==0))">  
     <option value="">-- choose area --</option>
   </select>
 </div>
