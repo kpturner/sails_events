@@ -132,7 +132,7 @@
         <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->          
 
           <!-- O R D E R -->
-          <div class="control-group form-group col-md-7" ng-show="orders.length>1">
+          <div class="control-group form-group col-xs-12" ng-show="orders.length>1">
             <label>* Order</label>  
             <select class="form-control" placeholder="e.g. Craft, Royal Arch etc" name="order" ng-options="order.code as order.desc for order in orders" 
                  ng-model="eventForm.order"> 
@@ -163,7 +163,7 @@
           
           <!-- O R G A N I S E R -->
           
-          <div class="control-group form-group col-md-7"
+          <div class="control-group form-group col-xs-12"
             ng-class="{'has-error':eventdetails.organiser.$invalid &&
                                   eventdetails.organiser.$dirty}">
             <label>* Organiser(s)</label>
@@ -178,7 +178,7 @@
            
           <!-- O R G A N I S E R  2 -->
           
-          <div class="control-group form-group col-md-7"
+          <div class="control-group form-group col-xs-12"
             ng-class="{'has-error':eventdetails.organiser2.$invalid &&
                                   eventdetails.organiser2.$dirty}">
             <select type="text" class="form-control" placeholder="event organiser" name="organiser2" ng-options="a.id as a.name for a in organisers" ng-model="eventForm.organiser2">
@@ -190,7 +190,7 @@
            
           <!-- D C -->
           
-          <div class="control-group form-group col-md-7"
+          <div class="control-group form-group col-xs-12"
             ng-class="{'has-error':eventdetails.dc.$invalid &&
                                   eventdetails.dc.$dirty}">
             <label>Event DC</label>                      
@@ -227,7 +227,7 @@
   
           <!-- C O D E -->
   
-          <div class="control-group form-group col-md-7"
+          <div class="control-group form-group col-xs-12"
             ng-class="{'has-error':eventdetails.code.$invalid &&
                                   eventdetails.code.$dirty}">
             <label>* Code (for payment)</label>
@@ -253,7 +253,7 @@
           
           <!-- D A T E -->
   
-          <div class="control-group form-group col-md-8"
+          <div class="control-group form-group col-xs-6"
             ng-class="{'has-error':eventdetails.date.$invalid &&
                                   eventdetails.date.$dirty}">
              <label>* Date</label>
@@ -370,7 +370,7 @@
       
           <!-- B Y P A S S  C O D E -->
   
-          <div class="control-group form-group col-xs-12"
+          <div class="control-group form-group col-xs-6"
             ng-class="{'has-error':eventdetails.bypasscode.$invalid &&
                                   eventdetails.bypasscode.$dirty}">
             <label>Bypass code</label>
@@ -379,7 +379,7 @@
       
           <!-- O P E N I N G   D A T E -->
   
-          <div class="control-group form-group col-xs-12"
+          <div class="control-group form-group col-xs-6"
             ng-class="{'has-error':eventdetails.openingdate.$invalid &&
                                   eventdetails.openingdate.$dirty}">
              <label>* Opening date bookings</label>
@@ -397,7 +397,7 @@
   
           <!-- C L O S I N G  D A T E -->
   
-          <div class="control-group form-group col-xs-12"
+          <div class="control-group form-group col-xs-6"
             ng-class="{'has-error':eventdetails.closingdate.$invalid &&
                                   eventdetails.closingdate.$dirty}">
              <label>* Closing date for bookings</label>
@@ -426,7 +426,7 @@
            
             <!-- I N S T A N T  P A Y M E N T  ? -->
   
-            <div style="display:none" class="control-group form-group col-md-7"
+            <div style="display:none" class="control-group form-group col-xs-12"
               ng-class="{'has-error':eventdetails.instantpayment.$invalid &&
                                     eventdetails.instantpayment.$dirty}">
                <label>
@@ -437,14 +437,14 @@
              
              <!-- G R A C E   P E R I O D -->
   
-            <div class="control-group form-group col-md-7" ng-hide="eventForm.free || eventForm.regInterest">
+            <div class="control-group form-group col-xs-12" ng-hide="eventForm.free || eventForm.regInterest">
                 <label>Grace period for payment (days)</label>       
                 <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace"></input>
              </div>
              
             <!-- L A T E  P A Y M E N T  C H E C K I N G ?-->
   
-            <div class="control-group form-group col-md-7"
+            <div class="control-group form-group col-xs-12"
               ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
                                     eventdetails.latePaymentChecking.$dirty}" ng-hide="eventForm.free || eventForm.regInterest">
                <label>
@@ -455,7 +455,7 @@
              
             <!-- S H O W  A P O L O G Y  B U T T O N ? -->
   
-            <div class="control-group form-group col-md-7"
+            <div class="control-group form-group col-xs-12"
               ng-class="{'has-error':eventdetails.showapologybutton.$invalid &&
                                     eventdetails.showapologybutton.$dirty}">
                <label>
