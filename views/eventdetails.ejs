@@ -128,8 +128,12 @@
              </label>
           </div> 
           
-          <!-- O R D E R -->
           <div class="control-group form-group col-md-12" ng-show="orders.length>1">
+            <hr>
+          </div>  
+
+          <!-- O R D E R -->
+          <div class="control-group form-group col-md-7" ng-show="orders.length>1">
             <label>* Order</label>  
             <select class="form-control" placeholder="e.g. Craft, Royal Arch etc" name="order" ng-options="order.code as order.desc for order in orders" 
                  ng-model="eventForm.order"> 
