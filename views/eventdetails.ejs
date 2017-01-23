@@ -52,8 +52,8 @@
         <h3 class="form-signin-heading">Event - <%=mode%></h3>
         <h5>Items marked with * are mandatory</h5>
         
-        <div disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule --> 
-          <div class="row"> 
+        <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule --> 
+          
     
             <!-- O P E N ? -->
     
@@ -128,9 +128,7 @@
                 &nbsp;&nbsp;&nbsp;Register interest?
               </label>
             </div> 
-          </div>
-
-          <div class="row">          
+             
 
             <!-- O R D E R -->
             <div class="control-group form-group col-xs-12" ng-show="orders.length>1">
@@ -465,10 +463,10 @@
                 </label>
               </div>
           
-          </div>
+          
         </div>
   
-        <br/>
+        <br>
   
         <!-- Disable button until something has been edited and the form has no errors --> 
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (eventdetails.$invalid || !detailsComplete())) || eventForm.loading">
