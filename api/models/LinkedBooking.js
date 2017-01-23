@@ -12,6 +12,10 @@ var LinkedBooking = {
     booking:{
         model:'booking'
     },
+
+    seq:{
+      type: 'integer'
+    },
     
     // Salutation
     salutation: {

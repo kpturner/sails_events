@@ -147,7 +147,7 @@ module.exports = {
 			
 			var preparedBooking=function(userForBooking,criteria){
 				var potentialDuplicates=[];
-				Booking.find(criteria).populate("user").populate("additions").exec(function(err,bookings){
+				Booking.find(criteria).populate("user").populate("additions",{sort:{seq:'asc'}}).exec(function(err,bookings){
 					if (!err) {
 						bookings.forEach(function(booking,index){
 							places+=booking.places
@@ -382,10 +382,12 @@ module.exports = {
 				user.phone=req.param("phone");
 			var linkedBookings=req.param("linkedBookings");
 
-			// Sort out placeholders
+			// Sort out linked bookings/placeholders
+			var ph=0;
 			_.forEach(linkedBookings,function(lb,l){
 				if (lb.surname.toLowerCase()=="*placeholder*") {
-					lb.firstName=(l+1).toString();
+					ph++;
+					lb.firstName=(ph).toString();
 				}
 			})
 			
@@ -496,6 +498,7 @@ module.exports = {
 											if (linkedBookings) {
 												linkedBookings.forEach(function(linkedBooking,index){
 													linkedBooking.booking=booking.id;
+													linkedBooking.seq=index+1;
 													if (!linkedBooking.rank)
 														linkedBooking.rank=""
 													if (!linkedBooking.dietary)
@@ -1074,7 +1077,7 @@ module.exports = {
 					}
 			)		
 			.populate('user')	
-			.populate('event').populate('additions',{sort:{surname:'asc'}}) 
+			.populate('event').populate('additions',{sort:{seq:'asc'}}) 
 			.paginate(pag)
 			.exec(function(err, bookings){
 				if (err) {
@@ -1191,7 +1194,7 @@ module.exports = {
 				)
 				.populate('event')
 				.populate('user')
-				.populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
+				.populate('additions',{sort:{seq:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
 				.paginate(pag)
 				.exec(function(err, bookings){
 					if (err) {
@@ -1301,7 +1304,7 @@ module.exports = {
 							}
 						}
 				)
-				.populate('event').populate('additions',{sort:{surname:'asc'}})
+				.populate('event').populate('additions',{sort:{seq:'asc'}})
 				.paginate(pag)				 
 				.exec(function(err, theBookings){
 					if (err) {
