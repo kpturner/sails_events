@@ -384,17 +384,19 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				$.each($scope.linkedbookings,function(index,value){
 					if (index<($scope.bookingForm.places-1)) {
 						lbcount--;
-						if (!this.salutation || this.salutation.length==0) {
-							complete=false;
-							errors.push("Salutation for additional attendee "+(index+1).toString())
-						}
-						if (!this.surname || this.surname.length==0) {
-							complete=false;
-							errors.push("Surname for additional attendee "+(index+1).toString())
-						}
-						if (!this.firstName || this.firstName.length==0) {
-							complete=false;
-							errors.push("First name for additional attendee "+(index+1).toString())
+						if (this.surname!="*placeholder*") {
+							if (!this.salutation || this.salutation.length==0) {
+								complete=false;
+								errors.push("Salutation for additional attendee "+(index+1).toString())
+							}
+							if (!this.surname || this.surname.length==0) {
+								complete=false;
+								errors.push("Surname for additional attendee "+(index+1).toString())
+							}
+							if (!this.firstName || this.firstName.length==0) {
+								complete=false;
+								errors.push("First name for additional attendee "+(index+1).toString())
+							}
 						}
 					}
 				})
