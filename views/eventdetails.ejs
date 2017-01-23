@@ -253,14 +253,14 @@
           
           <!-- D A T E -->
   
-          <div class="control-group form-group col-xs-6"
+          <div class="control-group form-group col-xs-8"
             ng-class="{'has-error':eventdetails.date.$invalid &&
                                   eventdetails.date.$dirty}">
              <label>* Date</label>
             <p class="input-group">             
               <input type="date" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" is-open="dateOpened"  placeholder="date of event" name="date" 
                 ng-model="eventForm.date" required></input>
-              <span class="input-group-btn hidden-xs hidden-sm">  
+              <span class="input-group-btn hidden-xs hidden-sm hidden-md">  
                 <button type="button" class="btn btn-default" ng-click="openDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>              
             </p>           
@@ -379,14 +379,14 @@
       
           <!-- O P E N I N G   D A T E -->
   
-          <div class="control-group form-group col-xs-6"
+          <div class="control-group form-group col-xs-8"
             ng-class="{'has-error':eventdetails.openingdate.$invalid &&
                                   eventdetails.openingdate.$dirty}">
              <label>* Opening date bookings</label>
             <p class="input-group">             
               <input type="date" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" is-open="openingDateOpened"  placeholder="opening date for bookings" name="openingdate" 
                 ng-model="eventForm.openingDate" required></input>
-              <span class="input-group-btn hidden-xs hidden-sm">
+              <span class="input-group-btn hidden-xs hidden-sm hidden-md">
                 <button type="button" class="btn btn-default" ng-click="openOpeningDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>              
             </p>
@@ -397,14 +397,14 @@
   
           <!-- C L O S I N G  D A T E -->
   
-          <div class="control-group form-group col-xs-6"
+          <div class="control-group form-group col-xs-8"
             ng-class="{'has-error':eventdetails.closingdate.$invalid &&
                                   eventdetails.closingdate.$dirty}">
              <label>* Closing date for bookings</label>
             <p class="input-group">             
               <input type="date" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" is-open="closingDateOpened"  placeholder="closing date for bookings" name="closingdate" 
                 ng-model="eventForm.closingDate" required></input>
-              <span class="input-group-btn hidden-xs hidden-sm">
+              <span class="input-group-btn hidden-xs hidden-sm hidden-md">
                 <button type="button" class="btn btn-default" ng-click="openClosingDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>              
             </p>
