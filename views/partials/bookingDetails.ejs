@@ -126,13 +126,13 @@ and/or maxlength) -->
   ng-class="{'has-error':<%-model%>.address1.$invalid &&
                       <%-model%>.address1.$dirty}" ng-show="event.addressReqd">
   <label>* Address (for postal correspondence)</label>  
-  <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-model%>Form.address1" ng-disabled="mode!='create'">      
+  <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-model%>Form.address1">      
   <br>
-  <input type="text" class="form-control" placeholder="address line 2" name="address2" ng-model="<%-model%>Form.address2" ng-disabled="mode!='create'">    
+  <input type="text" class="form-control" placeholder="address line 2" name="address2" ng-model="<%-model%>Form.address2">    
   <br>
-  <input type="text" class="form-control" placeholder="address line 3" name="address3" ng-model="<%-model%>Form.address3" ng-disabled="mode!='create'">     
+  <input type="text" class="form-control" placeholder="address line 3" name="address3" ng-model="<%-model%>Form.address3">     
   <br>
-  <input type="text" class="form-control" placeholder="address line 4" name="address4" ng-model="<%-model%>Form.address4" ng-disabled="mode!='create'">    
+  <input type="text" class="form-control" placeholder="address line 4" name="address4" ng-model="<%-model%>Form.address4">    
 </div>
 
 <!-- P O S T   C O D E -->
@@ -141,14 +141,14 @@ and/or maxlength) -->
     ng-class="{'has-error':<%-model%>.postcode.$invalid &&
                       <%-model%>.postcode.$dirty}" ng-show="event.addressReqd">
   <label>* Postcode</label>  
-  <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-model%>Form.postcode" ng-disabled="mode!='create'">      
+  <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-model%>Form.postcode">      
 </div>
 
 <!-- C O N T A C T   N U M B E R -->
 
 <div class="control-group form-group col-xs-10"> 
   <label>Contact number</label>
-  <input type="text" class="form-control" placeholder="e.g. mobile number" name="phone" ng-model="<%-model%>Form.phone" ng-disabled="mode!='create'">     
+  <input type="text" class="form-control" placeholder="e.g. mobile number" name="phone" ng-model="<%-model%>Form.phone">     
 </div>
 
 <!-- R A N K -->
@@ -157,8 +157,7 @@ and/or maxlength) -->
   ng-class="{'has-error':<%-model%>.rank.$invalid &&
                         <%-model%>.rank.$dirty}">
   <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
-  <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="<%-model%>Form.rank" ng-maxlength="100" 
-    ng-disabled="mode!='create'">  
+  <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank" ng-model="<%-model%>Form.rank" ng-maxlength="100">  
   <span class="help-block has-error" ng-if="<%-model%>.rank.$dirty">
     <span ng-show="<%-model%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
   </span>
@@ -170,7 +169,7 @@ and/or maxlength) -->
   ng-class="{'has-error':<%-model%>.lodge.$invalid &&
                         <%-model%>.lodge.$dirty}">
   <label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span><span>{{orderlabel}}</span> name</label>
-  <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-model%>Form.lodge" ng-maxlength="50" ng-disabled="mode!='create'">  
+  <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-model%>Form.lodge" ng-maxlength="50">  
   <span class="help-block has-error" ng-if="<%-model%>.lodge.$dirty">
     <span ng-show="<%-model%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
   </span>
@@ -182,8 +181,7 @@ and/or maxlength) -->
 ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
                       <%-model%>.lodgeno.$dirty}">
 <label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span><span>{{orderlabel}}</span> number</label>
-<input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-model%>Form.lodgeNo" ng-maxlength="5" min="(!eventBookings && !userBookings)?1:0" 
-  ng-disabled="mode!='create'">  
+<input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-model%>Form.lodgeNo" ng-maxlength="5" min="(!eventBookings && !userBookings)?1:0" >  
 <span class="help-block has-error" ng-if="<%-model%>.lodgeno.$dirty">
   <span ng-show="<%-model%>.lodgeno.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
 </span>
@@ -194,7 +192,7 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
   ng-class="{'has-error':<%-model%>.centre.$invalid &&
                         <%-model%>.centre.$dirty}">
   <label>Centre</label>  
-  <input type="text" class="form-control" placeholder="e.g. Woolston" name="centre" ng-model="<%-model%>Form.centre" ng-maxlength="50" ng-disabled="mode!='create'">  
+  <input type="text" class="form-control" placeholder="e.g. Woolston" name="centre" ng-model="<%-model%>Form.centre" ng-maxlength="50">  
   <span class="help-block has-error" ng-if="<%-model%>.centre.$dirty">
     <span ng-show="<%-model%>.centre.$error.maxlength">The centre name cannot be more than 50 characters.</span>
   </span>
@@ -205,8 +203,7 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
   ng-class="{'has-error':<%-model%>.area.$invalid &&
                         <%-model%>.area.$dirty}">
   <label><span ng-show="event.areaReqd && areas.length>0">* </span>Area</label>  
-  <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-model%>Form.area" 
-    ng-disabled="mode=='delete' || (mode!='create' && (!event.areaReqd || areas.length==0))">  
+  <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-model%>Form.area">  
     <option value="">-- choose area --</option>
   </select>
 </div>
