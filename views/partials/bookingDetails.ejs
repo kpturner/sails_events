@@ -348,8 +348,7 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
       <select ng-show="!event.order || event.order=='C'" class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="{{place}}_salutation" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation">
         <option value="">-- choose salutation --</option>
       </select>
-      <input  ng-hide="!event.order || event.order=='C'" type="text" class="form-control" placeholder="salutation" name="{{place}}_salutation" ng-model="linked<%-model%>s[place].salutation" ng-maxlength="50" 
-        ng-disabled="mode!='create'">  
+      <input  ng-hide="!event.order || event.order=='C'" type="text" class="form-control" placeholder="salutation" name="{{place}}_salutation" ng-model="linked<%-model%>s[place].salutation" ng-maxlength="50"> 
     </div>     
             
 	  <!-- S U R N A M E -->
