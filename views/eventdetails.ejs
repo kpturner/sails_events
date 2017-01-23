@@ -134,7 +134,7 @@
           <div class="row"> 
 
             <!-- O R D E R -->
-            <div class="control-group form-group" ng-show="orders.length>1">
+            <div class="control-group form-group col-md-10" ng-show="orders.length>1">
               <label>Order</label>  
               <select class="form-control" placeholder="e.g. Craft, Royal Arch etc" name="order" ng-options="order.code as order.desc for order in orders" 
                   ng-model="eventForm.order"> 
@@ -147,7 +147,7 @@
             <!-- checking whether the form "profile" with the "name" property is both $invalid AND $dirty.  If it is
             insert the "has-error" class on the input field (i.e. insert a red border around the input field)
             -->
-            <div class="control-group form-group"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.name.$invalid &&
                                   eventdetails.name.$dirty}">
               <label>* Full name</label>  
@@ -165,7 +165,7 @@
             
             <!-- O R G A N I S E R -->
             
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.organiser.$invalid &&
                                     eventdetails.organiser.$dirty}">
               <label>* Organiser(s)</label>
@@ -180,7 +180,7 @@
             
             <!-- O R G A N I S E R  2 -->
             
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.organiser2.$invalid &&
                                     eventdetails.organiser2.$dirty}">
               <select type="text" class="form-control" placeholder="event organiser" name="organiser2" ng-options="a.id as a.name for a in organisers" ng-model="eventForm.organiser2">
@@ -192,7 +192,7 @@
             
             <!-- D C -->
             
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.dc.$invalid &&
                                     eventdetails.dc.$dirty}">
               <label>Event DC</label>                      
@@ -205,7 +205,7 @@
           
             <!-- L O G O -->
             
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.logo.$invalid &&
                                     eventdetails.logo.$dirty}">
               <label>Path to logo</label>
@@ -217,7 +217,7 @@
             
             <!-- R I G H T - S I D E  L O G O -->
             
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.logoright.$invalid &&
                                     eventdetails.logoright.$dirty}">
               <label>Path to right-hand logo (if reqd)</label>
@@ -229,7 +229,7 @@
     
             <!-- C O D E -->
     
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.code.$invalid &&
                                     eventdetails.code.$dirty}">
               <label>* Code (for payment)</label>
@@ -243,7 +243,7 @@
                 
             <!-- V E N U E -->
     
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.rank.$invalid &&
                                     eventdetails.rank.$dirty}">
               <label>* Venue</label>
@@ -255,7 +255,7 @@
             
             <!-- D A T E -->
     
-            <div class="control-group form-group col-xs-12 col-md-6"
+            <div class="control-group form-group col-md-10 col-md-6"
               ng-class="{'has-error':eventdetails.date.$invalid &&
                                     eventdetails.date.$dirty}">
               <label>* Date</label>
@@ -273,7 +273,7 @@
             
             <!-- T I M E -->
     
-            <div class="control-group form-group col-xs-12 col-md-6"
+            <div class="control-group form-group col-md-10 col-md-6"
               ng-class="{'has-error':eventdetails.time.$invalid &&
                                     eventdetails.time.$dirty}">
                 <label>* Time</label>       
@@ -335,14 +335,14 @@
             </div>
               
             <!-- A D D I T I O N A L  I N F O  L I N K -->
-            <div class="control-group form-group col-xs-12">
+            <div class="control-group form-group col-md-10">
               <label>Additional info link</label>
               <input type="text" class="form-control" placeholder="Link to external resource (like http://blah)" name="additionalinfo" ng-model="eventForm.additionalInfo"></input>
             </div> 
                         
             <!-- B L U R B -->
     
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.blurb.$invalid &&
                                     eventdetails.blurb.$dirty}">
               <label>Blurb</label>
@@ -352,7 +352,7 @@
     
             <!-- M E N U -->
     
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.menu.$invalid &&
                                     eventdetails.menu.$dirty}">
               <label>Menu</label>
@@ -362,7 +362,7 @@
             
             <!-- D R E S S  C O D E -->
     
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group col-md-10"
               ng-class="{'has-error':eventdetails.dresscode.$invalid &&
                                     eventdetails.dresscode.$dirty}">
               <label>Dress code</label>
@@ -418,7 +418,7 @@
                       
             <!-- P A Y M E N T   D E T A I L S -->
     
-              <div class="control-group form-group col-xs-12"
+              <div class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.paymentdetails.$invalid &&
                                       eventdetails.paymentdetails.$dirty}" ng-hide="eventForm.free">
                 <label>Payment details</label>
@@ -428,7 +428,7 @@
             
               <!-- I N S T A N T  P A Y M E N T  ? -->
     
-              <div style="display:none" class="control-group form-group col-xs-12"
+              <div style="display:none" class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.instantpayment.$invalid &&
                                       eventdetails.instantpayment.$dirty}">
                 <label>
@@ -439,14 +439,14 @@
               
               <!-- G R A C E   P E R I O D -->
     
-              <div class="control-group form-group col-xs-12" ng-hide="eventForm.free || eventForm.regInterest">
+              <div class="control-group form-group col-md-10" ng-hide="eventForm.free || eventForm.regInterest">
                   <label>Grace period for payment (days)</label>       
                   <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace"></input>
               </div>
               
               <!-- L A T E  P A Y M E N T  C H E C K I N G ?-->
     
-              <div class="control-group form-group col-xs-12"
+              <div class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
                                       eventdetails.latePaymentChecking.$dirty}" ng-hide="eventForm.free || eventForm.regInterest">
                 <label>
@@ -457,7 +457,7 @@
               
               <!-- S H O W  A P O L O G Y  B U T T O N ? -->
     
-              <div class="control-group form-group col-xs-12"
+              <div class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.showapologybutton.$invalid &&
                                       eventdetails.showapologybutton.$dirty}">
                 <label>
