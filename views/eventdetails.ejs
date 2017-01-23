@@ -52,8 +52,8 @@
         <h3 class="form-signin-heading">Event - <%=mode%></h3>
         <h5>Items marked with * are mandatory</h5>
         
-        <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule --> 
-          
+        <div disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule --> 
+          <div class="row"> 
     
             <!-- O P E N ? -->
     
@@ -128,7 +128,10 @@
                 &nbsp;&nbsp;&nbsp;Register interest?
               </label>
             </div> 
-             
+          
+          </div>
+
+          <div class="row"> 
 
             <!-- O R D E R -->
             <div class="control-group form-group" ng-show="orders.length>1">
@@ -144,7 +147,7 @@
             <!-- checking whether the form "profile" with the "name" property is both $invalid AND $dirty.  If it is
             insert the "has-error" class on the input field (i.e. insert a red border around the input field)
             -->
-            <div class="control-group form-group col-xs-12"
+            <div class="control-group form-group"
               ng-class="{'has-error':eventdetails.name.$invalid &&
                                   eventdetails.name.$dirty}">
               <label>* Full name</label>  
@@ -462,7 +465,7 @@
                   &nbsp;&nbsp;&nbsp;Show 'Send Apology' button?
                 </label>
               </div>
-          
+          </div>
           
         </div>
   
