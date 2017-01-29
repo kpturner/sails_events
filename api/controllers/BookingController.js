@@ -583,6 +583,11 @@ module.exports = {
 														}													
 													}	
 
+													if (existingBooking && !existingBooking.paid && booking.paid) {
+														// Paid flag changed
+														updated+=" and flagged as PAID";
+													}	
+
 													sails.controllers.booking.setEmailInfo(event,user,orders);
 
 													Email.send(
