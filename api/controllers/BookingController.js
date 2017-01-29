@@ -537,8 +537,28 @@ module.exports = {
 													}
 												})								
 												
-												// If this is the user making a booking, send them a confirmation email	
-												if(!req.session.eventBookings && !req.session.userBookings && user.email) {
+												// If this is the user making a booking, send them a confirmation email.
+												// Also send an email when the event changes to "paid" and when an 
+												// organiser makes a new booking for somebody
+												var sendEmail=false;
+												if (user.email) {
+													if (!req.session.eventBookings && !req.session.userBookings) {
+														sendEmail=true;
+													}
+													else {
+														if (!existingBooking) {
+															// It is new
+															sendEmail=true;
+														}
+														else {
+															if (!existingBooking.paid && booking.paid) {
+																// Paid flag changed
+																sendEmail=true;
+															}
+														}
+													}
+												}	
+												if(sendEmail) {
 													var formattedDate=event.date.toString();
 													formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
 													
@@ -1403,9 +1423,15 @@ module.exports = {
 					if (sails.config.events.developer) {
 						bcc.push(sails.config.events.developer)
 					}
+					var mainOrganiser={
+						name: "Unknown"
+					};
 					organisers.forEach(function(organiser,o){
 						if (organiser.email) {
 							bcc.push(organiser.email)
+						}
+						if (organiser.id=booking.event.organiser) {
+							mainOrganiser=organiser;
 						}
 					})
 				
@@ -1476,9 +1502,9 @@ module.exports = {
 											eventTime: booking.event.time,
 											eventVenue: booking.event.venue.replace(/[\n\r]/g, '<br>'),
 											eventAdditionalInfo: booking.event.additionalInfo,
-											eventOrganiser: booking.event.organiser.name || "",
-											organiserEmail: booking.event.organiser.email || "",
-											organiserContactNo: booking.event.organiser.phone || "",
+											eventOrganiser: mainOrganiser.name || "",
+											organiserEmail: mainOrganiser.email || "",
+											organiserContactNo: mainOrganiser.phone || "",
 											eventBlurb: (booking.event.blurb || "").replace(/[\n\r]/g, '<br>'),
 											eventMenu: (booking.event.menu || "").replace(/[\n\r]/g, '<br>'),
 											eventDressCode: (booking.event.dressCode || "").replace(/[\n\r]/g, '<br>'),
