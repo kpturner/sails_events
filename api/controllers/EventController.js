@@ -276,8 +276,10 @@ module.exports = {
 					{name: {contains: filter}},
 					{venue: {contains: filter}},	
 					{blurb: {contains: filter}},
-					{order: orderFilter},
 				]
+			}
+			if (orderFilter) {
+				where.or.push({order: orderFilter})
 			}
 		}
 										
