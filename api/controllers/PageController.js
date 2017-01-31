@@ -36,8 +36,8 @@ module.exports = {
       // Edit the profile if essentials are missing
       if ( (!user.name || user.name.length==0)
   			|| (!user.salutation || user.salutation.length==0)
-        || (!user.lodge || user.lodge.length==0)
-  			|| (!user.lodgeNo || user.lodgeNo.length==0)
+        || (sails.config.events.lodgeMandatory && (!user.lodge || user.lodge.length==0))
+        || (sails.config.events.lodgeMandatory && (!user.lodgeNo || user.lodgeNo.length==0))
   			|| (!user.email || user.email.length==0)
         || (!user.firstName || user.firstName.length==0)
         || (!user.surname || user.surname.length==0)
