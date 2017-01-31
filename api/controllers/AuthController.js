@@ -389,6 +389,10 @@ var AuthController = {
               updatedUser[0].dietary=""
           if (updatedUser[0].rank==null)
               updatedUser[0].rank=""
+          if (updatedUser[0].centre==null)
+              updatedUser[0].centre=""
+          if (updatedUser[0].lodge==null)
+              updatedUser[0].lodge=""
           if (updatedUser[0].phone==null)
               updatedUser[0].phone=""
           if (!updatedUser[0].isVO)
