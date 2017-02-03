@@ -33,6 +33,7 @@
       mode: "<%= mode.toLowerCase() %>",  
       bookingId:   <%= res.locals.bookingId %>,
       apology:   <%- JSON.stringify( res.locals.apology ) %>,
+      selectedUserId: <%- JSON.stringify(res.locals.selectedUserId) %>,
     };
     
     </script>

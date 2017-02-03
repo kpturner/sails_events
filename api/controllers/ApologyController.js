@@ -30,34 +30,37 @@ module.exports = {
 		// Simply create the apology
 		var apology={};
 		apology.event=req.param("eventid");
-		apology.user=res.locals.user.id;
+		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making an apology on behalf of someone else
+		apology.user=(selectedUserId)?selectedUserId:res.locals.user.id;
 		apology.message=req.param("message");
 		Apology.create(apology).exec(function(err, newApology){
-			
-			// Email the organiser
-			Event.findOne(apology.event).populate("organiser").populate("organiser2").exec(function(err,event){
-				if (!err && event) {
-					var formattedDate=event.date.toString();
-					formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
-					if (newApology.message==null)
-						newApology.message=""					
-					Email.send(
-							"apology",
-							{
-								event:event,
-								eventDate: formattedDate,
-								user:res.locals.user, 
-								apology:newApology
-							},
-							{
-								to: event.organiser.email || "",
-								bcc: sails.config.events.developer || "", 
-								subject: event.name+": An apology"
-							},
-							function(err) {if (err) console.log(err);}
-							)     		
-				}				
+			User.findOne(apology.user).exec(function(err,apologiser){
+				// Email the organiser
+				Event.findOne(apology.event).populate("organiser").populate("organiser2").exec(function(err,event){
+					if (!err && event) {
+						var formattedDate=event.date.toString();
+						formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+						if (newApology.message==null)
+							newApology.message=""					
+						Email.send(
+								"apology",
+								{
+									event:event,
+									eventDate: formattedDate,
+									user:apologiser, 
+									apology:newApology
+								},
+								{
+									to: event.organiser.email || "",
+									bcc: sails.config.events.developer || "", 
+									subject: event.name+": An apology"
+								},
+								function(err) {if (err) console.log(err);}
+								)     		
+					}				
+				})
 			})
+			
 			
 			// Return 
 			return res.ok();		
@@ -71,6 +74,8 @@ module.exports = {
 	prepareApology:function(req, res) {
 		var eventId=req.param("eventid");
 		var action=req.param("action");
+		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making an apology on behalf of someone else
+		var userBookings=(req.param("userbookings"))?true:false;
 		var mode="create";
 		if (action)
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
@@ -96,12 +101,13 @@ module.exports = {
 					res.locals.event=event;		
 					res.locals.bookingId=null;
 					res.locals.apologyId=null;
+					res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
 					// Does a booking exist? 
 					return 	[
 								event,
 								Booking.findOne({
 									event: event.id,
-									user: res.locals.user.id,
+									user: (selectedUserId)?selectedUserId:res.locals.user.id,
 								})
 							]	
 				}	
@@ -127,7 +133,7 @@ module.exports = {
 									event,
 									Apology.findOne({
 										event: event.id,
-										user: res.locals.user.id,
+										user: (selectedUserId)?selectedUserId:res.locals.user.id,
 									})
 								]
 					}	

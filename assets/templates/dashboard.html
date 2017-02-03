@@ -28,7 +28,7 @@
             </button>     
         </div>
     <div class="photo-description" ng-show="card.showApologyButton">
-        <a href="/apology?eventid={{card.id}}" class="a-unstyled">     
+        <a href="/apology?eventid={{card.id}}&selecteduserid={{card.selectedUserId}}&userbookings={{card.userBookings}}" class="a-unstyled">     
             <button type="button" class="btn btn-danger card-btn">
                 <span>Send apology</span>
             </button>

@@ -22,13 +22,13 @@ angular.module('EventsModule').controller('ApologyController', ['$scope', '$http
 		
 		$scope.apologyForm.loading=true;
 		
-		$http.post('/sendapology/', {
+		$http.post('/sendapology?selecteduserid='+SAILS_LOCALS.selectedUserId, {
             _csrf: SAILS_LOCALS._csrf,
 			eventid: SAILS_LOCALS.event.id,
 			message: $scope.apologyForm.message			 
 		})
 		.then(function onSuccess(sailsResponse){
-			toastr.success("You have successfully sent your apologies")	
+			toastr.success("You have successfully sent apologies")	
 			setTimeout(function(){
 				window.location = '/'	
 			},1000)				
