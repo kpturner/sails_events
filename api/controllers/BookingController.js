@@ -1272,21 +1272,27 @@ module.exports = {
 							var b=booking;
 							// Order label
 							b.orderLabel=sails.controllers.booking.orderLabel(event.order);
-							Order.find({user:booking.user.id}).exec(function(err, orders){
-								_.forEach(orders,function(order){
-									if (event.order==order.code) {
-										b.user.salutation=order.salutation || "";
-										b.user.rank=order.rank || "";							 
-										b.user.lodge=order.name || "";
-										b.user.lodgeNo=order.number || "";							 						
-										b.user.centre=order.centre || "";
-										b.user.area=order.area || "";		
-									}
-									return false;
-								})
+							if (event.order && event.order!="C") {
+								Order.find({user:booking.user.id}).exec(function(err, orders){
+									_.forEach(orders,function(order){
+										if (event.order==order.code) {
+											b.user.salutation=order.salutation || "";
+											b.user.rank=order.rank || "";							 
+											b.user.lodge=order.name || "";
+											b.user.lodgeNo=order.number || "";							 						
+											b.user.centre=order.centre || "";
+											b.user.area=order.area || "";		
+										}
+										return false;
+									})
+									newBookings.push(b);
+									next();
+								});						
+							}	
+							else {
 								newBookings.push(b);
 								next();
-							});							
+							}		
 						}
 						,function(err){
 							if (err) {
