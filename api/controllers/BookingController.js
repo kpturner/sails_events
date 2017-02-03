@@ -1239,27 +1239,63 @@ module.exports = {
 					if (filter && filter.toLowerCase()=="late") {
 						bookings=sails.controllers.booking.filterLate(bookings,event.grace);
 					}    
-					
-					// Sort response by user surname (case insensitive) unless it is for a download, in which
-                    // case we will sort it later in the download function
-					// BIG HAIRY NOTE:  If we are using pagination this will be confusing.  For example, we may get the 
-					//                  first page of 10 and that will be in "createdAt" order and then we will sort that 
-					//                  set by surname.  So what you might see in the first 10 records on an unpaginated
-					//                  set might be different to what you see in a paginated set
-                    if (!download) {
-					   bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
-					} 
-					  		
-					if (download) {					
-						////Event.findOne(req.param("eventid")).exec(function(err,event){
-							sails.controllers.booking.download(req, res, event.code, true, event.addressReqd, event.voReqd, bookings);		
-						////})									
+
+					// Augment the bookings with the particular order info
+					bookings=augmentBookings(event,bookings,function(bookings){
+						// Sort response by user surname (case insensitive) unless it is for a download, in which
+						// case we will sort it later in the download function
+						// BIG HAIRY NOTE:  If we are using pagination this will be confusing.  For example, we may get the 
+						//                  first page of 10 and that will be in "createdAt" order and then we will sort that 
+						//                  set by surname.  So what you might see in the first 10 records on an unpaginated
+						//                  set might be different to what you see in a paginated set
+						if (!download) {
+							bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
+						} 
+								
+						if (download) {					
+							////Event.findOne(req.param("eventid")).exec(function(err,event){
+								sails.controllers.booking.download(req, res, event.code, true, event.addressReqd, event.voReqd, bookings);		
+							////})									
+						}
+						else {
+							// If session refers to a user who no longer exists, still allow logout.
+							result.bookings=bookings;										  
+							return res.json(result);  	
+						}		
+					})				
+						  	
+
+					// Augment the bookings with order info
+					function augmentBookings(event,bookings,cb) {
+						var newBookings=[];
+						async.each(bookings,function(booking,next){
+							var b=booking;
+							// Order label
+							b.orderLabel=sails.controllers.booking.orderLabel(event.order);
+							Order.find({user:booking.user.id}).exec(function(err, orders){
+								_.forEach(orders,function(order){
+									if (event.order==order.code) {
+										b.salutation=order.salutation || "";
+										b.rank=order.rank || "";							 
+										b.lodge=order.name || "";
+										b.lodgeNo=order.number || "";							 						
+										b.centre=order.centre || "";
+										b.area=order.area || "";		
+									}
+									return false;
+								})
+								newBookings.push(b);
+								next();
+							});							
+						}
+						,function(err){
+							if (err) {
+								sails.log.error(err);
+							}
+							cb(newBookings)
+						})						
 					}
-					else {
-						// If session refers to a user who no longer exists, still allow logout.
-						result.bookings=bookings;										  
-						return res.json(result);  	
-					}			  	
+
 				})
 		}	
 			
