@@ -1275,12 +1275,12 @@ module.exports = {
 							Order.find({user:booking.user.id}).exec(function(err, orders){
 								_.forEach(orders,function(order){
 									if (event.order==order.code) {
-										b.salutation=order.salutation || "";
-										b.rank=order.rank || "";							 
-										b.lodge=order.name || "";
-										b.lodgeNo=order.number || "";							 						
-										b.centre=order.centre || "";
-										b.area=order.area || "";		
+										b.user.salutation=order.salutation || "";
+										b.user.rank=order.rank || "";							 
+										b.user.lodge=order.name || "";
+										b.user.lodgeNo=order.number || "";							 						
+										b.user.centre=order.centre || "";
+										b.user.area=order.area || "";		
 									}
 									return false;
 								})
