@@ -40,9 +40,12 @@ module.exports = {
 					if (!err && event) {
 						var formattedDate=event.date.toString();
 						formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
-						if (newApology.message==null)
-							newApology.message=""					
-						Email.send(
+						if (newApology.message==null) {
+							newApology.message=""	
+						}								
+						Utility.augmentUser(event,apologiser,function(augmentedUser){
+							apologiser=augmentedUser;
+							Email.send(
 								"apology",
 								{
 									event:event,
@@ -57,6 +60,8 @@ module.exports = {
 								},
 								function(err) {if (err) console.log(err);}
 								)     		
+						})			
+						
 					}				
 				})
 			})
@@ -203,37 +208,57 @@ module.exports = {
 					}
 			)
 			.populate('user') // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
-			
+			.populate("event")
 			.exec(function(err, apologies){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve apologies.');
 					return res.negotiate(err);
 				}	
+
+				// Augment apologies based on order
+				var newApologies=[];
+				async.each(apologies,function(apology,next){
+					var b=apology;
+					if (apology.event.order && apology.event.order!="C") {
+						Utility.augmentUser(apology.event,apology.user,function(augmentedUser){
+							b.user=augmentedUser;
+							b.orderLabel=augmentedUser.orderLabel;
+							newApologies.push(b);									
+							next();
+						})
+					}	
+					else {
+						b.orderLabel="Lodge";
+						newApologies.push(b);
+						next();
+					}		
+				},function(err){
+					apologies=newApologies;
+					// Sort response by user surname (case insensitive)
+					apologies.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
 						
-				
-				// Sort response by user surname (case insensitive)
-				apologies.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
-					
-						
-				if (download) {					
-					Event.findOne(req.param("eventid")).exec(function(err,event){
-						sails.controllers.apology.download(req, res, event.code+"_apologies", apologies);		
-					})									
-				}
-				else {
-					// If session refers to a user who no longer exists, still allow logout.
-					if (!apologies) {
-						return res.json({});
+							
+					if (download) {					
+						Event.findOne(req.param("eventid")).exec(function(err,event){
+							sails.controllers.apology.download(req, res, event.code+"_apologies", apologies);		
+						})									
 					}
-						
-					return res.json(apologies);  	
-				}			  	
+					else {
+						// If session refers to a user who no longer exists, still allow logout.
+						if (!apologies) {
+							return res.json({});
+						}
+							
+						return res.json(apologies);  	
+					}			  	
+				})
+				
 			}) 
 		 
 			
 	},
 	
-		/**
+	/**
 	 * Download apologies
 	 */
 	 download: function(req, res, prefix, apologies) {

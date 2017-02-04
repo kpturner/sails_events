@@ -122,8 +122,9 @@ module.exports = {
 					//			date:'desc',
 					//		}
 					})
-					.populate('organiser')
+					.populate("organiser")
 					.populate("organiser2")
+					.populate("dc")
 			.exec(
 				function(err, events){
 					if (err) {

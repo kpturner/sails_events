@@ -482,7 +482,57 @@ module.exports = {
                 }
             }
             
-        }
+        },
 
+
+        /**
+         * Augment user details based on event order. This basically
+         * overrides rank and lodge etc and label for lodge
+         */
+        augmentUser: function(event,user,cb) {
+            user.orderLabel=Utility.orderLabel(event.order);
+            if (event.order && event.order!="C") {
+                Order.find({user:user.id}).exec(function(err, orders){
+                    _.forEach(orders,function(order){
+                        if (event.order==order.code) {
+                            user.salutation=order.salutation || "";
+                            user.rank=order.rank || "";							 
+                            user.lodge=order.name || "";
+                            user.lodgeNo=order.number || "";							 						
+                            user.centre=order.centre || "";
+                            user.area=order.area || "";		
+                        }
+                        return false;
+                    })
+                    cb(user)
+                });						
+            }	
+            else {
+                cb(user)
+            }
+        },
+
+        /**
+         * Order label
+         */
+        orderLabel:function(order){
+            // Order label
+            var orderLabel;
+            if (order && order!="C") {
+                sails.config.events.orders.forEach(function(cfg){
+                    if (order==cfg.code) {
+                        orderLabel=(cfg.label)?cfg.label:"Lodge";
+                        return false;
+                    }
+                })
+                if (!orderLabel) {
+                    orderLabel="Lodge";
+                }
+            }
+            else {
+                orderLabel="Lodge";
+            }
+            return orderLabel;
+        },
   
 };

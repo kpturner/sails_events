@@ -1270,26 +1270,16 @@ module.exports = {
 						var newBookings=[];
 						async.each(bookings,function(booking,next){
 							var b=booking;
-							// Order label
-							b.orderLabel=sails.controllers.booking.orderLabel(event.order);
 							if (event.order && event.order!="C") {
-								Order.find({user:booking.user.id}).exec(function(err, orders){
-									_.forEach(orders,function(order){
-										if (event.order==order.code) {
-											b.user.salutation=order.salutation || "";
-											b.user.rank=order.rank || "";							 
-											b.user.lodge=order.name || "";
-											b.user.lodgeNo=order.number || "";							 						
-											b.user.centre=order.centre || "";
-											b.user.area=order.area || "";		
-										}
-										return false;
-									})
-									newBookings.push(b);
+								Utility.augmentUser(event,booking.user,function(augmentedUser){
+									b.user=augmentedUser;
+									b.orderLabel=augmentedUser.orderLabel;
+									newBookings.push(b);									
 									next();
-								});						
+								})
 							}	
 							else {
+								b.orderLabel="Lodge";
 								newBookings.push(b);
 								next();
 							}		
@@ -1372,6 +1362,9 @@ module.exports = {
 						}
 				)
 				.populate('event').populate('additions',{sort:{seq:'asc'}})
+				.populate("organiser")
+				.populate("organiser2")
+				.populate("dc")
 				.paginate(pag)				 
 				.exec(function(err, theBookings){
 					if (err) {
@@ -1392,8 +1385,8 @@ module.exports = {
 						bookings=sails.controllers.booking.filterLate(bookings);
 					}  
 					  
-					if (download) {					
-						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, false, bookings, user);					
+					if (download) {
+						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, false, false, bookings, user);					
 					}
 					else {
 						// If session refers to a user who no longer exists, still allow logout.
