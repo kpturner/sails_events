@@ -119,11 +119,14 @@ module.exports = {
         }
         if (!isAdmin) {
             if (event) {
+                var id1=(typeof event.organiser=="object")?event.organiser.id:event.organiser;
+                var id2=(typeof event.organiser2=="object")?event.organiser2.id:event.organiser2;
+                var id3=(typeof event.dc=="object")?event.dc.id:event.dc;
                 // If we have an event then the user can be admin of the event if they are its organiser
                 isAdmin=(
-                    (event.organiser && event.organiser.id==user.id) ||
-                    (event.organiser2 && event.organiser2.id==user.id) ||
-                    (event.dc && event.dc.id==user.id) 
+                    (id1 && id1==user.id) ||
+                    (id2 && id2==user.id) ||
+                    (id3 && id3==user.id) 
                 );
             }
         }

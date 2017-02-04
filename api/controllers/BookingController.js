@@ -1362,9 +1362,6 @@ module.exports = {
 						}
 				)
 				.populate('event').populate('additions',{sort:{seq:'asc'}})
-				.populate("organiser")
-				.populate("organiser2")
-				.populate("dc")
 				.paginate(pag)				 
 				.exec(function(err, theBookings){
 					if (err) {
