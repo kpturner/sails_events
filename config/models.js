@@ -54,7 +54,7 @@ module.exports.models = {
         
         linkedbooking_booking:    { 
             table:      "linkedbooking",
-            columns:    ["booking"]
+            columns:    ["booking","seq"]
         },  
 
         order_user:    { 

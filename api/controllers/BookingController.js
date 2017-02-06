@@ -147,7 +147,7 @@ module.exports = {
 			
 			var preparedBooking=function(userForBooking,criteria){
 				var potentialDuplicates=[];
-				Booking.find(criteria).populate("user").populate("additions").exec(function(err,bookings){
+				Booking.find(criteria).populate("user").populate("additions",{sort:{seq:'asc'}}).exec(function(err,bookings){
 					if (!err) {
 						bookings.forEach(function(booking,index){
 							places+=booking.places
@@ -382,10 +382,12 @@ module.exports = {
 				user.phone=req.param("phone");
 			var linkedBookings=req.param("linkedBookings");
 
-			// Sort out placeholders
+			// Sort out linked bookings/placeholders
+			var ph=0;
 			_.forEach(linkedBookings,function(lb,l){
 				if (lb.surname.toLowerCase()=="*placeholder*") {
-					lb.firstName=(l+1).toString();
+					ph++;
+					lb.firstName=(ph).toString();
 				}
 			})
 			
@@ -496,6 +498,7 @@ module.exports = {
 											if (linkedBookings) {
 												linkedBookings.forEach(function(linkedBooking,index){
 													linkedBooking.booking=booking.id;
+													linkedBooking.seq=index+1;
 													if (!linkedBooking.rank)
 														linkedBooking.rank=""
 													if (!linkedBooking.dietary)
@@ -534,8 +537,28 @@ module.exports = {
 													}
 												})								
 												
-												// If this is the user making a booking, send them a confirmation email	
-												if(!req.session.eventBookings && !req.session.userBookings && user.email) {
+												// If this is the user making a booking, send them a confirmation email.
+												// Also send an email when the event changes to "paid" and when an 
+												// organiser makes a new booking for somebody
+												var sendEmail=false;
+												if (user.email) {
+													if (!req.session.eventBookings && !req.session.userBookings) {
+														sendEmail=true;
+													}
+													else {
+														if (!existingBooking) {
+															// It is new
+															sendEmail=true;
+														}
+														else {
+															if (!existingBooking.paid && booking.paid) {
+																// Paid flag changed
+																sendEmail=true;
+															}
+														}
+													}
+												}	
+												if(sendEmail) {
 													var formattedDate=event.date.toString();
 													formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
 													
@@ -558,6 +581,11 @@ module.exports = {
 														else {
 															subject='Event booking update confirmation'
 														}													
+													}	
+
+													if (existingBooking && !existingBooking.paid && booking.paid) {
+														// Paid flag changed
+														updated+=" and flagged as PAID";
 													}	
 
 													sails.controllers.booking.setEmailInfo(event,user,orders);
@@ -1074,7 +1102,7 @@ module.exports = {
 					}
 			)		
 			.populate('user')	
-			.populate('event').populate('additions',{sort:{surname:'asc'}}) 
+			.populate('event').populate('additions',{sort:{seq:'asc'}}) 
 			.paginate(pag)
 			.exec(function(err, bookings){
 				if (err) {
@@ -1191,7 +1219,7 @@ module.exports = {
 				)
 				.populate('event')
 				.populate('user')
-				.populate('additions',{sort:{surname:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
+				.populate('additions',{sort:{seq:'asc'}}) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
 				.paginate(pag)
 				.exec(function(err, bookings){
 					if (err) {
@@ -1211,27 +1239,59 @@ module.exports = {
 					if (filter && filter.toLowerCase()=="late") {
 						bookings=sails.controllers.booking.filterLate(bookings,event.grace);
 					}    
-					
-					// Sort response by user surname (case insensitive) unless it is for a download, in which
-                    // case we will sort it later in the download function
-					// BIG HAIRY NOTE:  If we are using pagination this will be confusing.  For example, we may get the 
-					//                  first page of 10 and that will be in "createdAt" order and then we will sort that 
-					//                  set by surname.  So what you might see in the first 10 records on an unpaginated
-					//                  set might be different to what you see in a paginated set
-                    if (!download) {
-					   bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
-					} 
-					  		
-					if (download) {					
-						////Event.findOne(req.param("eventid")).exec(function(err,event){
-							sails.controllers.booking.download(req, res, event.code, true, event.addressReqd, event.voReqd, bookings);		
-						////})									
+
+					// Augment the bookings with the particular order info
+					bookings=augmentBookings(event,bookings,function(bookings){
+						// Sort response by user surname (case insensitive) unless it is for a download, in which
+						// case we will sort it later in the download function
+						// BIG HAIRY NOTE:  If we are using pagination this will be confusing.  For example, we may get the 
+						//                  first page of 10 and that will be in "createdAt" order and then we will sort that 
+						//                  set by surname.  So what you might see in the first 10 records on an unpaginated
+						//                  set might be different to what you see in a paginated set
+						if (!download) {
+							bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
+						} 
+								
+						if (download) {					
+							////Event.findOne(req.param("eventid")).exec(function(err,event){
+								sails.controllers.booking.download(req, res, event.code, true, event.addressReqd, event.voReqd, bookings);		
+							////})									
+						}
+						else {
+							// If session refers to a user who no longer exists, still allow logout.
+							result.bookings=bookings;										  
+							return res.json(result);  	
+						}		
+					})				
+						  	
+
+					// Augment the bookings with order info
+					function augmentBookings(event,bookings,cb) {
+						var newBookings=[];
+						async.each(bookings,function(booking,next){
+							var b=booking;
+							if (event.order && event.order!="C") {
+								Utility.augmentUser(event,booking.user,function(augmentedUser){
+									b.user=augmentedUser;
+									b.orderLabel=augmentedUser.orderLabel;
+									newBookings.push(b);									
+									next();
+								})
+							}	
+							else {
+								b.orderLabel="Lodge";
+								newBookings.push(b);
+								next();
+							}		
+						}
+						,function(err){
+							if (err) {
+								sails.log.error(err);
+							}
+							cb(newBookings)
+						})						
 					}
-					else {
-						// If session refers to a user who no longer exists, still allow logout.
-						result.bookings=bookings;										  
-						return res.json(result);  	
-					}			  	
+
 				})
 		}	
 			
@@ -1301,7 +1361,7 @@ module.exports = {
 							}
 						}
 				)
-				.populate('event').populate('additions',{sort:{surname:'asc'}})
+				.populate('event').populate('additions',{sort:{seq:'asc'}})
 				.paginate(pag)				 
 				.exec(function(err, theBookings){
 					if (err) {
@@ -1322,8 +1382,8 @@ module.exports = {
 						bookings=sails.controllers.booking.filterLate(bookings);
 					}  
 					  
-					if (download) {					
-						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, false, bookings, user);					
+					if (download) {
+						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, false, false, bookings, user);					
 					}
 					else {
 						// If session refers to a user who no longer exists, still allow logout.
@@ -1400,9 +1460,15 @@ module.exports = {
 					if (sails.config.events.developer) {
 						bcc.push(sails.config.events.developer)
 					}
+					var mainOrganiser={
+						name: "Unknown"
+					};
 					organisers.forEach(function(organiser,o){
 						if (organiser.email) {
 							bcc.push(organiser.email)
+						}
+						if (organiser.id=booking.event.organiser) {
+							mainOrganiser=organiser;
 						}
 					})
 				
@@ -1473,9 +1539,9 @@ module.exports = {
 											eventTime: booking.event.time,
 											eventVenue: booking.event.venue.replace(/[\n\r]/g, '<br>'),
 											eventAdditionalInfo: booking.event.additionalInfo,
-											eventOrganiser: booking.event.organiser.name || "",
-											organiserEmail: booking.event.organiser.email || "",
-											organiserContactNo: booking.event.organiser.phone || "",
+											eventOrganiser: mainOrganiser.name || "",
+											organiserEmail: mainOrganiser.email || "",
+											organiserContactNo: mainOrganiser.phone || "",
 											eventBlurb: (booking.event.blurb || "").replace(/[\n\r]/g, '<br>'),
 											eventMenu: (booking.event.menu || "").replace(/[\n\r]/g, '<br>'),
 											eventDressCode: (booking.event.dressCode || "").replace(/[\n\r]/g, '<br>'),

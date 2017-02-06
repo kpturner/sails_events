@@ -30,34 +30,42 @@ module.exports = {
 		// Simply create the apology
 		var apology={};
 		apology.event=req.param("eventid");
-		apology.user=res.locals.user.id;
+		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making an apology on behalf of someone else
+		apology.user=(selectedUserId)?selectedUserId:res.locals.user.id;
 		apology.message=req.param("message");
 		Apology.create(apology).exec(function(err, newApology){
-			
-			// Email the organiser
-			Event.findOne(apology.event).populate("organiser").populate("organiser2").exec(function(err,event){
-				if (!err && event) {
-					var formattedDate=event.date.toString();
-					formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
-					if (newApology.message==null)
-						newApology.message=""					
-					Email.send(
-							"apology",
-							{
-								event:event,
-								eventDate: formattedDate,
-								user:res.locals.user, 
-								apology:newApology
-							},
-							{
-								to: event.organiser.email || "",
-								bcc: sails.config.events.developer || "", 
-								subject: event.name+": An apology"
-							},
-							function(err) {if (err) console.log(err);}
-							)     		
-				}				
+			User.findOne(apology.user).exec(function(err,apologiser){
+				// Email the organiser
+				Event.findOne(apology.event).populate("organiser").populate("organiser2").exec(function(err,event){
+					if (!err && event) {
+						var formattedDate=event.date.toString();
+						formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));
+						if (newApology.message==null) {
+							newApology.message=""	
+						}								
+						Utility.augmentUser(event,apologiser,function(augmentedUser){
+							apologiser=augmentedUser;
+							Email.send(
+								"apology",
+								{
+									event:event,
+									eventDate: formattedDate,
+									user:apologiser, 
+									apology:newApology
+								},
+								{
+									to: event.organiser.email || "",
+									bcc: sails.config.events.developer || "", 
+									subject: event.name+": An apology"
+								},
+								function(err) {if (err) console.log(err);}
+								)     		
+						})			
+						
+					}				
+				})
 			})
+			
 			
 			// Return 
 			return res.ok();		
@@ -71,6 +79,8 @@ module.exports = {
 	prepareApology:function(req, res) {
 		var eventId=req.param("eventid");
 		var action=req.param("action");
+		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making an apology on behalf of someone else
+		var userBookings=(req.param("userbookings"))?true:false;
 		var mode="create";
 		if (action)
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
@@ -96,12 +106,13 @@ module.exports = {
 					res.locals.event=event;		
 					res.locals.bookingId=null;
 					res.locals.apologyId=null;
+					res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
 					// Does a booking exist? 
 					return 	[
 								event,
 								Booking.findOne({
 									event: event.id,
-									user: res.locals.user.id,
+									user: (selectedUserId)?selectedUserId:res.locals.user.id,
 								})
 							]	
 				}	
@@ -127,7 +138,7 @@ module.exports = {
 									event,
 									Apology.findOne({
 										event: event.id,
-										user: res.locals.user.id,
+										user: (selectedUserId)?selectedUserId:res.locals.user.id,
 									})
 								]
 					}	
@@ -197,37 +208,57 @@ module.exports = {
 					}
 			)
 			.populate('user') // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.		
-			
+			.populate("event")
 			.exec(function(err, apologies){
 				if (err) {
 					sails.log.verbose('Error occurred trying to retrieve apologies.');
 					return res.negotiate(err);
 				}	
+
+				// Augment apologies based on order
+				var newApologies=[];
+				async.each(apologies,function(apology,next){
+					var b=apology;
+					if (apology.event.order && apology.event.order!="C") {
+						Utility.augmentUser(apology.event,apology.user,function(augmentedUser){
+							b.user=augmentedUser;
+							b.orderLabel=augmentedUser.orderLabel;
+							newApologies.push(b);									
+							next();
+						})
+					}	
+					else {
+						b.orderLabel="Lodge";
+						newApologies.push(b);
+						next();
+					}		
+				},function(err){
+					apologies=newApologies;
+					// Sort response by user surname (case insensitive)
+					apologies.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
 						
-				
-				// Sort response by user surname (case insensitive)
-				apologies.sort(Utility.jsonSort("user.surname", false, function(a){return a.toUpperCase()}))
-					
-						
-				if (download) {					
-					Event.findOne(req.param("eventid")).exec(function(err,event){
-						sails.controllers.apology.download(req, res, event.code+"_apologies", apologies);		
-					})									
-				}
-				else {
-					// If session refers to a user who no longer exists, still allow logout.
-					if (!apologies) {
-						return res.json({});
+							
+					if (download) {					
+						Event.findOne(req.param("eventid")).exec(function(err,event){
+							sails.controllers.apology.download(req, res, event.code+"_apologies", apologies);		
+						})									
 					}
-						
-					return res.json(apologies);  	
-				}			  	
+					else {
+						// If session refers to a user who no longer exists, still allow logout.
+						if (!apologies) {
+							return res.json({});
+						}
+							
+						return res.json(apologies);  	
+					}			  	
+				})
+				
 			}) 
 		 
 			
 	},
 	
-		/**
+	/**
 	 * Download apologies
 	 */
 	 download: function(req, res, prefix, apologies) {

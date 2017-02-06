@@ -23,12 +23,12 @@
             <p ng-hide="!card.organiser.phone"><a href="tel:{{card.organiser.phone}}"><span class="fa fa-phone"></span> {{card.organiser.phone}}</a></p>                  
     </div>    
     <div class="photo-description" > 
-            <button type="button" class="hidden-xs hidden-sm btn btn-primary card-btn" onclick="$(this).closest('.photo').find('a')[0].click()">
+            <button type="button" class="btn btn-primary card-btn" onclick="$(this).closest('.photo').find('a')[0].click()">
                 <span>{{card.bookInText}}</span>
             </button>     
         </div>
     <div class="photo-description" ng-show="card.showApologyButton">
-        <a href="/apology?eventid={{card.id}}" class="a-unstyled">     
+        <a href="/apology?eventid={{card.id}}&selecteduserid={{card.selectedUserId}}&userbookings={{card.userBookings}}" class="a-unstyled">     
             <button type="button" class="btn btn-danger card-btn">
                 <span>Send apology</span>
             </button>

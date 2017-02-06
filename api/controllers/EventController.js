@@ -122,8 +122,9 @@ module.exports = {
 					//			date:'desc',
 					//		}
 					})
-					.populate('organiser')
+					.populate("organiser")
 					.populate("organiser2")
+					.populate("dc")
 			.exec(
 				function(err, events){
 					if (err) {
@@ -276,8 +277,10 @@ module.exports = {
 					{name: {contains: filter}},
 					{venue: {contains: filter}},	
 					{blurb: {contains: filter}},
-					{order: orderFilter},
 				]
+			}
+			if (orderFilter) {
+				where.or.push({order: orderFilter})
 			}
 		}
 										

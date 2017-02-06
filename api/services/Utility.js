@@ -119,11 +119,14 @@ module.exports = {
         }
         if (!isAdmin) {
             if (event) {
+                var id1=(event.organiser && typeof event.organiser=="object")?event.organiser.id:event.organiser;
+                var id2=(event.organiser2 && typeof event.organiser2=="object")?event.organiser2.id:event.organiser2;
+                var id3=(event.dc && typeof event.dc=="object")?event.dc.id:event.dc;
                 // If we have an event then the user can be admin of the event if they are its organiser
                 isAdmin=(
-                    (event.organiser && event.organiser.id==user.id) ||
-                    (event.organiser2 && event.organiser2.id==user.id) ||
-                    (event.dc && event.dc.id==user.id) 
+                    (id1 && id1==user.id) ||
+                    (id2 && id2==user.id) ||
+                    (id3 && id3==user.id) 
                 );
             }
         }
@@ -482,7 +485,57 @@ module.exports = {
                 }
             }
             
-        }
+        },
 
+
+        /**
+         * Augment user details based on event order. This basically
+         * overrides rank and lodge etc and label for lodge
+         */
+        augmentUser: function(event,user,cb) {
+            user.orderLabel=Utility.orderLabel(event.order);
+            if (event.order && event.order!="C") {
+                Order.find({user:user.id}).exec(function(err, orders){
+                    _.forEach(orders,function(order){
+                        if (event.order==order.code) {
+                            user.salutation=order.salutation || "";
+                            user.rank=order.rank || "";							 
+                            user.lodge=order.name || "";
+                            user.lodgeNo=order.number || "";							 						
+                            user.centre=order.centre || "";
+                            user.area=order.area || "";		
+                        }
+                        return false;
+                    })
+                    cb(user)
+                });						
+            }	
+            else {
+                cb(user)
+            }
+        },
+
+        /**
+         * Order label
+         */
+        orderLabel:function(order){
+            // Order label
+            var orderLabel;
+            if (order && order!="C") {
+                sails.config.events.orders.forEach(function(cfg){
+                    if (order==cfg.code) {
+                        orderLabel=(cfg.label)?cfg.label:"Lodge";
+                        return false;
+                    }
+                })
+                if (!orderLabel) {
+                    orderLabel="Lodge";
+                }
+            }
+            else {
+                orderLabel="Lodge";
+            }
+            return orderLabel;
+        },
   
 };
