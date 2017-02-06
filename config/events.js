@@ -9,6 +9,8 @@
  */
 
 module.exports.events = {
+
+	skin:	"skins/defaultskin.css",
     
     developer: process.env.DEVELOPER || "kevin@kpturner.co.uk",
 
