@@ -469,13 +469,17 @@ var AuthController = {
        
         var sendEmail=function(user,resetInstructions,newPassword){
            // Send confirmation email
+           var domain=(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl();
+           if (domain.indexOf("http://")<0) {
+             domain="http://"+domain;
+           }
   					Email.send(
   						"passwordReset", {
       				    recipientName: Utility.recipient(user.salutation,user.firstName,user.surname),
                         senderName: sails.config.events.title,
   				        resetInstructions: resetInstructions,
                         newPassword: newPassword,
-                        domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),  							   
+                        domain:	domain,  							   
   					   },
   						 {
                   to: user.email,
