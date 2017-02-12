@@ -1457,7 +1457,7 @@ module.exports = {
 						organisers=[]
 					}
 					var bcc=[];
-					if (sails.config.events.developer) {
+					if (sails.config.events.developer && sails.config.events.developer!=organiser.email) {
 						bcc.push(sails.config.events.developer)
 					}
 					var mainOrganiser={
@@ -1728,7 +1728,7 @@ module.exports = {
 											{
 												//to: booking.user.email,
 												to: to,
-												bcc: sails.config.events.developer || "",
+												bcc: (sails.config.events.developer && sails.config.events.developer!=organiser.email)?sails.config.events.developer:"",
 												subject: event.name + " - Late payment reminder warning"
 											},
 											function(err) {if (err) console.log(err);}
@@ -1781,7 +1781,7 @@ module.exports = {
                                                 //to: booking.user.email,
                                                 to: to,
                                                 cc: cc,
-                                                bcc: sails.config.events.developer || "",
+                                                bcc: (sails.config.events.developer && sails.config.events.developer!=organiser.email)?sails.config.events.developer:"",
                                                 subject: event.name + " - Late payment reminder"
                                             },
                                             function(err) {if (err) console.log(err);}
