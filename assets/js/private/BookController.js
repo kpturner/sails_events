@@ -353,13 +353,13 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			errors.push("Area");	
 			validations.push($scope.booking.area);		
 		}
-		if (!$scope.eventBookings && !$scope.userBookings && !$scope.lodgeMandatory) {
-			if (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0) {
+		if (!$scope.eventBookings && !$scope.userBookings) {
+			if ($scope.lodgeMandatory && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0)) {
 				complete=false;
 				errors.push($scope.orderlabel);
 				validations.push($scope.booking.lodge);
 			}
-			if (!$scope.bookingForm.lodgeNo || $scope.bookingForm.lodge==0) {
+			if ($scope.lodgeMandatory && (!$scope.bookingForm.lodgeNo || $scope.bookingForm.lodge==0)) {
 				complete=false;
 				errors.push($scope.orderlabel+" number");
 				validations.push($scope.booking.lodgeno);
