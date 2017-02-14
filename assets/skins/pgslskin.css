@@ -1,4 +1,6 @@
-
+.navbar-logo {
+	margin-top: -5px;
+}
 
 .navbar-inverse {
 	background-color:#a0171d;

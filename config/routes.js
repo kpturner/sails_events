@@ -75,6 +75,7 @@ module.exports.routes = {
   'post /verifybypasscode': 'EventController.verifyBypassCode',
   'post /booking/transfer': 'BookingController.transferBookings',
   'get /lodgeroom': 'BookingController.lodgeRoom',
+  'post /addpd/:eventid': 'BookingController.addPD',
   
   // Apologies
   'get /apology': 'ApologyController.prepareApology',

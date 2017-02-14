@@ -119,6 +119,22 @@ module.exports = {
 			});  	
 		})		
 	}, 
+
+	/**
+	 * Add permanent diners
+	 */
+	addPD: function(req, res) {
+		var eventId=req.param("eventid");
+		//sails.log.debug("Adding permanent diners for event "+eventId);
+		// Find all permanent diners
+		User.find({isPD:true}).exec(function(err,users){
+			if (err) {
+				sails.log.error(err)
+			}
+			// TODO filter out users already booked in
+			return res.json(users)
+		})		
+	},
 	
 	/**
 	 * Prepare data for booking

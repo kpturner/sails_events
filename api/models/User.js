@@ -112,7 +112,12 @@ var User = {
     // DC?
     isDC: {
       type: 'boolean' 
-    },         
+    },        
+
+    // Permanent diner?
+    isPD: {
+      type: 'boolean' 
+    },        
 
     // VO?
     isVO: {

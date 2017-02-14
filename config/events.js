@@ -56,6 +56,9 @@ module.exports.events = {
 
 	// Lodge is mandatory
 	lodgeMandatory: true,
+
+	// Permanent diner?
+	permanentDiningList: false,
 	
 	// Domain (for signup email confirmations)
 	domain: "http://squareevents.org",

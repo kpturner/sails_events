@@ -1,0 +1,63 @@
+module.exports = {
+
+  // Events management details
+  events: {
+     maintenance: false,
+     admins:['kevin@kpturner.co.uk'],
+     developer:'kevin@kpturner.co.uk',
+     reminderTestMode: false,
+     //latePaymentInterval: 30000,  
+     latePaymentDaemon: true,
+     title: 'PGSL 9263',
+     heading: 'PGSL 9263',
+     domain: 'pgsl.squareevents.org',
+     areas: 'PGSL',
+     logoLink: 'http://www.lodge9263.org.uk/',
+     logo: '/images/pgsl/pgsl_logo-32x32',
+     updateAvatars: false,
+  },
+  
+  proxyHost: 'http://pgsl.squareevents.org/',  
+  port: 1341,
+  connections: {
+     localhostMysqlServer: {
+        adapter: 'sails-mysql',
+        host: 'localhost',
+        user: 'pgsl',
+        password: 'Hercule2',
+        database: 'squareevents_pgsl',
+     }
+  },
+
+  session: {
+     secret: 'b6d843339ae032a03af593ca4a98298i',  
+  },
+     
+  // Email configuration
+  eventemail: {
+   //service: "Gmail",
+   //auth: {
+   //  user:  "me@gmail.com",
+   //  pass:  "xxxxxxxxxx"
+   //},
+   /**
+	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
+	  */
+	transporter:	{
+      host: 'mail.squareevents.org',
+      port: 25,
+    	tls:{rejectUnauthorized: false},
+      auth: {
+        user: "noreply@squareevents.org",
+        pass: "klaatuberada"
+      }
+	 },
+   from: 'PGSL 9263 Dining <noreply@squareevents.org>', // sender address
+   testMode:  false 
+  },
+  
+  log: {
+    level: 'debug'
+  }
+  
+};

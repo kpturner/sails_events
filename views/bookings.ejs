@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="/styles/ng-dialog/ngDialog.min.css">
     <!--STYLES END-->
 
-    <link rel="stylesheet" href="<%=sails.config.events.skin%>">
+    <link rel="stylesheet" href="/<%=sails.config.events.skin%>">
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
@@ -37,6 +37,7 @@
         myBookings: <%- myBookings %>,
         eventBookings: <%- eventBookings %>,
         userBookings: <%- userBookings %>,
+        permanentDiningList: <%- sails.config.events.permanentDiningList %>,
       };      
     </script>
     
@@ -87,6 +88,11 @@
           <span class="fa-pulse fa fa-spinner" ng-show="newBooking" ></span>
           <span ng-show="newBooking">Please wait...</span>
         </button>
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addPD()" ng-disabled="addingPD"  ng-show="permanentDiningList && eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest">
+          <span ng-show="!addingPD">Add permanent diners</span>
+          <span class="fa-pulse fa fa-spinner" ng-show="addingPD" ></span>
+          <span ng-show="addingPD">Adding diners...</span>        
+        </button> 
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking">
           <span class="fa fa-download"></span><span> Download </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>         
         </button>  

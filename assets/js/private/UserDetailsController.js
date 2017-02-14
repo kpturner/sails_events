@@ -2,6 +2,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.mode=SAILS_LOCALS.mode;
+	$scope.permanentDiningList=SAILS_LOCALS.permanentDiningList;
 	$scope.userdetailsForm = {
 		loading: false
 	}

@@ -9,6 +9,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	// Initialise "user" in the scope with the data set in the view script 
 	$scope.user=SAILS_LOCALS.user;
 	$scope.profileForm = $scope.user;
+	$scope.permanentDiningList=SAILS_LOCALS.permanentDiningList;
 	
 	// Convert lodge no to numeric
 	$scope.profileForm.lodgeNo = parseInt($scope.user.lodgeNo); 

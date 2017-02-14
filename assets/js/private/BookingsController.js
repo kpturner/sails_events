@@ -6,6 +6,8 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.bookingsLoading=true;
 		$scope.hideCapacity=false;
 		$scope.newBooking=false;
+		$scope.addingPD=false;
+		$scope.permanentDiningList=SAILS_LOCALS.permanentDiningList;
 		 
 		$scope.filterForm = {
 			loading: false,
@@ -152,6 +154,33 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 				var eventId=(eventId)?eventId:$scope.event.id;
 				window.location="/booking/create/?eventid="+eventId+'&eventbookings=true';	
 			}			
+		}
+
+		/**
+		 * Add permanent diners
+		 */
+		$scope.addPD = function(eventId) {
+			$scope.addingPD=true;
+			$http.post("/addpd/"+$scope.event.id,{
+					_csrf: SAILS_LOCALS._csrf
+				})
+				.then(function onSuccess(sailsResponse){
+					//$scope.filterBookings();
+					// Cycle through data
+					angular.forEach(sailsResponse.data,function(diner){
+						//TODO generate booking for each user
+					})
+				})
+				.catch(function onError(sailsResponse){
+		
+					// Handle known error type(s).
+					toastr.error(sailsResponse.data, 'Error');
+					
+		
+				})
+				.finally(function eitherWay(){
+					$scope.addingPD=false;
+				})			 			
 		}
 		
 		/**
