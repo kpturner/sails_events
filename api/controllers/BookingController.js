@@ -223,8 +223,8 @@ module.exports = {
 							if (!sails.config.events.multipleBookings) {
 								booking.additions.forEach(function(addition,a){
 									if (
-											addition.surname.toLowerCase()==userForBooking.surname.toLowerCase()
-										&&	addition.firstName.toLowerCase()==userForBooking.firstName.toLowerCase()	
+											addition.surname && userForBooking.surname && addition.surname.toLowerCase()==userForBooking.surname.toLowerCase()
+										&&	addition.firstName && userForBooking.firstName && addition.firstName.toLowerCase()==userForBooking.firstName.toLowerCase()	
 									) {
 											if (!addition.lodge || (addition.lodge && userForBooking.lodge && addition.lodge.toLowerCase()==userForBooking.lodge.toLowerCase())) {
 												addition.host=booking.user;
