@@ -1709,9 +1709,8 @@ module.exports = {
 								})
 						.populate('user')			
 						.then(function(bookings){
-							// Filter bookings so we only have late payers
-							bookings=sails.controllers.booking.filterLate(bookings,event.grace); 
-							// Also get a list of bookings that will be flagged as late within 48 hours
+							
+							// Get bookings that will be late in 48 hours
 							if (event.grace>2) {
 								var warnings=sails.controllers.booking.filterLate(bookings,(event.grace-2)); 
 								if (warnings.length>0) {
@@ -1752,6 +1751,9 @@ module.exports = {
 									}									
 								}
 							}
+
+							// Filter bookings so we only have late payers
+							bookings=sails.controllers.booking.filterLate(bookings,event.grace);							
                             if (!sails.config.events.reminderTestMode) {
                                 // Process late payers
                                 bookings.forEach(function(booking,b){
