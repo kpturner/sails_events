@@ -13,8 +13,9 @@ module.exports = {
      domain: 'pgsl.squareevents.org',
      areas: 'PGSL',
      logoLink: 'http://www.lodge9263.org.uk/',
-     logo: '/images/pgsl/pgsl_logo-32x32',
+     logo: '/images/pgsl/favicon-32x32.png',
      updateAvatars: false,
+     skin: "skins/pgslskin.css",
   },
   
   proxyHost: 'http://pgsl.squareevents.org/',  
