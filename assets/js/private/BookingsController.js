@@ -165,11 +165,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 					_csrf: SAILS_LOCALS._csrf
 				})
 				.then(function onSuccess(sailsResponse){
-					//$scope.filterBookings();
-					// Cycle through data
-					angular.forEach(sailsResponse.data,function(diner){
-						//TODO generate booking for each user
-					})
+					$scope.filterBookings();					
 				})
 				.catch(function onError(sailsResponse){
 		

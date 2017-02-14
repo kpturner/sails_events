@@ -127,13 +127,65 @@ module.exports = {
 		var eventId=req.param("eventid");
 		//sails.log.debug("Adding permanent diners for event "+eventId);
 		// Find all permanent diners
-		User.find({isPD:true}).exec(function(err,users){
+		Event.findOne(eventId).exec(function(err,event){
 			if (err) {
-				sails.log.error(err)
+				return res.negotiate(err);
 			}
-			// TODO filter out users already booked in
-			return res.json(users)
-		})		
+			User.find({isPD:true}).exec(function(err,users){
+				if (err) {
+					sails.log.error(err);
+					return res.negotiate(err);
+				}
+				// Filter out users already booked in			
+				async.each(users,function(user,next){
+					Booking.findOne({event:eventId,user:user.id})
+						.then(function(b){
+							if (!b) {
+								// Not booked in so create booking now
+								b={};
+								b.user=user.id;
+								b.event=eventId;
+								b.dietary=user.dietary;
+								b.places=1;
+								b.cost=event.price;
+								b.amountPaid=0;
+								b.paid=false;
+								b.mop=null;
+								b.info=null;
+								b.bookingDate=new Date();
+								b.createdBy=req.user.id;
+								Event.incrementLastBookingRef(eventId,function(err, updatedEvent){
+									if (!err) {
+										b.ref=updatedEvent.code+updatedEvent.lastBookingRef.toString()
+											Booking.create(b).exec(function(){
+											next();
+										}) 
+									}		
+									else {
+										next(err)
+									}						
+								})							
+							}
+							else {
+								next()
+							}
+						})
+						.catch(function(err){
+							next(err)
+						})
+				},
+				function(err){
+					if (err) {
+						sails.log.error(err);
+						return res.negotiate(err);
+					}
+					else {
+						return res.ok();
+					}				
+				})			
+			})	
+		})
+			
 	},
 	
 	/**
