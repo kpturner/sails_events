@@ -1525,7 +1525,7 @@ module.exports = {
 						organisers=[]
 					}
 					var bcc=[];
-					if (sails.config.events.developer && sails.config.events.developer!=organiser.email) {
+					if (sails.config.events.developer && organiser && sails.config.events.developer!=organiser.email) {
 						bcc.push(sails.config.events.developer)
 					}
 					var mainOrganiser={
