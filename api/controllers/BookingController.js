@@ -1525,20 +1525,24 @@ module.exports = {
 						organisers=[]
 					}
 					var bcc=[];
-					if (sails.config.events.developer && organiser && sails.config.events.developer!=organiser.email) {
-						bcc.push(sails.config.events.developer)
-					}
 					var mainOrganiser={
 						name: "Unknown"
 					};
+					var organiserIsDev=false;
 					organisers.forEach(function(organiser,o){
 						if (organiser.email) {
 							bcc.push(organiser.email)
+							if (organiser.email==sails.config.events.developer) {
+								organiserIsDev=true;
+							}
 						}
 						if (organiser.id=booking.event.organiser) {
 							mainOrganiser=organiser;
 						}
 					})
+					if (!organiserIsDev) {
+						bcc.push(sails.config.events.developer)
+					}
 				
 					// Create linked bookings
 					var linkedBookings=booking.additions;
