@@ -62,7 +62,7 @@ module.exports = {
     
     // Menu
     menu: {
-      type: 'string'
+      type: 'text'
     },
     
     // Dress code
