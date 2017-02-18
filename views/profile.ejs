@@ -74,7 +74,7 @@
 
           <!-- P A S S W O R D -->
   
-          <div class="control-group form-group col-xs-7"
+          <div class="control-group form-group col-xs-10"
             ng-class="{'has-error':profile.password.$invalid &&
                                 profile.password.$dirty}" ng-hide="user.authProvider!='local'">
             <label>* Choose a password</label>
@@ -88,7 +88,7 @@
   
           <!-- C O N F I R M  P A S S W O R D -->
   
-          <div class="control-group form-group col-xs-7"  ng-hide="user.authProvider!='local'">
+          <div class="control-group form-group col-xs-10"  ng-hide="user.authProvider!='local'">
             <label>Re-enter your password</label>
             <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="profileForm.confirmPassword" >
             <span class="help-block has-error" ng-if="profile.confirmation.$dirty">
@@ -103,7 +103,7 @@
   
           </div>  
 
-            
+
           <% include partials/otherOrders.ejs %>     
 
         </div>
