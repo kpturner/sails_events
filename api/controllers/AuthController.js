@@ -141,7 +141,7 @@ var AuthController = {
    * Create a authentication callback endpoint
    *
    * This endpoint handles everything related to creating and verifying Pass-
-   * ports and users, both locally and from third-aprty providers.
+   * ports and users, both locally and from third-party providers.
    *
    * Passport exposes a login() function on req (also aliased as logIn()) that
    * can be used to establish a login session. When the login operation
@@ -204,9 +204,7 @@ var AuthController = {
         if (user.authProvider!="local") {
           var delta={};
           delta.lastLoggedIn=new Date().toISOString().slice(0, 19).replace('T', ' ');
-          User.update(user.id,delta).exec(function(){
-            sails.controllers.order.updateOtherOrders(user.id,req.param("orders"));
-          });            
+          User.update(user.id,delta).exec(function(){});            
           // Upon successful login, send the user to the default page
           res.redirect('/');
         }           

@@ -35,6 +35,20 @@
 	<br>Dietary reqs: <%=details.dietary%>
 	<br>Contact no: <%=details.phone%>	
 
+    <% if (orders.length>0) {%>
+	  <br><b>Other orders</b>	
+      <% orders.forEach(function (order,place) { %>
+	  	<br><i>Other order <%=place+1%></i>
+		<br>&nbsp;&nbsp;Order: <%=order.desc%>  
+        <br>&nbsp;&nbsp;Salutation: <%=order.salutation%>
+        <br>&nbsp;&nbsp;<%=order.label%>: <%=order.name%>
+		<br>&nbsp;&nbsp;Number: <%=order.number%>
+		<br>&nbsp;&nbsp;Centre: <%=order.centre%>
+		<br>&nbsp;&nbsp;Area: <%=order.area%>
+		<br>&nbsp;&nbsp;Rank: <%=order.rank%>
+      <% }) %>
+    <% } %>
+
 <p>Yours S&F,<br/><%=senderName%></p>
 
 <p><i>Do not reply to this email. The recipient is not a human!</i></p>

@@ -29,19 +29,31 @@ module.exports = {
     /**
 	 * Update other orders
 	 */
-	updateOtherOrders: function(userId,orders){
+	updateOtherOrders: function(userId,orders,cb){
         Order.destroy({user:userId}).exec(function(err){
-            _.forEach(orders,function(order){
-                order.user=userId;
-            })
-            Order.create(orders,function(err,newOrders){
-                if (err) {
-                    sails.log.error(err)
-                }
-                else {
-                     //sails.log.debug("Other orders created")
-                }               
-            })
+			if (orders) {
+				_.forEach(orders,function(order){
+					order.user=userId;
+				})
+				Order.create(orders,function(err,newOrders){
+					if (err) {
+						sails.log.error(err)
+					}
+					else {
+						//sails.log.debug("Other orders created")
+					}  
+					// Callback if required
+					if (cb) {
+						cb(err,newOrders)
+					}             
+				})
+			}
+            else {
+				// Callback if required
+				if (cb) {
+					cb(err,newOrders)
+				}      
+			}
         })
 	}
 

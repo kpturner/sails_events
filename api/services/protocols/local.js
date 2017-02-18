@@ -54,8 +54,10 @@ exports.register = function (req, res, next) {
                       return res.genericErrorResponse(410,"User name is already in use");
                     }
                 }
-                // Complete registration
-                completeReg(newUser,user.password); 
+                sails.controllers.order.updateOtherOrders(newUser.id,req.param("orders"),function(){
+                  // Complete registration
+                  completeReg(newUser,user.password); 
+                });               
             })                      
       }
       else {
@@ -78,9 +80,10 @@ exports.register = function (req, res, next) {
                     function(err) {if (err) console.log(err);}
                 )       
               }                    
-              
-              // Complete registration
-              completeReg(newUsers[0],user.password);         
+              sails.controllers.order.updateOtherOrders(newUsers[0].id,req.param("orders"),function(){
+                // Complete registration
+                completeReg(newUsers[0],user.password);     
+              });                   
             })
           } 
           else {
@@ -136,24 +139,28 @@ exports.register = function (req, res, next) {
             newUser.rank=""
           if (newUser.area==null)
             newUser.area=""  
-    
-          // Send confirmation email
-          Email.send(
-                "signupConfirmation",
-                {
-                    recipientName: Utility.recipient(newUser.salutation,newUser.firstName,newUser.surname),
-                    senderName: sails.config.events.title,
-                    details: newUser,        								 
-                    //domain:	sails.config.events.domain,
-                    domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
-                },
-                {
-                    to: newUser.email,
-                    bcc: sails.config.events.developer || "", 
-                    subject: "Welcome to "+sails.config.events.title
-                },
-                function(err) {if (err) console.log(err);}
-          )     
+
+          Order.find({user:newUser.id}).exec(function(err, orders){
+            // Send confirmation email
+            Email.send(
+                  "signupConfirmation",
+                  {
+                      recipientName: Utility.recipient(newUser.salutation,newUser.firstName,newUser.surname),
+                      senderName: sails.config.events.title,
+                      details: newUser,
+                      orders: orders,        								 
+                      //domain:	sails.config.events.domain,
+                      domain:	(sails.config.events.domain)?sails.config.events.domain:sails.getBaseUrl(),
+                  },
+                  {
+                      to: newUser.email,
+                      bcc: sails.config.events.developer || "", 
+                      subject: "Welcome to "+sails.config.events.title
+                  },
+                  function(err) {if (err) console.log(err);}
+            )     
+          });    
+          
             
           // Success
           // Mark the session as authenticated to work with default Sails sessionAuth.js policy
