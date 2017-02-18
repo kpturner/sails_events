@@ -94,8 +94,8 @@
         <div class="row">    
         
   
-          <% include ../partials/userDetails.ejs %>    
-          <% include ../partials/otherOrders.ejs %>
+          <% include ../partials/userDetails.ejs %>   
+          
 
           <!-- P A S S W O R D -->
   
@@ -123,6 +123,9 @@
               <span ng-show="signup.confirmation.$error.required">Confirmation password is required.</span>
             </span>
           </div>
+        
+          <% include ../partials/otherOrders.ejs %>
+
         </div>
         
         <br/>
