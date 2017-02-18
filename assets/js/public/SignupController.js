@@ -33,7 +33,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	$scope.orders=SAILS_LOCALS.orders;
 	$scope.ordersArr=[];
 	$scope.ordersModel=[];
-	$scope.userdetailsForm.otherorders=0;
+	$scope.signupForm.otherorders=0;
 
 	// makeOrdersArray is called every time the number of other orders changes
 	$scope.makeOrdersArray = function(){
