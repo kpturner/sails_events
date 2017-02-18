@@ -38,7 +38,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	// makeOrdersArray is called every time the number of other orders changes
 	$scope.makeOrdersArray = function(){
 		$scope.ordersArr.length=0;
-		for (var i=0;i<(parseInt($scope.userdetailsForm.otherorders));i++) {
+		for (var i=0;i<(parseInt($scope.signupForm.otherorders));i++) {
 			$scope.ordersArr.push(i);
             if (!$scope.ordersModel[i]) {
                 $scope.ordersModel.push({
@@ -55,7 +55,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 			$scope.ordersModel.forEach(function(v,i){
 				$scope.ordersModel[i].number=parseInt($scope.ordersModel[i].number)
 			});
-            $scope.userdetailsForm.otherorders=data.length;
+            $scope.signupForm.otherorders=data.length;
 			$scope.makeOrdersArray();		
 		}				
 	})
