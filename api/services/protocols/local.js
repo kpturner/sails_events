@@ -141,7 +141,7 @@ exports.register = function (req, res, next) {
             newUser.area="" 
 
           Order.find({user:newUser.id}).exec(function(err, orders){             
-            _.forEach(req.param("orders"),function(order){
+            _.forEach(orders,function(order){
               var res=Utility.orderDetails(order);
               order.label=res.label;
               order.desc=res.desc;
