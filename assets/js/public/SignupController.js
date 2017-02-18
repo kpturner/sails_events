@@ -48,21 +48,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		} 
 	}
 
-    // Get users other orders (if any)
-	$http.get("/otherorders/"+SAILS_LOCALS.userDetails.id).success(function(data, status) {
-		if (typeof data == 'object') {
-			$scope.ordersModel=data;	 	
-			$scope.ordersModel.forEach(function(v,i){
-				$scope.ordersModel[i].number=parseInt($scope.ordersModel[i].number)
-			});
-            $scope.signupForm.otherorders=data.length;
-			$scope.makeOrdersArray();		
-		}				
-	})
-	.error(function(data, status, headers, config) {
-		console.log("Error retrieving other orders "+SAILS_LOCALS.userDetails.id)
-	});
-	 
+    	 
 	// Set elements that have validity checking to dirty straight away 
  	angular.element(document).ready(function () {
 		 $timeout($scope.setDirty);
