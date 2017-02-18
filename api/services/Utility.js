@@ -538,4 +538,30 @@ module.exports = {
             return orderLabel;
         },
   
+        /**
+         * Order details
+         */
+        orderDetails:function(order){
+            // Order label
+            var res={};
+            if (order && order!="C") {
+                sails.config.events.orders.forEach(function(cfg){
+                    if (order==cfg.code) {
+                        res.label=(cfg.label)?cfg.label:"Lodge";
+                        res.desc=cfg.desc;
+                        return false;
+                    }
+                })
+                if (!res.label) {
+                    res.label="Lodge";
+                    res.desc="Craft";
+                }
+            }
+            else {
+                res.label="Lodge";
+                res.desc="Craft";
+            }
+            return res;
+        },
+
 };
