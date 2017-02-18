@@ -204,7 +204,9 @@ var AuthController = {
         if (user.authProvider!="local") {
           var delta={};
           delta.lastLoggedIn=new Date().toISOString().slice(0, 19).replace('T', ' ');
-          User.update(user.id,delta).exec(function(){});  
+          User.update(user.id,delta).exec(function(){
+            sails.controllers.order.updateOtherOrders(user.id,req.param("orders"));
+          });            
           // Upon successful login, send the user to the default page
           res.redirect('/');
         }           
