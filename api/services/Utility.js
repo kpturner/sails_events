@@ -544,9 +544,9 @@ module.exports = {
         orderDetails:function(order){
             // Order label
             var res={};
-            if (order && order!="C") {
+            if (order.code && order.code!="C") {
                 sails.config.events.orders.forEach(function(cfg){
-                    if (order==cfg.code) {
+                    if (order.code==cfg.code) {
                         res.label=(cfg.label)?cfg.label:"Lodge";
                         res.desc=cfg.desc;
                         return false;
