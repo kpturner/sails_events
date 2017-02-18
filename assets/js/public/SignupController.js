@@ -28,6 +28,40 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 
 	// Lodge required?
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
+
+	// Enable a repeater for other orders
+	$scope.orders=SAILS_LOCALS.orders;
+	$scope.ordersArr=[];
+	$scope.ordersModel=[];
+	$scope.userdetailsForm.otherorders=0;
+
+	// makeOrdersArray is called every time the number of other orders changes
+	$scope.makeOrdersArray = function(){
+		$scope.ordersArr.length=0;
+		for (var i=0;i<(parseInt($scope.userdetailsForm.otherorders));i++) {
+			$scope.ordersArr.push(i);
+            if (!$scope.ordersModel[i]) {
+                $scope.ordersModel.push({
+                    code: $scope.orders[0].code
+                });
+            }
+		} 
+	}
+
+    // Get users other orders (if any)
+	$http.get("/otherorders/"+SAILS_LOCALS.userDetails.id).success(function(data, status) {
+		if (typeof data == 'object') {
+			$scope.ordersModel=data;	 	
+			$scope.ordersModel.forEach(function(v,i){
+				$scope.ordersModel[i].number=parseInt($scope.ordersModel[i].number)
+			});
+            $scope.userdetailsForm.otherorders=data.length;
+			$scope.makeOrdersArray();		
+		}				
+	})
+	.error(function(data, status, headers, config) {
+		console.log("Error retrieving other orders "+SAILS_LOCALS.userDetails.id)
+	});
 	 
 	// Set elements that have validity checking to dirty straight away 
  	angular.element(document).ready(function () {
@@ -66,20 +100,8 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		// Submit request to Sails.
 		$http.post('/auth/local/register', {
             _csrf: SAILS_LOCALS._csrf,
-			user: $scope.signupForm
-			//name: $scope.signupForm.name,
-			//username: $scope.signupForm.username,
-			//lodge: $scope.signupForm.lodge,
-			//lodgeNo: $scope.signupForm.lodgeNo,
-			//rank: $scope.signupForm.rank,
-			//dietary: $scope.signupForm.dietary,
-			//isVO: $scope.signupForm.isVO,
-			//voLodge: $scope.signupForm.voLodge,
-			//voLodgeNo: $scope.signupForm.voLodgeNo,
-			//email: $scope.signupForm.email,
-			//password: $scope.signupForm.password,
-			//surname: $scope.signupForm.surname,
-			//firstName: $scope.signupForm.firstName,
+			user: $scope.signupForm,
+            orders: $scope.ordersModel			
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/';
