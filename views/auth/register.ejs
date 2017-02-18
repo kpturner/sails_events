@@ -45,6 +45,8 @@
     <link rel="stylesheet" href="/styles/ng-dialog/ngDialog.min.css">
     <!--STYLES END-->
 
+    <link rel="stylesheet" href="/<%=sails.config.events.skin%>">
+
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
     window.SAILS_LOCALS = {
@@ -92,7 +94,8 @@
         
   
           <% include ../partials/userDetails.ejs %>    
-            
+          <% include ../partials/otherOrders.ejs %>
+
           <!-- P A S S W O R D -->
   
           <div class="control-group form-group col-xs-7"
@@ -120,7 +123,7 @@
             </span>
           </div>
         </div>
-  
+        
         <br/>
   
           
