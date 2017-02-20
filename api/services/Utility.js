@@ -26,6 +26,17 @@ var Gravatar    = require('machinepack-gravatar');
 
 module.exports = { 
 
+    /** 
+     * Return todays date at 00:00:00
+     */
+    today: function(){
+        var t=new Date();
+		t=new Date(t.setHours(0));
+		t=new Date(t.setMinutes(0));
+		t=new Date(t.setSeconds(0));
+        return t;
+    },
+
     /**
      * @name         buildIndexes
      * @memberOf     Utility

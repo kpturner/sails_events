@@ -1725,10 +1725,7 @@ module.exports = {
 		sails.log.debug(info);  
 		Utility.diagnosticEmail(info,"Late payment daemon");		
 		// Get a list of open events
-		var today=new Date();
-		today=new Date(today.setHours(0));
-		today=new Date(today.setMinutes(0));
-		today=new Date(today.setSeconds(0));
+		var today=Utility.today()
 		Event	.find({
 					where:	{
 								or: [
@@ -1772,9 +1769,9 @@ module.exports = {
 								if (warnings.length>0) {
 									var nw=[];
 									warnings.forEach(function(booking,b){
-										var reminderDeadline=today;
+										var reminderDeadline=Utility.today();
 										if (booking.lastPaymentReminder) {
-											reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+(sails.config.events.lastPaymentReminderInterval-2));
+											reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+(sails.config.events.latePaymentReminderInterval-2));
 										}
 										if (!booking.lastPaymentReminder || reminderDeadline <= today) {
 											nw.push(booking)
@@ -1814,9 +1811,9 @@ module.exports = {
                                 // Process late payers
                                 bookings.forEach(function(booking,b){
                                     // Only email a reminder if a week has passed since last reminder
-                                    var reminderDeadline=today;
+									var reminderDeadline=Utility.today();
                                     if (booking.lastPaymentReminder) {
-										reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+sails.config.events.lastPaymentReminderInterval);							
+										reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+sails.config.events.latePaymentReminderInterval);							
                                     }
                                     //sails.log.debug(booking.user.name+" reminder deadline "+reminderDeadline);	
                                     if (!booking.lastPaymentReminder || reminderDeadline <= today) {
