@@ -1799,7 +1799,7 @@ module.exports = {
 											{
 												//to: booking.user.email,
 												to: to,
-												bcc: (sails.config.events.developer && sails.config.events.developer!=organiser.email)?sails.config.events.developer:"",
+												bcc: (sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
 												subject: event.name + " - Late payment reminder warning"
 											},
 											function(err) {if (err) console.log(err);}
@@ -1855,7 +1855,7 @@ module.exports = {
                                                 //to: booking.user.email,
                                                 to: to,
                                                 cc: cc,
-                                                bcc: (sails.config.events.developer && sails.config.events.developer!=organiser.email)?sails.config.events.developer:"",
+                                                bcc: (sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
                                                 subject: event.name + " - Late payment reminder"
                                             },
                                             function(err) {if (err) console.log(err);}

@@ -40,7 +40,7 @@ module.exports.bootstrap = function(cb) {
     // Start the late payment daemon
     if (sails.config.events.latePaymentDaemon) {
         // Do this 30 minutes after start just in case we restart lots of times to fix things.
-        // We don't want to SPAM organisers...execpt in development mode of course
+        // We don't want to SPAM organisers...except in development mode of course
         var waitTime=(1000 * 60 * 30);
         if (process.env.NODE_ENV=='development') {
             waitTime=10000
