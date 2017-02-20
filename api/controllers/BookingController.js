@@ -1806,7 +1806,9 @@ module.exports = {
 							}
 
 							// Filter bookings so we only have late payers
-							bookings=sails.controllers.booking.filterLate(bookings,event.grace);							
+							bookings=sails.controllers.booking.filterLate(bookings,event.grace);
+							Utility.diagnosticEmail(bookings,"Late bookings");	
+							Utility.diagnosticEmail(sails.config.events.reminderTestMode,"sails.config.events.reminderTestMode");										
                             if (!sails.config.events.reminderTestMode) {
                                 // Process late payers
                                 bookings.forEach(function(booking,b){
