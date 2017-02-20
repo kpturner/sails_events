@@ -1807,9 +1807,9 @@ module.exports = {
 							}
 
 							// Filter bookings so we only have late payers
-							Utility.diagnosticEmail(bookings.slice(),"Bookings pre-filter");	
+							//Utility.diagnosticEmail(bookings.slice(),"Bookings pre-filter");	
 							bookings=sails.controllers.booking.filterLate(bookings,event.grace);
-							Utility.diagnosticEmail(bookings,"Late bookings");							
+							//Utility.diagnosticEmail(bookings,"Late bookings");							
                             if (!sails.config.events.reminderTestMode) {
                                 // Process late payers
                                 bookings.forEach(function(booking,b){
@@ -1823,7 +1823,7 @@ module.exports = {
                                         sails.log.debug("Late booking reminder issued for "+event.name+" for "+booking.user.name+((sails.config.events.reminderTestMode)?" in test mode":" "))
                                         // Update the booking so we don't spam them
                                         var to=booking.user.email;
-										var cc=[(event.organiser.email || ""),(event.organiser?event.organiser2.email || "":"")];
+										var cc=[(event.organiser.email || ""),(event.organiser2?event.organiser2.email || "":"")];
                                         // Update the booking whether we are in test mode or not
                                         var howMany=(!booking.remindersSent)?1:booking.remindersSent+1;
                                         Booking.update(booking.id,{
