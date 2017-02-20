@@ -1770,10 +1770,11 @@ module.exports = {
 									var nw=[];
 									warnings.forEach(function(booking,b){
 										var reminderDeadline=Utility.today();
+										reminderDeadline.setDate(reminderDeadline-2);
 										if (booking.lastPaymentReminder) {
-											reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+(sails.config.events.latePaymentReminderInterval-2));
+											reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+(sails.config.events.latePaymentReminderInterval-2);
 										}
-										if (!booking.lastPaymentReminder || reminderDeadline <= today) {
+										if (reminderDeadline <= today) {
 											nw.push(booking)
 										}	
 									})
@@ -1806,7 +1807,7 @@ module.exports = {
 							}
 
 							// Filter bookings so we only have late payers
-							Utility.diagnosticEmail(bookings,"Bookings pre-filter");	
+							Utility.diagnosticEmail(bookings.slice(),"Bookings pre-filter");	
 							bookings=sails.controllers.booking.filterLate(bookings,event.grace);
 							Utility.diagnosticEmail(bookings,"Late bookings");							
                             if (!sails.config.events.reminderTestMode) {
@@ -1818,7 +1819,7 @@ module.exports = {
 										reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+sails.config.events.latePaymentReminderInterval);							
                                     }
                                     //sails.log.debug(booking.user.name+" reminder deadline "+reminderDeadline);	
-                                    if (!booking.lastPaymentReminder || reminderDeadline <= today) {
+                                    if (reminderDeadline <= today) {
                                         sails.log.debug("Late booking reminder issued for "+event.name+" for "+booking.user.name+((sails.config.events.reminderTestMode)?" in test mode":" "))
                                         // Update the booking so we don't spam them
                                         var to=booking.user.email;
