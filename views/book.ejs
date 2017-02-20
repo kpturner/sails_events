@@ -41,6 +41,7 @@
       salutations: <%- JSON.stringify(sails.config.events.salutations) %>,
       areas: <%- JSON.stringify(res.locals.areas) %>,
       lodgeMandatory: <%- res.locals.lodgeMandatory %>,
+      latePaymentReminderInterval: <%- sails.config.events.latePaymentReminderInterval %>,
       selectedUserId: <%- JSON.stringify(res.locals.selectedUserId) %>,
       potentialDuplicates: <%- JSON.stringify(res.locals.potentialDuplicates)%>,
       orders: <%- JSON.stringify(sails.config.events.orders) %>,
@@ -102,7 +103,9 @@
         <h4 ng-show="!eventBookings && !userBookings && !openForBookings">NOT OPEN FOR <span ng-hide="event.regInterest">BOOKINGS</span><span ng-show="event.regInterest">REGISTRATION</span> UNTIL {{ event.openingDate | date : 'EEE, MMM dd, yyyy'}}</h4>      
         <h4 ng-show="!user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid && mode!='delete'"><i>Contact the organiser to amend the number of places booked</i></h4>      
         <h4 ng-show="!eventBookings && !userBookings && paid && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>
-        <h4 ng-show="(eventBookings || userBookings) && bookingForm.remindersSent && bookingForm.remindersSent>0"><b>PAYMENT REMINDERS SENT: {{bookingForm.remindersSent}}</b></h4>           
+        <h4 ng-show="(eventBookings || userBookings) && !paid && bookingForm.remindersSent && bookingForm.remindersSent>0"><b>PAYMENT REMINDERS SENT: {{bookingForm.remindersSent}}</b></h4>   
+        <h4 ng-show="(eventBookings || userBookings) && !paid && bookingForm.lastPaymentReminder"><b>LAST PAYMENT REMINDER: {{ bookingForm.lastPaymentReminder | date : 'EEE, MMM dd, yyyy'}}</b></h4>  
+        <h4 ng-show="(eventBookings || userBookings) && !paid && nextPaymentReminder"><b>NEXT PAYMENT REMINDER: {{ nextPaymentReminder | date : 'EEE, MMM dd, yyyy'}}</b></h4>                
         <h5 ng-show="existingBooking && !paid">Payment deadline: <b>{{ deadline }}</b></h5> 
         <h5 ng-show="event.additionalInfo">
             <a href="{{event.additionalInfo}}" target="_blank">

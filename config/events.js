@@ -72,6 +72,9 @@ module.exports.events = {
 	// Late payment interval
 	latePaymentInterval: process.env.LATEPAYMENTINTERVAL || 86400000,
 	
+	// Late payment reminder interval (days)
+	latePaymentReminderInterval: 7,
+
 	// Additional info field label
 	//additionalInfoLabel: "Sit me with"
 	

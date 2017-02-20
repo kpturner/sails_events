@@ -1774,7 +1774,7 @@ module.exports = {
 									warnings.forEach(function(booking,b){
 										var reminderDeadline=today;
 										if (booking.lastPaymentReminder) {
-											reminderDeadline=new Date((booking.lastPaymentReminder).getTime()+(86400000*5));
+											reminderDeadline=new Date((booking.lastPaymentReminder).getTime()+(86400000*(sails.config.events.lastPaymentReminderInterval-2)));
 										}
 										if (!booking.lastPaymentReminder || reminderDeadline <= today) {
 											nw.push(booking)
@@ -1816,7 +1816,7 @@ module.exports = {
                                     // Only email a reminder if a week has passed since last reminder
                                     var reminderDeadline=today;
                                     if (booking.lastPaymentReminder) {
-                                        reminderDeadline=new Date((booking.lastPaymentReminder).getTime()+(86400000*7));									
+                                        reminderDeadline=new Date((booking.lastPaymentReminder).getTime()+(86400000*sails.config.events.lastPaymentReminderInterval));									
                                     }
                                     //sails.log.debug(booking.user.name+" reminder deadline "+reminderDeadline);	
                                     if (!booking.lastPaymentReminder || reminderDeadline <= today) {

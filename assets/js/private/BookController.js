@@ -243,6 +243,16 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Display the payment details & blurb
 	$scope.bookingForm.paymentDetails=$scope.event.paymentDetails;
 	$scope.bookingForm.blurb=$scope.event.blurb;
+
+	// Payment reminder info
+	if (!$scope.bookingForm.paid) {
+		// When is the next reminder due?		
+		if (SAILS_LOCALS.booking.remindersSent && SAILS_LOCALS.booking.remindersSent>0) {
+			// Add the interval to the last reminder date
+			$scope.nextPaymentReminder=new Date();
+			$scope.nextPaymentReminder.setDate(new Date(SAILS_LOCALS.booking.lastPaymentReminder).getDate()+SAILS_LOCALS.latePaymentReminderInterval);
+		}		
+	}
 	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
