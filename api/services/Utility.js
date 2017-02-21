@@ -31,9 +31,10 @@ module.exports = {
      */
     today: function(){
         var t=new Date();
-		t=new Date(t.setHours(0));
-		t=new Date(t.setMinutes(0));
-		t=new Date(t.setSeconds(0));
+		t.setHours(0);
+		t.setMinutes(0);
+		t.setSeconds(0);
+        t.setMilliseconds(0);
         return t;
     },
 
