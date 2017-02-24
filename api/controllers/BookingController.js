@@ -1921,6 +1921,7 @@ module.exports = {
 				labelNo="orderNo";
 			}		
 			var amountPaid=booking.amountPaid/booking.places;
+			var mop=booking.mop || "";
 			var row={};   
             //if (!user) {
             //    row.seq=parseInt(booking.ref.replace(prefix,""));
@@ -1945,7 +1946,8 @@ module.exports = {
 			row.places=booking.places;
 			row.paid=booking.paid || "";
 			row.cost=booking.cost || "";
-			row.amountPaid=amountPaid || "";	
+			row.amountPaid=amountPaid || "";
+			row.mop=mop;	
             row.creationDate=booking.bookingDate;
 			if (voReqd && booking.user.isVO) {
 				row.voLodge=booking.user.voLodge;
@@ -1965,7 +1967,7 @@ module.exports = {
 				row[labelNo]=booking.user.lodgeNo || "";	
 				row.centre=booking.user.centre || "";
 				row.area=booking.user.area || "";
-				pushRow(booking,amountPaid,row);			
+				pushRow(booking,amountPaid,mop,row);			
 				// Next booking
 				next();
 			}
@@ -1984,12 +1986,13 @@ module.exports = {
 						}
 						return false;
 					})
-					pushRow(this.booking,this.amountPaid,this.row);
+					pushRow(this.booking,this.amountPaid,this.mop,this.row);
 					// Next booking
 					next(err);
 				},{
 					booking:booking,
 					amountPaid: amountPaid,
+					mop: mop,
 					row:row
 				})
 				
@@ -2018,7 +2021,7 @@ module.exports = {
 			sails.controllers.booking.sendCsv(req, res, data, options)			
 		})
 
-		function pushRow(booking,amountPaid,row){
+		function pushRow(booking,amountPaid,mop,row){
 			count++;
 			row.count=count;    
 			data.push(row);
@@ -2043,7 +2046,8 @@ module.exports = {
 				row.area=addition.area || booking.user.area || "";
 				row.dietary=addition.dietary || "";
 				row.paid=booking.paid || "";
-				row.amountPaid=amountPaid || "";   
+				row.amountPaid=amountPaid || "";  
+				row.mop=mop || "";	 
                 // If the createdAt date is later than the booking date for the main booking, use that for the booking date
                 //var ca=new Date(addition.createdAt.getFullYear(), addition.createdAt.getMonth(), addition.createdAt.getDate());
                 //var ba=new Date(booking.bookingDate.getFullYear(), booking.bookingDate.getMonth(), booking.bookingDate.getDate());
