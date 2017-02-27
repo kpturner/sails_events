@@ -79,7 +79,7 @@
         </div>
          
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading">
-          <span class="fa fa-filter"></span> <span ng-show="!filterForm.loading"> Filter </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>
+          <span class="fa fa-filter"></span> <span ng-show="!filterForm.loading"> Filter </span><span ng-hide="event.regInterest || filterForm.loading">bookings </span><span ng-show="event.regInterest && !filterForm.loading">interest </span>
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
