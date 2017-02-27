@@ -1770,7 +1770,7 @@ module.exports = {
 									var nw=[];
 									warnings.forEach(function(booking,b){
 										var reminderDeadline=Utility.today();
-										reminderDeadline.setDate(reminderDeadline-2);
+										reminderDeadline.setDate(reminderDeadline.getDate()-2);
 										if (booking.lastPaymentReminder) {
 											reminderDeadline.setDate(booking.lastPaymentReminder.getDate()+(sails.config.events.latePaymentReminderInterval-2));
 										}
