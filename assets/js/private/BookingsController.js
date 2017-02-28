@@ -7,8 +7,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.hideCapacity=false;
 		$scope.newBooking=false;
 		$scope.addingPD=false;
-		$scope.permanentDiningList=SAILS_LOCALS.permanentDiningList;
-		 
+				 
 		$scope.filterForm = {
 			loading: false,
 			paging: false,			
@@ -17,9 +16,11 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		
 		$scope.myBookings 	= SAILS_LOCALS.myBookings;
 		$scope.eventBookings= SAILS_LOCALS.eventBookings;
-		$scope.userBookings= SAILS_LOCALS.userBookings;
+		$scope.userBookings	= SAILS_LOCALS.userBookings;
 		$scope.event 		= SAILS_LOCALS.event;
 		$scope.selectedUser	= SAILS_LOCALS.selectedUser;
+		$scope.viewOnly		=SAILS_LOCALS.viewOnly;
+		$scope.permanentDiningList=SAILS_LOCALS.permanentDiningList;
 		$scope.allAddresses = "";
 		$scope.event.bookInText=($scope.event.regInterest)?"register interest":"book in"; 
 		

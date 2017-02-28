@@ -37,6 +37,7 @@
         myBookings: <%- myBookings %>,
         eventBookings: <%- eventBookings %>,
         userBookings: <%- userBookings %>,
+        viewOnly: <%- (viewOnly)?viewOnly:false %>,
         permanentDiningList: <%- sails.config.events.permanentDiningList %>,
       };      
     </script>
@@ -83,22 +84,24 @@
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="createNewBooking()" ng-disabled="newBooking" ng-show="eventBookings || userBookings">
+       
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="createNewBooking()" ng-disabled="newBooking" ng-show="(eventBookings || userBookings) && !viewOnly">
           <span ng-show="!newBooking">Create </span><span ng-hide="newBooking || event.regInterest">booking </span><span ng-show="!newBooking && event.regInterest">interest </span>
           <span class="fa-pulse fa fa-spinner" ng-show="newBooking" ></span>
           <span ng-show="newBooking">Please wait...</span>
         </button>
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addPD()" ng-disabled="addingPD"  ng-show="permanentDiningList && eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addPD()" ng-disabled="addingPD"  ng-show="!viewOnly && permanentDiningList && eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest">
           <span ng-show="!addingPD">Add permanent diners</span>
           <span class="fa-pulse fa fa-spinner" ng-show="addingPD" ></span>
           <span ng-show="addingPD">Adding diners...</span>        
         </button> 
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking || viewOnly">
           <span class="fa fa-download"></span><span> Download </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>         
         </button>  
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="!newBooking && eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="!newBooking && eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest && !viewOnly">
           <span class="fa fa-download"></span><span> Download Lodge Room</span>         
         </button>  
+        
         </br>  
         <!-- P A G I N A T I O N -->
         <!-- Only show this on desktops etc -->
@@ -129,7 +132,7 @@
             
      
       <div class="container">   
-        <div ng-show="bookings.length>0"> 
+        <div ng-show="bookings.length>0 && !viewOnly"> 
           <h4 class="hidden-xs hidden-sm">
             <a href="mailto:?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}&bcc={{allAddresses}}" 
                 target="_top">

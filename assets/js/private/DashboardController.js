@@ -5,6 +5,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 		$scope.userBookings=false;
 		$scope.selectedUser={};
 		$scope.dashboard=true;
+		$scope.usersCanViewBookings=SAILS_LOCALS.usersCanViewBookings;
 
 		// Get the events
 		$http.get('/openevents').success(function(data, status) {

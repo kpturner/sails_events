@@ -114,7 +114,8 @@
         </h5>         
         <h5 ng-hide="event.capacity<=0">Items marked with * are mandatory</h5>  
         
-        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !user.isOrganiser && !myBookings && !eventBookings && !userBookings" disable-contents="mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to EventsModule -->
+        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !mode=='display' !mode=='delete' && !user.isOrganiser && !myBookings && !eventBookings && !userBookings" 
+                disable-contents="mode=='display' || mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to EventsModule -->
            
            <% include partials/bookingDetails.ejs %>  
           
@@ -126,28 +127,29 @@
         <!--
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || (!eventBookings && !userBookings && paid) || bookingForm.loading">
         -->
+        <div ng-hide="mode=='display'">
+          <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addGuest()" ng-show="(openForBookings && bookingForm.places<placesMax && mode!='delete')">
+            <span>Add guest</span>     
+          </button>
 
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addGuest()" ng-show="(openForBookings && bookingForm.places<placesMax && mode!='delete')">
-          <span>Add guest</span>     
-        </button>
+          <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="bookingForm.loading || event.capacity<=0 || !openForBookings">
+            <span ng-show="!bookingForm.loading && mode=='delete' && !event.regInterest">Cancel booking</span>
+            <span ng-show="!bookingForm.loading && mode=='delete' && event.regInterest">Cancel interest</span>
+            <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete' && !event.regInterest">Book now</span>
+            <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete' && event.regInterest">Register interest</span>
+            <span ng-show="!bookingForm.loading && existingBooking && mode!='delete' && !event.regInterest">Update booking</span>
+            <span ng-show="!bookingForm.loading && existingBooking && mode!='delete' && event.regInterest">Update interest</span>
+            <span class="fa-pulse fa fa-spinner" ng-show="bookingForm.loading" ></span>
+            <span ng-show="bookingForm.loading && !existingBooking  && mode!='delete'">Creating...</span>
+            <span ng-show="bookingForm.loading && existingBooking  && mode!='delete'">Updating...</span>
+            <span ng-show="bookingForm.loading && mode=='delete'">Cancelling...</span>
+          </button>
 
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="bookingForm.loading || event.capacity<=0 || !openForBookings">
-          <span ng-show="!bookingForm.loading && mode=='delete' && !event.regInterest">Cancel booking</span>
-          <span ng-show="!bookingForm.loading && mode=='delete' && event.regInterest">Cancel interest</span>
-          <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete' && !event.regInterest">Book now</span>
-          <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete' && event.regInterest">Register interest</span>
-          <span ng-show="!bookingForm.loading && existingBooking && mode!='delete' && !event.regInterest">Update booking</span>
-          <span ng-show="!bookingForm.loading && existingBooking && mode!='delete' && event.regInterest">Update interest</span>
-          <span class="fa-pulse fa fa-spinner" ng-show="bookingForm.loading" ></span>
-          <span ng-show="bookingForm.loading && !existingBooking  && mode!='delete'">Creating...</span>
-          <span ng-show="bookingForm.loading && existingBooking  && mode!='delete'">Updating...</span>
-          <span ng-show="bookingForm.loading && mode=='delete'">Cancelling...</span>
-        </button>
-
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="transferBooking()" ng-show="(mode!='delete' && mode!='create' && selectedUserId)">
-          <span ng-show="!bookingForm.transferring">Transfer booking</span>  
-          <span ng-show="bookingForm.transferring">Transferring booking...</span>          
-        </button>
+          <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="transferBooking()" ng-show="(mode!='delete' && mode!='create' && selectedUserId)">
+            <span ng-show="!bookingForm.transferring">Transfer booking</span>  
+            <span ng-show="bookingForm.transferring">Transferring booking...</span>          
+          </button>
+        </div>
   
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form>

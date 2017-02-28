@@ -89,6 +89,7 @@ module.exports = {
 			  myBookings: false,
 			  eventBookings: true,
 			  userBookings: false,
+			  viewOnly: req.param("viewonly"),
 			  errors: req.flash('error')
 			});  	
 		})		
@@ -198,7 +199,8 @@ module.exports = {
 		var userId=req.param("userid");
 		var selectedUserId=req.param("selecteduserid"); //Only populated when an admin is making a booking on behalf of someone else
 		var action=req.param("action");
-		var mode=(selectedUserId && !bookingId)?"create":"edit";
+		var mode=req.param("mode")?req.param("mode"):
+					(selectedUserId && !bookingId)?"create":"edit";
 		if (action) {
 			mode=action.substr(0,1).toUpperCase()+action.substr(1);	
 		}			

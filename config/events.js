@@ -41,6 +41,9 @@ module.exports.events = {
 	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
 	multipleBookings: false,
 
+	// Users can view bookings for an events
+	usersCanViewBookings: false,
+
     // Orders supported by this instance (e.g. {"code":"C","desc":"Craft"},{"code":"RA","desc":"Royal Arch"} )
 	// Craft is the default and if no others are added then "Order" is not something that will be prompted for anywhere
 	orders: [{"code":"C","desc":"Craft"}],
