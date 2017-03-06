@@ -156,7 +156,7 @@ module.exports = {
                 if (typeof err=="string")
                     errStr=err
                 else
-                    errStr=JSON.stringify(err)
+                    errStr=err.toString();
                 Email.send(
                     "diagnostic",
                     {
@@ -574,6 +574,41 @@ module.exports = {
                 res.desc="Craft";
             }
             return res;
+        },
+
+        /**
+         * Email error. Handle errors that occur sending emails!
+         */
+        emailError: function(err){
+            if (err) {
+                var errStr;
+                if (typeof err=="string")
+                    errStr=err
+                else
+                    errStr=err.toString();
+                sails.log.error("Emailing error: "+err);
+                // Try to inform the developer
+                if (sails.config.events.developer) {
+                    setTimeout(function(){
+                        try {
+                            Email.send(
+                                "diagnostic",
+                                {
+                                    err:errStr
+                                },
+                                {
+                                    to: sails.config.events.developer,
+                                    subject: "Email failure"
+                                },
+                                function(){}
+                            )	
+                        }
+                        catch(e) {
+                            // No dice!
+                        }
+                    },10)
+                }
+            };
         },
 
 };
