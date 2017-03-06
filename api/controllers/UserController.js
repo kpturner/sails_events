@@ -28,7 +28,7 @@ module.exports = {
 			criteria.page=1;
 		}
 		if (!criteria.limit) {
-			criteria.limit=99999;
+			criteria.limit=50;
 		}
 		if (!criteria.filter) {
 			criteria.filter="";
@@ -113,7 +113,7 @@ module.exports = {
 		var where = {};
 		var pag={
 			"page": 	(criteria.page || 1),
-			"limit": 	(criteria.limit || 99999)
+			"limit": 	(criteria.limit || 50)
 		}
 		var filter=criteria.filter;
 
