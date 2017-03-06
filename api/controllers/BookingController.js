@@ -67,7 +67,8 @@ module.exports = {
 		  myBookings: true,
 		  eventBookings: false,
 		  userBookings: false,
-		  errors: req.flash('error')
+		  viewOnly: false,
+		  errors: req.flash('error')		  
 		});  
 	}, 
 	
@@ -116,6 +117,7 @@ module.exports = {
 			  myBookings: false,
 			  eventBookings: false,
 			  userBookings: true,
+			  viewOnly: false,
 			  errors: req.flash('error')
 			});  	
 		})		
