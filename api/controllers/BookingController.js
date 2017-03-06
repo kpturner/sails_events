@@ -1275,7 +1275,7 @@ module.exports = {
 					{
 						user: req.user,
 						event: event,
-						what: "bookings",
+						what: event.regInterest?"interest":"bookings",
 					},
 					{
 						from: event.name + ' <'+sails.config.events.email+'>',
