@@ -724,7 +724,7 @@ module.exports = {
 																	errStr=err
 																else
 																	errStr=JSON.stringify(err)
-																sails.log.error("Emailing error: "+errStr);
+																sails.log.error("Emailing error: "+err);
 																// Try to inform the developer
 																if (sails.config.events.developer) {
 																	setTimeout(function(){
@@ -1267,6 +1267,55 @@ module.exports = {
 				sails.log.error(err);
 				return res.json({});
 			}
+
+			// Diagnostic email required?
+			if (sails.config.events.emailDeveloperOnDownload && download && sails.config.events.developer) {
+				Email.send(
+					"downloadAlert",
+					{
+						user: req.user,
+						event: event,
+						what: "bookings",
+					},
+					{
+						from: event.name + ' <'+sails.config.events.email+'>',
+						to: sails.config.events.developer,
+						subject: "Download alert"
+					},
+					function(err){
+						if (err) {
+							var errStr;
+							if (typeof err=="string")
+								errStr=err
+							else
+								errStr=JSON.stringify(err)
+							sails.log.error("Emailing error: "+err);
+							// Try to inform the developer
+							if (sails.config.events.developer) {
+								setTimeout(function(){
+									try {
+										Email.send(
+											"diagnostic",
+											{
+												err:errStr
+											},
+											{
+												to: sails.config.events.developer,
+												subject: "Email failure"
+											},
+											function(){}
+										)	
+									}
+									catch(e) {
+										// No dice!
+									}
+								},10)
+							}
+						};
+					}
+				)		
+			}
+
 			// Do we need to filter late bookings?			
 			getBookings(req,res,event);			
 		});
@@ -1876,7 +1925,7 @@ module.exports = {
 	 * Download bookings
 	 */
 	 download: function(req, res, prefix, eventBookings, addressReqd, voReqd, bookings, user) {
-		 
+
 	 	if (!bookings) {
 			bookings=[]
 		}
@@ -2077,6 +2126,55 @@ module.exports = {
         // Get the event
         Event.findOne(req.param("eventid")).exec(function(err,event){
             if (event) {
+
+				// Diagnostic email required?
+				if (sails.config.events.emailDeveloperOnDownload && sails.config.events.developer) {
+					Email.send(
+						"downloadAlert",
+						{
+							user: req.user,
+							event: event,
+							what: "the lodge room"
+						},
+						{
+							from: event.name + ' <'+sails.config.events.email+'>',
+							to: sails.config.events.developer,
+							subject: "Download alert"
+						},
+						function(err){
+							if (err) {
+								var errStr;
+								if (typeof err=="string")
+									errStr=err
+								else
+									errStr=JSON.stringify(err)
+								sails.log.error("Emailing error: "+err);
+								// Try to inform the developer
+								if (sails.config.events.developer) {
+									setTimeout(function(){
+										try {
+											Email.send(
+												"diagnostic",
+												{
+													err:errStr
+												},
+												{
+													to: sails.config.events.developer,
+													subject: "Email failure"
+												},
+												function(){}
+											)	
+										}
+										catch(e) {
+											// No dice!
+										}
+									},10)
+								}
+							};
+						}
+					)		
+				}
+
                 var seq=0;
                 options.filename=event.name+'_lr_' + ((new Date().getTime().toString())) + '.csv';
                 LodgeRoom.find({event:event.id}).sort('createdAt')

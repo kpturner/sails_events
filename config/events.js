@@ -10,9 +10,14 @@
 
 module.exports.events = {
 
+	// Default skin
 	skin:	"skins/defaultskin.css",
     
+	// Enter an email address if you want developer(s) to get bcc's on everything
     developer: process.env.DEVELOPER || "kevin@kpturner.co.uk",
+
+	// Email developer when a download is activated
+	emailDeveloperOnDownload: false,
 
 	// Maintenance mode?
 	maintenance: false,
