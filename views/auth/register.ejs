@@ -114,7 +114,7 @@
           <!-- C O N F I R M  P A S S W O R D -->
   
           <div class="control-group form-group col-xs-10"
-             ng-class="{'has-error':signup.confirmation.$invalid &&
+             ng-class="{'has-error':(signup.confirmation.$invalid || signup.password.$error.compareTo) &&
                                 signup.confirmation.$dirty}">
             <label>Re-enter your password</label>
             <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="signupForm.confirmPassword" required>

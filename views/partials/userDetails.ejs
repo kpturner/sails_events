@@ -170,7 +170,7 @@ ng-class="{'has-error':<%-form%>.email.$invalid &&
  <!-- C O N F I R M  E M A I L -->
 
 <div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-form%>.confirmemail.$invalid &&
+ng-class="{'has-error':(<%-form%>.confirmemail.$invalid || <%-form%>.email.$error.compareTo) &&
                       <%-form%>.confirmemail.$dirty}">
   <label>Re-enter your email address</label>
   <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'" >
