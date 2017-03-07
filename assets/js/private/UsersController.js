@@ -113,8 +113,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 						$scope.augment(sailsResponse.data);	
 						if (scrolling) {
 							// Add data to existing scope
-							$scope.users = $.merge($scope.users,sailsResponse.data);							
-							$scope.usersLoading=false;	
+							$scope.users = $.merge($scope.users,sailsResponse.data);
 							// Run callback if required
 							if (cb && typeof cb=="function") {
 								cb(sailsResponse.data);
@@ -125,8 +124,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 						}
 						else {
 							$scope.users = sailsResponse.data;	
-							$scope.scrollDisabled=false;							
-							$scope.usersLoading=false;	
+							$scope.scrollDisabled=false;	
 						}
 					}
 					else {
@@ -142,7 +140,8 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 				})
 				.finally(function eitherWay(){
 					$scope.filterForm.loading = false;
-					$scope.filterForm.paging = false;									
+					$scope.filterForm.paging = false;	
+					$scope.usersLoading=false;									
 				})
 		}
 
