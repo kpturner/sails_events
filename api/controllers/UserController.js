@@ -109,7 +109,13 @@ module.exports = {
 			criteria={}
 		}
 		req.session.userCriteria=JSON.stringify(criteria);
-		req.session.bookingCriteria="{}";				
+		req.session.bookingCriteria="{}";	
+
+		// Special case for no data
+		if (req.param("nodata")=="1") {
+			return res.json({});
+		}
+
 		var where = {};
 		var pag={
 			"page": 	(criteria.page || 1),

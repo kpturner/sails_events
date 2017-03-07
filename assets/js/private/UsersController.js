@@ -22,10 +22,10 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 						}												
 						// Change the filter criteria to match what we really have
 						$scope.filterForm.criteria.limit=$scope.scrollPage*$scope.initialLimit;
-						$scope.filterForm.criteria.page=1;	
+						$scope.filterForm.criteria.page=1; 	
 						if (data.length==0) {							
 							// Dummy get just to update the criteria server side
-							$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
+							$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+"?nodata=1")
 						}
 						else {
 							setTimeout(function(){
