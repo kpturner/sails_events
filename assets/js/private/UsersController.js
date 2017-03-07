@@ -8,7 +8,8 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		
 		$scope.scroll=function(){ 
 			if(!$scope.scrollDisabled) {
-				if($(window).scrollTop() == $(document).height() - $(window).height()) {
+				// Use >= (not ==) if we want iPads to work 
+				if($(window).scrollTop() + $(window).height() >= $(document).height()) {
 					// Hit bottom
 					$scope.scrollPage+=1;
 					$scope.filterForm.criteria.page=$scope.scrollPage;
