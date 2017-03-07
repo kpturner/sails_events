@@ -90,7 +90,7 @@ module.exports = {
 			  myBookings: false,
 			  eventBookings: true,
 			  userBookings: false,
-			  viewOnly: req.param("viewonly"),
+			  viewOnly: req.param("viewonly") || false,
 			  errors: req.flash('error')
 			});  	
 		})		
