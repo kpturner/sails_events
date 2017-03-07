@@ -7,17 +7,30 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		});
 		
 		$scope.scroll=function(){ 
-			if(!$scope.pagingDisabled) {
+			if(!$scope.scrollDisabled) {
 				if($(window).scrollTop() == $(document).height() - $(window).height()) {
-					$scope.filterForm.criteria.limit+=$scope.filterForm.initialLimit;
-					$scope.pagingDisabled=true;
-					$scope.filterUsers(true,function(){
-						if ($scope.filterForm.totalLoaded!=$scope.users.length) {
-							$scope.filterForm.totalLoaded=$scope.users.length;
+					// Hit bottom
+					$scope.scrollPage+=1;
+					$scope.filterForm.criteria.page=$scope.scrollPage;
+					$scope.filterForm.criteria.limit=$scope.initialLimit;
+					$scope.scrollDisabled=true;
+					$scope.filterUsers(false,true,function(data){	
+						if (data.length==0) {
+							// Out of data
+							$scope.scrollPage-=1;
+						}												
+						// Change the filter criteria to match what we really have
+						$scope.filterForm.criteria.limit=$scope.scrollPage*$scope.initialLimit;
+						$scope.filterForm.criteria.page=1;	
+						if (data.length==0) {							
+							// Dummy get just to update the criteria server side
+							$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
+						}
+						else {
 							setTimeout(function(){
-								$scope.pagingDisabled=false;
-							},500)		
-						}									
+								$scope.scrollDisabled=false;							
+							},500)	
+						}							
 					});			
 				}				
 			}			
@@ -32,11 +45,11 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		 
 		$scope.filterForm = {
 			loading: false,
-			paging: false,			
-			criteria:SAILS_LOCALS.criteria,			
-			initialLimit:SAILS_LOCALS.criteria.limit,
-			totalLoaded:0
+			paging: false,	
+			criteria:SAILS_LOCALS.criteria,						
 		}
+		$scope.initialLimit=SAILS_LOCALS.criteria.limit;
+		$scope.scrollPage=1;
 
 		// Get the users
 		$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
@@ -45,7 +58,6 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 				if (typeof data == 'object') {
 					$scope.users = data; 
                 	$scope.augment($scope.users);
-					$scope.filterForm.totalLoaded=$scope.users.length;	
 				}
 				else {
 					window.location = '/';
@@ -77,27 +89,35 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		/**
 		 * Filter users
 		 */  
-		$scope.filterUsers = function(paging,cb){
+		$scope.filterUsers = function(paging,scrolling,cb){
 			if (paging) {
 				$scope.filterForm.paging=true;
+				$scope.initialLimit=$scope.filterForm.criteria.limit;			
 			}
 			else {
 				$scope.filterForm.loading=true;
 			}
 			$scope.usersLoading=true;
-			// Submit request to Sails.
+			// Submit request to server.
 			$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
-						$scope.users = sailsResponse.data;	
-						$scope.augment($scope.users);		
-						if (cb && typeof cb=="function") {
-							cb();
-						}	
+						$scope.augment(sailsResponse.data);	
+						if (scrolling) {
+							// Add data to existing scope
+							$scope.users = $.merge($scope.users,sailsResponse.data);	
+							// Run callback if required
+							if (cb && typeof cb=="function") {
+								cb(sailsResponse.data);
+							}	
+							else {								
+								$scope.scrollDisabled=false;
+							}		
+						}
 						else {
-							$scope.filterForm.totalLoaded=$scope.users.length;
-							$scope.pagingDisabled=false;
-						}		
+							$scope.users = sailsResponse.data;	
+							$scope.scrollDisabled=false;
+						}
 					}
 					else {
 						window.location="/";
