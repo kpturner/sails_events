@@ -224,7 +224,7 @@ module.exports = {
 						bookings.forEach(function(booking,index){
 							places+=booking.places
 							// Look for potential duplicates
-							if (!sails.config.events.multipleBookings) {
+							if (!sails.config.events.multipleBookings && userForBooking) {
 								booking.additions.forEach(function(addition,a){
 									if (
 											addition.surname && userForBooking.surname && addition.surname.toLowerCase()==userForBooking.surname.toLowerCase()
@@ -288,7 +288,12 @@ module.exports = {
 						})
 				}
 				else {
-					return preparedBooking(res.locals.user,criteria);
+					if (eventBookings) {
+						return preparedBooking(null,criteria);
+					}
+					else {
+						return preparedBooking(res.locals.user,criteria);
+					}					
 				}
 			}
 			
