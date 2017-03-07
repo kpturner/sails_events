@@ -3,7 +3,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		// Lets trap the scroll to bottom on the body and
 		// increment the page when they get there (it will load more data if need be)
 		$(document).ready(function(){			
-			$(window).scroll($scope.scroll);
+			$(window).scroll($scope.scroll);			
 		});
 		
 		$scope.scroll=function(){ 
@@ -50,6 +50,13 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		}
 		$scope.initialLimit=SAILS_LOCALS.criteria.limit;
 		$scope.scrollPage=1;
+		// If paging is not visible (i.e. the user cannot do it manually because of screen size)
+		// make sure that page is set to 1 regardless of what was stored in the session. This 
+		// means that if the user has partially scrolled with dynamic update and then clicks
+		// on this screen again they go back to the beginning
+		if (!$("#page").is(":visible")) {
+			$scope.filterForm.criteria.page=1;
+		}
 
 		// Get the users
 		$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
