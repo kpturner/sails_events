@@ -22,12 +22,10 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 						}												
 						// Change the filter criteria to match what we really have
 						$scope.filterForm.criteria.limit=$scope.scrollPage*$scope.initialLimit;
-						$scope.filterForm.criteria.page=1; 	
-						if (data.length==0) {							
-							// Dummy get just to update the criteria server side
-							$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+"?nodata=1")
-						}
-						else {
+						$scope.filterForm.criteria.page=$scope.initialPage;
+						// Dummy get just to update the criteria server side
+						$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+"?nodata=1"); 	
+						if (data.length>0) {
 							setTimeout(function(){
 								$scope.scrollDisabled=false;							
 							},500)	
@@ -50,6 +48,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 			criteria:SAILS_LOCALS.criteria,						
 		}
 		$scope.initialLimit=SAILS_LOCALS.criteria.limit;
+		$scope.initialPage=SAILS_LOCALS.criteria.page;
 		$scope.scrollPage=1;
 		// If paging is not visible (i.e. the user cannot do it manually because of screen size)
 		// make sure that page is set to 1 regardless of what was stored in the session. This 
