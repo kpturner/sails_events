@@ -86,6 +86,7 @@ module.exports.routes = {
   
   // Log
   'get /log': 'LogController.download',
+  'post /log/:action': 'LogController.process',
 
   // Users
   'get /users': 'UserController.users',

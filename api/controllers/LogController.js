@@ -9,7 +9,7 @@
 module.exports = {
 	
 	/**
-	 * Other orders
+	 * Download log
 	 */	
 	download:function(req, res) {
 
@@ -17,7 +17,8 @@ module.exports = {
 
 		require("fs").readFile(require("path").join("logs",fileName), function (err, source) {
 			if (err) {
-				sails.log.error(err)
+				sails.log.error(err);
+				Utility.sendCsv(req, res, [err]);
 			}
 			else {
 				try {
@@ -34,14 +35,36 @@ module.exports = {
 					})
 					Utility.sendCsv(req, res, data)
 				} catch (e) {
-					sails.log.error(e)
+					sails.log.error(e);
+					Utility.sendCsv(req, res, [e]);
 				}
 			}			
 		});		
 		
 	},
 	
-     
+    /**
+	 * Process log
+	 */	
+	process:function(req, res) {
+
+		var fileName="events-service.log";	 
+
+		var action=req.param("action");
+
+		switch (action) {
+			case "delete":
+				require("fs").writeFile(require("path").join("logs",fileName),"",function(err){
+					if (err) {
+						sails.log.error(err)
+					}					
+				})
+				break;
+		}
+
+		return res.ok();
+		
+	}, 
 
 
 };

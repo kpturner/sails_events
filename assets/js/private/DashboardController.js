@@ -47,11 +47,27 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 			window.location = '/';
 	  	});
 		
-		  /**
-		   * Download log
-		   */
+		/**
+		 * Download log
+		 */
 		$scope.downloadLog=function(){
 			window.location="log";			
+		}		
+
+		/**
+		 * Delete log
+		 */
+		$scope.deleteLog=function(){
+			$http.post('/log/delete', {
+				_csrf: SAILS_LOCALS._csrf		 
+			}).success(function(data, status) {
+				// Good!
+			}).
+			error(function(data, status, headers, config) {
+				// called asynchronously if an error occurs
+				// or server returns response with an error status.
+				window.location = '/';
+			});			
 		}		
 								
 }]);

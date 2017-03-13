@@ -40,9 +40,12 @@
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %> 
 
-      <div ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <button class="btn btn-primary btn-lg btn-block" type="button" ng-hide="<%-sails.config.events.developer!=req.user.email %>" ng-click="downloadLog()">
+      <div ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}" ng-show="<%-sails.config.events.developer && req.user && sails.config.events.developer==req.user.email %>">
+        <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
           <span class="fa fa-download"></span><span> Download log</span>         
+        </button> 
+        <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="deleteLog()">
+          <span> Clear log</span>         
         </button> 
       </div>
 
