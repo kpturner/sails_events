@@ -13,9 +13,7 @@ module.exports = {
 	 */	
 	download:function(req, res) {
 
-		var fullPath="logs";
-		var fileName="events-service.log";
-		 
+		var fileName="events-service.log";	 
 
 		require("fs").readFile(require("path").join("logs",fileName), function (err, source) {
 			if (err) {
