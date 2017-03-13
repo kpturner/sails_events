@@ -283,7 +283,7 @@ module.exports = {
 			data.push(row);			
 		})
 		// Re-use the bookings function						
-		sails.controllers.booking.sendCsv(req, res, data, options)				
+		Utility.sendCsv(req, res, data, options)				
 	 },
 	
 };

@@ -47,5 +47,11 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 			window.location = '/';
 	  	});
 		
+		  /**
+		   * Download log
+		   */
+		$scope.downloadLog=function(){
+			window.location="log";			
+		}		
 								
 }]);

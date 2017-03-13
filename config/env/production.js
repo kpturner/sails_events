@@ -11,11 +11,12 @@
  */
 var winston = require('winston');
 
+
 var customLogger = new winston.Logger({
     transports: [
         new(winston.transports.File)({
             level: 'debug',
-            filename: './logs/events-service.log'
+            filename: require("path").join(".","logs","events-service.log")
         }),
     ],
 });

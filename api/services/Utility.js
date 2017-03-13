@@ -505,25 +505,30 @@ module.exports = {
          * overrides rank and lodge etc and label for lodge
          */
         augmentUser: function(event,user,cb) {
-            user.orderLabel=Utility.orderLabel(event.order);
-            if (event.order && event.order!="C") {
-                Order.find({user:user.id}).exec(function(err, orders){
-                    _.forEach(orders,function(order){
-                        if (event.order==order.code) {
-                            user.salutation=order.salutation || "";
-                            user.rank=order.rank || "";							 
-                            user.lodge=order.name || "";
-                            user.lodgeNo=order.number || "";							 						
-                            user.centre=order.centre || "";
-                            user.area=order.area || "";		
-                        }
-                        return false;
-                    })
+            if (user) {
+                user.orderLabel=Utility.orderLabel(event.order);
+                if (event.order && event.order!="C") {
+                    Order.find({user:user.id}).exec(function(err, orders){
+                        _.forEach(orders,function(order){
+                            if (event.order==order.code) {
+                                user.salutation=order.salutation || "";
+                                user.rank=order.rank || "";							 
+                                user.lodge=order.name || "";
+                                user.lodgeNo=order.number || "";							 						
+                                user.centre=order.centre || "";
+                                user.area=order.area || "";		
+                            }
+                            return false;
+                        })
+                        cb(user)
+                    });						
+                }	
+                else {
                     cb(user)
-                });						
-            }	
+                }
+            }
             else {
-                cb(user)
+                cb({})
             }
         },
 
@@ -610,5 +615,79 @@ module.exports = {
                 }
             };
         },
+
+        /**
+	 * Download CSV
+	 * https://gist.github.com/jeffskelton3/2b9fc748ec69205694dc
+	 */
+	sendCsv: function(req, res, data, optionsIn) {
+
+	  var sails = req._sails
+	  ,   options = _.extend({},optionsIn)
+	  ,   json2csv = require('json2csv')
+	  ,   fs = require('fs')
+	  ,   download_dir = path.join(".tmp","downloads")
+	  ,   filename = options && options.filename ? options.filename : 'file_' + ((new Date().getTime().toString())) + '.csv'
+      ,   fullpath = path.join(download_dir,filename);
+	
+	  	
+	  sails.log.silly('res.csv() :: Sending 200 ("OK") response');
+	
+		
+	  //PUT THE DATA THROUGH THE GAUNTLET...
+	
+	  if(!data){
+	    throw new Error('data cannot be null');
+	  }
+	
+	  if(!_.isArray(data)){
+	    throw new Error('data must be of type array');
+	  }
+	
+	  var columns = data.length ? _.keys(data[0]) : [];
+	
+	  // if we made it this far, send the file
+	
+	  // Set status code
+	  res.status(200);
+	
+	  options.data=data;
+	  options.fields=columns;
+	
+	  json2csv(options, function(err, csv) {
+	
+	    if (err) { throw err; }
+	
+	    //make the download dir if it doesnt exist
+	    fs.mkdir(download_dir, 0777, function(err){
+	      if(err){
+	        //we dont care if the directory already exists.
+	        if (err.code !== 'EEXIST'){
+	          throw err;
+	        }
+	      }
+	
+	      //create the csv file and upload it to our directory
+	      fs.writeFile(fullpath, csv, function(err) {
+	        if (err) throw err;
+	        sails.log.silly('file saved to ' + fullpath);
+	        res.download(fullpath, filename, function(err){
+	          if(err) {
+	            throw err;
+	          }
+	
+	          //delete the file after we are done with it.
+	          fs.unlink(fullpath);
+	
+	        });
+	      });
+	
+	    });
+	
+	
+	
+	  });
+	  
+	}
 
 };

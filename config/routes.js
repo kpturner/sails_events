@@ -84,6 +84,9 @@ module.exports.routes = {
   'get /eventapologies': 'ApologyController.eventApologies',
   'get /alleventapologies/:filter?': 'ApologyController.allEventApologies',
   
+  // Log
+  'get /log': 'LogController.download',
+
   // Users
   'get /users': 'UserController.users',
   'get /allusers/:criteria?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional

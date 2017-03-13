@@ -38,8 +38,14 @@
 
     <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
-      <% include partials/private/navbar.ejs %>  
-      
+      <% include partials/private/navbar.ejs %> 
+
+      <div ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-hide="<%-sails.config.events.developer!=req.user.email %>" ng-click="downloadLog()">
+          <span class="fa fa-download"></span><span> Download log</span>         
+        </button> 
+      </div>
+
       <div class="container">     
         <div ng-show="events.length>0">
           <h4 class="hidden-md hidden-lg">Tap an event name to book in</h4>  

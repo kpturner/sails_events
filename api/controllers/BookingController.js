@@ -2020,7 +2020,7 @@ module.exports = {
 			//    data.sort(Utility.jsonSort("seq", false))
 			//}        
 			// Send CSV						
-			sails.controllers.booking.sendCsv(req, res, data, options)			
+			Utility.sendCsv(req, res, data, options)			
 		})
 
 		function pushRow(booking,amountPaid,mop,row){
@@ -2118,90 +2118,18 @@ module.exports = {
                         delete d.booking;
                         delete d.cancelled;
                     })
-                    sails.controllers.booking.sendCsv(req, res, data, options);	
+                    Utility.sendCsv(req, res, data, options);	
                 }) 
             }
             else {
-                sails.controllers.booking.sendCsv(req, res, [], options);	
+                Utility.sendCsv(req, res, [], options);	
             }
         }) 
          
         		
 	 },
 	
-	/**
-	 * Download CSV
-	 * https://gist.github.com/jeffskelton3/2b9fc748ec69205694dc
-	 */
-	sendCsv: function(req, res, data, optionsIn) {
-
-	  var sails = req._sails
-	  ,   options = _.extend({},optionsIn)
-	  ,   json2csv = require('json2csv')
-	  ,   fs = require('fs')
-	  ,   download_dir = '.tmp/downloads/'
-	  ,   filename = options && options.filename ? options.filename : 'file_' + ((new Date().getTime().toString())) + '.csv'
-	  ,   fullpath = download_dir + filename;
 	
-	  	
-	  sails.log.silly('res.csv() :: Sending 200 ("OK") response');
-	
-		
-	  //PUT THE DATA THROUGH THE GAUNTLET...
-	
-	  if(!data){
-	    throw new Error('data cannot be null');
-	  }
-	
-	  if(!_.isArray(data)){
-	    throw new Error('data must be of type array');
-	  }
-	
-	  var columns = data.length ? _.keys(data[0]) : [];
-	
-	  // if we made it this far, send the file
-	
-	  // Set status code
-	  res.status(200);
-	
-	  options.data=data;
-	  options.fields=columns;
-	
-	  json2csv(options, function(err, csv) {
-	
-	    if (err) { throw err; }
-	
-	    //make the download dir if it doesnt exist
-	    fs.mkdir(download_dir, 0777, function(err){
-	      if(err){
-	        //we dont care if the directory already exists.
-	        if (err.code !== 'EEXIST'){
-	          throw err;
-	        }
-	      }
-	
-	      //create the csv file and upload it to our directory
-	      fs.writeFile(fullpath, csv, function(err) {
-	        if (err) throw err;
-	        sails.log.silly('file saved to ' + fullpath);
-	        res.download(fullpath, filename, function(err){
-	          if(err) {
-	            throw err;
-	          }
-	
-	          //delete the file after we are done with it.
-	          fs.unlink(fullpath);
-	
-	        });
-	      });
-	
-	    });
-	
-	
-	
-	  });
-	  
-	}
 	 
 };
 
