@@ -67,5 +67,119 @@ angular.module('EventsModule', ['ngDialog', 'ui.bootstrap', 'toastr', 'compareTo
 					}		           
 		        });
 		    };
-		});	
+		})
+		.factory('scroller',['toastr','$http',function(toastr,$http){
+
+			var scroller = {
+				scroll: scroll,
+				filter: filter
+			}
+
+			return scroller;
+
+			/* Public API */
+
+			/**
+			 * scroll
+			 * This function handles the scroll event on a page. It expects the following to
+			 * be available in context:
+			 * 		scope
+			 * 		dataProperty
+			 * 		urn 
+			 * 		queryString
+			 * 
+			 */
+			function scroll(){
+				var $scope=this.scope;
+				if(!$scope.scrollDisabled) {
+					var dataProperty=this.dataProperty;
+					var urn=this.urn;
+					var queryString=this.queryString;
+					var augmentationFunction=this.augmentationFunction;
+				
+					// Use >= (not ==) if we want iPads to work 
+					if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+						// Hit bottom
+						$scope.scrollDisabled=true;
+						$scope.scrollPage+=1;
+						$scope.filterForm.criteria.page=$scope.scrollPage;
+						$scope.filterForm.criteria.limit=$scope.initialLimit;						
+						filter($scope,dataProperty,urn,queryString,augmentationFunction,false,true,function(sailsResponse){	
+							var data=sailsResponse.data[dataProperty]?sailsResponse.data[dataProperty]:sailsResponse.data;
+							if (data.length==0) {
+								// Out of data
+								$scope.scrollPage-=1;
+							}												
+							// Change the filter criteria to match what we really have
+							$scope.filterForm.criteria.limit=$scope.scrollPage*$scope.initialLimit;
+							$scope.filterForm.criteria.page=$scope.initialPage;
+							// Dummy get just to update the criteria server side
+							var uri=urn+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+"?nodata=1"+(queryString?("&"+queryString):"");
+							$http.get(uri); 	
+							if (data.length>0) {
+								setTimeout(function(){
+									$scope.scrollDisabled=false;							
+								},500)	
+							}							
+						});			
+					}				
+				}			
+			}
+
+			/**
+			 * filter
+			 * 
+			 */
+			function filter($scope, dataProperty, urn, queryString, augmentationFunction, paging,scrolling,cb){
+				if (paging) {
+					$scope.filterForm.paging=true;
+					$scope.initialLimit=$scope.filterForm.criteria.limit;			
+				}
+				else {
+					$scope.filterForm.loading=true;
+				}				
+				// Submit request to server.
+				var uri=urn+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+(queryString?("?"+queryString):"")
+				$http.get(uri)
+					.then(function onSuccess(sailsResponse){
+						if (typeof sailsResponse.data == 'object') {
+							// Check if there is a property matching the dataProperty
+							// and use it of so - else assume it is just called "data"
+							var data=sailsResponse.data[dataProperty]?sailsResponse.data[dataProperty]:sailsResponse.data;
+							if (augmentationFunction) {
+								$scope[augmentationFunction](data);	
+							}							
+							if (scrolling) {
+								// Add data to existing scope
+								$scope[dataProperty] = $.merge($scope[dataProperty],data);								
+							}
+							else {
+								$scope[dataProperty] = data;
+							}
+							// Run callback if required
+							if (cb && typeof cb=="function") {
+								cb(sailsResponse);
+							}	
+							else {								
+								$scope.scrollDisabled=false;
+							}		
+						}
+						else {
+							window.location="/";
+						}
+					})
+					.catch(function onError(sailsResponse){
+			
+						// Handle known error type(s).
+						toastr.error(sailsResponse.data, 'Error');
+						
+			
+					})
+					.finally(function eitherWay(){
+						$scope.filterForm.loading = false;
+						$scope.filterForm.paging = false;														
+					})
+			}
+
+		}]);	
  

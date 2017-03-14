@@ -1,11 +1,21 @@
-angular.module('EventsModule').controller('UsersController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('UsersController', ['scroller', '$scope', '$http', 'toastr', function(scroller, $scope, $http, toastr){
 
-		// Lets trap the scroll to bottom on the body and
-		// increment the page when they get there (it will load more data if need be)
+		// Let's trap the scroll to bottom on the body and
+		// increment the page when they get there (it will load more data if need be)		
+		var scrollHandler=$.proxy(scroller.scroll,{
+				scope: 	$scope,
+				dataProperty: "users",
+				queryString: null,
+				urn: 	"/allusers/",
+				augmentationFunction: "augment"
+			})
 		$(document).ready(function(){			
-			$(window).scroll($scope.scroll);			
+			//$(window).scroll($scope.scroll);			
+			$(window).scroll(scrollHandler); 
 		});
 		
+		/*
+		 *  Now define in EventsModule.js 
 		$scope.scroll=function(){ 
 			if(!$scope.scrollDisabled) {
 				// Use >= (not ==) if we want iPads to work 
@@ -34,7 +44,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 				}				
 			}			
 		}
-
+		*/
 		
 		// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
@@ -96,7 +106,12 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 		/**
 		 * Filter users
 		 */  
-		$scope.filterUsers = function(paging,scrolling,cb){
+		$scope.filterUsers = function(paging){
+			$scope.usersLoading=true;
+			scroller.filter($scope,"users","/allusers/","","augment",paging,false,function(sailsResponse){				
+				$scope.usersLoading=false;	
+			});
+			/*
 			if (paging) {
 				$scope.filterForm.paging=true;
 				$scope.initialLimit=$scope.filterForm.criteria.limit;			
@@ -142,6 +157,7 @@ angular.module('EventsModule').controller('UsersController', ['$scope', '$http',
 					$scope.filterForm.paging = false;	
 					$scope.usersLoading=false;									
 				})
+			*/
 		}
 
 		/**

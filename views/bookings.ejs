@@ -146,7 +146,7 @@
           <h4 ng-hide="event.regInterest">There are no bookings to show you!</h4>  
           <h4 ng-show="event.regInterest">There is no interest yet!</h4>  
         </div>      
-        <span class="fa fa-spinner fa-pulse fa-3x fa-fw" ng-hide="!bookingsLoading"></span>    
+        <span class="fa fa-spinner fa-pulse fa-3x fa-fw loading-spinner" ng-hide="!bookingsLoading"></span>    
         <% if (myBookings) {%> 
         <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div> 
         <% } %>

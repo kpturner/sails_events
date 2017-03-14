@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('BookingsController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('BookingsController', ['scroller','$scope', '$http', 'toastr', function(scroller,$scope, $http, toastr){
 
 	// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
@@ -13,6 +13,17 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 			paging: false,			
 			criteria:SAILS_LOCALS.criteria,			
 		}
+		$scope.initialLimit=SAILS_LOCALS.criteria.limit;
+		$scope.initialPage=SAILS_LOCALS.criteria.page;
+		$scope.scrollPage=1;
+		// If paging is not visible (i.e. the user cannot do it manually because of screen size)
+		// make sure that page is set to 1 regardless of what was stored in the session. This 
+		// means that if the user has partially scrolled with dynamic update and then clicks
+		// on this screen again they go back to the beginning
+		if (!$("#page").is(":visible")) {
+			$scope.filterForm.criteria.page=1;
+		}
+
 		
 		$scope.myBookings 	= SAILS_LOCALS.myBookings;
 		$scope.eventBookings= SAILS_LOCALS.eventBookings;
@@ -25,18 +36,32 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		$scope.event.bookInText=($scope.event.regInterest)?"register interest":"book in"; 
 		
 		// Get the bookings
-		var route;
 		if (SAILS_LOCALS.myBookings) {
-			route='/allmybookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?mybookings=1'			
+			$scope.urn='/allmybookings/';
+			$scope.queryString='mybookings=1';			
 		}
 		else if (SAILS_LOCALS.eventBookings) {
-			route='/alleventbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?eventid='+$scope.event.id;
+			$scope.urn='/alleventbookings/'
+			$scope.queryString='eventid='+$scope.event.id;
 		}	
 		else if (SAILS_LOCALS.userBookings) {
-			route='/alluserbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?userid='+$scope.selectedUser.id;
-		}	
-		$scope.downloadUrl=route+'&download=1';
-		$http.get(route)
+			$scope.urn='/alluserbookings/'
+			$scope.queryString='userid='+$scope.selectedUser.id;
+		}
+		var uri=$scope.urn+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?'+$scope.queryString;
+		// Let's trap the scroll to bottom on the body and
+		// increment the page when they get there (it will load more data if need be)		
+		var scrollHandler=$.proxy(scroller.scroll,{
+				scope: 	$scope,
+				dataProperty: "bookings",				
+				urn: 	$scope.urn,
+				queryString: $scope.queryString,
+				augmentationFunction: "augment"
+			})
+		$(window).scroll(scrollHandler); 
+		
+		$scope.downloadUrl=uri+'&download=1';
+		$http.get(uri)
 			.success(function(data, status) {
 				if (typeof data == 'object') {
 					if (data.bookings) {
@@ -91,6 +116,18 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 		 * Filter bookings
 		 */  
 		$scope.filterBookings = function(paging){
+			$scope.bookingsLoading=true;
+			scroller.filter($scope,"bookings",$scope.urn,$scope.queryString,"augment",paging,false,function(sailsResponse){				
+				$scope.bookingsLoading=false;
+				if (sailsResponse.data.bookings) {
+					$scope.hideCapacity=!sailsResponse.data.capacity;	
+					$scope.capacity=sailsResponse.data.capacity;
+				}
+				else {
+					$scope.hideCapacity=true;	
+				}				
+			});
+			/*
 			if (paging) {
 				$scope.filterForm.paging=true;
 			}
@@ -139,6 +176,7 @@ angular.module('EventsModule').controller('BookingsController', ['$scope', '$htt
 					$scope.filterForm.paging = false;
 					$scope.bookingsLoading=false;
 				})
+			*/
 		}
 		
 		

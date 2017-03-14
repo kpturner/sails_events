@@ -42,7 +42,7 @@ module.exports = {
 			criteria.page=1;
 		}
 		if (!criteria.limit) {
-			criteria.limit=99999;
+			criteria.limit=50;
 		}
 		if (!criteria.filter) {
 			criteria.filter="";
@@ -1112,16 +1112,28 @@ module.exports = {
 			criteria={}
 		}
 		req.session.bookingCriteria=JSON.stringify(criteria);
-		req.session.userCriteria="{}";	
+		req.session.userCriteria="{}";
+
+		// Special case for no data
+		if (req.param("nodata")=="1") {
+			return res.json({});
+		}
+
+
 		var download=req.param('download');
 								
 		var where = {};
 		where.user=req.user.id;
 		var pag={
 			"page": 	(criteria.page || 1),
-			"limit": 	(criteria.limit || 99999)
+			"limit": 	(criteria.limit || 50)
 		}
 		var filter=criteria.filter;
+
+		// If we are looking for late payments then pagination will defeat us!
+		if (filter=="late") {
+			pag.limit=99999999;
+		}
 				
 		if (filter && filter.length>0) {
 			where.or= 	[
@@ -1191,7 +1203,7 @@ module.exports = {
 	 */
 	allEventBookings: function (req, res) {		
 
-		var pagLimit=99999;		
+		var pagLimit=50;		
 		var criteria=req.param('criteria');
 		if (criteria) {
 			try {
@@ -1205,7 +1217,13 @@ module.exports = {
 			criteria={}
 		}
 		req.session.bookingCriteria=JSON.stringify(criteria);
-		req.session.userCriteria="{}";	
+		req.session.userCriteria="{}";
+
+		// Special case for no data
+		if (req.param("nodata")=="1") {
+			return res.json({});
+		}
+
 		var download=req.param('download');
 								
 		var where = {};
@@ -1216,6 +1234,11 @@ module.exports = {
 			"limit": 	(criteria.limit || pagLimit)
 		}
 		var filter=criteria.filter; 
+
+		// If we are looking for late payments then pagination will defeat us!
+		if (filter=="late") {
+			pag.limit=99999999;
+		}
 
 		if (filter && filter.length>0) {
 			where.or= 	[
@@ -1389,13 +1412,24 @@ module.exports = {
 		}
 		req.session.bookingCriteria=JSON.stringify(criteria);
 		/////req.session.userCriteria="{}";
+
+		// Special case for no data
+		if (req.param("nodata")=="1") {
+			return res.json({});
+		}
+
 		var download=req.param('download');
 
 		var pag={
 			"page": 	(criteria.page || 1),
-			"limit": 	(criteria.limit || 99999)
+			"limit": 	(criteria.limit || 50)
 		}
 		var filter=criteria.filter; 
+
+		// If we are looking for late payments then pagination will defeat us!
+		if (filter=="late") {
+			pag.limit=99999999;
+		}
 								
 		User.findOne(req.param("userid")).exec(function(err,user){
 			if (err) {

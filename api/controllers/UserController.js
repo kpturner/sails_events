@@ -123,6 +123,11 @@ module.exports = {
 		}
 		var filter=criteria.filter;
 
+		// If we are looking for duplicates then pagination will defeat us!
+		if (filter=="duplicates") {
+			pag.limit=99999999;
+		}
+
 		if (filter && filter.length>0 && filter!="duplicates" && filter!="facebook" && filter!="twitter" && filter!="google") {
 			where = {
 				or: [
