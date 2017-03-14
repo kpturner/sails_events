@@ -30,7 +30,7 @@
     window.SAILS_LOCALS = {
       _csrf: '<%= _csrf %>',
       user: <%- JSON.stringify(res.locals.user) %>,
-      filter: "<%- filter %>"
+      criteria: <%- criteria %>
     };
     </script>
   </head>
@@ -49,14 +49,20 @@
   
           <!-- F I L T E R -->
            
-          <div class="control-group form-group col-xs-12">
-             
-            <input type="text" class="form-control" placeholder="key text to filter events" name="filter" ng-model="filterForm.filter">  
+          <div class="control-group form-group col-sm-8 col-xs-6">             
+            <input type="text" class="form-control" placeholder="key text to filter events" name="filter" ng-model="filterForm.criteria.filter">  
           </div>                    
+
+           <div class="control-group form-group col-sm-4 col-xs-6">
+              <label>
+                <input type="checkbox" class="bigcheckbox" name="incclosed" ng-model="filterForm.criteria.incclosed"></input>
+                &nbsp;&nbsp;&nbsp;Include closed?
+              </label>
+            </div>
          
         </div>
          
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!filterform.filter.$dirty || filterForm.loading">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(!filterform.filter.$dirty && !filterform.incclosed.$dirty) || filterForm.loading">
           <span class="fa fa-filter"></span><span ng-show="!filterForm.loading"> Filter events</span>
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>

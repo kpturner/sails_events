@@ -62,7 +62,7 @@ module.exports.routes = {
   'get /booking' : 'BookingController.prepareBooking',
   'get /booking/:action': 'BookingController.prepareBooking',
   'get /mybookings': 'BookingController.myBookings',
-  'get /allmybookings/:criteria?': 'BookingController.allMyBookings',  // the ? in :filter? means that the filter part or the URL is optional
+  'get /allmybookings/:criteria?': 'BookingController.allMyBookings',  // the ? in :criteria? means that the filter part or the URL is optional
   'get /eventbookings': 'BookingController.eventBookings',
   'get /alleventbookings/:criteria?': 'BookingController.allEventBookings',
   'get /userbookings': 'BookingController.userBookings',
@@ -90,7 +90,7 @@ module.exports.routes = {
 
   // Users
   'get /users': 'UserController.users',
-  'get /allusers/:criteria?': 'UserController.allUsers',  // the ? in :filter? means that the filter part or the URL is optional
+  'get /allusers/:criteria?': 'UserController.allUsers',  // the ? in :criteria? means that the filter part or the URL is optional
   'get /usermaint/:action': 'UserController.prepareUser',
   'post /updateuser/:action': 'UserController.updateUser',
   'get /organisers': 'UserController.organisers',
@@ -102,7 +102,7 @@ module.exports.routes = {
   // Events
   'get /events': 'EventController.events',
   'get /openevents': 'EventController.openEvents',
-  'get /allevents/:filter?': 'EventController.allEvents',  // the ? in :filter? means that the filter part or the URL is optional
+  'get /allevents/:criteria?': 'EventController.allEvents',  // the ? in :criteria? means that the filter part or the URL is optional
   'get /event/:action': 'EventController.prepareEvent',
   'post /updateevent/:action': 'EventController.updateEvent',
 

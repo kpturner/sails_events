@@ -17,7 +17,7 @@ module.exports = {
 	 */
 	events: function(req, res) {
 		res.view('events',{
-		  filter: req.session.eventFilter,
+		  criteria: JSON.stringify(req.session.eventCriteria || {}),
 		  errors: req.flash('error')
 		});  
 	}, 
@@ -257,8 +257,16 @@ module.exports = {
 	 */
 	allEvents: function (req, res) {
 		
-		var filter=req.param('filter');
-		req.session.eventFilter=filter;
+		var criteria=req.param('criteria');
+		var filter, incclosed;
+
+		if (criteria) {
+			criteria=JSON.parse(criteria);
+			filter=criteria.filter;
+			incclosed=criteria.incclosed;
+		}
+		 
+		req.session.eventCriteria=criteria;
 		// Check for a filter by order
 		var orderFilter=null;
 		if (filter) {
@@ -270,15 +278,22 @@ module.exports = {
 		}		
 						
 		var where = {};
+		var today=new Date();
+		today=new Date(today.setHours(0));
+		today=new Date(today.setMinutes(0));
+		today=new Date(today.setSeconds(0));
+
+		if (!incclosed) {
+			where.open=true;
+			where.closingDate={ '>=': today };				
+		}
 		
-		if (filter && filter.length>0) {
-			where = {
-				or: [
-					{name: {contains: filter}},
-					{venue: {contains: filter}},	
-					{blurb: {contains: filter}},
-				]
-			}
+		if (filter && filter.length>0) {		 
+			where.or=[
+				{name: {contains: filter}},
+				{venue: {contains: filter}},	
+				{blurb: {contains: filter}},
+			]	 
 			if (orderFilter) {
 				where.or.push({order: orderFilter})
 			}

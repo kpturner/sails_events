@@ -5,12 +5,18 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 
 		$scope.filterForm = {
 			loading: false,
-			filter:SAILS_LOCALS.filter
+			criteria:SAILS_LOCALS.criteria
 		}
 
+		//if ($scope.filterForm.incclosed) {
+		//	$scope.filterForm.incclosed=true
+		//}
+		//else {
+		//	$scope.filterForm.incclosed=false
+		//}
 		
 		// Get the events
-		$http.get('/allevents/'+$scope.filterForm.filter)
+		$http.get('/allevents/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 			.success(function(data, status) {
 				if (typeof data == 'object') {
 					$scope.events = data;
@@ -70,7 +76,7 @@ angular.module('EventsModule').controller('EventsController', ['$scope', '$http'
 		$scope.filterEvents = function(){
 			$scope.filterForm.loading=true;
 			// Submit request to Sails.
-			$http.get('/allevents/'+encodeURIComponent($scope.filterForm.filter))
+			$http.get('/allevents/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
 						$scope.events = sailsResponse.data;	
