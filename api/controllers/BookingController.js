@@ -1131,7 +1131,7 @@ module.exports = {
 		var filter=criteria.filter;
 
 		// If we are looking for late payments then pagination will defeat us!
-		if (filter=="late") {
+		if (filter=="late" || download) {
 			pag.limit=99999999;
 		}
 				
