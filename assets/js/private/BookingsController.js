@@ -58,7 +58,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 				augmentationFunction: "augment"
 			})
 		$(window).scroll(scrollHandler); 
-		
+		$scope.loading=true;
 		$scope.downloadUrl=uri+'&download=1';
 		$http.get(uri)
 			.success(function(data, status) {
