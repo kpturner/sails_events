@@ -50,7 +50,7 @@ angular.module('EventsModule').controller('UsersController', ['scroller', '$scop
 		$scope.user=SAILS_LOCALS.user;
 		
 		// Animate a spinner while we load the users
-		$scope.usersLoading=true;
+		$scope.loading=true;
 		 
 		$scope.filterForm = {
 			loading: false,
@@ -71,7 +71,7 @@ angular.module('EventsModule').controller('UsersController', ['scroller', '$scop
 		// Get the users
 		$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 			.success(function(data, status) {
-				$scope.usersLoading=false;
+				$scope.loading=false;
 				if (typeof data == 'object') {
 					$scope.users = data; 
                 	$scope.augment($scope.users);
@@ -107,9 +107,9 @@ angular.module('EventsModule').controller('UsersController', ['scroller', '$scop
 		 * Filter users
 		 */  
 		$scope.filterUsers = function(paging){
-			$scope.usersLoading=true;
+			$scope.loading=true;
 			scroller.filter($scope,"users","/allusers/","","augment",paging,false,function(sailsResponse){				
-				$scope.usersLoading=false;	
+				$scope.loading=false;	
 			});
 			/*
 			if (paging) {
@@ -119,7 +119,7 @@ angular.module('EventsModule').controller('UsersController', ['scroller', '$scop
 			else {
 				$scope.filterForm.loading=true;
 			}
-			$scope.usersLoading=true;
+			$scope.loading=true;
 			// Submit request to server.
 			$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
 				.then(function onSuccess(sailsResponse){
@@ -155,7 +155,7 @@ angular.module('EventsModule').controller('UsersController', ['scroller', '$scop
 				.finally(function eitherWay(){
 					$scope.filterForm.loading = false;
 					$scope.filterForm.paging = false;	
-					$scope.usersLoading=false;									
+					$scope.loading=false;									
 				})
 			*/
 		}

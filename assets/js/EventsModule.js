@@ -137,7 +137,8 @@ angular.module('EventsModule', ['ngDialog', 'ui.bootstrap', 'toastr', 'compareTo
 				}
 				else {
 					$scope.filterForm.loading=true;
-				}				
+				}	
+				$scope.loading=true;			
 				// Submit request to server.
 				var uri=urn+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+(queryString?("?"+queryString):"")
 				$http.get(uri)
@@ -177,7 +178,8 @@ angular.module('EventsModule', ['ngDialog', 'ui.bootstrap', 'toastr', 'compareTo
 					})
 					.finally(function eitherWay(){
 						$scope.filterForm.loading = false;
-						$scope.filterForm.paging = false;														
+						$scope.filterForm.paging = false;	
+						$scope.loading=false;													
 					})
 			}
 

@@ -3,7 +3,6 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 	// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
 		 
-		$scope.bookingsLoading=true;
 		$scope.hideCapacity=false;
 		$scope.newBooking=false;
 		$scope.addingPD=false;
@@ -66,7 +65,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 				if (typeof data == 'object') {
 					if (data.bookings) {
 						$scope.bookings = data.bookings;
-						$scope.hideCapacity=!data.capacity;	
+						$scope.hideCapacity=(data.capacity==null || data.capacity==undefined);	
 						$scope.capacity=data.capacity;
 					}
 					else {
@@ -85,7 +84,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 				window.location = '/';
 		  	})
 			.finally(function(){
-				$scope.bookingsLoading=false;
+				$scope.loading=false;
 			})
 
 		/**
@@ -116,9 +115,9 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		 * Filter bookings
 		 */  
 		$scope.filterBookings = function(paging){
-			$scope.bookingsLoading=true;
+			$scope.loading=true;
 			scroller.filter($scope,"bookings",$scope.urn,$scope.queryString,"augment",paging,false,function(sailsResponse){				
-				$scope.bookingsLoading=false;
+				$scope.loading=false;
 				if (sailsResponse.data.bookings) {
 					$scope.hideCapacity=!sailsResponse.data.capacity;	
 					$scope.capacity=sailsResponse.data.capacity;
@@ -134,7 +133,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 			else {
 				$scope.filterForm.loading=true;
 			}
-			$scope.bookingsLoading=true;
+			$scope.loading=true;
 			// Submit request to Sails.
 			var route;
 			if (SAILS_LOCALS.myBookings) {
@@ -174,7 +173,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 				.finally(function eitherWay(){
 					$scope.filterForm.loading = false;
 					$scope.filterForm.paging = false;
-					$scope.bookingsLoading=false;
+					$scope.loading=false;
 				})
 			*/
 		}

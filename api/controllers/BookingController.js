@@ -1305,7 +1305,7 @@ module.exports = {
 		function getBookings(req, res, event) {
 
 			// Get ALL bookings first to calculate capacity
-			if (pag.page==1) {
+			if (pag.page==1 && !event.regInterest) {
 				Booking.find({
 							where:  where,
 						}

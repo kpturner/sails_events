@@ -4,7 +4,7 @@ angular.module('EventsModule').controller('UserBookingsController', ['$scope', '
 		$scope.user=SAILS_LOCALS.user;
 		$scope.selectedUser=SAILS_LOCALS.selectedUser;
 		$scope.userBookings=true;
-		$scope.bookingsLoading=true;
+		$scope.loading=true;
 
 		// Get the events
 		$http.get('/openevents?selecteduserid='+$scope.selectedUser.id).success(function(data, status) {
@@ -40,7 +40,7 @@ angular.module('EventsModule').controller('UserBookingsController', ['$scope', '
 			window.location = '/';
 	  	})
 		.finally(function(){
-			$scope.bookingsLoading=false;	
+			$scope.loading=false;	
 		});
 		
 								
