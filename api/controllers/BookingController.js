@@ -1132,7 +1132,8 @@ module.exports = {
 
 		// If we are looking for late payments then pagination will defeat us!
 		if (filter=="late" || download) {
-			pag.limit=99999999;
+			pag.page=1;
+			pag.limit=99999999;			
 		}
 				
 		if (filter && filter.length>0) {
@@ -1236,8 +1237,9 @@ module.exports = {
 		var filter=criteria.filter; 
 
 		// If we are looking for late payments then pagination will defeat us!
-		if (filter=="late") {
-			pag.limit=99999999;
+		if (filter=="late" || download) {
+			pag.page=1;
+			pag.limit=99999999;			
 		}
 
 		if (filter && filter.length>0) {
@@ -1427,8 +1429,9 @@ module.exports = {
 		var filter=criteria.filter; 
 
 		// If we are looking for late payments then pagination will defeat us!
-		if (filter=="late") {
-			pag.limit=99999999;
+		if (filter=="late" || download) {
+			pag.page=1;
+			pag.limit=99999999;			
 		}
 								
 		User.findOne(req.param("userid")).exec(function(err,user){
