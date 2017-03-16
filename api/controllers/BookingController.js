@@ -1303,8 +1303,23 @@ module.exports = {
 		});
 		
 		function getBookings(req, res, event) {
-					
+
+			// Get ALL bookings first to calculate capacity
+			if (pag.page==1) {
+				Booking.find({
+							where:  where,
+						}
+				).exec(function(err, bookings){
+					if (bookings) {
+						_.forEach(bookings,function(booking){
+							result.capacity-=booking.places;
+						})	
+					}
+				})			
+			}
 			
+			
+			// Now get the paginated bookings
 			Booking.find({
 							where:  where,	
                             sort:   "createdAt",						
@@ -1327,15 +1342,7 @@ module.exports = {
 						sails.log.verbose('Error occurred trying to retrieve bookings.');
 						return res.negotiate(err);
 					}	
-	
-					// Calculate remaining capacity if not paging or filtering
-					if (!filter && pag.limit==pagLimit) {
-						result.capacity=event.capacity;
-						_.forEach(bookings,function(booking){
-							result.capacity-=booking.places;
-						})						
-					}
-
+	 
 					// If we only want late bookings, filter the list
 					if (filter && filter.toLowerCase()=="late") {
 						bookings=sails.controllers.booking.filterLate(bookings,event.grace);
