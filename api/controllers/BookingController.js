@@ -1311,6 +1311,7 @@ module.exports = {
 						}
 				).exec(function(err, bookings){
 					if (bookings) {
+						result.capacity=event.capacity;
 						_.forEach(bookings,function(booking){
 							result.capacity-=booking.places;
 						})	
