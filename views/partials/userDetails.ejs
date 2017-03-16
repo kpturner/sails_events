@@ -122,6 +122,19 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
   </span>
 </div>
 
+<!-- L O D G E  Y E A R-->
+
+<div class="control-group form-group col-xs-10"
+  ng-show="<%-sails.config.events.lodgeYear%>"
+  ng-class="{'has-error':<%-form%>.lodgeyear.$invalid &&
+                        <%-form%>.lodgeyear.$dirty}">
+  <label>Lodge year</label>
+  <input type="text" class="form-control" placeholder="e.g. year you joined this lodge" name="lodgeyear" ng-model="<%-form%>Form.lodgeYear" ng-maxlength="4" >
+  <span class="help-block has-error" ng-if="<%-form%>.lodgeyear.$dirty">
+    <span ng-show="<%-form%>.lodgeyear.$error.maxlength">The lodge year cannot be more than 4 characters.</span>
+  </span>
+</div>
+
 <!-- C E N T R E -->
 <div class="control-group form-group col-xs-10" 
   ng-class="{'has-error':<%-form%>.centre.$invalid &&

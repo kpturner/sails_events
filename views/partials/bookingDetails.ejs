@@ -171,7 +171,7 @@ and/or maxlength) -->
   <label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span><span>{{orderlabel}}</span> name</label>
   <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-model%>Form.lodge" ng-maxlength="50">  
   <span class="help-block has-error" ng-if="<%-model%>.lodge.$dirty">
-    <span ng-show="<%-model%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
+    <span ng-show="<%-model%>.lodge.$error.maxlength">The {{orderlabel.toLowerCase()}} name cannot be more than 50 characters.</span>
   </span>
 </div>
 
@@ -183,8 +183,21 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
 <label><span ng-hide="eventBookings || userBookings || !lodgeMandatory">* </span><span>{{orderlabel}}</span> number</label>
 <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-model%>Form.lodgeNo" ng-maxlength="5" min="(!eventBookings && !userBookings)?1:0" >  
 <span class="help-block has-error" ng-if="<%-model%>.lodgeno.$dirty">
-  <span ng-show="<%-model%>.lodgeno.$error.maxlength">The lodge no cannot be more than 5 digits.</span>
+  <span ng-show="<%-model%>.lodgeno.$error.maxlength">The {{orderlabel.toLowerCase()}} no cannot be more than 5 digits.</span>
 </span>
+</div>
+
+<!-- L O D G E  Y E A R-->
+
+<div class="control-group form-group col-xs-10"
+  ng-show="<%-sails.config.events.lodgeYear%>"
+  ng-class="{'has-error':<%-model%>.lodgeyear.$invalid &&
+                        <%-model%>.lodgeyear.$dirty}">
+  <label><span>{{orderlabel}}</span> year</label>
+  <input type="text" class="form-control" placeholder="e.g. year joined" name="lodgeyear" ng-model="<%-model%>Form.lodgeYear" ng-maxlength="4" >
+  <span class="help-block has-error" ng-if="<%-model%>.lodgeyear.$dirty">
+    <span ng-show="<%-model%>.lodgeyear.$error.maxlength">The {{orderlabel.toLowerCase()}} year cannot be more than 4 characters.</span>
+  </span>
 </div>
 
 <!-- C E N T R E -->
@@ -376,6 +389,13 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 	  <div class="control-group form-group col-xs-6 col-md-4">
 	    <label><span>{{orderlabel}}</span> number</label>
 	    <input type="number" class="form-control" placeholder="e.g. 7083" name="{{place}}_lodgeno" ng-model="linked<%-model%>s[place].lodgeNo">
+	   
+	  </div>
+
+    <!-- L O D G E  Y E A R -->
+	  <div class="control-group form-group col-xs-10" ng-show="<%-sails.config.events.lodgeYear %>">
+	    <label><span>{{orderlabel}}</span> year</label>
+	    <input type="text" class="form-control" placeholder="e.g. year joined" name="{{place}}_lodgeyear" ng-model="linked<%-model%>s[place].lodgeYear">
 	   
 	  </div>
 

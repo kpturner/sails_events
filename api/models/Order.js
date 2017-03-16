@@ -32,6 +32,10 @@ var Order = {
       type: 'string'
     },
     
+    year: {
+      type: 'string'
+    },
+    
     // Centre
     centre: {
       type: 'string'

@@ -395,6 +395,7 @@ module.exports = {
 				if (event.order==order.code) {
 					user.lodge=	 order.name;
 					user.lodgeNo=order.number;
+					user.lodgeYear=order.year;
 					user.salutation=order.salutation;
 					user.rank=order.rank;
 					user.centre=order.centre;
@@ -436,6 +437,7 @@ module.exports = {
 				user.salutation=req.param("salutation");
 				user.lodge=req.param("lodge");
 				user.lodgeNo=req.param("lodgeNo");
+				user.lodgeYear=req.param("lodgeYear");
 				user.centre=req.param("centre");
 				user.area=req.param("area");
 				user.rank=req.param("rank");
@@ -584,6 +586,8 @@ module.exports = {
 														linkedBooking.lodge=""
 													if (!linkedBooking.lodgeNo)
 														linkedBooking.lodgeNo=""
+													if (!linkedBooking.lodgeYear)
+														linkedBooking.lodgeYear=""
 													if (!linkedBooking.area)
 														linkedBooking.area=""
 													if (!linkedBooking.centre)
@@ -700,6 +704,7 @@ module.exports = {
 																phone: user.phone || "",
 																lodge: user.lodge || "",
 																lodgeNo: user.lodgeNo || "",
+																lodgeYear: user.lodgeYear || "",
 																centre: user.centre || "",																
 																area: user.area || "",															
 																rank: user.rank || "",
@@ -922,6 +927,7 @@ module.exports = {
 							salutation: req.param("salutation"),    
 							name: 		req.param("lodge"),
 							number: 	req.param("lodgeNo"),
+							year: 		req.param("lodgeYear"),
 							centre: 	req.param("centre"),
 							area: 		req.param("area"),
 							rank: 		req.param("rank"),
@@ -2000,7 +2006,10 @@ module.exports = {
 				row.salutation=booking.user.salutation || "";
 				row.rank=booking.user.rank || "";
 				row[label]=booking.user.lodge || "";
-				row[labelNo]=booking.user.lodgeNo || "";	
+				row[labelNo]=booking.user.lodgeNo || "";
+				if (sails.config.events.lodgeYear) {
+					row.lodgeYear=booking.user.lodgeYear || "";
+				}	
 				row.centre=booking.user.centre || "";
 				row.area=booking.user.area || "";
 				pushRow(booking,amountPaid,mop,row);			
@@ -2016,7 +2025,10 @@ module.exports = {
 							row.salutation=order.salutation || "";
 							row.rank=order.rank || "";							 
 							row[label]=order.name || "";
-							row[labelNo]=order.number || "";							 						
+							row[labelNo]=order.number || "";
+							if (sails.config.events.lodgeYear) {
+								row.lodgeYear=order.year || "";
+							}								 						
 							row.centre=order.centre || "";
 							row.area=order.area || "";		
 						}
@@ -2078,6 +2090,9 @@ module.exports = {
 				row.rank=addition.rank || "";
 				row[label]=addition.lodge || "";
 				row[labelNo]=addition.lodgeNo || "";
+				if (sails.config.events.lodgeYear) {
+					row.lodgeYear=addition.year || "";
+				}	
 				row.centre=addition.centre || booking.user.centre || "";
 				row.area=addition.area || booking.user.area || "";
 				row.dietary=addition.dietary || "";

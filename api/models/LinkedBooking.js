@@ -40,6 +40,11 @@ var LinkedBooking = {
     lodgeNo: {
       type: 'string'
     },
+
+    // The user's lodge year
+    lodgeYear: {
+      type: 'string'
+    },
     
     // The user's centre
     centre: {

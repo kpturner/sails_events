@@ -90,6 +90,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					if ($scope.event.order==order.code) {
 						$scope.bookingForm.lodge=order.name;
 						$scope.bookingForm.lodgeNo = parseInt(order.number);
+						$scope.bookingForm.lodgeYear=order.year;
 						$scope.bookingForm.salutation=order.salutation;
 						$scope.bookingForm.centre=order.centre;
 						$scope.bookingForm.area=order.area;
@@ -628,6 +629,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					phone: $scope.bookingForm.phone,
 					lodge: $scope.bookingForm.lodge,
 					lodgeNo: $scope.bookingForm.lodgeNo,
+					lodgeYear: $scope.bookingForm.lodgeYear,
 					isVO: $scope.bookingForm.isVO,
 					voLodge: $scope.bookingForm.voLodge,
 					voLodgeNo: $scope.bookingForm.voLodgeNo,

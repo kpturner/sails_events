@@ -45,6 +45,9 @@
     <br>Contact no: <%=phone%> 
 	<br><%=orderLabel%>: <%=lodge%>
 	<br><%=orderLabel%> no: <%=lodgeNo%>
+	<% if (sails.config.events.lodgeYear) {%>
+	<br><%=orderLabel%> year: <%=lodgeYear%>
+	<% } %>
 	<br>Centre: <%=centre%>	
 	<br>Area: <%=area%>	
 	<% if  (voReqd && isVO) {%>
@@ -80,6 +83,9 @@
 		<br>&nbsp;&nbsp;First name: <%=linkedBooking.firstName%>
 		<br>&nbsp;&nbsp;<%=orderLabel%>: <%=linkedBooking.lodge%>
 		<br>&nbsp;&nbsp;<%=orderLabel%> no: <%=linkedBooking.lodgeNo%>
+		<% if (sails.config.events.lodgeYear) {%>
+		<br>&nbsp;&nbsp;<%=orderLabel%> year: <%=linkedBooking.lodgeYear%>
+		<% } %>
 		<br>&nbsp;&nbsp;Centre: <%=linkedBooking.centre%>
 		<br>&nbsp;&nbsp;Area: <%=linkedBooking.area%>
 		<br>&nbsp;&nbsp;Rank: <%=linkedBooking.rank%>

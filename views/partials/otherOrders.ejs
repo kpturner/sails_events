@@ -6,12 +6,12 @@
     <!-- O T H E R  O R D E R S -->
 
     <div class="control-group form-group col-xs-6 col-md-4"
-        ng-class="{'has-error':<%-form%>Form.otherorders.$invalid &&
-                            <%-form%>Form.otherorders.$dirty}">
+        ng-class="{'has-error':<%-form%>.otherorders.$invalid &&
+                            <%-form%>.otherorders.$dirty}">
         <label>Other orders</label>
-        <input type="number" class="form-control" placeholder="other orders" name="otherorders" ng-model="<%-form%>Form.otherorders"
+        <input type="number" class="form-control" placeholder="other orders" name="otherorders" ng-model="<%-form%>Form.otherorders" min="0"
             ng-change="makeOrdersArray()"  ng-disabled="mode=='delete'">
-        <span class="help-block has-error" ng-if="<%-form%>Form.otherorders.$dirty"> 
+        <span class="help-block has-error" ng-if="<%-form%>.otherorders.$dirty"> 
              
         </span>
     </div>
@@ -61,6 +61,20 @@
                         ng-model="ordersModel[order].number">
 	   
 	        </div> 
+
+            <!-- Y E A R-->
+
+            <div class="control-group form-group col-xs-10"
+                ng-show="<%-sails.config.events.lodgeYear%>"
+                ng-class="{'has-error':<%-form%>.{{order}}_year.$invalid &&
+                                        <%-form%>.{{order}}_year.$dirty}">
+                <label>Year</label>
+                <input type="text" class="form-control" placeholder="e.g. year you joined this order" name="{{order}}_year" 
+                        ng-model="ordersModel[order].year" ng-maxlength="4" >
+                <span class="help-block has-error" ng-if="<%-form%>.{{order}}_year.$dirty">
+                    <span ng-show="<%-form%>.{{order}}_year.$error.maxlength">The year cannot be more than 4 characters.</span>
+                </span>
+            </div>
 
             <!-- C E N T R E -->
             <div class="control-group form-group col-xs-10">

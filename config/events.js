@@ -65,6 +65,9 @@ module.exports.events = {
 	// Lodge is mandatory
 	lodgeMandatory: true,
 
+	// Show lodge year in profile
+	lodgeYear: false,
+
 	// Permanent diner?
 	permanentDiningList: false,
 	

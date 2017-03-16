@@ -29,6 +29,9 @@
 	<br>Contact no: <%=details.phone%>	
 	<br>Lodge: <%=details.lodge%>
 	<br>Lodge no: <%=details.lodgeNo%>
+    <% if (sails.config.events.lodgeYear) {%>
+    <br>Lodge year: <%=details.lodgeYear%>
+    <% } %>
     <br>Centre: <%=details.centre%>
 	<br>Area: <%=details.area%>
     <% if  (details.isVO) {%>
@@ -53,6 +56,9 @@
         <br>&nbsp;&nbsp;Salutation: <%=order.salutation%>
         <br>&nbsp;&nbsp;<%=order.label%>: <%=order.name%>
 		<br>&nbsp;&nbsp;Number: <%=order.number%>
+        <% if (sails.config.events.lodgeYear) {%>
+            <br>Year: <%=details.order.year%>
+        <% } %>
 		<br>&nbsp;&nbsp;Centre: <%=order.centre%>
 		<br>&nbsp;&nbsp;Area: <%=order.area%>
 		<br>&nbsp;&nbsp;Rank: <%=order.rank%>

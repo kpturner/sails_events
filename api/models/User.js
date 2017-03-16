@@ -47,6 +47,10 @@ var User = {
       type: 'string'
     },       
     
+    lodgeYear: {
+      type: 'string'
+    },
+
     // The user's masonic centre
     centre: {
       type: 'string'
