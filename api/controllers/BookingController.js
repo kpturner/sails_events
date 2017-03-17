@@ -1298,12 +1298,6 @@ module.exports = {
 				)		
 			}
 
-			// Do we need to filter late bookings?			
-			getBookings(req,res,event);			
-		});
-		
-		function getBookings(req, res, event) {
-
 			// Get ALL bookings first to calculate capacity
 			if (pag.page==1 && !event.regInterest) {
 				Booking.find({
@@ -1316,9 +1310,18 @@ module.exports = {
 							result.capacity-=booking.places;
 						})	
 					}
+					// Send bookings to client
+					getBookings(req,res,event);			
 				})			
 			}
+			else {
+				// Send bookings to client
+				getBookings(req,res,event);			
+			}
 			
+		});
+		
+		function getBookings(req, res, event) {
 			
 			// Now get the paginated bookings
 			Booking.find({
