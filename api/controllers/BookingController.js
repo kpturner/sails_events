@@ -1991,7 +1991,7 @@ module.exports = {
 			row.firstName=booking.user.firstName || "";
 			row.displayName=booking.user.salutation+" "+booking.user.name;
 			if (sails.config.events.userCategories.length>0) {
-				row.category=booking.user.category;
+				row.category=booking.user.category || "";
 			}			
             if (addressReqd) {
                 row.address1=booking.user.address1 || "";
