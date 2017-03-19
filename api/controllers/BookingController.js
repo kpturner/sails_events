@@ -610,7 +610,9 @@ module.exports = {
 														}
 													}	
 												})
-											}				 						
+											}
+
+
 											var finalise=function(){
 												// If the user has previously sent an apology, delete it
 												Apology.destroy({event:booking.event,user:booking.user}).exec(function(err, deleted){
@@ -751,9 +753,13 @@ module.exports = {
 											// booking reference, so we had to create the booking first.  
 											// The code is still in the same place so that we can fall back to that 
 											// method if the new atomic function fails for some reason (paranoia)
-											if (!bookingRef) {											
+											if (!bookingRef) {
+												var ss=new Date().getTime();											
 												Event.incrementLastBookingRef(event.id,function(err, updatedEvent){
 													if (!err) {
+														if (sails.config.events.timings) {
+															sails.log.info("It took "+(new Date().getTime()-ss)+" to increment the booking ref");
+														}
 														bookingRef=updatedEvent.code+updatedEvent.lastBookingRef.toString()
 													}
 													else {

@@ -147,8 +147,8 @@
           </button>
 
           <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="transferBooking()" ng-show="(mode!='delete' && mode!='create' && selectedUserId)">
-            <span ng-show="!bookingForm.transferring">Transfer booking</span>  
-            <span ng-show="bookingForm.transferring">Transferring booking...</span>          
+            <span ng-show="!bookingForm.transferring">Transfer </span><span ng-show="event.regInterest">interest</span><span ng-show="!event.regInterest">booking</span>  
+            <span ng-show="bookingForm.transferring">Transferring </span><span ng-show="event.regInterest">interest</span><span ng-show="!event.regInterest">booking</span><span>...</span>          
           </button>
         </div>
   
