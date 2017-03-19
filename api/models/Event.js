@@ -188,6 +188,7 @@ module.exports = {
         // Just in case we need it, create a string for any errors
         var subject="Error trying to obtain a unique booking reference for event "+id;       
         // Increment the last booking ref - get lock (waiting 10 seconds at most)
+        var ss=new Date().getTime();
         Event.query('SELECT GET_LOCK("EVENT",10)',function(err){
           if (err) {
             // Wow!  Disaster - we cannot get a lock so this means something horrible has happened trying to get a 
@@ -204,6 +205,9 @@ module.exports = {
             }
           }
           else {
+            if (sails.config.events.timings) {
+              sails.log.debug("It took "+(new Date().getTime()-ss)+"ms to GET_LOCK");
+            }
             //console.log("Updating "+id)
             //No need for the fix to null lastBookingRef fields now
             //Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){

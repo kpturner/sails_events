@@ -753,13 +753,9 @@ module.exports = {
 											// booking reference, so we had to create the booking first.  
 											// The code is still in the same place so that we can fall back to that 
 											// method if the new atomic function fails for some reason (paranoia)
-											if (!bookingRef) {
-												var ss=new Date().getTime();											
+											if (!bookingRef) {																		
 												Event.incrementLastBookingRef(event.id,function(err, updatedEvent){
-													if (!err) {														
-														if (sails.config.events.timings) {
-															sails.log.debug("It took "+(new Date().getTime()-ss)+" to increment the booking ref");
-														}
+													if (!err) {
 														bookingRef=updatedEvent.code+updatedEvent.lastBookingRef.toString()
 													}
 													else {
