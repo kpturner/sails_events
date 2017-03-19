@@ -756,11 +756,9 @@ module.exports = {
 											if (!bookingRef) {
 												var ss=new Date().getTime();											
 												Event.incrementLastBookingRef(event.id,function(err, updatedEvent){
-													if (!err) {
-														console.log(sails.config.events.timings);
-														console.log("It took "+(new Date().getTime()-ss)+" to increment the booking ref");
+													if (!err) {														
 														if (sails.config.events.timings) {
-															sails.log.info("It took "+(new Date().getTime()-ss)+" to increment the booking ref");
+															sails.log.debug("It took "+(new Date().getTime()-ss)+" to increment the booking ref");
 														}
 														bookingRef=updatedEvent.code+updatedEvent.lastBookingRef.toString()
 													}
