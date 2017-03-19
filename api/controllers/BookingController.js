@@ -696,6 +696,7 @@ module.exports = {
 																salutation: user.salutation || "",
 																firstName: user.firstName || "",
 																surname: user.surname || "",
+																category: user.category || "",
 																addressReqd: event.addressReqd,
 																address1: user.address1 || "",
 																address2: user.address2 || "",

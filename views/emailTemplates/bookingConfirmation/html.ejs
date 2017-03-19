@@ -33,6 +33,9 @@
     <br>Salutation: <%=salutation%>
     <br>First name: <%=firstName%>
     <br>Surname: <%=surname%> 
+	<% if (sails.config.events.userCategories.length>0) {%>
+	<br>Category: <%=category%>
+	<% } %>
     <% if (addressReqd) {%>
 	  <br><i>Address</i>       
 	  	<br><%=address1%>

@@ -11,6 +11,9 @@
 	<br>First name: <%=details.firstName%>	
 	<br>Full name: <%=details.name%>
 	<br>Login user name: <%=details.username%>	
+    <% if (sails.config.events.userCategories.length>0) {%>
+	<br>Category: <%=details.category%>
+	<% } %>
     <% if  (details.address1 
             || details.address2
             || details.address3
