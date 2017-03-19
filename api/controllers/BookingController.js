@@ -1687,6 +1687,7 @@ module.exports = {
 											email: booking.user.email,
 											lodge: booking.user.lodge || "",
 											lodgeNo: booking.user.lodgeNo || "",
+											lodgeYear: booking.user.lodgeYear || "",
 											salutation: booking.user.salutation || "",
 											category: booking.user.category || "",
 											centre: booking.user.centre,
