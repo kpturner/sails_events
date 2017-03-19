@@ -189,7 +189,8 @@ module.exports = {
         var subject="Error trying to obtain a unique booking reference for event "+id;       
         // Increment the last booking ref - get lock (waiting 10 seconds at most)
         var ss=new Date().getTime();
-        Event.query('SELECT GET_LOCK("EVENT",10)',function(err){
+        var lock="EVENT_"+sails.config.port;
+        Event.query('SELECT GET_LOCK("'+lock+'",10)',function(err){
           if (err) {
             // Wow!  Disaster - we cannot get a lock so this means something horrible has happened trying to get a 
             // unique booking reference.
@@ -215,7 +216,7 @@ module.exports = {
               Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {
                 if(cb) {
                   if(err) {
-                    Event.query('SELECT RELEASE_LOCK("EVENT")');
+                    Event.query('SELECT RELEASE_LOCK("'+lock+'")');
                     Utility.diagnosticEmail(err,subject);
                     return cb(err,null)
                   }
@@ -223,18 +224,18 @@ module.exports = {
                     // Find the event so we can pass the updated version back
                     Event.findOne(id)
                       .then(function(event){
-                          Event.query('SELECT RELEASE_LOCK("EVENT")');
+                          Event.query('SELECT RELEASE_LOCK("'+lock+'")');
                           return cb(err,event);  
                       })
                       .catch(function (err) {
-                          Event.query('SELECT RELEASE_LOCK("EVENT")'); 
+                          Event.query('SELECT RELEASE_LOCK("'+lock+'")');
                           Utility.diagnosticEmail(err,subject);                    
                           return cb(err,null);  
                       });             
                   }                  
                 } 
                 else {
-                  Event.query('SELECT RELEASE_LOCK("EVENT")');
+                  Event.query('SELECT RELEASE_LOCK("'+lock+'")');
                   Utility.diagnosticEmail(err,subject);
                   return;
                 } 
