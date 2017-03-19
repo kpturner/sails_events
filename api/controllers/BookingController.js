@@ -1990,6 +1990,9 @@ module.exports = {
 			row.surname=booking.user.surname || "";
 			row.firstName=booking.user.firstName || "";
 			row.displayName=booking.user.salutation+" "+booking.user.name;
+			if (sails.config.events.userCategories.length>0) {
+				row.category=booking.user.category;
+			}			
             if (addressReqd) {
                 row.address1=booking.user.address1 || "";
                 row.address2=booking.user.address2 || "";
