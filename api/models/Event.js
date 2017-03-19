@@ -214,44 +214,31 @@ module.exports = {
             //Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){
               //console.log(err)
               Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {
+                // Release the lock
+                Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err){
+                  if (err) {
+                    sails.log.error(err)
+                  }
+                });
+                // Callback or not?
                 if(cb) {
-                  if(err) {
-                    Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err){
-                      if (err) {
-                        sails.log.error(err)
-                      }
-                    });
+                  if(err) {                    
                     Utility.diagnosticEmail(err,subject);
                     return cb(err,null)
                   }
                   else {
                     // Find the event so we can pass the updated version back
                     Event.findOne(id)
-                      .then(function(event){
-                          Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err){
-                            if (err) {
-                              sails.log.error(err)
-                            }
-                          });
+                      .then(function(event){                         
                           return cb(err,event);  
                       })
-                      .catch(function (err) {
-                          Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err){
-                            if (err) {
-                              sails.log.error(err)
-                            }
-                          });
+                      .catch(function (err) {                          
                           Utility.diagnosticEmail(err,subject);                    
                           return cb(err,null);  
                       });             
                   }                  
                 } 
-                else {
-                  Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err){
-                    if (err) {
-                      sails.log.error(err)
-                    }
-                  });
+                else {                 
                   if(err) {
                     Utility.diagnosticEmail(err,subject);
                   }
