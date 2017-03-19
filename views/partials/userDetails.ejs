@@ -82,6 +82,18 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
   </span>
 </div>
 
+<!-- C A T E G O R Y -->
+<div class="control-group form-group col-xs-10"
+  ng-show="<%-sails.config.events.userCategories.length>0 %>"
+  ng-class="{'has-error':<%-form%>.category.$invalid &&
+                      <%-form%>.category.$dirty}">
+  <label>Category</label>  
+  <select class="form-control" name="category" ng-options="userCategory for userCategory in userCategories" ng-model="<%-form%>Form.category">
+    <option value="">-- choose category --</option>
+  </select>
+  <span class="help-block has-error" ng-if="<%-form%>.category.$dirty"> 
+  </span>
+</div> 
 
 <!-- R A N K -->
 

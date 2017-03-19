@@ -445,6 +445,7 @@ module.exports = {
 			user.name=req.param("name");
 			user.surname=req.param("surname");
 			user.firstName=req.param("firstName");
+			user.category=req.param("category");
 			user.isVO=req.param("isVO");
 			user.voLodge=req.param("voLodge");
 			user.voLodgeNo=req.param("voLodgeNo");

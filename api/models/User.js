@@ -21,6 +21,10 @@ var User = {
     name: {
       type: 'string'
     },
+
+    category: {
+      type: 'string'
+    },
     
     // Salutation
     salutation: {

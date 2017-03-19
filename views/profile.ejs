@@ -32,6 +32,7 @@
       _csrf: "<%= _csrf %>",
       user: <%- JSON.stringify(res.locals.user) %>,
       salutations: <%- JSON.stringify(sails.config.events.salutations) %>,
+      userCategories: <%- JSON.stringify(sails.config.events.userCategories) %>,
       areas: <%- JSON.stringify(res.locals.areas) %>,
       lodgeMandatory: <%- res.locals.lodgeMandatory %>,
       spamDomains: <%- JSON.stringify(sails.config.events.spamDomains) %>,

@@ -39,6 +39,7 @@
       mode: "<%= mode.toLowerCase() %>",
       mops: <%- JSON.stringify(res.locals.mops) %>,
       salutations: <%- JSON.stringify(sails.config.events.salutations) %>,
+      userCategories: <%- JSON.stringify(sails.config.events.userCategories) %>,
       areas: <%- JSON.stringify(res.locals.areas) %>,
       lodgeMandatory: <%- res.locals.lodgeMandatory %>,
       latePaymentReminderInterval: <%- sails.config.events.latePaymentReminderInterval %>,

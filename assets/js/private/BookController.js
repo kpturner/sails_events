@@ -239,6 +239,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
+
+	// User categories
+	$scope.userCategories=SAILS_LOCALS.userCategories;
 	
 	
 	// Display the payment details & blurb
@@ -626,6 +629,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					name: $scope.bookingForm.name,
 					surname: $scope.bookingForm.surname,
 					firstName: $scope.bookingForm.firstName,
+					category: $scope.bookingForm.category,
 					phone: $scope.bookingForm.phone,
 					lodge: $scope.bookingForm.lodge,
 					lodgeNo: $scope.bookingForm.lodgeNo,

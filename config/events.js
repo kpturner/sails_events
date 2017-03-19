@@ -52,6 +52,9 @@ module.exports.events = {
     // Orders supported by this instance (e.g. {"code":"C","desc":"Craft"},{"code":"RA","desc":"Royal Arch"} )
 	// Craft is the default and if no others are added then "Order" is not something that will be prompted for anywhere
 	orders: [{"code":"C","desc":"Craft"}],
+
+	// User categories
+	userCategories: [],
 	
 	// Methods of payment
 	mops: ['Cheque', 'BACS', 'Cash', 'Paypal'],

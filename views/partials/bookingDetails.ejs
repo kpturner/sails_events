@@ -119,6 +119,18 @@ and/or maxlength) -->
   </span>
 </div>
 
+<!-- C A T E G O R Y -->
+<div class="control-group form-group col-xs-10"
+  ng-show="<%-sails.config.events.userCategories.length>0 %>"
+  ng-class="{'has-error':<%-model%>.category.$invalid &&
+                      <%-model%>.category.$dirty}">
+  <label>Category</label>  
+  <select class="form-control" name="category" ng-options="userCategory for userCategory in userCategories" ng-model="<%-model%>Form.category">
+    <option value="">-- choose category --</option>
+  </select>
+  <span class="help-block has-error" ng-if="<%-model%>.category.$dirty"> 
+  </span>
+</div> 
 
 <!-- A D D R E S S -->
 

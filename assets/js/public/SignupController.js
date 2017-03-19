@@ -22,6 +22,9 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
+
+	// User categories
+	$scope.userCategories=SAILS_LOCALS.userCategories;
 	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
