@@ -28,7 +28,10 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 		})
 	
 	// Salutations
-	$scope.salutations=SAILS_LOCALS.salutations;	
+	$scope.salutations=SAILS_LOCALS.salutations;
+
+	// User categories
+	$scope.userCategories=SAILS_LOCALS.userCategories;	
     	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
