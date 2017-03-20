@@ -745,6 +745,26 @@ module.exports = {
                 })
             }
         },{keys:keys,cb:cb})   
+
+        // Create a test then delete it
+        redisClient.set('mytest', 'myvalue',function(err,reply){
+            if (err) {
+                console.log(err)
+            }
+            console.log("Set "+reply)
+            redisClient.get('mytest', function(err, reply) {
+                if (err) {
+                    console.log(err)
+                }
+                console.log("Get "+reply);
+                redisClient.del('mytest', function(err, reply) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    console.log("Del "+reply);        
+                });    
+            });
+        });
         
         // Authenticate if need be before calling function        
         if (sails.config.mutex.pass) {
