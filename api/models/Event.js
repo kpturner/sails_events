@@ -185,44 +185,24 @@ module.exports = {
   // Function to increment booking ref
   incrementLastBookingRef : function(id, cb) {
 
-        // NOTE:  We did employ a locking mechanism here to prevent two bookings getting
-        // the same reference but it turns out the doing a native "update" to increment the 
-        // booking reference is atomic anyway in mysql
-        var subject="Error trying to obtain a unique booking reference for event "+id;     
-        Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err,rawResult) {
-          // Callback or not?          
-          if(cb) {
-            if(err) {                    
-              Utility.diagnosticEmail(err,subject);
-              return cb(err,null)
-            }
-            else {
-              // Find the event so we can pass the updated version back
-              Event.findOne(id)
-                .then(function(event){                         
-                    return cb(err,event);  
-                })
-                .catch(function (err) {                          
-                    Utility.diagnosticEmail(err,subject);                    
-                    return cb(err,null);  
-                });             
-            }                  
-          } 
-          else {                 
-            if(err) {
-              Utility.diagnosticEmail(err,subject);
-            }
-            return;
-          } 
-        });
-
-        /*   
-        // Just in case we need it, create a string for any errors
+        // We will use a mutex to make sure no two booking attempts
+        // can do this simultaneously 
+        Mutex.initialise();  // Does nothing after first call   
+        
+        // Lock the mutex if we can. Wait for a maximum of 10 seconds.  let the 
+        // lock die naturally after 30 seconds if the server dies or something.
+        var opts={
+          duration:   30000,
+          maxWait:    10000,
+        }
+          
+        // Just in case we need it, create an email subject string for any errors
         var subject="Error trying to obtain a unique booking reference for event "+id;       
         // Increment the last booking ref - get lock (waiting 10 seconds at most)
         var ss=new Date().getTime();
-        var lock="EVENT_"+sails.config.port;
-        Event.query('SELECT GET_LOCK("'+lock+'",5)',function(err){
+        var lockHandle="EVENT_"+sails.config.port;
+
+        Mutex.lock(lockHandle,opts,function(err,lock){
           if (err) {
             // Wow!  Disaster - we cannot get a lock so this means something horrible has happened trying to get a 
             // unique booking reference.
@@ -236,25 +216,18 @@ module.exports = {
             else {
               return
             }
-          }
+          } 
           else {
-            if (sails.config.events.timings) {
-              sails.log.debug("It took "+(new Date().getTime()-ss)+"ms to GET_LOCK");
-            }
-            //console.log("Updating "+id)
-            //No need for the fix to null lastBookingRef fields now
-            //Event.query('Update `event` SET `lastBookingRef` = 0 where `lastBookingRef` IS NULL and `id` = ' + id, function(err){
-              //console.log(err)
-              Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {                
+            // Successfully obtained lock
+            Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {                
                 // Callback or not?
                 if(cb) {
                   if(err) {  
                     // Release the lock                 
-                    Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err,raw){
+                    Mutex.unlock(lock,function(err){
                       if (err) {
                         sails.log.error(err)
-                      }
-                      //sails.log.debug(raw);
+                      }                      
                     });                   
                     Utility.diagnosticEmail(err,subject);
                     return cb(err,null)
@@ -262,36 +235,30 @@ module.exports = {
                   else {
                     // Find the event so we can pass the updated version back
                     Event.findOne(id)
-                      .then(function(event){ 
-                          // Release the lock                 
-                          Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err,raw){
-                            if (err) {
-                              sails.log.error(err)
-                            }
-                            //sails.log.debug(raw);
-                          });                         
+                      .then(function(event){                                    
                           return cb(err,event);  
                       })
-                      .catch(function (err) {   
+                      .catch(function (err) {                                       
+                          Utility.diagnosticEmail(err,subject);                    
+                          return cb(err,null);  
+                      })
+                      .finally(function(){
                           // Release the lock                 
-                          Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err,raw){
+                          Mutex.unlock(lock,function(err){
                             if (err) {
                               sails.log.error(err)
                             }
-                            //sails.log.debug(raw);
-                          });                        
-                          Utility.diagnosticEmail(err,subject);                    
-                          return cb(err,null);  
+                          });          
                       });             
                   }                  
                 } 
                 else {  
+                  // No callback
                   // Release the lock                 
-                  Event.query('SELECT RELEASE_LOCK("'+lock+'")',function(err,raw){
+                  Mutex.unlock(lock,function(err){
                     if (err) {
                       sails.log.error(err)
                     }
-                    //sails.log.debug(raw);
                   });                
                   if(err) {
                     Utility.diagnosticEmail(err,subject);
@@ -299,10 +266,9 @@ module.exports = {
                   return;
                 } 
               })     
-            //})        
-          }
-        })
-        */
+          }      
+        });            
+
         
   },
   

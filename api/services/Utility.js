@@ -14,6 +14,7 @@
  */
 //var util = require('util'),
 //    _ = require('lodash');
+var libredis    = require("redis");
 var util        = require('util');
 var async       = require("async");
 var path        = require("path");
@@ -23,6 +24,7 @@ var Twit        = require("twit");
 var google      = require('googleapis');
 var plus        = google.plus('v1'); 
 var Gravatar    = require('machinepack-gravatar');
+var redisClient;  
 
 module.exports = { 
 
@@ -688,6 +690,69 @@ module.exports = {
 	
 	  });
 	  
-	}
+	},
+
+    /**
+     * @name            service.Utility.deleteRedisKeys
+     * @method
+     * @description      Delete redis keys en-masse
+     * @param {Array}    keys   An array of key search strings. It is also possible to pass a single  key as a string.
+     * @param {Function} [cb]   callback
+     *  
+     */
+    deleteRedisKeys: function(keys, cb) {
+        if (!redisClient) {
+             // Add function to client
+             libredis.RedisClient.prototype.delWildcard = function(key, callback) {
+                var redis = this            
+                redis.keys(key, function(err, rows) {
+                    async.each(rows, function(row, callbackDelete) {
+                        sails.log.verbose("Deleting "+row)
+                        redis.del(row, callbackDelete)
+                    }, callback)
+                });
+            }
+            var opts={
+                 port:      sails.config.mutex.port,
+                 host:      sails.config.mutex.host,            
+            }            
+            if (sails.config.mutex.db) {
+                 opts.db=sails.config.mutex.db;
+            }
+            // Create a client
+            redisClient=libredis.createClient(opts) 
+             
+        }            
+         
+        // Function to actually do the business
+        var del=_.bind(function(){
+            var self=this;
+            // String or array of keys?
+            if (typeof this.keys=="string") {
+               redisClient.delWildcard(this.keys, this.cb)
+            } 
+            else {
+                // Array of keys
+                async.forEach(this.keys,function(key,next){
+                    redisClient.delWildcard(key, next);
+                },
+                function(err){
+                    // All done
+                    if (err) {
+                        sails.log.error(err);                        
+                    }
+                    self.cb();
+                })
+            }
+        },{keys:keys,cb:cb})   
+        
+        // Authenticate if need be before calling function        
+        if (sails.config.mutex.pass) {
+            redisClient.auth(sails.config.mutex.pass, del);
+        }
+        else {
+            del();
+        }
+    }, 
 
 };
