@@ -56,6 +56,8 @@ module.exports = {
                 }
             } 
         
+            sails.log.debug(strategy)
+
             self.mutex=Strategy({
                 id: uuid.v4(),
                 strategy: strategy
@@ -88,7 +90,7 @@ module.exports = {
         if (opts) {
             lOpts=_.extend(lOpts,opts)
         }
-        
+         
         sails.log.verbose("Trying to lock "+lockName);
         self.mutex.lock(sails.config.mutex.prefix+lockName,lOpts)
             .then(lock => {

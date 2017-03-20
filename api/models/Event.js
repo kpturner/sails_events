@@ -202,71 +202,71 @@ module.exports = {
         var ss=new Date().getTime();
         var lockHandle="EVENT_"+sails.config.port;
 
+        var ss=new Date().getTime();
         Mutex.lock(lockHandle,opts,function(err,lock){
           if (err) {
             // Wow!  Disaster - we cannot get a lock so this means something horrible has happened trying to get a 
             // unique booking reference.
             sails.log.error(subject)
             sails.log.error(err);
-            Utility.diagnosticEmail(err,subject);
-            // Pass the error back to the callback if need be
-            if (cb) {
-              return cb(err,null)
-            }
-            else {
-              return
-            }
-          } 
-          else {
-            // Successfully obtained lock
-            Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {                
-                // Callback or not?
-                if(cb) {
-                  if(err) {  
-                    // Release the lock                 
+            Utility.diagnosticEmail(err,subject);            
+          }  
+
+          // Whether we have the lock or not, update the event
+          Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function(err) {                
+              // Callback or not?
+              if(cb) {
+                if(err) {  
+                  // Release the lock  
+                  if (lock) {
+                      Mutex.unlock(lock,function(err){
+                        if (err) {
+                          sails.log.error(err)
+                        }                      
+                      });     
+                  }          
+                  Utility.diagnosticEmail(err,subject);
+                  return cb(err,null)
+                }
+                else {
+                  // Find the event so we can pass the updated version back
+                  Event.findOne(id)
+                    .then(function(event){                                    
+                        return cb(err,event);  
+                    })
+                    .catch(function (err) {                                       
+                        Utility.diagnosticEmail(err,subject);                    
+                        return cb(err,null);  
+                    })
+                    .finally(function(){
+                        // Release the lock                 
+                        if (lock) {
+                            Mutex.unlock(lock,function(err){
+                              if (err) {
+                                sails.log.error(err)
+                              }                      
+                            });     
+                        }                
+                    });             
+                }                  
+              } 
+              else {  
+                // No callback
+                // Release the lock                 
+                if (lock) {
                     Mutex.unlock(lock,function(err){
                       if (err) {
                         sails.log.error(err)
                       }                      
-                    });                   
-                    Utility.diagnosticEmail(err,subject);
-                    return cb(err,null)
-                  }
-                  else {
-                    // Find the event so we can pass the updated version back
-                    Event.findOne(id)
-                      .then(function(event){                                    
-                          return cb(err,event);  
-                      })
-                      .catch(function (err) {                                       
-                          Utility.diagnosticEmail(err,subject);                    
-                          return cb(err,null);  
-                      })
-                      .finally(function(){
-                          // Release the lock                 
-                          Mutex.unlock(lock,function(err){
-                            if (err) {
-                              sails.log.error(err)
-                            }
-                          });          
-                      });             
-                  }                  
-                } 
-                else {  
-                  // No callback
-                  // Release the lock                 
-                  Mutex.unlock(lock,function(err){
-                    if (err) {
-                      sails.log.error(err)
-                    }
-                  });                
-                  if(err) {
-                    Utility.diagnosticEmail(err,subject);
-                  }
-                  return;
-                } 
-              })     
-          }      
+                    });     
+                }                  
+                if(err) {
+                  Utility.diagnosticEmail(err,subject);
+                }
+                return;
+              } 
+            })     
+                
         });            
 
         
