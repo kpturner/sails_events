@@ -54,9 +54,7 @@ module.exports = {
                                     (sails.config.mutex.db?"/"+sails.config.mutex.db:""), 
                     
                 }
-            } 
-        
-            sails.log.debug(strategy)
+            }                   
 
             self.mutex=Strategy({
                 id: uuid.v4(),
@@ -90,7 +88,8 @@ module.exports = {
         if (opts) {
             lOpts=_.extend(lOpts,opts)
         }
-         
+
+        /** DOESN'T WORK ON CENTOS SERVER YET! 
         sails.log.verbose("Trying to lock "+lockName);
         self.mutex.lock(sails.config.mutex.prefix+lockName,lOpts)
             .then(lock => {
@@ -102,7 +101,8 @@ module.exports = {
                 //sails.log.error(err);
                 cb(err,null);
             })
-        
+        */
+        cb(null,{})
     },
      
     /**
@@ -115,11 +115,12 @@ module.exports = {
     unlock: function (lock,cb) {
         
         var self = this;
-        
+         /** DOESN'T WORK ON CENTOS SERVER YET! 
         if (lock && self.mutex) {
             self.mutex.unlock(lock,cb)
-        }    
-        
+        }   
+        */ 
+        cb()
     }, 
      
 };
