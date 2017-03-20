@@ -1,9 +1,11 @@
 {
 	"version": "0.2.0",
 	"configurations": [
+		
 		{
 			"name": "Launch",
 			"type": "node",
+			"protocol": "auto",
 			"request": "launch",
 			"program": "${workspaceRoot}/app.js",
 			"stopOnEntry": false,
@@ -23,12 +25,14 @@
 		{
 			"name": "Attach",
 			"type": "node",
+			"protocol": "inspector",
 			"request": "attach",
 			"port": 5858
 		},
 		{
 			"name": "Daemon",
 			"type": "node",
+			"protocol": "inspector",
             "request": "attach",
 			"address": "localhost",
 			"port": 5859

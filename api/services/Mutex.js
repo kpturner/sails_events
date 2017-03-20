@@ -26,7 +26,8 @@
 
 var Strategy=require("mutex");
 var uuid = require('uuid'); 
-var mutex;
+var libredis    = require("redis");
+var mutex, redisClient;
 
 module.exports = {
 
@@ -102,7 +103,74 @@ module.exports = {
                 cb(err,null);
             })
         */
-        cb(null,{})
+
+        // Use home-made noddy version for now
+        lOpts.key=sails.config.mutex.prefix+lockName;
+        lOpts.waited=0;
+        lOpts.interval=100;
+        lOpts.cb=cb;
+
+        if (!redisClient) {
+            var opts={
+                 port:      sails.config.mutex.port,
+                 host:      sails.config.mutex.host,            
+            }            
+            if (sails.config.mutex.db) {
+                 opts.db=sails.config.mutex.db;
+            }
+            // Create a client
+            redisClient=libredis.createClient(opts); 
+             
+        }                
+
+        // Loop until the key does not exist or until we time out
+        self.wait=_.bind(function(){
+            var me=this;
+            redisClient.exists(me.key,function(err,reply){
+                if (reply==1) {
+                    // It exists
+                    if (me.waited>=me.maxWait) {
+                        // Timed out
+                        var err=new Error("Timed out trying to obtain mutex lock for "+me.key)
+                        if (me.cb) {
+                            me.cb(err,null);
+                        }
+                    }
+                    else {
+                        me.waited+=me.interval;
+                        setTimeout(self.wait,100)
+                    }               
+                }
+                else {
+                    // OK, create the lock
+                    redisClient.set(me.key,"LOCKED",function(err,reply){
+                        if (err) {
+                            me.cb(err,null);
+                        }
+                        else {
+                            redisClient.expire(me.key,me.duration/1000)
+                            me.cb(null,{
+                                key: me.key,
+                                status: "LOCKED"
+                            })
+                        }
+                    }) 
+                }
+            })
+        },lOpts);
+
+        // Kick off
+        // Authenticate if need be before calling function        
+        if (sails.config.mutex.pass && !redisClient._authenticated) {
+            redisClient.auth(sails.config.mutex.pass, function(){
+                redisClient._authenticated=true;
+                self.wait();
+            });
+        }
+        else {
+            self.wait();
+        }        
+
     },
      
     /**
@@ -120,7 +188,25 @@ module.exports = {
             self.mutex.unlock(lock,cb)
         }   
         */ 
-        cb()
+         
+        // Use home-made noddy version for now
+        redisClient.exists(lock.key,function(err,reply){
+            if (reply==1) {
+                redisClient.del(lock.key,function(err,reply){
+                    if (err) {
+                        cb(err)
+                    }
+                    else {
+                        cb();
+                    }
+                })
+            }
+            else {
+                 var err=new Error("No lock exists for "+lock.key);
+                 cb(err);
+            }
+        })
+
     }, 
      
 };

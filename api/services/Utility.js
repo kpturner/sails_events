@@ -747,6 +747,7 @@ module.exports = {
         },{keys:keys,cb:cb})   
 
         // Create a test then delete it
+        /*
         redisClient.set('mytest', 'myvalue',function(err,reply){
             if (err) {
                 console.log(err)
@@ -765,7 +766,8 @@ module.exports = {
                 });    
             });
         });
-        
+        */
+
         // Authenticate if need be before calling function        
         if (sails.config.mutex.pass) {
             redisClient.auth(sails.config.mutex.pass, del);
