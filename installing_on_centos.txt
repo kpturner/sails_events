@@ -125,6 +125,9 @@ otherwise start service: "service events-service start"
 
 
 
+How to access the Centos file structure from your local windows PC
+==================================================================
+An excellent tool for mounting the drives remotely via SSH:  https://igikorn.com/sshfs-windows-10/
 
 
 
