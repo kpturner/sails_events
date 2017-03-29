@@ -141,6 +141,8 @@ module.exports = {
 					{dietary: {contains: filter}},
 					{lodge: {contains: filter}},
 					{lodgeNo: {contains: filter}}, 
+					{lodgeYear: {contains: filter}},
+					{category: {contains: filter}},  
 					{area: {contains: filter}}, 
 					{centre: {contains: filter}}, 
 				]
