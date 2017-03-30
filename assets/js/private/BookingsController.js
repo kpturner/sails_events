@@ -66,7 +66,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 				if (typeof data == 'object') {
 					if (data.bookings) {
 						$scope.bookings = data.bookings;
-						$scope.hideCapacity=(!data.capacity && data.capacity!=0); // We want to show zero	
+						$scope.hideCapacity=(data.capacity==null || data.capacity==undefined);	
 						$scope.capacity=data.capacity;
 					}
 					else {
@@ -119,8 +119,9 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 			$scope.loading=true;
 			scroller.filter($scope,"bookings",$scope.urn,$scope.queryString,"augment",paging,false,function(sailsResponse){				
 				$scope.loading=false;
+				$scope.hideCapacity=false;	
 				if (sailsResponse.data.bookings) {
-					$scope.hideCapacity=!sailsResponse.data.capacity;	
+					$scope.hideCapacity=(sailsResponse.data.capacity==null || sailsResponse.data.capacity==undefined);	
 					$scope.capacity=sailsResponse.data.capacity;
 				}
 				else {
