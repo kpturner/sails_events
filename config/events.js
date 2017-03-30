@@ -42,6 +42,9 @@ module.exports.events = {
 	
 	// Logo link
 	logoLink: "http://www.hiowmasons.org/",
+
+	// Logo tip
+	logoTip: "Provincial website",
 	
 	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
 	multipleBookings: false,
