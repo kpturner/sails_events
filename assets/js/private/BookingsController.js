@@ -66,7 +66,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 				if (typeof data == 'object') {
 					if (data.bookings) {
 						$scope.bookings = data.bookings;
-						$scope.hideCapacity=(data.capacity==null || data.capacity==undefined);	
+						$scope.hideCapacity=(!data.capacity && data.capacity!=0); // We want to show zero	
 						$scope.capacity=data.capacity;
 					}
 					else {
