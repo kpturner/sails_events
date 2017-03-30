@@ -59,9 +59,10 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 			})
 		$(window).scroll(scrollHandler); 
 		$scope.loading=true;
-		$scope.downloadUrl=uri+'&download=1';
+		$scope.downloadUrl=uri+'&download=1';		
 		$http.get(uri)
 			.success(function(data, status) {
+				$scope.hideCapacity=false;
 				if (typeof data == 'object') {
 					if (data.bookings) {
 						$scope.bookings = data.bookings;
