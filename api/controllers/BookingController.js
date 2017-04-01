@@ -1259,6 +1259,7 @@ module.exports = {
 							{user:{lodge: {contains: filter}}},
 							{user:{email:{contains: filter}}},
 							{user:{lodgeNo: {contains: filter}}},
+							{user:{lodgeYear: {contains: filter}}},
 							{ref: {contains: filter}},
 						
 						]
