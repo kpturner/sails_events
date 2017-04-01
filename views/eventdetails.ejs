@@ -32,7 +32,7 @@
       _csrf: "<%= _csrf %>",
       user: <%- JSON.stringify(res.locals.user) %>,
       event: <%- JSON.stringify(event) %>,
-      logo: "<%- sails.config.events.logo %>",
+      logo: "<%- sails.config.events.defaultEventLogo || logosails.config.events.logo %>",
       orders: <%- JSON.stringify(sails.config.events.orders) %>,
       mode: "<%= mode.toLowerCase() %>"
     };
