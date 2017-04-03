@@ -295,6 +295,7 @@
                 <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-required="!eventForm.free"></input>
                 <span class="help-block has-error" ng-if="eventdetails.price.$dirty">
                   <span ng-show="eventdetails.price.$error.required">Price is required.</span>
+                  <span ng-show="eventdetails.price.$error.pattern">Price contains an invalid value.</span>
                 </span>
             </div>  
             
@@ -304,10 +305,11 @@
               ng-class="{'has-error':eventdetails.minbookingplaces.$invalid &&
                                     eventdetails.minbookingplaces.$dirty}">
                 <label>* Minimum number of places per booking</label>       
-                <input type="number" class="form-control" placeholder="e.g. 1" name="minbookingplaces" ng-model="eventForm.minBookingPlaces" min="1" required></input>
+                <input type="number" class="form-control" placeholder="e.g. 1" name="minbookingplaces" ng-model="eventForm.minBookingPlaces" min="1" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
                 <span class="help-block has-error" ng-if="eventdetails.minbookingplaces.$dirty">
                   <span ng-show="eventdetails.minbookingplaces.$error.required">Minimum number of booking places is required.</span>
                   <span ng-show="eventdetails.minbookingplaces.$error.min">Minimum number of booking places must be greater than 0.</span>
+                  <span ng-show="eventdetails.minbookingplaces.$error.pattern">Minimum number of booking places contains an invalid value.</span>
                 </span>
             </div>
                         
@@ -317,10 +319,11 @@
               ng-class="{'has-error':eventdetails.maxbookingplaces.$invalid &&
                                     eventdetails.maxbookingplaces.$dirty}">
                 <label>* Maximum number of places per booking</label>       
-                <input type="number" class="form-control" placeholder="e.g. 10" name="maxbookingplaces" ng-model="eventForm.maxBookingPlaces" min="1" required></input>
+                <input type="number" class="form-control" placeholder="e.g. 10" name="maxbookingplaces" ng-model="eventForm.maxBookingPlaces" min="1" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
                 <span class="help-block has-error" ng-if="eventdetails.maxbookingplaces.$dirty">
                   <span ng-show="eventdetails.maxbookingplaces.$error.required">Maximum number of booking places is required.</span>
                   <span ng-show="eventdetails.maxbookingplaces.$error.min">Maximum number of booking places must be greater than 0.</span>
+                  <span ng-show="eventdetails.maximumbookingplaces.$error.pattern">Maximum number of booking places contains an invalid value.</span>
                 </span>
             </div>
             
@@ -330,9 +333,10 @@
               ng-class="{'has-error':eventdetails.capacity.$invalid &&
                                     eventdetails.capacity.$dirty}">
                 <label>* Capacity</label>       
-                <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" required></input>
+                <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
                 <span class="help-block has-error" ng-if="eventdetails.capacity.$dirty">
                   <span ng-show="eventdetails.capacity.$error.required">Capacity is required.</span>
+                  <span ng-show="eventdetails.capacity.$error.pattern">Capacity contains an invalid value.</span>
                 </span>
             </div>
               
@@ -445,9 +449,10 @@
                     ng-class="{'has-error':eventdetails.grace.$invalid &&
                                     eventdetails.grace.$dirty}">
                   <label>Grace period for payment (days)</label>       
-                  <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace" ng-min="0"></input>
+                  <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace" ng-min="0" ng-pattern="/^(0|\-?[1-9][0-9]*)$/"></input>
                   <span class="help-block has-error" ng-if="eventdetails.grace.$dirty">
                     <span ng-show="eventdetails.grace.$error.min">Grace period must be greater than or equal to 0.</span>
+                    <span ng-show="eventdetails.grace.$error.pattern">Grace period contains an invalid value.</span>
                   </span>
               </div>
               
