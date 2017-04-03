@@ -152,6 +152,7 @@ exports.register = function (req, res, next) {
                   {
                       recipientName: Utility.recipient(newUser.salutation,newUser.firstName,newUser.surname),
                       senderName: sails.config.events.title,
+                      lodgeYearLabel: sails.config.events.lodgeYearLabel || "Lodge year",
                       details: newUser,
                       orders: orders,        								 
                       //domain:	sails.config.events.domain,

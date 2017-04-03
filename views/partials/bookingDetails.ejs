@@ -205,7 +205,7 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
   ng-show="<%-sails.config.events.lodgeYear%>"
   ng-class="{'has-error':<%-model%>.lodgeyear.$invalid &&
                         <%-model%>.lodgeyear.$dirty}">
-  <label><span>{{orderlabel}}</span> year</label>
+  <label><%-sails.config.events.lodgeYearLabel || '{{orderlabel}} year' %></label>
   <input type="text" class="form-control" placeholder="e.g. year joined" name="lodgeyear" ng-model="<%-model%>Form.lodgeYear" ng-maxlength="4" >
   <span class="help-block has-error" ng-if="<%-model%>.lodgeyear.$dirty">
     <span ng-show="<%-model%>.lodgeyear.$error.maxlength">The {{orderlabel.toLowerCase()}} year cannot be more than 4 characters.</span>
@@ -341,7 +341,7 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 </div>
 
 <!-- A D D I T I O N A L  I N F O -->
-<div class="control-group form-group col-xs-10" ng-hide="event.regInterest">
+<div class="control-group form-group col-xs-10" ng-hide="event.regInterest || !event.additionalInfo">
   <label><%-sails.config.events.additionalInfoLabel || 'Any additional info' %></label>
   <textarea class="form-control" placeholder="e.g. seating requests etc" name="info" ng-model="<%-model%>Form.info" ></textarea>            
 </div>
@@ -406,7 +406,7 @@ ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
 
     <!-- L O D G E  Y E A R -->
 	  <div class="control-group form-group col-xs-10" ng-show="<%-sails.config.events.lodgeYear %>">
-	    <label><span>{{orderlabel}}</span> year</label>
+	    <label><%-sails.config.events.lodgeYearLabel || '{{orderlabel}} year' %></label>
 	    <input type="text" class="form-control" placeholder="e.g. year joined" name="{{place}}_lodgeyear" ng-model="linked<%-model%>s[place].lodgeYear">
 	   
 	  </div>

@@ -69,7 +69,7 @@
                 ng-class="{'has-error':<%-form%>.{{order}}_year.$invalid &&
                                         <%-form%>.{{order}}_year.$dirty}">
                 <label>Year</label>
-                <input type="text" class="form-control" placeholder="e.g. year you joined this order" name="{{order}}_year" 
+                <input type="text" class="form-control" placeholder="e.g. year you joined" name="{{order}}_year" 
                         ng-model="ordersModel[order].year" ng-maxlength="4" >
                 <span class="help-block has-error" ng-if="<%-form%>.{{order}}_year.$dirty">
                     <span ng-show="<%-form%>.{{order}}_year.$error.maxlength">The year cannot be more than 4 characters.</span>

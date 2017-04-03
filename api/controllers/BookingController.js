@@ -405,6 +405,94 @@ module.exports = {
 			})	
 		}		
 	},
+
+	/**
+	 * Booing confirmation email
+	 */
+	bookingConfirmationEmail: function(opts){
+		
+		var recipientName=opts.recipientName;
+		var subject=opts.subject;
+		var from=opts.from;
+		var to=opts.to;
+		var cc=opts.cc;
+		var bcc=opts.bcc;
+		var user=opts.user;
+		var event=opts.event;
+		var booking=opts.booking;
+		var updated=opts.updated;
+		var orderLabel=opts.orderLabel;
+		var deadline=opts.deadline;
+		var formattedDate=opts.formattedDate;
+		var linkedBookings=opts.linkedBookings;
+		var bookingRef=opts.bookingRef;
+
+		Email.send(
+			"bookingConfirmation",
+			{
+			recipientName: recipientName,
+			senderName: sails.config.events.title,
+					updated: updated,
+					regInterest: event.regInterest,
+					orderLabel: orderLabel,
+					lodgeYearLabel: sails.config.events.lodgeYearLabel || (orderLabel+ " year"),
+					eventFree: event.free,
+					eventName: event.name,
+					eventDate: formattedDate,
+					eventTime: event.time,
+					eventAdditionalInfo: event.additionalInfo,
+					eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
+					eventOrganiser: event.organiser.name,
+					organiserEmail: event.organiser.email,
+					organiserContactNo: event.organiser.phone || "",
+					eventBlurb: (event.blurb || "n/a").replace(/[\n\r]/g, '<br>'),
+					eventMenu: (event.menu || "n/a").replace(/[\n\r]/g, '<br>'),
+					eventDressCode: (event.dressCode || "n/a").replace(/[\n\r]/g, '<br>'),
+					email: user.email,
+					salutation: user.salutation || "",
+					firstName: user.firstName || "",
+					surname: user.surname || "",
+					category: user.category || "",
+					addressReqd: event.addressReqd,
+					address1: user.address1 || "",
+					address2: user.address2 || "",
+					address3: user.address3 || "",
+					address4: user.address4 || "",
+					postcode: user.postcode || "",
+					phone: user.phone || "",
+					lodge: user.lodge || "",
+					lodgeNo: user.lodgeNo || "",
+					lodgeYear: user.lodgeYear || "",
+					centre: user.centre || "",																
+					area: user.area || "",															
+					rank: user.rank || "",
+					voReqd: event.voReqd,
+					isVO: user.isVO,
+					voLodge: user.voLodge || "",
+					voLodgeNo: user.voLodgeNo || "",
+					voCentre: user.voCentre || "",
+					voArea: user.voArea || "",
+					dietary: user.dietary || "",
+					bookingRef: bookingRef,
+					info: (booking.info || "n/a").replace(/[\n\r]/g, '<br>'),  
+					places: booking.places,
+					linkedBookings: linkedBookings,
+					paymentDetails: (event.paymentDetails || "n/a").replace(/[\n\r]/g, '<br>'),
+					total: (booking.places * event.price),
+					deadline: deadline,
+			},
+			{
+			from: from,
+			to: to,
+			cc: cc,
+			bcc: bcc,
+			subject: subject
+			},
+			function(err) {
+				Utility.emailError(err);
+			}
+		)    
+	},
 	
 	/**
 	 * Make booking
@@ -674,6 +762,25 @@ module.exports = {
 
 													sails.controllers.booking.setEmailInfo(event,user,orders);
 
+													var emailOpts={
+														recipientName:Utility.recipient(user.salutation,user.firstName,user.surname),
+														subject:subject,
+														from:event.name + ' <'+sails.config.events.email+'>',
+														to:user.email,
+														bcc:[event.organiser.email || "",(event.organiser2)?(event.organiser2.email || ""):"",sails.config.events.developer || ""],
+														user:user,
+														event:event,
+														booking:booking,
+														updated:updated,
+														orderLabel:orderLabel,
+														deadline:deadline,
+														formattedDate:formattedDate,
+														linkedBookings:linkedBookings,
+														bookingRef:bookingRef,
+													}
+													sails.controllers.booking.bookingConfirmationEmail(emailOpts);
+
+													/*****
 													Email.send(
 														"bookingConfirmation",
 														{
@@ -682,6 +789,7 @@ module.exports = {
 																updated: updated,
 																regInterest: event.regInterest,
 																orderLabel: orderLabel,
+																lodgeYearLabel: sails.config.events.lodgeYearLabel || (orderLabel+ " year"),
 																eventFree: event.free,
 																eventName: event.name,
 																eventDate: formattedDate,
@@ -737,7 +845,7 @@ module.exports = {
 															Utility.emailError(err);
 														}
 													)    		
-												
+													****/
 												}
 												
 												// Return to caller with complete booking info
@@ -1592,6 +1700,7 @@ module.exports = {
 						name: "Unknown"
 					};
 					var organiserIsDev=false;
+					var eventOrganiserId=booking.event.organiser;
 					organisers.forEach(function(organiser,o){
 						if (organiser.email) {
 							bcc.push(organiser.email)
@@ -1599,8 +1708,12 @@ module.exports = {
 								organiserIsDev=true;
 							}
 						}
-						if (organiser.id=booking.event.organiser) {
-							mainOrganiser=organiser;
+						if (organiser.id=eventOrganiserId) {
+							//mainOrganiser=organiser;
+							booking.event.organiser=organiser;
+						}
+						else {
+							booking.event.organiser2=organiser;
 						}
 					})
 					if (!organiserIsDev) {
@@ -1658,8 +1771,27 @@ module.exports = {
 								
 								if (booking.user.email) {
 
-									sails.controllers.booking.setEmailInfo(booking.event,booking.user,orders);
-								
+									sails.controllers.booking.setEmailInfo(booking.event,booking.user,orders);									
+
+									var emailOpts={
+										recipientName:Utility.recipient(booking.user.salutation,booking.user.firstName,booking.user.surname),
+										subject:booking.event.regInterest?"Event interest cancellation confirmation":"Event booking cancellation confirmation",
+										from:booking.event.name + ' <'+sails.config.events.email+'>',
+										to:booking.user.email,
+										bcc:bcc,
+										user:booking.user,
+										event:booking.event,
+										booking:booking,
+										updated:updated,
+										orderLabel:orderLabel,
+										deadline:deadline,
+										formattedDate:formattedDate,
+										linkedBookings:linkedBookings,
+										bookingRef:booking.ref,
+									}
+									sails.controllers.booking.bookingConfirmationEmail(emailOpts);
+
+									/****
 									Email.send(
 										"bookingConfirmation",
 										{
@@ -1667,6 +1799,7 @@ module.exports = {
 											senderName: sails.config.events.title,
 											updated: updated,
 											orderLabel: orderLabel,
+											lodgeYearLabel: sails.config.events.lodgeYearLabel || (orderLabel+ " year"),
 											regInterest: booking.event.regInterest,
 											eventName: booking.event.name,
 											eventFree: booking.event.free,
@@ -1721,7 +1854,7 @@ module.exports = {
 										},
 										function(err) {if (err) console.log(err);}
 									)    			
-								
+									****/
 								}
 								
 									
@@ -2034,7 +2167,8 @@ module.exports = {
 				row[label]=booking.user.lodge || "";
 				row[labelNo]=booking.user.lodgeNo || "";
 				if (sails.config.events.lodgeYear) {
-					row.lodgeYear=booking.user.lodgeYear || "";
+					var ly=sails.config.events.lodgeYearDownloadLabel || "lodgeYear";
+					row[ly]=booking.user.lodgeYear || "";
 				}	
 				row.centre=booking.user.centre || "";
 				row.area=booking.user.area || "";

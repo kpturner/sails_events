@@ -74,6 +74,12 @@ module.exports.events = {
 	// Show lodge year in profile
 	lodgeYear: false,
 
+	// Lodge year label (or null to use default)
+	lodgeYearLabel: null, 
+
+	// Lodge year download label (or null to use default)
+	lodgeYearDoanloadLabel: null, 
+
 	// Permanent diner?
 	permanentDiningList: false,
 	

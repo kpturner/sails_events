@@ -424,6 +424,7 @@ var AuthController = {
 						"profileChanged", {
     				      recipientName: Utility.recipient(updatedUser[0].salutation,updatedUser[0].firstName,updatedUser[0].surname),
     				      senderName: sails.config.events.title,
+                  lodgeYearLabel: sails.config.events.lodgeYearLabel || "Lodge year",
     			        details: updatedUser[0],
 							    orders: orders
 						    },
