@@ -441,9 +441,14 @@
               
               <!-- G R A C E   P E R I O D -->
     
-              <div class="control-group form-group col-md-10" ng-hide="eventForm.free || eventForm.regInterest">
+              <div class="control-group form-group col-md-10" ng-hide="eventForm.free || eventForm.regInterest"
+                    ng-class="{'has-error':eventdetails.grace.$invalid &&
+                                    eventdetails.grace.$dirty}">
                   <label>Grace period for payment (days)</label>       
-                  <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace"></input>
+                  <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace" ng-min="0"></input>
+                  <span class="help-block has-error" ng-if="eventdetails.closingdate.$dirty">
+                    <span ng-show="eventdetails.grace.$error.min">Grace period must be greater than or equal to 0.</span>
+                  </span>
               </div>
               
               <!-- L A T E  P A Y M E N T  C H E C K I N G ?-->

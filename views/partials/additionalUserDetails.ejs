@@ -64,9 +64,10 @@
             ng-class="{'has-error':<%-form%>.volodgeno.$invalid &&
                                   <%-form%>.volodgeno.$dirty}" ng-hide="!<%-form%>Form.isVO">
             <label>VO lodge number</label>
-            <input type="number" class="form-control"  name="volodgeno" ng-model="<%-form%>Form.voLodgeNo" ng-maxlength="5" >
+            <input type="number" class="form-control"  name="volodgeno" ng-model="<%-form%>Form.voLodgeNo" ng-min="1" ng-maxlength="5" >
             <span class="help-block has-error" ng-if="<%-form%>.volodgeno.$dirty">
               <span ng-show="<%-form%>.volodgeno.$error.maxlength">The VO lodge number cannot be more than 5 characters.</span>
+              <span ng-show="<%-form%>.volodgeno.$error.min">The VO lodge number must be greater than zero.</span>
             </span>
           </div>
 
