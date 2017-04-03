@@ -679,7 +679,7 @@ module.exports = {
 	          }
 	
 	          //delete the file after we are done with it.
-	          fs.unlink(fullpath);
+	          fs.unlink(fullpath,function(){});
 	
 	        });
 	      });
