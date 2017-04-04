@@ -196,14 +196,15 @@ ng-class="{'has-error':<%-form%>.email.$invalid &&
  <!-- C O N F I R M  E M A I L -->
 
 <div class="control-group form-group col-xs-10"
-ng-class="{'has-error':(<%-form%>.confirmemail.$invalid || <%-form%>.email.$error.compareTo) &&
-                      <%-form%>.confirmemail.$dirty}">
+ng-class="{'has-error':<%-form%>.confirmemail.$invalid || <%-form%>.email.$error.compareTo}">
   <label>Re-enter your email address</label>
   <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'" >
   <span class="help-block has-error" ng-if="<%-form%>.confirmemail.$dirty">
-    <span ng-show="<%-form%>.email.$error.compareTo">Email address must match.</span>
     <span ng-show="<%-form%>.confirmemail.$error.required">Confirmation email address is required.</span>
     <span ng-show="<%-form%>.confirmemail.$error.email">Not a valid email address.</span>
+  </span>
+  <span class="help-block has-error">
+    <span ng-show="<%-form%>.email.$error.compareTo">Email address must match.</span>   
   </span>
 </div>
 

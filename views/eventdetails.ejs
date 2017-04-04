@@ -333,7 +333,7 @@
               ng-class="{'has-error':eventdetails.capacity.$invalid &&
                                     eventdetails.capacity.$dirty}">
                 <label>* Capacity</label>       
-                <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
+                <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" min="0" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
                 <span class="help-block has-error" ng-if="eventdetails.capacity.$dirty">
                   <span ng-show="eventdetails.capacity.$error.required">Capacity is required.</span>
                   <span ng-show="eventdetails.capacity.$error.pattern">Capacity contains an invalid value.</span>

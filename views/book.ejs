@@ -115,7 +115,7 @@
         </h5>         
         <h5 ng-hide="event.capacity<=0">Items marked with * are mandatory</h5>  
         
-        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && !mode=='display' !mode=='delete' && !user.isOrganiser && !myBookings && !eventBookings && !userBookings" 
+        <div class="row" ng-hide="event.capacity<=0 && !user.isAdmin && mode!='display' && mode!='delete' && !user.isOrganiser && !myBookings && !eventBookings && !userBookings" 
                 disable-contents="mode=='display' || mode=='delete' || !openForBookings">  <!-- disable-contents is a custom directive I have added to EventsModule -->
            
            <% include partials/bookingDetails.ejs %>  

@@ -314,31 +314,32 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <!-- E M A I L -->
 
 <div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-model%>.email.$invalid &&
-                    <%-model%>.email.$dirty}">
-<label><span ng-hide="eventBookings || userBookings">* </span>Email address</label>
-<input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-model%>Form.email" compare-to="<%-model%>Form.confirmemail"
-  ng-disabled="mode!='create'">  
-<span class="help-block has-error" ng-if="<%-model%>.email.$dirty">  
-  <span ng-show="<%-model%>.email.$error.email">Not a valid email address.</span>
-</span>
+  ng-class="{'has-error':<%-model%>.email.$invalid}">
+  <label><span ng-hide="eventBookings || userBookings">* </span>Email address</label>
+  <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-model%>Form.email" compare-to="<%-model%>Form.confirmemail"
+    ng-disabled="mode!='create'">  
+  <span class="help-block has-error" ng-if="<%-model%>.email.$dirty">  
+    <span ng-show="<%-model%>.email.$error.email">Not a valid email address.</span>
+  </span>
 </div>
 
 
 <!-- C O N F I R M  E M A I L -->
 
 <div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-model%>.confirmemail.$invalid &&
-                    <%-model%>.confirmemail.$dirty}">
-<label ng-hide="mode=='create'">Re-enter your email address</label>
-<label ng-show="mode=='create'">Re-enter the email address</label>
-<input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-model%>Form.confirmemail" 
-  ng-disabled="mode!='create'">  
-<span class="help-block has-error" ng-if="<%-model%>.confirmemail.$dirty">
-  <span ng-show="<%-model%>.email.$error.compareTo">Re-enter a matching email address.</span>
-  <span ng-show="<%-model%>.confirmemail.$error.email">Not a valid email address.</span>
-</span>
-</div>
+ ng-class="{'has-error':<%-model%>.confirmemail.$invalid || (<%-model%>.email.$error.compareTo)}">
+  <label ng-hide="mode=='create'">Re-enter your email address</label>
+  <label ng-show="mode=='create'">Re-enter the email address</label>
+  <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-model%>Form.confirmemail" 
+    ng-disabled="mode!='create'" >    
+  <span class="help-block has-error" ng-if="<%-model%>.confirmemail.$dirty">  
+    <span ng-show="<%-model%>.email.$error.compareTo">Re-enter a matching email address.</span>
+    <span ng-show="<%-model%>.confirmemail.$error.email">Not a valid email address.</span>
+  </span> 
+  <span class="help-block has-error">  
+    <span ng-show="<%-model%>.email.$error.compareTo">Re-enter a matching email address.</span>    
+  </span> 
+</div>  
 
 <!-- A D D I T I O N A L  I N F O -->
 <div class="control-group form-group col-xs-10" ng-hide="event.regInterest || !event.additionalInfo">
