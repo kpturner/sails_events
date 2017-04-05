@@ -158,7 +158,7 @@ module.exports = {
       type: 'text'
     },
     
-    // Number of days grace the bookee has to make payment
+    // Number of days grace the booker has to make payment
     grace: {
       type: 'integer'
     },

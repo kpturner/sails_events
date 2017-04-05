@@ -367,16 +367,15 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			errors.push("Area");	
 			validations.push($scope.booking.area);		
 		}
-		if ($scope.bookingForm.email && (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0)) {
+		if (($scope.bookingForm.email && (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0))
+			|| ($scope.bookingForm.confirmemail && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))
+			|| ($scope.bookingForm.email && $scope.bookingForm.confirmemail && $scope.bookingForm.email!=$scope.bookingForm.confirmemail) 
+			) {
 			complete=false;
-			errors.push("Re-enter email address to confirm it");
-			validations.push($scope.booking.confirmemail);
-		}
-		if ($scope.bookingForm.confirmemail && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0)) {
-			complete=false;
-			errors.push("Email address");
+			errors.push("Enter matching email address twice or not at all");
 			validations.push($scope.booking.email);
-		}
+			validations.push($scope.booking.confirmemail);
+		}		
 		if (!$scope.eventBookings && !$scope.userBookings) {
 			if ($scope.lodgeMandatory && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0)) {
 				complete=false;
