@@ -338,7 +338,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 </div>  
 
 <!-- A D D I T I O N A L  I N F O -->
-<div class="control-group form-group col-xs-10" ng-hide="event.regInterest || !event.additionalInfo">
+<div class="control-group form-group col-xs-10" ng-hide="event.regInterest">
   <label><%-sails.config.events.additionalInfoLabel || 'Any additional info' %></label>
   <textarea class="form-control" placeholder="e.g. seating requests etc" name="info" ng-model="<%-model%>Form.info" ></textarea>            
 </div>
