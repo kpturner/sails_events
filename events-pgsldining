@@ -52,7 +52,7 @@ do_stop()
         # pid=`ps -aefw | grep "$DAEMON $SERVER" | grep -v " grep " | awk '{print $2}'`
         #kill -9 $pid > /dev/null 2>&1 && echo_success || echo_failure
         echo -n $"$DAEMON stop $SERVER "
-        runuser -l "$USER" -c "$DAEMON stop $SERVER >> $LOG_FILE &" && echo_success || echo_failure
+        runuser -l "$USER" -c "$DAEMON $SERVER >> $LOG_FILE &" && echo_success || echo_failure
         RETVAL=$?
         echo
         [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
