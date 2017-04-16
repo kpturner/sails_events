@@ -379,6 +379,7 @@ module.exports = {
 		
 		var action=req.param("action");
 		var event=req.param("data");
+		var graceChangedTo=req.param("gracechangedto");
 		var eventId=event.id;
 		
 		// Sort out the event time
@@ -397,7 +398,7 @@ module.exports = {
 		
 		// Decide what to do based on the action
 		if (action=="edit") {
-			Event.update(eventId,event).exec(function(err,event){
+			Event.update(eventId,event).exec(function(err,events){
 				if (err) {
 					// If this is a uniqueness error about the code attribute,
 				    // send back an easily parseable status code.
@@ -408,6 +409,70 @@ module.exports = {
 					// Else unknown error
 					return res.negotiate(err)
 				}
+				var event=events[0];
+				// If the grace changed then warn the people booked in
+				if (graceChangedTo) {
+					var diff=event.grace-parseInt(graceChangedTo);
+					if (diff) {
+						// Get all the bookings that are unpaid
+						Booking.find({where:{
+							event:	event.id,
+							or:		[
+								{paid:false},
+								{paid:null}
+							],
+						}})
+						.populate('user')
+						.then(function(bookings){
+							// Prep some text for the email 
+							var wh;
+							if (diff<0) {
+								wh="decreased by "+(diff*-1)+" days";								
+							}	
+							else {
+								wh="increased by "+(diff)+" days";
+							}	
+							// Send the email
+							_.forEach(bookings,function(booking){
+								var dl=new Date(booking.bookingDate);
+								dl.setDate(dl.getDate()+event.grace);
+								dl=dl.toString();
+								var deadline=dl.substr(0,dl.indexOf(":")-2);
+								var to=booking.user.email;
+								var cc=[(event.organiser.email || ""),(event.organiser2?event.organiser2.email || "":"")];
+								var formattedDate=event.date.toString();
+								formattedDate=formattedDate.substr(0,formattedDate.indexOf("00:00:00"));									
+								// Send email reminder
+								Email.send(
+									"gracePeriodChanged", {
+										recipientName: Utility.recipient(booking.user.salutation,booking.user.firstName,booking.user.surname),
+										senderName: sails.config.events.title,
+										eventDate: formattedDate,
+										event: event,
+										deadline: deadline,
+										details: booking,
+										wh: wh												
+									},
+									{
+										//to: booking.user.email,
+										to: to,
+										cc: cc,
+										bcc: (sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
+										subject: event.name + " - Payment deadline changed"
+									},
+									function(err) {if (err) console.log(err);}
+								)     
+							})
+						})
+						.catch(function(err){
+							sails.log.error(err)
+						})
+						.finally(function(){
+							 
+						})		
+					}
+				}
+
 				return res.ok();	
 			})
 		}

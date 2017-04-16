@@ -1,13 +1,13 @@
-angular.module('EventsModule').controller('EventDetailsController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('EventsModule').controller('EventDetailsController', ['$scope', '$http', 'toastr', 'ngDialog', function($scope, $http, toastr, ngDialog){
 
 	$scope.user=SAILS_LOCALS.user;
-	$scope.mode=SAILS_LOCALS.mode;
+	$scope.mode=SAILS_LOCALS.mode;	
 	$scope.eventForm = {
 		loading: false
 	}
 
-	$scope.orders=SAILS_LOCALS.orders;
-	$scope.eventForm=SAILS_LOCALS.event;
+	$scope.orders=$.extend({},SAILS_LOCALS.orders);
+	$scope.eventForm=$.extend({},SAILS_LOCALS.event);
 
 	if (SAILS_LOCALS.mode=="create") {
 		$scope.eventForm.logo=SAILS_LOCALS.logo;
@@ -132,29 +132,56 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 	
 	$scope.submitEventForm = function(){
 		$scope.eventForm.loading=true;
-						
-		if ($scope.eventForm.maxBookingPlaces<$scope.eventForm.minBookingPlaces)
-			$scope.eventForm.maxBookingPlaces=$scope.eventForm.minBookingPlaces;		
 
-		$scope.eventForm.time=$scope.eventForm.time.toTimeString().split(" ")[0]		
+		// Firstly we have to decide if the user has changed the grace period and warn them of 
+		// the consequences
+		if (SAILS_LOCALS.event.grace && $scope.eventForm.grace && SAILS_LOCALS.event.grace!=$scope.eventForm.grace) {
+			// Warn the user		
+			$scope.eventForm.informGraceChanged=true;	
+			var opts={
+				template:"/templates/graceWarning.html",
+				className: 'ngdialog-theme-default',
+				scope: $scope
+			};
+			// Pop the dialog
+			ngDialog.openConfirm(opts)
+				.then(function (value) {
+					updateEvent($scope.eventForm.informGraceChanged);
+				}, 
+				function (reason) {
+					$scope.eventForm.loading=false;
+				});	
+		}		
+		else {
+			updateEvent();
+		}
 						
-		// Submit request to Sails.
-		$http.post('/updateevent/'+$scope.mode, {
-            _csrf: SAILS_LOCALS._csrf,
-			data: $scope.eventForm			 
-		})
-		.then(function onSuccess(sailsResponse){
-			window.location = '/events';
-		})
-		.catch(function onError(sailsResponse){
-			convertTime();
-			// Handle known error type(s).
-			toastr.error(sailsResponse.data, 'Error');
+		function updateEvent(graceChanged) {
+			if ($scope.eventForm.maxBookingPlaces<$scope.eventForm.minBookingPlaces) {
+				$scope.eventForm.maxBookingPlaces=$scope.eventForm.minBookingPlaces;		
+			}	
+			$scope.eventForm.time=$scope.eventForm.time.toTimeString().split(" ")[0]		
+							
+			// Submit request to Sails.
+			var route='/updateevent/'+$scope.mode+((graceChanged)?"?gracechangedto="+SAILS_LOCALS.event.grace:"");			
+			$http.post(route, {
+				_csrf: SAILS_LOCALS._csrf,
+				data: $scope.eventForm			 
+			})
+			.then(function onSuccess(sailsResponse){
+				window.location = '/events';
+			})
+			.catch(function onError(sailsResponse){
+				convertTime();
+				// Handle known error type(s).
+				toastr.error(sailsResponse.data, 'Error');
 
-		})
-		.finally(function eitherWay(){
-			$scope.eventForm.loading = false;
-		})
+			})
+			.finally(function eitherWay(){
+				$scope.eventForm.loading = false;
+			})
+		}				
+		
 	}	
 
 }])

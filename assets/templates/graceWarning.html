@@ -1,0 +1,14 @@
+<div class="ngdialog-message">
+    <h3>WARNING</h3>
+    <p>If you change the grace period after bookings and been taken then you will also change the payment deadline on existing bookings (and so their deadline will differ from that shown on their booking confirmation email).</p>
+    <p><b>Are you sure you want to make this change?</b>
+    <p>If you do, you <i>should</i> inform users with unpaid bookings.<p>  
+    <label>
+        <input type="checkbox" class="bigcheckbox" name="informgracechange" ng-model="eventForm.informGraceChanged"></input>
+            &nbsp;&nbsp;&nbsp;Inform users?
+    </label> 
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Change it</button>
+</div>

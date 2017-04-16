@@ -117,7 +117,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
     var maxPlaces=($scope.event.maxBookingPlaces==1)?$scope.event.maxBookingPlaces:
-					($scope.user.isAdmin || $scope.user.isOrganiser)?($scope.event.maxBookingPlaces*2):$scope.event.maxBookingPlaces;
+					($scope.user.isAdmin || ($scope.user.id==$scope.event.organiser.id || $scope.user.id==$scope.event.organiser2.id))?($scope.event.maxBookingPlaces*2):
+							$scope.event.maxBookingPlaces;
 	$scope.placesMax=($scope.event.capacity>maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
 	if ($scope.placesMin>$scope.placesMax)
@@ -367,16 +368,15 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			errors.push("Area");	
 			validations.push($scope.booking.area);		
 		}
-		if ($scope.bookingForm.email && (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0)) {
+		if (($scope.bookingForm.email && (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0))
+			|| ($scope.bookingForm.confirmemail && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))
+			|| ($scope.bookingForm.email && $scope.bookingForm.confirmemail && $scope.bookingForm.email!=$scope.bookingForm.confirmemail) 
+			) {
 			complete=false;
-			errors.push("Re-enter email address to confirm it");
-			validations.push($scope.booking.confirmemail);
-		}
-		if ($scope.bookingForm.confirmemail && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0)) {
-			complete=false;
-			errors.push("Email address");
+			errors.push("Enter matching email address twice or not at all");
 			validations.push($scope.booking.email);
-		}
+			validations.push($scope.booking.confirmemail);
+		}		
 		if (!$scope.eventBookings && !$scope.userBookings) {
 			if ($scope.lodgeMandatory && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0)) {
 				complete=false;
