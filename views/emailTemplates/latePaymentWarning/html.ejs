@@ -20,10 +20,10 @@
 
 
 <% if (reminderTestMode) { %>
-    <p>NOTE: The system is currently configured *not* to send automatic reminders to the bookee.</p>
+    <p>NOTE: The system is currently configured *not* to send automatic reminders to the person who made the booking.</p>
 <% } %> 
 <% if (!reminderTestMode) { %>
-    <p>NOTE: The system is currently configured to automatically send reminders to the bookee. It is therefore essential that you keep the system up to date to avoid embarrassment.</p>
+    <p>NOTE: The system is currently configured to automatically send reminders to the person who made the booking. It is therefore essential that you keep the system up to date to avoid embarrassment.</p>
 <% } %> 
 
 <p>Yours S&F,<br/><%=senderName%></p>
