@@ -1248,6 +1248,11 @@ module.exports = {
 		}
 		var filter=criteria.filter;
 
+		if (filter=="late" && pag.page>1) {
+			// Don't need to return anything since "late" will have returned the lot
+			return res.json({});  
+		}
+
 		// If we are looking for late payments then pagination will defeat us!
 		if (filter=="late" || download) {
 			pag.page=1;
