@@ -360,7 +360,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <!-- A D D I T I O N A L   A T T E N D E E S -->
 <div ng-repeat="place in linked<%-model%>sArr | limitTo:<%-model%>Form.places-1">
 	<div class="control-group form-group col-xs-10">
-	  <h4>Additional attendee {{place+1}} <span class="fa fa-trash" name="heading_{{place}}" ng-click="removeGuest($event)" style="cursor:pointer" title="Remove guest"></span></h4>   
+	  <h4>Additional attendee {{place+1}} <span class="fa fa-trash" ng-hide="mode=='delete' || mode=='display' || !openForBookings || (!user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid)" name="heading_{{place}}" ng-click="removeGuest($event)" style="cursor:pointer" title="Remove guest"></span></h4>   
 	</div>
 	<ng-model name="linked<%-model%>">
     
