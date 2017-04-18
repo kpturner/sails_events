@@ -49,6 +49,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.places+=1;
 		$scope.makeArray();
 	}
+
+	// RemoveGuest - Remove a guest 
+	$scope.removeGuest = function($event) {
+		var index=parseInt($($event.target).attr("name").replace("heading_",""));
+		$scope.linkedbookingsArr.pop();
+		$scope.linkedbookings.splice(index,1);
+		$scope.bookingForm.places-=1;
+	}
 	
 	// Build a list of MOPs from the config for the MOP dropdown
 	//$scope.mops=[];
