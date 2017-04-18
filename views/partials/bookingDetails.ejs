@@ -367,58 +367,58 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
     <!-- S A L U T A T I O N -->
     <div class="control-group form-group col-xs-10">
       <label>* Salutation</label>  
-      <select ng-show="!event.order || event.order=='C'" class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="{{place}}_salutation" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation">
+      <select ng-show="!event.order || event.order=='C'" class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc" name="salutation_{{place}}" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation">
         <option value="">-- choose salutation --</option>
       </select>
-      <input  ng-hide="!event.order || event.order=='C'" type="text" class="form-control" placeholder="salutation" name="{{place}}_salutation" ng-model="linked<%-model%>s[place].salutation" ng-maxlength="50"> 
+      <input  ng-hide="!event.order || event.order=='C'" type="text" class="form-control" placeholder="salutation" name="salutation_{{place}}" ng-model="linked<%-model%>s[place].salutation" ng-maxlength="50"> 
     </div>     
             
 	  <!-- S U R N A M E -->
 	  <div class="control-group form-group col-xs-10">
 	    <label>* Surname</label>  
-	    <input type="text" class="form-control" placeholder="e.g. Bloggs" name="{{place}}_surname" ng-model="linked<%-model%>s[place].surname"  >              
+	    <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname_{{place}}" ng-model="linked<%-model%>s[place].surname"  >              
 	    
 	  </div>   
 	  
 	  <!-- F I R S T   N A M E -->
 	  <div class="control-group form-group col-xs-10">
 	    <label>* First name</label>  
-	    <input type="text" class="form-control" placeholder="e.g. Fred" name="{{place}}_firstname" ng-model="linked<%-model%>s[place].firstName"   >              
+	    <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname_{{place}}" ng-model="linked<%-model%>s[place].firstName"   >              
 	   
 	  </div>   
 	  
 	  <!-- L O D G E -->
 	  <div class="control-group form-group col-xs-10 col-md-6">
 	    <label><span>{{orderlabel}}</span> name</label>
-	    <input type="text" class="form-control" placeholder="e.g. Hamtun" name="{{place}}_lodge" ng-model="linked<%-model%>s[place].lodge"  >
+	    <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge_{{place}}" ng-model="linked<%-model%>s[place].lodge"  >
 	    
 	  </div>
 	  
 	  <!-- L O D G E  N U M B E R-->
 	  <div class="control-group form-group col-xs-6 col-md-4">
 	    <label><span>{{orderlabel}}</span> number</label>
-	    <input type="number" class="form-control" placeholder="e.g. 7083" name="{{place}}_lodgeno" ng-model="linked<%-model%>s[place].lodgeNo">
+	    <input type="text" class="form-control" placeholder="e.g. 7083" name="lodgeno_{{place}}" ng-model="linked<%-model%>s[place].lodgeNo">
 	   
 	  </div>
 
     <!-- L O D G E  Y E A R -->
 	  <div class="control-group form-group col-xs-10" ng-show="<%-sails.config.events.lodgeYear %>">
 	    <label><%-sails.config.events.lodgeYearLabel || '{{orderlabel}} year' %></label>
-	    <input type="text" class="form-control" placeholder="e.g. year joined" name="{{place}}_lodgeyear" ng-model="linked<%-model%>s[place].lodgeYear">
+	    <input type="text" class="form-control" placeholder="e.g. year joined" name="lodgeyear_{{place}}" ng-model="linked<%-model%>s[place].lodgeYear">
 	   
 	  </div>
 
     <!-- C E N T R E -->
     <div class="control-group form-group col-xs-10">
       <label>Centre</label>  
-      <input type="text" class="form-control" placeholder="e.g. Woolston" name="{{place}}_centre" ng-model="linked<%-model%>s[place].centre">
+      <input type="text" class="form-control" placeholder="e.g. Woolston" name="centre_{{place}}" ng-model="linked<%-model%>s[place].centre">
       
     </div>
     
     <!-- A R E A -->
     <div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
       <label>Area</label>  
-      <select class="form-control" placeholder="e.g. South Central" name="{{place}}_area" ng-options="area for area in areas" ng-model="linked<%-model%>s[place].area">
+      <select class="form-control" placeholder="e.g. South Central" name="area_{{place}}" ng-options="area for area in areas" ng-model="linked<%-model%>s[place].area">
         <option value="">-- choose area --</option>
       </select>
     </div>
@@ -426,14 +426,14 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 	   <!-- R A N K -->
 	  <div class="control-group form-group col-xs-10">
 	    <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
-	    <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="{{place}}_rank" ng-model="linked<%-model%>s[place].rank"  >
+	    <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies" name="rank_{{place}}" ng-model="linked<%-model%>s[place].rank"  >
 	    
 	  </div>
 	
 	  <!-- D I E T A R Y -->
 	  <div class="control-group form-group col-xs-10" ng-hide="event.regInterest">
 	    <label>Dietary requirements</label>
-	    <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="{{place}}_dietary" ng-model="linked<%-model%>s[place].dietary" >
+	    <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary_{{place}}" ng-model="linked<%-model%>s[place].dietary" >
 	    
 	  </div>  
 	

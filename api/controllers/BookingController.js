@@ -5,9 +5,6 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-
-
-
 module.exports = {
 
 	/**
@@ -246,6 +243,7 @@ module.exports = {
 					// Obscure some fields!
 					if (res.locals.event.bypassCode)
 						res.locals.event.bypassCode="*redacted";
+					res.locals.now=new Date();
 					res.locals.event.capacity-=places;
 					res.locals.booking=existingBooking;
 					res.locals.myBookings=myBookings;

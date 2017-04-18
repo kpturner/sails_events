@@ -27,7 +27,7 @@
             <!-- O R D E R -->
             <div class="control-group form-group col-xs-10">
                 <label>* Order</label>  
-                <select class="form-control" placeholder="e.g. Craft, Royal Arch etc" name="{{order}}_order" ng-options="order.code as order.desc for order in orders" 
+                <select class="form-control" placeholder="e.g. Craft, Royal Arch etc" name="order_{{order}}" ng-options="order.code as order.desc for order in orders" 
                         ng-model="ordersModel[order].code"> 
                 </select>
             </div>    
@@ -35,21 +35,21 @@
             <!-- S A L U T A T I O N -->
             <div class="control-group form-group col-xs-10">
                 <label>Salutation</label>  
-                <input type="text" class="form-control" placeholder="e.g. Companion" name="{{order}}_salutation" 
+                <input type="text" class="form-control" placeholder="e.g. Companion" name="salutation_{{order}}" 
                         ng-model="ordersModel[order].salutation"  >    
             </div>    
                         
             <!-- R A N K -->
             <div class="control-group form-group col-xs-10">
                 <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
-                <input type="text" class="form-control" placeholder="e.g. Principal Sojourner" name="{{order}}_rank" 
+                <input type="text" class="form-control" placeholder="e.g. Principal Sojourner" name="rank_{{order}}" 
                         ng-model="ordersModel[order].rank"  >
             </div>
 
             <!-- O R D E R  N A M E -->
             <div class="control-group form-group col-xs-10">
                 <label>Unit</label>  
-                <input type="text" class="form-control" placeholder="e.g. Name of Chapter" name="{{order}}_name" 
+                <input type="text" class="form-control" placeholder="e.g. Name of Chapter" name="name_{{order}}" 
                         ng-model="ordersModel[order].name"  >              
                 
             </div>  
@@ -57,7 +57,7 @@
             <!-- O R D E R  N U M B E R-->
 	        <div class="control-group form-group col-xs-6 col-md-4">
 	            <label>Number</label>
-	            <input type="number" class="form-control" placeholder="e.g. Chapter no." name="{{order}}_number" 
+	            <input type="number" class="form-control" placeholder="e.g. Chapter no." name="number_{{order}}" 
                         ng-model="ordersModel[order].number">
 	   
 	        </div> 
@@ -65,28 +65,34 @@
             <!-- Y E A R-->
 
             <div class="control-group form-group col-xs-10"
-                ng-show="<%-sails.config.events.lodgeYear%>"
-                ng-class="{'has-error':<%-form%>.{{order}}_year.$invalid &&
-                                        <%-form%>.{{order}}_year.$dirty}">
+                ng-show="<%-sails.config.events.lodgeYear%>">
+                <!-- 
+                   Doesn't work with variable names
+                   ng-class="{'has-error':<%-form%>.year_{{order}}.$invalid &&
+                                        <%-form%>.year_{{order}}.$dirty}">
+                -->
                 <label>Year</label>
-                <input type="text" class="form-control" placeholder="e.g. year you joined" name="{{order}}_year" 
+                <input type="text" class="form-control" placeholder="e.g. year you joined" name="year_{{order}}" 
                         ng-model="ordersModel[order].year" ng-maxlength="4" >
-                <span class="help-block has-error" ng-if="<%-form%>.{{order}}_year.$dirty">
-                    <span ng-show="<%-form%>.{{order}}_year.$error.maxlength">The year cannot be more than 4 characters.</span>
+                <!-- 
+                   Doesn't work with variable names        
+                <span class="help-block has-error" ng-if="<%-form%>.year_{{order}}.$dirty">
+                    <span ng-show="<%-form%>.year_{{order}}.$error.maxlength">The year cannot be more than 4 characters.</span>
                 </span>
+                -->
             </div>
 
             <!-- C E N T R E -->
             <div class="control-group form-group col-xs-10">
                 <label>Centre</label>  
-                <input type="text" class="form-control" placeholder="e.g. Winchester" name="{{order}}_centre" 
+                <input type="text" class="form-control" placeholder="e.g. Winchester" name="centre_{{order}}" 
                         ng-model="ordersModel[order].centre">            
             </div>
             
             <!-- A R E A -->
             <div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
                 <label>Area</label>  
-                <select class="form-control" placeholder="e.g. South Central" name="{{order}}_area" ng-options="area for area in areas" 
+                <select class="form-control" placeholder="e.g. South Central" name="area_{{order}}" ng-options="area for area in areas" 
                         ng-model="ordersModel[order].area">
                     <option value="">-- choose area --</option>
                 </select>

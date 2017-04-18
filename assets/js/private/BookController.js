@@ -66,6 +66,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	 */
 	$scope.initialiseLodgeInfo = function(userId,userOrders){
 
+		// <ake sure lodge numbers are numeric before starting
+		$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo);								
+		if ($scope.bookingForm.voLodgeNo) {
+			$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
+		} 			
+
 		// First of all get the users orders if not passed
 		if (userOrders) {
 			setInfo(userOrders)
@@ -174,7 +180,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	}	
 
 	// Open for bookings?
-	var today=new Date();
+	var today=new Date(SAILS_LOCALS.now);
 	$scope.openForBookings=true;
 	if (!$scope.eventBookings && !$scope.userBookings && $scope.event.openingDate && new Date($scope.event.openingDate)>today) {
 		$scope.openForBookings=false;			
