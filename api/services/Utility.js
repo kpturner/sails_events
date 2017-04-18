@@ -24,20 +24,38 @@ var Twit        = require("twit");
 var google      = require('googleapis');
 var plus        = google.plus('v1'); 
 var Gravatar    = require('machinepack-gravatar');
+var moment      = require('moment-timezone');
 var redisClient;  
 
 module.exports = { 
 
     /** 
-     * Return todays date at 00:00:00
+     * Return todays date at 00:00:00 (ignoring DST)
      */
     today: function(){
-        var t=new Date();
-		t.setHours(0);
-		t.setMinutes(0);
-		t.setSeconds(0);
-        t.setMilliseconds(0);
+        var realDate=moment.tz(new Date(),sails.config.events.timezone).format();
+        var splits=realDate.split("-");
+        splits[2]=splits[2].split("T")[0];
+        var t=new Date(parseInt(splits[0]),parseInt(splits[1])-1,splits[2],0,0,0,0);	
         return t;
+    },
+
+    /**
+     * Return a database date in UTC format ignoring DST
+     * The Mysql adaptor will return a date file set to 
+     * 23:00:00 the previous day when DST in in use and 
+     * we don't want that
+     */
+    UTCDBdate: function(dateIn) {
+        var offset=dateIn.getTimezoneOffset()/60;
+		var dateOut=Date.UTC(   dateIn.getUTCFullYear(),
+                                dateIn.getUTCMonth(),
+                                dateIn.getUTCDate()-offset,
+                                0,
+                                0,
+                                0
+        );
+        return dateOut;
     },
 
     /**

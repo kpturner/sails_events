@@ -21,6 +21,9 @@ module.exports.events = {
 
 	// Maintenance mode?
 	maintenance: false,
+
+	// Timezone
+	timezone: "Europe/London",
     
 	// Expire session after this many milliseconds
 	sessionExpiry:  30 * 60 * 1000,
