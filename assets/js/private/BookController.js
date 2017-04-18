@@ -180,9 +180,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	}	
 
 	// Open for bookings?
-	var today=new Date(SAILS_LOCALS.now);
 	$scope.openForBookings=true;
-	if (!$scope.eventBookings && !$scope.userBookings && $scope.event.openingDate && new Date($scope.event.openingDate)>today) {
+	if (!$scope.eventBookings && !$scope.userBookings && $scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate>SAILS_LOCALS.now) {
 		$scope.openForBookings=false;			
 	}
 

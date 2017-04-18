@@ -240,10 +240,16 @@ module.exports = {
 					}
 				
 					res.locals.event=event;
+					// Remember that mysql adaptor will very unhelpfully adjust the date for DST so check if we have 23 hours. If we do, add one today
+					if (event.openingDate) {
+						var addday=(event.openingDate.getUTCHours()==23)?1:0;
+						res.locals.event.UTCOpeningDate=Date.UTC(event.openingDate.getUTCFullYear(),event.openingDate.getUTCMonth(),event.openingDate.getUTCDate()+addday,0,0,0);
+					}					
 					// Obscure some fields!
 					if (res.locals.event.bypassCode)
 						res.locals.event.bypassCode="*redacted";
-					res.locals.now=new Date();
+					var d=new Date();
+					res.locals.now=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),0,0,0);
 					res.locals.event.capacity-=places;
 					res.locals.booking=existingBooking;
 					res.locals.myBookings=myBookings;
