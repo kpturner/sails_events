@@ -249,6 +249,7 @@ module.exports = {
 					if (res.locals.event.bypassCode)
 						res.locals.event.bypassCode="*redacted";
 					var d=new Date();
+					res.locals.nowLocal=new Date();
 					res.locals.now=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),0,0,0);
 					res.locals.event.capacity-=places;
 					res.locals.booking=existingBooking;
