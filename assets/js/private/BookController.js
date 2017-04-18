@@ -123,7 +123,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.myBookings=SAILS_LOCALS.myBookings;
 	$scope.eventBookings=SAILS_LOCALS.eventBookings;
     var maxPlaces=($scope.event.maxBookingPlaces==1)?$scope.event.maxBookingPlaces:
-					($scope.user.isAdmin || ($scope.user.id==$scope.event.organiser.id || $scope.user.id==$scope.event.organiser2.id))?($scope.event.maxBookingPlaces*2):
+					($scope.user.isAdmin || (($scope.event.organiser && $scope.user.id==$scope.event.organiser.id) || ($scope.event.organiser2 && $scope.user.id==$scope.event.organiser2.id)))?($scope.event.maxBookingPlaces*2):
 							$scope.event.maxBookingPlaces;
 	$scope.placesMax=($scope.event.capacity>maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
