@@ -30,7 +30,7 @@ var redisClient;
 module.exports = { 
 
     /** 
-     * Return todays date at 00:00:00 (ignoring DST)
+     * Return todays date at 00:00:00 (catering for DST which is not in use on some centos/plesk servers)
      */
     today: function(){
         var realDate=moment.tz(new Date(),sails.config.events.timezone).format();
@@ -47,7 +47,8 @@ module.exports = {
      * we don't want that
      */
     UTCDBdate: function(dateIn) {
-        var offset=dateIn.getTimezoneOffset()/60;
+        var hh=dateIn.getUTCHours()-(dateIn.getTimezoneOffset()/60);
+        var offset=(hh>=24)?1:(hh<0)?-1:0;
 		var dateOut=Date.UTC(   dateIn.getUTCFullYear(),
                                 dateIn.getUTCMonth(),
                                 dateIn.getUTCDate()-offset,
