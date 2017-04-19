@@ -719,7 +719,7 @@ module.exports = {
      * @param {Function} [cb]   callback
      *  
      */
-    deleteRedisKeys: function(keys, cb) {
+    deleteRedisKeys: function(keys, cb) {    
         if (!redisClient) {
              // Add function to client
              libredis.RedisClient.prototype.delWildcard = function(key, callback) {

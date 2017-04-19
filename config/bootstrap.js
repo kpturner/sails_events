@@ -66,6 +66,11 @@ module.exports.bootstrap = function(cb) {
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   // Make sure we have no locks lingering before doing so
-  Utility.deleteRedisKeys([sails.config.mutex.prefix+"*"],cb);
+  if (sails.config.mutex.adapter!="lockfile") {
+    Utility.deleteRedisKeys([sails.config.mutex.prefix+"*"],cb);
+  }
+  else {
+    cb();
+  } 
   
 };
