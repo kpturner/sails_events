@@ -23,13 +23,10 @@ module.exports = {
       lodgeYear: true,
       lodgeYearLabel: 'PGSL year',
       lodgeYearDownloadLabel: 'PGSLyear',     
-  },
-  
-  session: {
-    adapter: 'memory'
-  },
+  },  
+   
   mutex: {
-    adapter: 'lockfile
+    adapter: 'lockfile'
   },
 
   /***************************************************************************
