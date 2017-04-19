@@ -72,7 +72,7 @@
                   <% }) %>
                 <% } %>          	    
             </div>
-              <div class="row omb_row-sm-offset-3 omb_loginOr">
+            <div class="row omb_row-sm-offset-3 omb_loginOr">
               <div class="col-xs-12 col-sm-6">
                 <hr class="omb_hrOr">
                 <span class="omb_spanManual">or login manually</span>
@@ -80,6 +80,15 @@
             </div>  
           </div>  
       
+          <div ng-hide="<%-sails.config.events.socialMedia%>">
+            <div class="row omb_row-sm-offset-3 omb_loginOr">
+              <div class="col-xs-12 col-sm-6">
+                <hr class="omb_hrOr">
+                <span class="omb_spanManual">or login</span>
+              </div>
+            </div>  
+          </div>  
+          
       		<div class="row omb_row-sm-offset-3">
       			<div class="col-xs-12 col-sm-6">	
                 <!--
