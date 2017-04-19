@@ -1,3 +1,1 @@
-export SESS_ADAPTOR=memory
-export SMTP_SENDER='PGSL Dining <dining@9263dining.org.uk>' 
-node app.js --prod
+sudo SESS_ADAPTOR=memory SMTP_SENDER='PGSL Dining <dining@9263dining.org.uk>' NODE_ENV=production  node_modules/forever/bin/forever $1 app.js
