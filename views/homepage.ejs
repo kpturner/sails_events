@@ -51,32 +51,34 @@
         <h1><%= sails.config.events.heading %></h1>
         <h2 class="hidden-xs">Masonic event management</h2>
         <div class="omb_login">
-            <h4 class="omb_authTitle"><a href="/register">Create an account</a></h4>
-      		<div class="row omb_row-sm-offset-3 omb_loginOr">
-      			<div class="col-xs-12 col-sm-6">
-      				<hr class="omb_hrOr">
-      				<span class="omb_spanSocial">or login via Social Media</span>
-      			</div>
-      		</div>  
-      		<div class="row omb_row-sm-offset-3 omb_socialButtons">
-              <% if (Object.keys(providers).length) {%>                         
-                <% Object.keys(providers).forEach(function (key) { %>
-                  <div class="col-xs-4 col-sm-2">
-      		          <a href="/auth/<%= providers[key].slug %>" class="btn btn-lg btn-block <%= providers[key].klass %>">
-      			         <i class="fa <%= providers[key].icon %> visible-xs visible-sm"></i>  
-      			         <span class="hidden-xs hidden-sm"><%= providers[key].name %></span>
-      		          </a>
-      	          </div>
-                <% }) %>
-              <% } %>          	    
-      		</div>
+          <h4 class="omb_authTitle"><a href="/register">Create an account</a></h4>
+
+      		<div ng-show="<%-sails.config.events.socialMedia%>">
             <div class="row omb_row-sm-offset-3 omb_loginOr">
-      			<div class="col-xs-12 col-sm-6">
-      				<hr class="omb_hrOr">
-      				<span class="omb_spanManual">or login manually</span>
-      			</div>
-      		</div>  
-            
+              <div class="col-xs-12 col-sm-6">
+                <hr class="omb_hrOr">
+                <span class="omb_spanSocial">or login via Social Media</span>
+              </div>
+            </div>  
+            <div class="row omb_row-sm-offset-3 omb_socialButtons">
+                <% if (Object.keys(providers).length) {%>                         
+                  <% Object.keys(providers).forEach(function (key) { %>
+                    <div class="col-xs-4 col-sm-2">
+                      <a href="/auth/<%= providers[key].slug %>" class="btn btn-lg btn-block <%= providers[key].klass %>">
+                      <i class="fa <%= providers[key].icon %> visible-xs visible-sm"></i>  
+                      <span class="hidden-xs hidden-sm"><%= providers[key].name %></span>
+                      </a>
+                    </div>
+                  <% }) %>
+                <% } %>          	    
+            </div>
+              <div class="row omb_row-sm-offset-3 omb_loginOr">
+              <div class="col-xs-12 col-sm-6">
+                <hr class="omb_hrOr">
+                <span class="omb_spanManual">or login manually</span>
+              </div>
+            </div>  
+          </div>  
       
       		<div class="row omb_row-sm-offset-3">
       			<div class="col-xs-12 col-sm-6">	

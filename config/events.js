@@ -10,6 +10,9 @@
 
 module.exports.events = {
 
+	// Allow login via social media?
+	socialMedia: true,
+
 	// Default skin
 	skin:	"skins/defaultskin.css",
     

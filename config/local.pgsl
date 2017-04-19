@@ -8,6 +8,8 @@ module.exports = {
 
   // Event management details
   events: {
+      socialMedia: false,
+      skin:      "skins/pgslskin.css", 
       maintenance: false,
       admins: ['kevin@kpturner.co.uk'],
       developer: 'kevin@kpturner.co.uk',
