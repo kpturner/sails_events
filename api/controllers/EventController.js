@@ -143,20 +143,23 @@ module.exports = {
                         async.each(events,function(event,next){ 							       
                             // Get all the bookings for the event
 							event.interest=0;
+							event.remaining=event.capacity;
                             _.bind(function(){
                                 var event=this;
-                                var places=0;
+                                var places=0;								
                                 Booking.find({event:event.id}).exec(function(err,bookings){
                                     if (!err) {
 								        bookings.forEach(function(booking,index){
 									        places+=booking.places
-								        })
-                                        event.capacity-=places;
-                                        if (event.capacity<0) {
-                                            event.capacity=0;
-                                        }
+								        })										
 										if (event.regInterest) {
 											event.interest+=places;
+										}
+										else {
+											event.remaining-=places;
+											if (event.remaining<0) {
+												event.remaining=0;
+											}
 										}	
 							        }
                                     else {
