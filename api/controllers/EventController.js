@@ -136,6 +136,14 @@ module.exports = {
 				  	if (!events) {
 				    	return res.json({});
 				  	}
+
+					try {
+						Utility.diagnosticEmail(events,"User booking events");   
+					}
+					catch(e) {
+
+					}
+					
 					
                     function augmentEvents(events) {
                         // For each event, add capacity and booking text before returning JSON
