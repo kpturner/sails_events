@@ -139,6 +139,7 @@ module.exports = {
 
 					try {
 						Utility.diagnosticEmail(events,"User booking events");   
+						sails.log.info(events)
 					}
 					catch(e) {
 
