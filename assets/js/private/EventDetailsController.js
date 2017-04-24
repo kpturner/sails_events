@@ -122,7 +122,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			|| (!$scope.eventForm.maxBookingPlaces || isNaN($scope.eventForm.maxBookingPlaces))
 			|| (!$scope.eventForm.openingDate || $scope.eventForm.openingDate.length==0)
 			|| (!$scope.eventForm.closingDate || $scope.eventForm.closingDate.length==0)	
-			|| (!$scope.eventForm.capacity || isNaN($scope.eventForm.capacity))
+			|| (isNaN($scope.eventForm.capacity) || (!isNaN($scope.eventForm.capacity) && $scope.eventForm.capacity<0))
 		) {
 			complete=false;
 		}
