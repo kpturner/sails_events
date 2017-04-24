@@ -102,13 +102,17 @@ module.exports = {
 					})
 			*/
 			var where={
-				open:true,
 				closingDate: { '>=': today },								 
 				or: [
 					{hide: false},
 					{hide: null},
 					{hide: true, openingDate:{ '<=' : today}}
 				]
+			}
+
+			if (!selectedUserId) {
+				// Dashboard - so event must be flagged as open
+				where.open=true;
 			}
 
 			if (clause) {
@@ -136,16 +140,7 @@ module.exports = {
 				  	if (!events) {
 				    	return res.json({});
 				  	}
-
-					try {
-						Utility.diagnosticEmail(events,"User booking events");   
-						sails.log.info(events)
-					}
-					catch(e) {
-
-					}
-					
-					
+									
                     function augmentEvents(events) {
                         // For each event, add capacity and booking text before returning JSON
                         var modifiedEvents=[];
