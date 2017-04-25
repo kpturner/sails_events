@@ -332,6 +332,12 @@ module.exports = {
 									});  
 						}
 						Event.findOne(existingBooking.event).populate("organiser").populate("organiser2").exec(function(err,event){
+							if (err) {
+								return res.negotiate(err);
+							}	
+							if (!event) {
+								return res.negotiate(new Error("No event found for id "+existingBooking.event));
+							}
 							initialiseBooking(event,existingBooking);			
 						})					
 					}					
@@ -342,6 +348,9 @@ module.exports = {
 					if (err) {
 						return res.negotiate(err);
 					}	
+					if (!event) {
+						return res.negotiate(new Error("No event found for id "+eventId));
+					}
 					// Create or edit/delete mode?				
 					if (action=="create") {
 						initialiseBooking(event);
