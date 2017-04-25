@@ -252,6 +252,9 @@ module.exports = {
 						res.locals.event.bypassCode="*redacted";
 					res.locals.now=Utility.UTCDBdate(Utility.today());
 					res.locals.event.capacity-=places;
+					if (res.locals.event.capacity<0) {
+						res.locals.event.capacity=0;
+					}
 					res.locals.booking=existingBooking;
 					res.locals.myBookings=myBookings;
 					res.locals.eventBookings=eventBookings;
