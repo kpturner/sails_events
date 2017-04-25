@@ -1504,9 +1504,11 @@ module.exports = {
 						//                  first page of 10 and that will be in "createdAt" order and then we will sort that 
 						//                  set by surname.  So what you might see in the first 10 records on an unpaginated
 						//                  set might be different to what you see in a paginated set
-						if (!download) {
-							bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
-						} 
+						//
+						// SECOND BIG HAIRY NOTE: It confuses me so lets not bother. Just show the bookings in the order we have them
+						//if (!download) {
+						//	bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
+						//} 
 								
 						if (download) {					
 							////Event.findOne(req.param("eventid")).exec(function(err,event){
