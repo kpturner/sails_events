@@ -240,7 +240,7 @@ module.exports = {
 					}
 				
 					res.locals.event=event;
-					// Remember that mysql adaptor will very unhelpfully adjust the date for DST so check if we have 23 hours. If we do, add one today
+					// Remember that mysql adaptor will very unhelpfully adjust the date for DST so use a utility to get UTC date
 					if (event.openingDate) {
 						res.locals.event.UTCOpeningDate=Utility.UTCDBdate(event.openingDate);
 					}	
