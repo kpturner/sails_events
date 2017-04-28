@@ -14,7 +14,7 @@
 	"Error.Passport.Email.Exists.Google": "Your email address is already registered with your Google account.",
 	"Error.Passport.Username.Missing": "You need to supply a user name",
 	"Error.Passport.Password.Missing": "You haven't set a password yet!",
-	"Error.Passport.Generic": "You haven't provided your login details!",
+	"Error.Passport.Generic": "You haven't provided all your login details!",
 	"Error.Passport.Signup": "Please create an account before attempting to use the system",
 	"Error.Session.Expired": "Your session has expired"
 }
