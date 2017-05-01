@@ -302,10 +302,24 @@ exports.login = function (req, identifier, password, next) {
         });
       }
       else {
-        if (user.authProvider=="dummy")
+        if (user.authProvider=="dummy") {
           req.flash('error', 'Error.Passport.Signup');
-        else
-          req.flash('error', 'Error.Passport.Password.NotSet');
+        }          
+        else {
+          switch (user.authProvider) {
+            case "facebook":
+              req.flash('error', 'Error.Passport.Email.Exists.Facebook');
+              break;
+            case "twitter":
+              req.flash('error', 'Error.Passport.Email.Exists.Twitter');
+              break;
+            case "google":
+              req.flash('error', 'Error.Passport.Email.Exists.Google');
+              break;
+            default:
+              req.flash('error', 'Error.Passport.Password.NotSet');
+          }          
+        }          
         return next(null, false);
       }
     });
