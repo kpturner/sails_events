@@ -55,7 +55,7 @@ module.exports = {
 								},
 								{
 									to: event.organiser.email || "",
-									bcc: sails.config.events.developer || "", 
+									bcc: (sails.config.events.emailDeveloperOnBooking && sails.config.events.developer) || "", 
 									subject: event.name+": An apology"
 								},
 								function(err) {if (err) console.log(err);}
