@@ -784,7 +784,7 @@ module.exports = {
 														subject:subject,
 														from:event.name + ' <'+sails.config.events.email+'>',
 														to:user.email,
-														bcc:[event.organiser.email || "",(event.organiser2)?(event.organiser2.email || ""):"",sails.config.events.developer || ""],
+														bcc:[event.organiser.email || "",(event.organiser2)?(event.organiser2.email || ""):"",(sails.config.events.emailDeveloperOnBooking && sails.config.events.developer) || ""],
 														user:user,
 														event:event,
 														booking:booking,
@@ -1752,7 +1752,7 @@ module.exports = {
 							booking.event.organiser2=organiser;
 						}
 					})
-					if (!organiserIsDev) {
+					if (!organiserIsDev && sails.config.events.emailDeveloperOnBooking) {
 						bcc.push(sails.config.events.developer)
 					}
 				
@@ -1957,7 +1957,7 @@ module.exports = {
 	 processLatePayers: function(){
         var info="Processing late payers..."; 
 		sails.log.debug(info);  
-		Utility.diagnosticEmail(info,"Late payment daemon");		
+		//Utility.diagnosticEmail(info,"Late payment daemon");		
 		// Get a list of open events
 		var today=Utility.today()
 		Event	.find({
@@ -2031,7 +2031,7 @@ module.exports = {
 											{
 												//to: booking.user.email,
 												to: to,
-												bcc: (sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
+												bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
 												subject: event.name + " - Late payment reminder warning"
 											},
 											function(err) {if (err) console.log(err);}
@@ -2089,7 +2089,7 @@ module.exports = {
                                                 //to: booking.user.email,
                                                 to: to,
                                                 cc: cc,
-                                                bcc: (sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
+                                                bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
                                                 subject: event.name + " - Late payment reminder"
                                             },
                                             function(err) {if (err) console.log(err);}

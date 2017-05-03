@@ -22,6 +22,21 @@ module.exports.events = {
 	// Email developer when a download is activated
 	emailDeveloperOnDownload: false,
 
+	// Email developer when a booking is made/changed
+	emailDeveloperOnBooking: false,
+
+	// Email developer on password reset
+	emailDeveloperOnPasswordReset: false,
+
+	// Email developer on profile change
+	emailDeveloperOnProfile: false,
+
+	// Email developer on late payment
+	emailDeveloperOnLatePayment: false,
+
+	// Email developer on signup
+	emailDeveloperOnSignup: false,
+
 	// Maintenance mode?
 	maintenance: false,
 

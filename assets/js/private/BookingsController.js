@@ -6,6 +6,8 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		$scope.hideCapacity=false;
 		$scope.newBooking=false;
 		$scope.addingPD=false;
+		// Calculate all addresses
+		$scope.allAddresses = "";
 				 
 		$scope.filterForm = {
 			loading: false,
@@ -91,9 +93,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		/**
 		 * Augment data 
 		 **/  
-		$scope.augment=function(data){
-			// Calculate all addresses
-			$scope.allAddresses = "";
+		$scope.augment=function(data){			
 			// Traverse the events and calculate an appropriate width
 			// for each event name and accumulate email addresses
 			angular.forEach(data,function(booking){

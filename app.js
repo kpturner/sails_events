@@ -63,7 +63,7 @@ process.on('uncaughtException', function (err) {
     try {
         var msg='uncaughtException: '+err.message;
         msg+="</br>"+err.stack;
-        if (sails) {
+        if (sails && Utility) {
             sails.log.error('uncaughtException:', err.message);
             sails.log.error(err.stack);
             Utility.diagnosticEmail(msg,"Application crash",function(){
