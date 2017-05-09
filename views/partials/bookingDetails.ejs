@@ -28,6 +28,14 @@
    </label>
 </div>  
 
+<!-- B A L A N C E --> 
+<div class="control-group form-group col-md-5" ng-show="balance">
+  <label>Balance due</label>       
+    <input type="number" class="form-control" placeholder="e.g. 20.00" name="balance" ng-model="balance"  
+      ng-disabled="balance"></input>
+   
+</div> 
+
  <!-- M E T H O D  O F  P A Y M E N T -->
 <div class="control-group form-group col-md-5"
   ng-class="{'has-error':<%-model%>.mop.$invalid &&

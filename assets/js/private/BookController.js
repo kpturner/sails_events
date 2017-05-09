@@ -135,6 +135,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							$scope.event.maxBookingPlaces;
 	$scope.placesMax=($scope.event.capacity>maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
+	
 	if ($scope.placesMin>$scope.placesMax)
 		$scope.placesMin=$scope.placesMax
 	if ($scope.mode!="create") {
@@ -295,6 +296,15 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.info = SAILS_LOCALS.booking.info;
 		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
 		$scope.bookingForm.remindersSent = SAILS_LOCALS.booking.remindersSent;
+		// If the booking has an amount paid and a balance due
+		// then the minimum cannot reduce the cost below that amount.
+		// The organiser needs to intervene for refunds etc
+		$scope.balance=($scope.bookingForm.cost-$scope.bookingForm.amountPaid);
+		if ($scope.balance) {
+			$scope.placesMin=($scope.bookingForm.amountPaid/$scope.event.price)||1;
+		}
+
+		// Make array for additional bookings
 		$scope.makeArray();
 		// Get linked booking info
 		if (SAILS_LOCALS.booking.places>1) {
@@ -315,6 +325,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
         
         // Check if paid
         $scope.chkPaid();
+		
 	}
 	else {
 		if (!$scope.selectedUserId) {

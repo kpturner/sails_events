@@ -661,13 +661,8 @@ module.exports = {
 												// Existing booking - has the amount owed changed for a paid booking?
 												if (booking.paid && existingBooking.places!=booking.places) {
 													balance=(booking.places-existingBooking.places)*event.price;
-													if (balance>0) {
-														// Not "fully paid" now
-														booking.paid=false;
-													}
-													else {
-														balance=null;
-													}
+													balance=(balance<=0)?null:balance;
+													booking.paid=false;
 												}
 											}																	
 										}
@@ -2106,8 +2101,18 @@ module.exports = {
 				// so use a generic label
 				label="order";
 				labelNo="orderNo";
-			}		
-			var amountPaid=booking.amountPaid/booking.places;
+			}	
+			// Is there a balance due?
+			row.balance=booking.cost-booking.amountPaid;	
+			var amountPaid;
+			// Divide amount paid between places UNLESS there is a balance
+			// due - in which case that is nonsensical
+			if (row.balance>0) {
+				amountPaid=booking.amountPaid;
+			}
+			else {
+				amountPaid=booking.amountPaid/booking.places;
+			}					
 			var mop=booking.mop || "";
 			var row={};   
             //if (!user) {
@@ -2222,6 +2227,11 @@ module.exports = {
 			count++;
 			row.count=count;    
 			data.push(row);
+			if (row.balance>0) {
+				// Amount paid is irrelevant/nonsensical on additional
+				// places if a balance is due
+				amountPaid=null;
+			}
 			// Add additional places as rows also
 			booking.additions.forEach(function(addition,j){
 				var row={};
