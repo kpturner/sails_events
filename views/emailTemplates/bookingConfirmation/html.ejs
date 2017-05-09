@@ -5,11 +5,12 @@
 <p>Dear <%=recipientName%>,</p>
 
 <% if (regInterest) {%>
-	<p>This is a courtesy email to confirm your interest<%-updated%>:</p>
+	<p>This is a courtesy email to confirm your interest<%-updated%>.</p>
 <% } %> 
 <% if (!regInterest) {%>
-	<p>This is a courtesy email to confirm your booking<%-updated%>:</p>
+	<p>This is a courtesy email to confirm your booking<%-updated%>.</p>
 <% } %> 
+<p>Details:</p>
 <p>
 	<% if (regInterest) {%>
 	Interest ref: <b><%=bookingRef%></b>
