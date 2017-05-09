@@ -2104,11 +2104,11 @@ module.exports = {
 			}	
 			var row={};   
 			// Is there a balance due?
-			row.balance=booking.cost-booking.amountPaid;	
+			booking.balance=booking.cost-booking.amountPaid;	
 			var amountPaid;
 			// Divide amount paid between places UNLESS there is a balance
 			// due - in which case that is nonsensical
-			if (row.balance>0) {
+			if (booking.balance>0) {
 				amountPaid=booking.amountPaid;
 			}
 			else {
@@ -2142,6 +2142,7 @@ module.exports = {
 			row.paid=booking.paid || "";
 			row.cost=booking.cost || "";
 			row.amountPaid=amountPaid || "";
+			row.balance=booking.balance || "";
 			row.mop=mop;	
             row.creationDate=booking.bookingDate;
 			if (voReqd && booking.user.isVO) {
@@ -2227,7 +2228,7 @@ module.exports = {
 			count++;
 			row.count=count;    
 			data.push(row);
-			if (row.balance>0) {
+			if (booking.balance>0) {
 				// Amount paid is irrelevant/nonsensical on additional
 				// places if a balance is due
 				amountPaid=null;
@@ -2257,6 +2258,7 @@ module.exports = {
 				row.dietary=addition.dietary || "";
 				row.paid=booking.paid || "";
 				row.amountPaid=amountPaid || "";  
+				row.balance="";
 				row.mop=mop || "";	 
                 // If the createdAt date is later than the booking date for the main booking, use that for the booking date
                 //var ca=new Date(addition.createdAt.getFullYear(), addition.createdAt.getMonth(), addition.createdAt.getDate());
