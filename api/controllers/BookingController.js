@@ -665,7 +665,7 @@ module.exports = {
 													booking.paid=false;
 												}
 												else {
-													if (!booking.paid && booking.cost==booking.amountPaid) {
+													if (!booking.paid && booking.amountPaid && booking.cost==booking.amountPaid) {
 														booking.paid=true;
 													}
 												}
