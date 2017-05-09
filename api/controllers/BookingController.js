@@ -2102,6 +2102,7 @@ module.exports = {
 				label="order";
 				labelNo="orderNo";
 			}	
+			var row={};   
 			// Is there a balance due?
 			row.balance=booking.cost-booking.amountPaid;	
 			var amountPaid;
@@ -2113,8 +2114,7 @@ module.exports = {
 			else {
 				amountPaid=booking.amountPaid/booking.places;
 			}					
-			var mop=booking.mop || "";
-			var row={};   
+			var mop=booking.mop || "";			
             //if (!user) {
             //    row.seq=parseInt(booking.ref.replace(prefix,""));
             //}	
