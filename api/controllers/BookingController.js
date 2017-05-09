@@ -623,6 +623,7 @@ module.exports = {
 									// Private function to process booking
 									var processBooking=function(){
 										var booking={};
+										var balance;
 										if (existingBooking) {
 											_.extend(booking, existingBooking);
 										}
@@ -655,6 +656,19 @@ module.exports = {
 												booking.paid=false;	
 												booking.mop=null;	
 												booking.tableNo=null;
+											}
+											else {
+												// Existing booking - has the amount owed changed for a paid booking?
+												if (booking.paid && existingBooking.places!=booking.places) {
+													balance=(booking.places-existingBooking.places)*event.price;
+													if (balance>0) {
+														// Not "fully paid" now
+														booking.paid=false;
+													}
+													else {
+														balance=null;
+													}
+												}
 											}																	
 										}
 										
@@ -776,6 +790,12 @@ module.exports = {
 														// Paid flag changed
 														updated+=" and flagged as PAID";
 													}	
+													else {
+														// Is there a balance to pay?
+														if (balance) {
+															updated+=" and there is a balance to pay of £"+balance;
+														}
+													}
 
 													sails.controllers.booking.setEmailInfo(event,user,orders);
 
@@ -796,73 +816,6 @@ module.exports = {
 														bookingRef:bookingRef,
 													}
 													sails.controllers.booking.bookingConfirmationEmail(emailOpts);
-
-													/*****
-													Email.send(
-														"bookingConfirmation",
-														{
-														recipientName: Utility.recipient(user.salutation,user.firstName,user.surname),
-														senderName: sails.config.events.title,
-																updated: updated,
-																regInterest: event.regInterest,
-																orderLabel: orderLabel,
-																lodgeYearLabel: sails.config.events.lodgeYearLabel || (orderLabel+ " year"),
-																eventFree: event.free,
-																eventName: event.name,
-																eventDate: formattedDate,
-																eventTime: event.time,
-																eventAdditionalInfo: event.additionalInfo,
-																eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
-																eventOrganiser: event.organiser.name,
-																organiserEmail: event.organiser.email,
-																organiserContactNo: event.organiser.phone || "",
-																eventBlurb: (event.blurb || "n/a").replace(/[\n\r]/g, '<br>'),
-																eventMenu: (event.menu || "n/a").replace(/[\n\r]/g, '<br>'),
-																eventDressCode: (event.dressCode || "n/a").replace(/[\n\r]/g, '<br>'),
-																email: user.email,
-																salutation: user.salutation || "",
-																firstName: user.firstName || "",
-																surname: user.surname || "",
-																category: user.category || "",
-																addressReqd: event.addressReqd,
-																address1: user.address1 || "",
-																address2: user.address2 || "",
-																address3: user.address3 || "",
-																address4: user.address4 || "",
-																postcode: user.postcode || "",
-																phone: user.phone || "",
-																lodge: user.lodge || "",
-																lodgeNo: user.lodgeNo || "",
-																lodgeYear: user.lodgeYear || "",
-																centre: user.centre || "",																
-																area: user.area || "",															
-																rank: user.rank || "",
-																voReqd: event.voReqd,
-																isVO: user.isVO,
-																voLodge: user.voLodge || "",
-																voLodgeNo: user.voLodgeNo || "",
-																voCentre: user.voCentre || "",
-																voArea: user.voArea || "",
-																dietary: user.dietary || "",
-																bookingRef: bookingRef,
-																info: (booking.info || "n/a").replace(/[\n\r]/g, '<br>'),  
-																places: booking.places,
-																linkedBookings: linkedBookings,
-																paymentDetails: (event.paymentDetails || "n/a").replace(/[\n\r]/g, '<br>'),
-																total: (booking.places * event.price),
-																deadline: deadline,
-														},
-														{
-														from: event.name + ' <'+sails.config.events.email+'>',
-														to: user.email,
-														bcc: [event.organiser.email || "",(event.organiser2)?(event.organiser2.email || ""):"",sails.config.events.developer || ""],
-														subject: subject
-														},
-														function(err) {
-															Utility.emailError(err);
-														}
-													)    		
-													****/
 												}
 												
 												// Return to caller with complete booking info
