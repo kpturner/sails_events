@@ -664,6 +664,11 @@ module.exports = {
 													balance=(balance<=0)?null:balance;
 													booking.paid=false;
 												}
+												else {
+													if (!booking.paid && booking.cost==booking.amountPaid) {
+														booking.paid=true;
+													}
+												}
 											}																	
 										}
 										
