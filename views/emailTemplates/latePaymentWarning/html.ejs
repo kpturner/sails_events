@@ -14,7 +14,7 @@
 	<% if (bookings.length>0) {%>
 		<br><b>Late payment reminders due:</b><br>	
 		<% bookings.forEach(function (booking,index) { %>
-			&nbsp;&nbsp;Ref: <%=booking.ref%>: <%=booking.user.salutation%> <%=booking.user.name%><br>        			
+			&nbsp;&nbsp;Ref: <%=booking.ref%>: <%=booking.user.salutation%> <%=booking.user.name%> Balance: £<%=(booking.amountPaid?booking.cost-booking.amountPaid:booking.cost)%><br>        			
 		<% }) %>
     <% } %>
 
