@@ -299,7 +299,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// If the booking has an amount paid and a balance due
 		// then the minimum cannot reduce the cost below that amount.
 		// The organiser needs to intervene for refunds etc
-		$scope.balance=($scope.bookingForm.cost-$scope.bookingForm.amountPaid);
+		$scope.balance=$scope.bookingForm.amountPaid?($scope.bookingForm.cost-$scope.bookingForm.amountPaid):null;
 		if ($scope.balance) {
 			$scope.placesMin=($scope.bookingForm.amountPaid/$scope.event.price)||1;
 		}
