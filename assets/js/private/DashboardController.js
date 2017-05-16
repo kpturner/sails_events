@@ -34,7 +34,12 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
                             if (event.logo) {
                                 event.nameClass="event-name-80";
                             }
-                        } 		
+                        }
+						// Font size override?
+						event.eventNameStyle=null;
+						if (event.eventNameSize) {
+							event.eventNameStyle="font-size:"+event.eventNameSize;
+						} 		
                     })				
 			}
 			else {

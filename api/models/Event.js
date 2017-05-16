@@ -175,6 +175,10 @@ module.exports = {
       type: 'boolean'
     },        
     
+    eventNameSize: {
+      type: 'string'
+    },    
+
     lastBookingRef: {
       type: 'integer',
       defaultsTo: 0
