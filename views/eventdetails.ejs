@@ -63,7 +63,7 @@
               ng-class="{'has-error':eventdetails.open.$invalid &&
                                     eventdetails.open.$dirty}">
               <label>
-                <input type="checkbox" class="bigcheckbox" name="open" ng-model="eventForm.open"></input>
+                <input type="checkbox" class="bigcheckbox" name="open" ng-model="eventForm.open"/>
                 &nbsp;&nbsp;&nbsp;Show on dashboard?
               </label>
             </div>
@@ -74,7 +74,7 @@
               ng-class="{'has-error':eventdetails.hide.$invalid &&
                                     eventdetails.hide.$dirty}" ng-show="eventForm.open">
               <label>
-                <input type="checkbox" class="bigcheckbox" name="hide" ng-model="eventForm.hide" title="Hide on dashboard until opening date"></input>
+                <input type="checkbox" class="bigcheckbox" name="hide" ng-model="eventForm.hide" title="Hide on dashboard until opening date"/>
                 &nbsp;&nbsp;&nbsp;Hide until opening?
               </label>
             </div>
@@ -84,7 +84,7 @@
               ng-class="{'has-error':eventdetails.addressreqd.$invalid &&
                                     eventdetails.addressreqd.$dirty}">
               <label>
-                <input type="checkbox" class="bigcheckbox" name="addressreqd" ng-model="eventForm.addressReqd"></input>
+                <input type="checkbox" class="bigcheckbox" name="addressreqd" ng-model="eventForm.addressReqd"/>
                 &nbsp;&nbsp;&nbsp;Postal address reqd?
               </label>
             </div>
@@ -94,7 +94,7 @@
               ng-class="{'has-error':eventdetails.areareqd.$invalid &&
                                     eventdetails.areareqd.$dirty}">
               <label>
-                <input type="checkbox" class="bigcheckbox" name="areareqd" ng-model="eventForm.areaReqd"></input>
+                <input type="checkbox" class="bigcheckbox" name="areareqd" ng-model="eventForm.areaReqd"/>
                 &nbsp;&nbsp;&nbsp;Area reqd?
               </label>
             </div>
@@ -104,7 +104,7 @@
               ng-class="{'has-error':eventdetails.voreqd.$invalid &&
                                     eventdetails.voreqd.$dirty}">
               <label>
-                <input type="checkbox" class="bigcheckbox" name="voreqd" ng-model="eventForm.voReqd"></input>
+                <input type="checkbox" class="bigcheckbox" name="voreqd" ng-model="eventForm.voReqd"/>
                 &nbsp;&nbsp;&nbsp;VO details reqd?
               </label>
             </div>
@@ -115,7 +115,7 @@
               ng-class="{'has-error':eventdetails.free.$invalid &&
                                     eventdetails.free.$dirty}">
               <label>
-                <input type="checkbox" class="bigcheckbox" name="free" ng-model="eventForm.free"></input>
+                <input type="checkbox" class="bigcheckbox" name="free" ng-model="eventForm.free"/>
                 &nbsp;&nbsp;&nbsp;Free event?
               </label>
             </div>
@@ -126,7 +126,7 @@
               ng-class="{'has-error':eventdetails.reginterest.$invalid &&
                                     eventdetails.reginterest.$dirty}">
               <label>
-                <input type="checkbox" class="bigcheckbox" name="voreginterest" ng-model="eventForm.regInterest"></input>
+                <input type="checkbox" class="bigcheckbox" name="voreginterest" ng-model="eventForm.regInterest"/>
                 &nbsp;&nbsp;&nbsp;Register interest?
               </label>
             </div> 
@@ -211,7 +211,7 @@
               ng-class="{'has-error':eventdetails.logo.$invalid &&
                                     eventdetails.logo.$dirty}">
               <label>Path to logo</label>
-              <input type="text" class="form-control" placeholder="e.g /images/provincial/crest.png or http address" name="logo" ng-model="eventForm.logo"></input>
+              <input type="text" class="form-control" placeholder="e.g /images/provincial/crest.png or http address" name="logo" ng-model="eventForm.logo"/>
               <span class="help-block has-error" ng-if="eventdetails.logo.$dirty">
                 <span ng-show="eventdetails.logo.$error.required">Path to logo is required.</span> 
               </span>
@@ -223,7 +223,7 @@
               ng-class="{'has-error':eventdetails.logoright.$invalid &&
                                     eventdetails.logoright.$dirty}">
               <label>Path to right-hand logo (if reqd)</label>
-              <input type="text" class="form-control" placeholder="e.g /images/provincial/crest.png or http address" name="logoright" ng-model="eventForm.logoRight"></input>
+              <input type="text" class="form-control" placeholder="e.g /images/provincial/crest.png or http address" name="logoright" ng-model="eventForm.logoRight"/>
               <span class="help-block has-error" ng-if="eventdetails.logoright.$dirty">
                 <span ng-show="eventdetails.logoright.$error.required">Path to right side logo is required.</span> 
               </span>
@@ -263,7 +263,7 @@
               <label>* Date</label>
               <p class="input-group">             
                 <input type="date" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" is-open="dateOpened"  placeholder="date of event" name="date" 
-                  ng-model="eventForm.date" required></input>
+                  ng-model="eventForm.date" required/>
                 <span class="input-group-btn hidden-xs hidden-sm hidden-md">  
                   <button type="button" class="btn btn-default" ng-click="openDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>              
@@ -279,7 +279,7 @@
               ng-class="{'has-error':eventdetails.time.$invalid &&
                                     eventdetails.time.$dirty}">
                 <label>* Time</label>       
-                <input type="time" class="form-control" placeholder="e.g. 18:00:00" name="time" ng-model="eventForm.time" required></input>
+                <input type="time" class="form-control" placeholder="e.g. 18:00:00" name="time" ng-model="eventForm.time" required/>
                 <span class="help-block has-error" ng-if="eventdetails.time.$dirty">
                   <span ng-show="eventdetails.time.$error.required">Time is required.</span>
                 </span>
@@ -292,7 +292,7 @@
               ng-class="{'has-error':eventdetails.price.$invalid &&
                                     eventdetails.price.$dirty}" ng-hide="eventForm.free">
                 <label><span ng-hide="eventForm.free">* </span>Price</label>       
-                <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-required="!eventForm.free"></input>
+                <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-required="!eventForm.free"/>
                 <span class="help-block has-error" ng-if="eventdetails.price.$dirty">
                   <span ng-show="eventdetails.price.$error.required">Price is required.</span>
                   <span ng-show="eventdetails.price.$error.pattern">Price contains an invalid value.</span>
@@ -305,7 +305,7 @@
               ng-class="{'has-error':eventdetails.minbookingplaces.$invalid &&
                                     eventdetails.minbookingplaces.$dirty}">
                 <label>* Minimum number of places per booking</label>       
-                <input type="number" class="form-control" placeholder="e.g. 1" name="minbookingplaces" ng-model="eventForm.minBookingPlaces" min="1" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
+                <input type="number" class="form-control" placeholder="e.g. 1" name="minbookingplaces" ng-model="eventForm.minBookingPlaces" min="1" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required/>
                 <span class="help-block has-error" ng-if="eventdetails.minbookingplaces.$dirty">
                   <span ng-show="eventdetails.minbookingplaces.$error.required">Minimum number of booking places is required.</span>
                   <span ng-show="eventdetails.minbookingplaces.$error.min">Minimum number of booking places must be greater than 0.</span>
@@ -319,7 +319,7 @@
               ng-class="{'has-error':eventdetails.maxbookingplaces.$invalid &&
                                     eventdetails.maxbookingplaces.$dirty}">
                 <label>* Maximum number of places per booking</label>       
-                <input type="number" class="form-control" placeholder="e.g. 10" name="maxbookingplaces" ng-model="eventForm.maxBookingPlaces" min="1" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
+                <input type="number" class="form-control" placeholder="e.g. 10" name="maxbookingplaces" ng-model="eventForm.maxBookingPlaces" min="1" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required/>
                 <span class="help-block has-error" ng-if="eventdetails.maxbookingplaces.$dirty">
                   <span ng-show="eventdetails.maxbookingplaces.$error.required">Maximum number of booking places is required.</span>
                   <span ng-show="eventdetails.maxbookingplaces.$error.min">Maximum number of booking places must be greater than 0.</span>
@@ -328,12 +328,12 @@
             </div>
             
             <!-- C A P A C I T Y -->
-            </br>
+            <br>
             <div class="control-group form-group col-md-3"
               ng-class="{'has-error':eventdetails.capacity.$invalid &&
                                     eventdetails.capacity.$dirty}">
                 <label>* Capacity</label>       
-                <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" min="0" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required></input>
+                <input type="number" class="form-control" placeholder="e.g. 300" name="capacity" ng-model="eventForm.capacity" min="0" ng-pattern="/^(0|\-?[1-9][0-9]*)$/" required/>
                 <span class="help-block has-error" ng-if="eventdetails.capacity.$dirty">
                   <span ng-show="eventdetails.capacity.$error.required">Capacity is required.</span>
                   <span ng-show="eventdetails.capacity.$error.pattern">Capacity contains an invalid value.</span>
@@ -343,7 +343,7 @@
             <!-- A D D I T I O N A L  I N F O  L I N K -->
             <div class="control-group form-group col-md-10">
               <label>Additional info link</label>
-              <input type="text" class="form-control" placeholder="Link to external resource (like http://blah)" name="additionalinfo" ng-model="eventForm.additionalInfo"></input>
+              <input type="text" class="form-control" placeholder="Link to external resource (like http://blah)" name="additionalinfo" ng-model="eventForm.additionalInfo"/>
             </div> 
                         
             <!-- B L U R B -->
@@ -382,7 +382,7 @@
               ng-class="{'has-error':eventdetails.bypasscode.$invalid &&
                                     eventdetails.bypasscode.$dirty}">
               <label>Bypass code</label>
-              <input type="text" class="form-control" placeholder="used to bypass the opening date" name="bypasscode" ng-model="eventForm.bypassCode"></input>
+              <input type="text" class="form-control" placeholder="used to bypass the opening date" name="bypasscode" ng-model="eventForm.bypassCode"/>
             </div>
         
             <!-- O P E N I N G   D A T E -->
@@ -393,7 +393,7 @@
               <label>* Opening date bookings</label>
               <p class="input-group">             
                 <input type="date" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" is-open="openingDateOpened"  placeholder="opening date for bookings" name="openingdate" 
-                  ng-model="eventForm.openingDate" required></input>
+                  ng-model="eventForm.openingDate" required/>
                 <span class="input-group-btn hidden-xs hidden-sm hidden-md">
                   <button type="button" class="btn btn-default" ng-click="openOpeningDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>              
@@ -411,7 +411,7 @@
               <label>* Closing date for bookings</label>
               <p class="input-group">             
                 <input type="date" class="form-control" uib-datepicker-popup datepicker-options="dateOptions" is-open="closingDateOpened"  placeholder="closing date for bookings" name="closingdate" 
-                  ng-model="eventForm.closingDate" required></input>
+                  ng-model="eventForm.closingDate" required/>
                 <span class="input-group-btn hidden-xs hidden-sm hidden-md">
                   <button type="button" class="btn btn-default" ng-click="openClosingDate($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>              
@@ -438,7 +438,7 @@
                 ng-class="{'has-error':eventdetails.instantpayment.$invalid &&
                                       eventdetails.instantpayment.$dirty}">
                 <label>
-                  <input type="checkbox" class="bigcheckbox" name="instantpayment" ng-model="eventForm.instantPayment" ></input>
+                  <input type="checkbox" class="bigcheckbox" name="instantpayment" ng-model="eventForm.instantPayment" />
                   &nbsp;&nbsp;&nbsp;Instant payment required?
                 </label>
               </div>
@@ -449,7 +449,7 @@
                     ng-class="{'has-error':eventdetails.grace.$invalid &&
                                     eventdetails.grace.$dirty}">
                   <label>Grace period for payment (days)</label>       
-                  <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace" ng-min="0" ng-pattern="/^(0|\-?[1-9][0-9]*)$/"></input>
+                  <input type="number" class="form-control" placeholder="e.g. 14" name="grace" ng-model="eventForm.grace" ng-min="0" ng-pattern="/^(0|\-?[1-9][0-9]*)$/"/>
                   <span class="help-block has-error" ng-if="eventdetails.grace.$dirty">
                     <span ng-show="eventdetails.grace.$error.min">Grace period must be greater than or equal to 0.</span>
                     <span ng-show="eventdetails.grace.$error.pattern">Grace period contains an invalid value.</span>
@@ -460,7 +460,7 @@
             
               <div class="control-group form-group col-md-10">
                 <label>Event name size override</label>
-                <input type="text" class="form-control" placeholder="e.g 20px" name="eventnamesize" ng-model="eventForm.eventNameSize"></input>                
+                <input type="text" class="form-control" placeholder="e.g 20px" name="eventnamesize" ng-model="eventForm.eventNameSize"/>                
               </div>
               
               <!-- L A T E  P A Y M E N T  C H E C K I N G ?-->
@@ -469,7 +469,7 @@
                 ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
                                       eventdetails.latePaymentChecking.$dirty}" ng-hide="eventForm.free || eventForm.regInterest">
                 <label>
-                  <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" ></input>
+                  <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" />
                   &nbsp;&nbsp;&nbsp;Late payment checking?
                 </label>
               </div> 
@@ -480,7 +480,7 @@
                 ng-class="{'has-error':eventdetails.showapologybutton.$invalid &&
                                       eventdetails.showapologybutton.$dirty}">
                 <label>
-                  <input type="checkbox" class="bigcheckbox" name="showapologybutton" ng-model="eventForm.showApologyButton" ></input>
+                  <input type="checkbox" class="bigcheckbox" name="showapologybutton" ng-model="eventForm.showApologyButton" />
                   &nbsp;&nbsp;&nbsp;Show 'Send Apology' button?
                 </label>
               </div>
