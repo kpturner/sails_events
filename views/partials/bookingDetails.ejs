@@ -3,7 +3,7 @@
 <!-- C O S T -->           
 <div class="control-group form-group col-md-5" ng-hide="(!eventBookings && !userBookings) || event.free">
     <label>Cost</label>       
-    <input type="number" class="form-control" name="cost" ng-model="<%-model%>Form.cost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" readonly></input>
+    <input type="number" class="form-control" name="cost" ng-model="<%-model%>Form.cost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" readonly />
    
 </div>
 
@@ -13,7 +13,7 @@
                         <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
   <label>Amount paid</label>       
     <input type="number" class="form-control" placeholder="e.g. 20.00" name="amountpaid" ng-model="<%-model%>Form.amountPaid" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" 
-      ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display'"></input>
+      ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display'" />
    
 </div>      
 
@@ -23,7 +23,7 @@
   ng-class="{'has-error':<%-model%>.paid.$invalid &&
                         <%-model%>.paid.$dirty}" ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
    <label>
-    <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete'"></input>
+    <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete'" />
     &nbsp;&nbsp;&nbsp;Fully paid?
    </label>
 </div>  
@@ -33,7 +33,7 @@
 <div class="control-group form-group col-md-5" ng-show="balance">
   <label>Balance due</label>       
     <input type="number" class="form-control" placeholder="e.g. 20.00" name="balance" ng-model="balance"  
-      ng-disabled="balance"></input>
+      ng-disabled="balance" />
    
 </div> 
 -->
@@ -271,7 +271,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
   ng-class="{'has-error':userdetails.isvo.$invalid &&
                         userdetails.isvo.$dirty}" ng-show="event.voReqd">
     <label>
-    <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-model%>Form.isVO"></input>
+    <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-model%>Form.isVO" />
     &nbsp;&nbsp;&nbsp;Visiting Officer?
     </label>
 </div>
