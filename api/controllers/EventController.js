@@ -434,10 +434,10 @@ module.exports = {
 							// Prep some text for the email 
 							var wh;
 							if (diff<0) {
-								wh="decreased by "+(diff*-1)+" days";								
+								wh="decreased by "+(diff*-1)+" day(s)";								
 							}	
 							else {
-								wh="increased by "+(diff)+" days";
+								wh="increased by "+(diff)+" day(s)";
 							}	
 							// Send the email
 							_.forEach(bookings,function(booking){
