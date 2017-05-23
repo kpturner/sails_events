@@ -1639,6 +1639,11 @@ module.exports = {
 			if (g>0 && booking.bookingDate) {
 				var dl=new Date(booking.bookingDate);
 				dl.setDate(dl.getDate()+g+1);
+				// If the date is beyond the event closing date then use the event closing date instead
+				var cd=new Date(booking.event.closingDate);
+				if (dl>cd) {
+					dl=cd;
+				}
 				//console.log(dl)
 				if (new Date()>dl) {
 					//console.log("late")
