@@ -270,6 +270,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			// Add the interval to the last reminder date
 			$scope.nextPaymentReminder=new Date();
 			$scope.nextPaymentReminder.setDate(new Date(SAILS_LOCALS.booking.lastPaymentReminder).getDate()+SAILS_LOCALS.latePaymentReminderInterval);
+			var cd=new date($scope.event.closingDate);
+			if ($scope.nextPaymentReminder>cd) {
+				$scope.nextPaymentReminder=cd;
+			}
 		}		
 	}
 	
