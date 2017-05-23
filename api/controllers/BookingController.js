@@ -1225,7 +1225,7 @@ module.exports = {
 		
 
 		// If we are looking for late payments then pagination will defeat us!
-		if (filter=="late" || download) {
+		if (filter=="late" || download || criteria.sortByName) {
 			pag.page=1;
 			pag.limit=99999999;			
 		}
@@ -1271,7 +1271,7 @@ module.exports = {
 					bookings=sails.controllers.booking.filterLate(bookings);
 				}  
 				
-				// Sort response by user surname and first name
+				// Sort response by event date				
 				bookings.sort(Utility.jsonSort("event.date", true));
 				  
 				if (download) {	
@@ -1336,7 +1336,7 @@ module.exports = {
 		}
 
 		// If we are looking for late payments then pagination will defeat us!
-		if (filter=="late" || download) {
+		if (filter=="late" || download || criteria.sortByName) {
 			pag.page=1;
 			pag.limit=99999999;			
 		}
@@ -1458,10 +1458,11 @@ module.exports = {
 						//                  set by surname.  So what you might see in the first 10 records on an unpaginated
 						//                  set might be different to what you see in a paginated set
 						//
-						// SECOND BIG HAIRY NOTE: It confuses me so lets not bother. Just show the bookings in the order we have them
-						//if (!download) {
-						//	bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
-						//} 
+						// SECOND BIG HAIRY NOTE: It confuses me so lets not bother. Just show the bookings in the order we have them unless 
+						// requested
+						if (criteria.sortByName) {
+							bookings.sort(Utility.jsonSort("user.surname", false, function(a){return (a && typeof a=="string"?a.toUpperCase():a)}))
+						}
 								
 						if (download) {					
 							////Event.findOne(req.param("eventid")).exec(function(err,event){
@@ -1581,6 +1582,8 @@ module.exports = {
 											
 			Booking.find({
 							where: where,
+							// NOTE: Sorting by date/time of the foreign "event" table as shown below does not appear to work at all.
+							//       We will have to sort it after getting the data set
 							sort: {
 									event: {
 										date:'desc',
@@ -1608,7 +1611,10 @@ module.exports = {
 					// If we only want late bookings, filter the list
 					if (filter && filter.toLowerCase()=="late") {
 						bookings=sails.controllers.booking.filterLate(bookings);
-					}  
+					} 
+
+					// Sort response by event date				
+					bookings.sort(Utility.jsonSort("event.date", true)); 
 					  
 					if (download) {
 						sails.controllers.booking.download(req, res, user.surname.replace(RegExp(" ","g"),"_")+'_'+user.firstName, false, false, false, bookings, user);					
