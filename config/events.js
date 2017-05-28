@@ -64,6 +64,9 @@ module.exports.events = {
 	// Logo link
 	logoLink: "http://www.hiowmasons.org/",
 
+	// Quick start guide
+	quickStart: "/doc/quick_start.pdf",
+
 	// Logo tip
 	logoTip: "Provincial website",
 	

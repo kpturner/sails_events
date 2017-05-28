@@ -22,7 +22,8 @@ module.exports = {
       defaultEventLogo: '/images/pgsl/pgsl_logo-24x24.png',
       lodgeYear: true,
       lodgeYearLabel: 'PGSL year',
-      lodgeYearDownloadLabel: 'PGSLyear',     
+      lodgeYearDownloadLabel: 'PGSLyear',  
+      quickStart: "/doc/pgsl/quick_start.pdf",   
   },  
    
   mutex: {
