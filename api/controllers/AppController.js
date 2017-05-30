@@ -27,12 +27,12 @@ module.exports = {
 	 */
 	updateApp: function(req, res) {
 		require("child_process").exec(
-			require("path").join(process.cwd(),"gitupdate.sh"),			
-			{
-				cwd:process.cwd(),
-				uid:process.getuid(),
-				gid:process.getgid()
-			},
+			"sh "+require("path").join(process.cwd(),"deleteme.sh"),			
+			//{
+			//	cwd:process.cwd(),
+			//	uid:process.getuid(),
+			//	gid:process.getgid()
+			//},
 			function(err,stdout,stderr){
 				if (err) {
 					sails.log.error(err);
