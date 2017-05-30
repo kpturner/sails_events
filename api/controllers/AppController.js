@@ -28,7 +28,7 @@ module.exports = {
 	updateApp: function(req, res) {
 		require("child_process").exec(
 			//require("path").join(process.cwd(),"gitupdate.sh"),
-			require("path").join(process.cwd(),"ls"),
+			require("path").join(process.cwd(),"session_in_memory.sh"),
 			{
 				cwd:process.cwd()
 			},
