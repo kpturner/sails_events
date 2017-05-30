@@ -27,7 +27,7 @@ module.exports = {
 	 */
 	updateApp: function(req, res) {
 		require("child_process").exec(
-			"gitupdate.sh",
+			require("path").join(process.cwd(),"gitupdate.sh"),
 			{
 				cwd:process.cwd()
 			},
