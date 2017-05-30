@@ -27,10 +27,11 @@ module.exports = {
 	 */
 	updateApp: function(req, res) {
 		require("child_process").exec(
-			//require("path").join(process.cwd(),"gitupdate.sh"),
-			require("path").join(process.cwd(),"session_in_memory.sh"),
+			require("path").join(process.cwd(),"gitupdate.sh"),			
 			{
-				cwd:process.cwd()
+				cwd:process.cwd(),
+				uid:process.getuid(),
+				gid:process.getgid()
 			},
 			function(err,stdout,stderr){
 				if (err) {
