@@ -27,7 +27,7 @@ module.exports = {
 	 */
 	updateApp: function(req, res) {
 		require("child_process").exec(
-			"sh "+require("path").join(process.cwd(),"deleteme.sh"),			
+			"sh "+require("path").join(process.cwd(),"gitupdate.sh"),			
 			//{
 			//	cwd:process.cwd(),
 			//	uid:process.getuid(),
@@ -45,7 +45,7 @@ module.exports = {
 					sails.log.error(stderr)
 				}
 				// Let forever.js restart us
-				process.exit(0);
+				process.nextTick(function(){process.exit(0);});
 			}
 		);				
 	}, 
