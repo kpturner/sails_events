@@ -14,6 +14,14 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	// Convert lodge no to numeric
 	$scope.profileForm.lodgeNo = parseInt($scope.user.lodgeNo); 
 	$scope.profileForm.voLodgeNo = parseInt($scope.user.voLodgeNo); 
+	// Defaults if not entered
+	if (!$scope.profileForm.lodge) {
+		$scope.profileForm.lodge=SAILS_LOCALS.defaults.lodge;
+	}
+	if (!$scope.profileForm.lodgeNo) {
+		$scope.profileForm.lodgeNo=SAILS_LOCALS.defaults.lodgeNo;
+	}	
+	
 	// Set the confirm email
 	$scope.profileForm.confirmemail=$scope.profileForm.email; 
 	 

@@ -40,6 +40,10 @@
       signup: <%- res.locals.signup %>,
       orders: <%- JSON.stringify(sails.config.events.orders) %>,
       permanentDiningList: <%- sails.config.events.permanentDiningList %>,
+      defaults: {
+         lodge: "<%- sails.config.events.lodgeDefault || '' %>",
+         lodgeNo: <%- sails.config.events.lodgeNoDefault || 0 %>,
+      },
     };
     
     </script>

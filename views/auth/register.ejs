@@ -56,6 +56,10 @@
        areas: <%- JSON.stringify(res.locals.areas) %>,
        lodgeMandatory: <%- res.locals.lodgeMandatory %>,
        orders: <%- JSON.stringify(sails.config.events.orders) %>,
+       defaults: {
+         lodge: "<%- sails.config.events.lodgeDefault || '' %>",
+         lodgeNo: <%- sails.config.events.lodgeNoDefault || 0 %>,
+       },
     };
     </script>
     

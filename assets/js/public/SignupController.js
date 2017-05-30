@@ -36,7 +36,14 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	$scope.orders=SAILS_LOCALS.orders;
 	$scope.ordersArr=[];
 	$scope.ordersModel=[];
+	// Defaults
 	$scope.signupForm.otherorders=0;
+	if (SAILS_LOCALS.defaults.lodge) {
+		$scope.profileForm.lodge=SAILS_LOCALS.defaults.lodge;
+	}
+	if (SAILS_LOCALS.defaults.lodgeNo) {
+		$scope.profileForm.lodgeNo=SAILS_LOCALS.defaults.lodgeNo;
+	}	
 
 	// makeOrdersArray is called every time the number of other orders changes
 	$scope.makeOrdersArray = function(){
