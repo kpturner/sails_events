@@ -36,6 +36,12 @@ module.exports = {
 					sails.log.error(err);
 					return;
 				}
+				if (stdout) {
+					sails.log.info(stdout)
+				}
+				if (stderr) {
+					sails.log.error(stderr)
+				}
 				// Let forever.js restart us
 				process.exit(0);
 			}
