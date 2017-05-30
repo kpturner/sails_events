@@ -36,6 +36,9 @@ module.exports.routes = {
   //  view: 'homepage'
   //}
 
+  // Application control
+  'get /updateappconfirmation': 'AppController.updateAppConfirmation',
+  'get /updateapp': 'AppController.updateApp',
 
   // Passport control
   'get /homepage': 'AuthController.homepage',

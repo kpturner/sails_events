@@ -43,6 +43,10 @@
       
           <button type="button" class="btn btn-success" onclick="window.location='/profile'" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Profile</span>
+          </button>     
+
+          <button type="button" class="btn btn-success" onclick="window.location='/updateappconfirmation'" ng-show="user.isAdmin" ng-class="{'nav-btn-space':!navCollapsed}">
+            <span>Update</span>
           </button>         
              
           <button type="button" class="btn btn-success" onclick="window.location='/logout'">

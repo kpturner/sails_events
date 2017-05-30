@@ -30,7 +30,8 @@
     window.SAILS_LOCALS = {
       _csrf: '<%= _csrf %>',
       user: <%- JSON.stringify(res.locals.user) %>,
-      usersCanViewBookings: <%- sails.config.events.usersCanViewBookings %>
+      usersCanViewBookings: <%- sails.config.events.usersCanViewBookings %>,
+      appUpdateRequested: <%- appUpdateRequested || false %>
     };
     </script>
   </head>

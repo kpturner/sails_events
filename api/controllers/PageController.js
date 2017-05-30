@@ -55,7 +55,9 @@ module.exports = {
   		}
       
       // Default home location
-      return res.view('dashboard');
+      return res.view('dashboard',{			
+        appUpdateRequested: false
+      });  	
       
     });
   },

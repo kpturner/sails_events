@@ -123,7 +123,9 @@ var AuthController = {
   dashboard: function (req, res) {
     
     req.session.eventBookings=false;
-    res.view('dashboard');
+    res.view('dashboard',{			
+			appUpdateRequested: false
+		});  	
   
   },
 

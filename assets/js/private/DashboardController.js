@@ -1,4 +1,4 @@
-angular.module('EventsModule').controller('DashboardController', ['$scope', '$http', '$location', 'toastr', function($scope, $http, $location, toastr) {
+angular.module('EventsModule').controller('DashboardController', ['$scope', '$http', '$location', 'toastr', 'ngDialog', function($scope, $http, $location, toastr, ngDialog) {
 	
 		// Initialise "user" in the scope with the data set in the view script 
 		$scope.user=SAILS_LOCALS.user;
@@ -6,6 +6,26 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 		$scope.selectedUser={};
 		$scope.dashboard=true;
 		$scope.usersCanViewBookings=SAILS_LOCALS.usersCanViewBookings;
+
+		// Has an applicationm update been requested?
+		if (SAILS_LOCALS.appUpdateRequested) {
+			var opts={
+				template:"/templates/updateConfirmation.html",
+				className: 'ngdialog-theme-default',
+				scope: $scope
+			};
+			// Pop the dialog
+			ngDialog.openConfirm(opts)
+				.then(function (value) {
+					// Continue update
+					$http.get('/updateapp').success(function(data, status) {
+						// Let it go
+					});
+					window.location = '/';
+				}, function (reason) {
+					// They bottled it					
+				});	
+		}
 
 		// Get the events
 		$http.get('/openevents').success(function(data, status) {

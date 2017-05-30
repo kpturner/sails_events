@@ -155,7 +155,9 @@ module.exports = {
 					return response();				
 				}
 				else {
-					res.view("dashboard");
+					res.view('dashboard',{			
+						appUpdateRequested: false
+					});  	
 				}					
 			})
 			.catch(function(err){	 
