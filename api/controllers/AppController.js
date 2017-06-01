@@ -26,8 +26,13 @@ module.exports = {
 	 * @param {Object} res
 	 */
 	updateApp: function(req, res) {
+		var cmd="sh "+require("path").join(process.cwd(),"gitupdate.sh");
+		if (process.platform.subst(0,3)=="win") {
+			// Windows!
+			cmd=require("path").join(process.cwd(),"gitupdate.bat");
+		}
 		require("child_process").exec(
-			"sh "+require("path").join(process.cwd(),"gitupdate.sh"),			
+			cmd,			
 			//{
 			//	cwd:process.cwd(),
 			//	uid:process.getuid(),
