@@ -133,20 +133,25 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     var maxPlaces=($scope.event.maxBookingPlaces==1)?$scope.event.maxBookingPlaces:
 					($scope.user.isAdmin || (($scope.event.organiser && $scope.user.id==$scope.event.organiser.id) || ($scope.event.organiser2 && $scope.user.id==$scope.event.organiser2.id)))?($scope.event.maxBookingPlaces*2):
 							$scope.event.maxBookingPlaces;
-	$scope.placesMax=($scope.event.capacity>maxPlaces)?maxPlaces:$scope.event.capacity;
+	$scope.placesMax=($scope.event.capacity>=maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
 	
-	if ($scope.placesMin>$scope.placesMax)
+	if ($scope.placesMin>$scope.placesMax) {
 		$scope.placesMin=$scope.placesMax
+	}	
 	if ($scope.mode!="create") {
 		if (SAILS_LOCALS.booking.id) {
 			$scope.bookingForm = SAILS_LOCALS.booking.user;			
 			// Is the administrator managing a booking for somebody else?
 			if (SAILS_LOCALS.booking.user.id!=$scope.user.id) {
 				$scope.userBookings=true;	
-				$scope.selectedUserId=SAILS_LOCALS.booking.user.id;	
+				$scope.selectedUserId=SAILS_LOCALS.booking.user.id;				
 			}
-			$scope.initialiseLodgeInfo(SAILS_LOCALS.booking.user.id);	
+			$scope.initialiseLodgeInfo(SAILS_LOCALS.booking.user.id);
+			// In this case we can allow the maximum places to be the same as the number of places on the booking
+			// so that (if the event has been changed to have fewer places per booking) we don't cause 
+			// confusion 
+			$scope.placesMax=(SAILS_LOCALS.booking.places>$scope.placesMax)?SAILS_LOCALS.booking.places:$scope.placesMax;	
 		}
 		else {
 			$scope.bookingForm = angular.extend($scope.bookingForm,$scope.user);
@@ -166,7 +171,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						$scope.bookingForm.places=$scope.placesMin;
 					}
 					else {
-						$scope.bookingForm.places = $scope.booking.places;	
+						$scope.bookingForm.places = SAILS_LOCALS.booking.places;	
 					}              					
 					if ($scope.bookingForm.places>1)
 						$scope.makeArray();			
