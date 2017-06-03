@@ -879,7 +879,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.transferBooking = function() {
 		$scope.bookingForm.transferring=true;
         // Get a list of users that excludes this user
-        $http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent($scope.selectedUserId.toString())+'"}}&sort=surname')
+        $http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent($scope.selectedUserId.toString())+'"}}&sort=surname&limit=10000')
             .then(function onSuccess(sailsResponse){
                 if (typeof sailsResponse.data == 'object') {
                     $scope.users = sailsResponse.data;
