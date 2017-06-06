@@ -90,8 +90,11 @@
         </h4> 
           
         <h5 ng-hide="event.free">Price per place: £{{event.price.toFixed(2)}}</h5>
-        <h5 ng-hide="event.regInterest">Places remaining: {{event.capacity}}</h5>  
-        
+        <div ng-hide="event.regInterest">
+        <h5 ng-show="existingBooking">Places remaining: {{event.capacity}} (excl. this booking)</h5> 
+        <h5 ng-hide="existingBooking">Places remaining: {{event.capacity}}</h5> 
+        </div>
+
         <h4>In case of difficulty, contact:<h4>  
         <h5><a href="mailto:{{event.organiser.email}}?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}" target="_top">
               <span class="fa fa-envelope"></span> Organiser: {{event.organiser.name}}
