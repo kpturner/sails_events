@@ -32,7 +32,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		$scope.event 		= SAILS_LOCALS.event;
 		$scope.selectedUser	= SAILS_LOCALS.selectedUser;
 		$scope.viewOnly		=SAILS_LOCALS.viewOnly;
-		// If not vie wonly then make it so anyway if the user is not an admin or the organiser
+		// If not view only then make it so anyway if the user is not an admin or the organiser
 		if (!$scope.viewOnly) {
 			$scope.viewOnly=(!user.isAdmin && user.email!=event.organiser.email && user.email!=event.organiser2.email)?true:false;
 		}
