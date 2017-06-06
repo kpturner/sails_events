@@ -25,7 +25,8 @@ module.exports = {
       lodgeYearDownloadLabel: 'PGSLyear',
       lodgeDefault: 'PGSL',
       lodgeNoDefault: 9263,  
-      quickStart: "/doc/pgsl/quick_start.pdf",   
+      quickStart: "/doc/pgsl/quick_start.pdf", 
+      usersCanViewBookings: true,  
   },  
    
   mutex: {

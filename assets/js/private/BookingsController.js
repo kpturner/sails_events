@@ -32,6 +32,10 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		$scope.event 		= SAILS_LOCALS.event;
 		$scope.selectedUser	= SAILS_LOCALS.selectedUser;
 		$scope.viewOnly		=SAILS_LOCALS.viewOnly;
+		// If not vie wonly then make it so anyway if the user is not an admin or the organiser
+		if (!$scope.viewOnly) {
+			$scope.viewOnly=(!user.isAdmin && user.email!=event.organiser.email && user.email!=event.organiser2.email)?true:false;
+		}
 		$scope.permanentDiningList=SAILS_LOCALS.permanentDiningList;
 		$scope.allAddresses = "";
 		$scope.event.bookInText=($scope.event.regInterest)?"register interest":"book in"; 
