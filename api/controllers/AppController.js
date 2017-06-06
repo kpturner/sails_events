@@ -27,7 +27,7 @@ module.exports = {
 	 */
 	updateApp: function(req, res) {
 		var cmd="sh "+require("path").join(process.cwd(),"gitupdate.sh");
-		if (process.platform.subst(0,3)=="win") {
+		if (process.platform.substr(0,3)=="win") {
 			// Windows!
 			cmd=require("path").join(process.cwd(),"gitupdate.bat");
 		}
