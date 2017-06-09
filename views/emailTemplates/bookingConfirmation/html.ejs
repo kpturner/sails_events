@@ -69,7 +69,7 @@
 	<br>Additional info: <%-info%>
 	<% } %>
 	<br>Places: <%=places%>
-	<% if  (!eventFree && !regInterest) {%>
+	<% if  (!eventFree && !regInterest && !paid) {%>
 	<br>Payment deadline: <%=deadline%>	
 	<br>Amount to pay: £<%=total%>
 	<% } %>
@@ -97,7 +97,7 @@
       <% }) %>
     <% } %>
 	
-	<% if  (!eventFree && !regInterest) {%>
+	<% if  (!eventFree && !regInterest && !paid) {%>
 	<p> Payment details: <b><%-paymentDetails%></b>
 	<% } %>
 	

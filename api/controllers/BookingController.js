@@ -493,6 +493,7 @@ module.exports = {
 					bookingRef: bookingRef,
 					info: (booking.info || "n/a").replace(/[\n\r]/g, '<br>'),  
 					places: booking.places,
+					paid: booking.paid,
 					linkedBookings: linkedBookings,
 					paymentDetails: (event.paymentDetails || "n/a").replace(/[\n\r]/g, '<br>'),
 					total: (booking.places * event.price),
@@ -786,7 +787,10 @@ module.exports = {
 														}													
 													}	
 
-													if (existingBooking && !existingBooking.paid && booking.paid) {
+													if (!existingBooking && booking.paid) {
+														updated+=". It has been flagged as PAID";
+													}
+													else if (existingBooking && !existingBooking.paid && booking.paid) {
 														// Paid flag changed
 														updated+=" and flagged as PAID";
 													}	
@@ -1791,70 +1795,7 @@ module.exports = {
 									}
 									sails.controllers.booking.bookingConfirmationEmail(emailOpts);
 
-									/****
-									Email.send(
-										"bookingConfirmation",
-										{
-											recipientName: Utility.recipient(booking.user.salutation,booking.user.firstName,booking.user.surname),
-											senderName: sails.config.events.title,
-											updated: updated,
-											orderLabel: orderLabel,
-											lodgeYearLabel: sails.config.events.lodgeYearLabel || (orderLabel+ " year"),
-											regInterest: booking.event.regInterest,
-											eventName: booking.event.name,
-											eventFree: booking.event.free,
-											eventDate: formattedDate,
-											eventTime: booking.event.time,
-											eventVenue: booking.event.venue.replace(/[\n\r]/g, '<br>'),
-											eventAdditionalInfo: booking.event.additionalInfo,
-											eventOrganiser: mainOrganiser.name || "",
-											organiserEmail: mainOrganiser.email || "",
-											organiserContactNo: mainOrganiser.phone || "",
-											eventBlurb: (booking.event.blurb || "").replace(/[\n\r]/g, '<br>'),
-											eventMenu: (booking.event.menu || "").replace(/[\n\r]/g, '<br>'),
-											eventDressCode: (booking.event.dressCode || "").replace(/[\n\r]/g, '<br>'),
-											addressReqd: booking.event.addressReqd,
-											address1: booking.user.address1 || "",
-											address2: booking.user.address2 || "",
-											address3: booking.user.address3 || "",
-											address4: booking.user.address4 || "",
-											postcode: booking.user.postcode || "", 
-											phone: booking.user.phone || "",  
-											email: booking.user.email,
-											lodge: booking.user.lodge || "",
-											lodgeNo: booking.user.lodgeNo || "",
-											lodgeYear: booking.user.lodgeYear || "",
-											salutation: booking.user.salutation || "",
-											category: booking.user.category || "",
-											centre: booking.user.centre,
-											area: booking.user.area || "",
-											voReqd: booking.event.voReqd,
-											isVO: booking.user.isVO,
-											voLodge: booking.user.voLodge || "",
-											voLodgeNo: booking.user.voLodgeNo || "",
-											voCentre: booking.user.voCentre || "",
-											voArea: booking.user.voArea || "",
-											surname: booking.user.surname || "",
-											firstName: booking.user.firstName || "",
-											rank: booking.user.rank || "",
-											dietary: booking.user.dietary || "",
-											bookingRef: booking.ref,
-											info: (booking.info || "").replace(/[\n\r]/g, '<br>'),  
-											places: booking.places,
-											linkedBookings: linkedBookings,
-											paymentDetails: (booking.event.paymentDetails)?booking.event.paymentDetails.replace(/[\n\r]/g, '<br>'):"",
-											total: (booking.places * booking.event.price),
-											deadline: deadline
-										},
-										{
-										from: booking.event.name + ' <noreply@squareevents.org>',
-										to: booking.user.email,
-										bcc: bcc,
-										subject: booking.event.regInterest?"Event interest cancellation confirmation":"Event booking cancellation confirmation"
-										},
-										function(err) {if (err) console.log(err);}
-									)    			
-									****/
+
 								}
 								
 									
