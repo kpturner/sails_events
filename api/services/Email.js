@@ -25,7 +25,7 @@ module.exports = {
      var hook="eventemail";
      //var hook="email"; 
      var transporter=sails.hooks[hook].transporter(); 
-     if (sails.config.events.DKIM && !transporter._dkim) {
+     if (sails.config.events.DKIM && sails.config.events.DKIM.domainName && !transporter._dkim) {
         var nodemailer = require('nodemailer');
         var nodemailerDKIM = require('nodemailer-dkim');
         var fs = require('fs');
