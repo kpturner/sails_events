@@ -238,6 +238,13 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 			else {
 				$scope.downloadUrl='/alleventbookings/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria))+'?eventid='+$scope.event.id+'&download=1';
 			}	
+			// If "sort by name" disable scroller
+			if ($scope.filterForm.criteria.sortByName) {
+				$scope.scrollDisabled=true;
+			}
+			else {
+				$scope.scrollDisabled=false;
+			}
 		}
 		
 		/**
