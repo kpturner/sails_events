@@ -38,6 +38,7 @@ exports.register = function (req, res, next) {
   User.findOne({email:user.email}).exec(function(err,existingUser){
       if (err || !existingUser) {
           // Normal situation so proceed with creation
+          sails.log.error(err);
           User.create(user,
             function(err, newUser) {
                 if (err) {
@@ -53,11 +54,17 @@ exports.register = function (req, res, next) {
                       && err.invalidAttributes.username[0].rule === 'unique') {
                       return res.genericErrorResponse(410,"User name is already in use");
                     }
+                    return res.genericErrorResponse(410,err.message);
                 }
-                sails.controllers.order.updateOtherOrders(newUser.id,req.param("orders"),function(){
-                  // Complete registration
-                  completeReg(newUser,user.password); 
-                });               
+                if (newUser) {
+                  sails.controllers.order.updateOtherOrders(newUser.id,req.param("orders"),function(){
+                    // Complete registration
+                    completeReg(newUser,user.password); 
+                  });      
+                }
+                else {
+                  return res.genericErrorResponse(410,"User not created");
+                }                         
             })                      
       }
       else {
