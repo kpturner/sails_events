@@ -38,7 +38,10 @@ exports.register = function (req, res, next) {
   User.findOne({email:user.email}).exec(function(err,existingUser){
       if (err || !existingUser) {
           // Normal situation so proceed with creation
-          sails.log.error(err);
+          if (err) {
+            sails.log.error(err);
+          }
+          // Create user          
           User.create(user,
             function(err, newUser) {
                 if (err) {
