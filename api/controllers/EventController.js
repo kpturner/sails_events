@@ -464,7 +464,7 @@ module.exports = {
 										//to: booking.user.email,
 										to: to,
 										cc: cc,
-										bcc: (sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
+										bcc: ((sails.config.events.emailDeveloperOnBooking) && sails.config.events.developer && sails.config.events.developer!=event.organiser.email)?sails.config.events.developer:"",
 										subject: event.name + " - Payment deadline changed"
 									},
 									function(err) {if (err) console.log(err);}

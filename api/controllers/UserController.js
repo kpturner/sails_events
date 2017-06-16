@@ -330,50 +330,7 @@ module.exports = {
 						return res.negotiate(err)
 					}
 					sails.controllers.order.updateOtherOrders(userId,req.param("orders"));
-					// Success
-					/* Don't inform the user by email. Can cause confusion
-					if (user[0].address1==null)
-						user[0].address1=""
-					if (user[0].address2==null)
-						user[0].address2=""
-					if (user[0].address3==null)
-						user[0].address3=""
-					if (user[0].address4==null)
-						user[0].address4=""
-					if (user[0].postcode==null)
-						user[0].postcode=""
-					if (user[0].dietary==null)
-						user[0].dietary=""
-					if (user[0].rank==null)
-						user[0].rank=""
-					if (user[0].phone==null)
-						user[0].phone=""
-					if (user[0].area==null)
-						user[0].area=""
-					
-					if (!user[0].isVO) 
-						user[0].isVO=false
-					if (!user[0].isAdmin)
-						user[0].isAdmin=false
-					if (!user[0].isOrganiser)
-						user[0].isOrganiser=false
-					if (!user[0].isDC)
-						user[0].isDC=false
-					// Send confirmation email
-					Email.send(
-						"profileChanged", {
-								recipientName:Utility.recipient(user[0].salutation,user[0].firstName,user[0].surname),
-								senderName: sails.config.events.title,
-								details: user[0]						  
-							},
-							{
-							to:user[0].email,
-							bcc: sails.config.events.developer || "",
-							subject: sails.config.events.title + " - Your details have been changed by the Administrator"
-							},
-							function(err) {if (err) console.log(err);}
-					) 
-					*/    
+					  
 					return res.ok();	
 				})
 			}) 
