@@ -36,7 +36,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		if (!$scope.viewOnly && $scope.eventBookings) {
 			$scope.viewOnly=!$scope.user.isAdmin;
 			if ($scope.viewOnly) {
-				if (($scope.event.organiser && $scope.user.email==$scope.event.organiser.email) || ($scope.organiser2 && $scope.user.email==$scope.event.organiser2.email)) {
+				if (($scope.event.organiser && $scope.user.email==$scope.event.organiser.email) || ($scope.event.organiser2 && $scope.user.email==$scope.event.organiser2.email)) {
 					$scope.viewOnly=false
 				}
 			}			
