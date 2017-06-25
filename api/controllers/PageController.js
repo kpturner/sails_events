@@ -56,7 +56,8 @@ module.exports = {
       
       // Default home location
       return res.view('dashboard',{			
-        appUpdateRequested: false
+        appUpdateRequested: false,
+        mimicUserRequested:false
       });  	
       
     });

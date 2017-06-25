@@ -124,7 +124,8 @@ var AuthController = {
     
     req.session.eventBookings=false;
     res.view('dashboard',{			
-			appUpdateRequested: false
+			appUpdateRequested: false,
+			mimicUserRequested: false
 		});  	
   
   },

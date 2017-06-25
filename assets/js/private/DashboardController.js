@@ -27,6 +27,55 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 				});	
 		}
 
+		// Are we attempting to mimic a user?
+		if (SAILS_LOCALS.mimicUserRequested) {
+			// Get a list of users that excludes this user
+			$http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent(SAILS_LOCALS.user.id.toString())+'"}}&sort=surname&limit=10000')
+				.then(function onSuccess(sailsResponse){
+					if (typeof sailsResponse.data == 'object') {
+						$scope.users = sailsResponse.data;
+						// Prompt the user to select a user to mimic
+						var opts={
+							template:"/templates/mimicUser.html",
+							className: 'ngdialog-theme-default',
+							scope: $scope
+							};
+						// Pop the dialog
+						$scope.dashboard={};
+						ngDialog.openConfirm(opts)
+							.then(function (value) {
+								// Mimic user
+								$http.post('/mimicuser',{
+									_csrf: SAILS_LOCALS._csrf,
+									mimicuser:$scope.dashboard.mimicUser
+								})
+								.then(function(){
+									window.location="/";
+								})
+								.catch(function(sailsResponse){
+									toastr.error(sailsResponse.data, 'Error');									
+								})
+							}, 
+							function (reason) {
+								
+							});						
+					}
+					else {
+						toastr.error(origResponse.data, 'Error');  
+					}
+				})
+				.catch(function onError(sailsResponse){
+		
+					// Handle known error type(s).
+					toastr.error(sailsResponse.data, 'Error');
+					$scope.bookingForm.transferring=false;
+		
+				})
+				.finally(function eitherWay(){
+					// Nothing to do
+				})
+		}
+
 		// Get the events
 		$http.get('/openevents').success(function(data, status) {
 			if (typeof data == 'object') {

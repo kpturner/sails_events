@@ -387,6 +387,49 @@ module.exports = {
 		
 	},
 
-
+	/**
+	 * Mimic a user requested
+	 *
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	mimicUserRequested: function(req, res) {
+		res.view('dashboard',{		
+			appUpdateRequested: false,	
+			mimicUserRequested: true
+		});  		
+	}, 
 	
+	/**
+	 * Mimic a user  
+	 *
+	 * @param {Object} req
+	 * @param {Object} res
+	 */
+	mimicUser: function(req, res) {
+		// Find the user
+		User.findOne(req.param("mimicuser"), function (err, user) {
+			if (err) {
+				return res.negotiate(err)
+			}
+			if (!user) {
+				return res.genericErrorResponse(409,"User not found");
+			}
+			// Override the user
+			res.locals.user = user;
+			Passport.findOne({user:user.id},function(err,passport){
+				if (err) {
+					return res.negotiate(err)
+				}
+				if (!passport) {
+					return res.genericErrorResponse(409,"Passport not found");
+				}
+				sails.controllers.auth.resetAuth(req,res);
+				req.session.passport=passport;
+				return res.ok();
+			})
+			
+		}) 
+	}, 
+
 };

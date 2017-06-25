@@ -1,0 +1,11 @@
+<div class="ngdialog-message">
+    <h3>MIMIC USER</h3>
+    <p>Select user to mimic:<p> 
+    <select type="text" class="form-control" placeholder="mimic user" name="mimicuser" ng-options="a.id as (a.surname + ', '+a.firstName+((a.lodge)?' ('+a.lodge+' '+a.lodgeNo+')':'')) for a in users" ng-model="dashboard.mimicUser" required>
+        <option value="">-- choose user --</option>
+    </select>        
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Continue</button>
+</div>

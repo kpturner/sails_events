@@ -15,7 +15,8 @@ module.exports = {
 	 */
 	updateAppConfirmation: function(req, res) {
 		res.view('dashboard',{			
-			appUpdateRequested: true
+			appUpdateRequested: true,
+			mimicUserRequested: false
 		});  		
 	}, 
 	

@@ -156,7 +156,8 @@ module.exports = {
 				}
 				else {
 					res.view('dashboard',{			
-						appUpdateRequested: false
+						appUpdateRequested: false,
+						mimicUserRequested: false
 					});  	
 				}					
 			})

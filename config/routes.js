@@ -98,6 +98,8 @@ module.exports.routes = {
   'post /updateuser/:action': 'UserController.updateUser',
   'get /organisers': 'UserController.organisers',
   'get /dcs': 'UserController.dcs',
+  'get /mimicuserrequested': 'UserController.mimicUserRequested',
+  'post /mimicuser': 'UserController.mimicUser',
 
   // Other orders
   'get /otherorders/:userid': 'OrderController.otherOrders',
