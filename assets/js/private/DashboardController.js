@@ -6,6 +6,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 		$scope.selectedUser={};
 		$scope.dashboard=true;
 		$scope.usersCanViewBookings=SAILS_LOCALS.usersCanViewBookings;
+		$scope.loadingMimicUsers=false;
 
 		// Has an applicationm update been requested?
 		if (SAILS_LOCALS.appUpdateRequested) {
@@ -30,10 +31,12 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 		// Are we attempting to mimic a user?
 		if (SAILS_LOCALS.mimicUserRequested) {
 			// Get a list of users that excludes this user
+			$scope.loadingMimicUsers=true;
 			$http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent(SAILS_LOCALS.user.id.toString())+'"}}&sort=surname&limit=10000')
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
 						$scope.users = sailsResponse.data;
+						$scope.loadingMimicUsers=false;
 						// Prompt the user to select a user to mimic
 						var opts={
 							template:"/templates/mimicUser.html",

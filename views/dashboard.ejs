@@ -51,7 +51,8 @@
         </button> 
       </div>
 
-      <div class="container">     
+      <div class="container">  
+        <span class="fa fa-spinner fa-pulse fa-3x fa-fw" ng-show="loadingMimicUsers"></span>      
         <div ng-show="events.length>0">
           <h4 class="hidden-md hidden-lg">Tap an event name to book in</h4>  
           <!-- <h4 class="hidden-xs hidden-sm">Click an event to book in</h4> -->  
