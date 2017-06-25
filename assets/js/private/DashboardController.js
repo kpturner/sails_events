@@ -32,7 +32,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 		if (SAILS_LOCALS.mimicUserRequested) {
 			// Get a list of users that excludes this user
 			$scope.loadingMimicUsers=true;
-			$http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent(SAILS_LOCALS.user.id.toString())+'"}}&sort=surname&limit=10000')
+			$http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent(SAILS_LOCALS.user.id.toString())+'"},"authProvider":{"not":"dummy"}}&sort=surname&limit=10000')
 				.then(function onSuccess(sailsResponse){
 					if (typeof sailsResponse.data == 'object') {
 						$scope.users = sailsResponse.data;
