@@ -15,6 +15,7 @@ module.exports = function(req, res, next) {
   // is the homepage or just "/" (the PageController will handle this)
   // or we are being authenticated, we can also proceed
   res.locals.developer=sails.config.events.developer;
+  res.locals.help=sails.config.events.help;
   if (req.session.authenticated || req.url=="/" || req.url=="/homepage" || req.url=="/register" || req.url.indexOf("/auth/")>=0) {
     
      
