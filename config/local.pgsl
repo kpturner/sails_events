@@ -26,7 +26,8 @@ module.exports = {
       lodgeDefault: 'PGSL',
       lodgeNoDefault: 9263,  
       quickStart: "/doc/pgsl/quick_start.pdf", 
-      usersCanViewBookings: true,  
+      usersCanViewBookings: true, 
+      help: "wilkinsongd@gmail.com", 
   },  
    
   mutex: {
