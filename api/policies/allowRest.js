@@ -17,8 +17,9 @@ module.exports = function(req, res, next) {
  
   if (action=="find" && process.env.NODE_ENV!=='development') {
     // Disallow REST find from address bar in production unless csrf provided
-    if (!req.param("_csrf"))  
+    if (!req.param("_csrf"))  {
         allowed=false;
+    }    
   }
  
   if (allowed) {
@@ -27,5 +28,7 @@ module.exports = function(req, res, next) {
 
   // User is not allowed
   // (default res.forbidden() behavior can be overridden in `config/403.js`)
-  return res.forbidden('You are not permitted to perform this action.');
+  sails.log.error("REST api called illegally. Let page controller take over");
+  //return res.forbidden('You are not permitted to perform this action.');
+  return res.redirect("/");  //Page controller can take ove
 };

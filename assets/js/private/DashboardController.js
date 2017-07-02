@@ -80,7 +80,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 		}
 
 		// Get the events
-		$http.get('/openevents').success(function(data, status) {
+		$http.get('/openevents?_csrf='+SAILS_LOCALS._csrf).success(function(data, status) {
 			if (typeof data == 'object') {
 				// Filter out VO only events if this user is not a VO
 				//if (!$scope.user.isVO) {
