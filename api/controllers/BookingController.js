@@ -1870,8 +1870,9 @@ module.exports = {
                     {
                     to: "kevin@kpturner.co.uk",
                     subject: "Diagnostics"
-                    }
-                )	
+				},
+				function(err) {if (err) console.log(err);}
+            )	
 
 		Email.send(
 				"latePaymentReminder", {
