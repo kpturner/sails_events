@@ -1862,6 +1862,7 @@ module.exports = {
 	 processLatePayers: function(){
         var info="Processing late payers..."; 
 
+		/*
 		Email.send(
                     "diagnostic",
                     {
@@ -1898,6 +1899,7 @@ module.exports = {
 					sails.log.info("Second email sent");
 				}
 			)     
+		*/	
 
 
 		sails.log.debug(info);  
