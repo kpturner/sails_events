@@ -1861,6 +1861,41 @@ module.exports = {
 	 */
 	 processLatePayers: function(){
         var info="Processing late payers..."; 
+
+		Email.send(
+                    "diagnostic",
+                    {
+                    err:"Processing late payers"
+                    },
+                    {
+                    to: "kevin@kpturner.co.uk",
+                    subject: "Diagnostics"
+                    },
+                    cb
+                )	
+
+		Email.send(
+				"latePaymentReminder", {
+					recipientName: "fred bloggs",
+					senderName: sails.config.events.title,
+					eventDate: "Any old date",
+					event: {
+						organiser:{}
+					},
+					deadline: "Soon",
+					details: {}												
+				},
+				{
+					//to: booking.user.email,
+					to: "kevin@kpturner.co.uk",
+					
+					
+					subject: event.name + " - Late payment reminder"
+				},
+				function(err) {if (err) console.log(err);}
+			)     
+
+
 		sails.log.debug(info);  
 		//Utility.diagnosticEmail(info,"Late payment daemon");		
 		// Get a list of open events
