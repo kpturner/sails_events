@@ -45,6 +45,9 @@ module.exports.bootstrap = function(cb) {
         if (process.env.NODE_ENV=='development') {
             waitTime=10000
         }
+
+        waitTime=10000; // DELETE THIS
+
         setTimeout(function(){
             var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
             var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
