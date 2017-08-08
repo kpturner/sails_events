@@ -1870,8 +1870,7 @@ module.exports = {
                     {
                     to: "kevin@kpturner.co.uk",
                     subject: "Diagnostics"
-                    },
-                    cb
+                    }
                 )	
 
 		Email.send(
