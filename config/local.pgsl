@@ -101,15 +101,15 @@ module.exports = {
 	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
 	  */
 	  transporter:	{
-      host: 'localhost',
+      host: 'mail.gridhost.co.uk',
       port: 25,
     	tls:{rejectUnauthorized: false},
       auth: {
-        user: "xxxxx",
-        pass: "yyyyy"
+        user: "dining@9263dining.org.uk",
+        pass: "K1ng50L0m0N9263"
       }
 	  },
-    from:  process.env.SMTP_SENDER || 'Provincial Events <noreply@squareevents.org>', // sender address
+    from:  process.env.SMTP_SENDER || 'PGSL 9263 Events <noreply@squareevents.org>', // sender address
     testMode:  false 
   },
   

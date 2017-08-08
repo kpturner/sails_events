@@ -50,6 +50,22 @@ module.exports.bootstrap = function(cb) {
             var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
             var latePaymentDaemon = childProcessDebug.fork(__dirname+"/../api/processes/LatePaymentDaemon");
             
+            // Detect any messages
+            latePaymentDaemon.on("message",function(data){
+                // Email?
+                if (data.email) {
+                    process.nextTick(function(){
+                        Email.send( data.email.template,
+                                data.email.data,
+                                data.email.options,
+                                function(err) {
+                                    if (err) sails.log.error(err);
+                                }
+                        );	
+                    })                   
+                }
+            })
+
             // Detect it exiting
             latePaymentDaemon.on("exit", function(code, signal){
                 var msg="Late payment daemon process exiting with code/signal "+code+"/"+signal ;  
