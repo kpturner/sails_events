@@ -1868,10 +1868,13 @@ module.exports = {
                     err:"Processing late payers"
                     },
                     {
-                    to: "kevin@kpturner.co.uk",
+                    to: sails.config.events.developer,
                     subject: "Diagnostics"
 				},
-				function(err) {if (err) console.log(err);}
+				function(err) {
+					if (err) sails.log.error(err);
+					sails.log.debug("First email sent");
+				}
             )	
 
 		Email.send(
@@ -1887,12 +1890,13 @@ module.exports = {
 				},
 				{
 					//to: booking.user.email,
-					to: "kevin@kpturner.co.uk",
-					
-					
+					to: sails.config.events.developer,
 					subject: "TEST Late payment reminder"
 				},
-				function(err) {if (err) console.log(err);}
+				function(err) {
+					if (err) sails.log.error(err);
+					sails.log.debug("Second email sent");
+				}
 			)     
 
 
