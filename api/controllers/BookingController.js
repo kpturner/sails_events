@@ -1873,7 +1873,7 @@ module.exports = {
 				},
 				function(err) {
 					if (err) sails.log.error(err);
-					sails.log.debug("First email sent");
+					sails.log.info("First email sent");
 				}
             )	
 
@@ -1895,7 +1895,7 @@ module.exports = {
 				},
 				function(err) {
 					if (err) sails.log.error(err);
-					sails.log.debug("Second email sent");
+					sails.log.info("Second email sent");
 				}
 			)     
 
