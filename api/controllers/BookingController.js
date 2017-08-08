@@ -1889,7 +1889,7 @@ module.exports = {
 					to: "kevin@kpturner.co.uk",
 					
 					
-					subject: event.name + " - Late payment reminder"
+					subject: "TEST Late payment reminder"
 				},
 				function(err) {if (err) console.log(err);}
 			)     
