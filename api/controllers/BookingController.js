@@ -2000,7 +2000,10 @@ module.exports = {
 								//Utility.diagnosticEmail(bookings.slice(),"Bookings pre-filter");	
 								bookings=sails.controllers.booking.filterLate(bookings,event.grace);
 								//Utility.diagnosticEmail(bookings,"Late bookings");							
-								if (!sails.config.events.reminderTestMode) {
+								if (sails.config.events.reminderTestMode) {
+									sails.log.debug("Reminder test mode: "+Utility.recipient(booking.user.salutation,booking.user.firstName,booking.user.surname));
+								}
+								else {	
 									// Process late payers using async so that the emails do not go simultaneously
 									async.each(bookings,function(booking,next){
 										// Only email a reminder if a week has passed since last reminder

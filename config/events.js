@@ -113,7 +113,7 @@ module.exports.events = {
     // Late payment interval
     latePaymentDaemon: (process.env.LATEPAYMENTDAEMON=="0")?false:true,
     
-    // Reminder text mode
+    // Reminder test mode
     reminderTestMode: (process.env.REMINDERTESTMODE=='1')?true:false,
             
 	// Late payment interval
