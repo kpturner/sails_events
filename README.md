@@ -1,6 +1,6 @@
 ---
 title: 'Provincial Events – Guide'
-...
+---
 
 Kevin Turner Sept 2015
 
@@ -135,22 +135,22 @@ Email example
 
 ![][18]
 
-  []: readme_media/media/image1.png
-  [1]: readme_media/media/image2.png
-  [2]: readme_media/media/image3.png
-  [3]: readme_media/media/image4.png
-  [4]: readme_media/media/image5.png
-  [5]: readme_media/media/image6.png
-  [6]: readme_media/media/image7.png
-  [7]: readme_media/media/image8.png
-  [8]: readme_media/media/image9.png
-  [9]: readme_media/media/image10.png
-  [10]: readme_media/media/image11.png
-  [11]: readme_media/media/image12.png
-  [12]: readme_media/media/image13.png
-  [13]: readme_media/media/image14.png
-  [14]: readme_media/media/image15.png
-  [15]: readme_media/media/image16.png
-  [16]: readme_media/media/image17.png
-  [17]: readme_media/media/image18.png
-  [18]: readme_media/media/image19.png
+  []: readme_media/media/image1.png{width="3.9057622484689416in" height="6.947048337707787in"}
+  [1]: readme_media/media/image2.png{width="2.9791666666666665in" height="5.293081802274716in"}
+  [2]: readme_media/media/image3.png{width="2.9261920384951883in" height="3.1458333333333335in"}
+  [3]: readme_media/media/image4.png{width="4.260416666666667in" height="7.625in"}
+  [4]: readme_media/media/image5.png{width="2.990832239720035in" height="4.989583333333333in"}
+  [5]: readme_media/media/image6.png{width="2.8541666666666665in" height="5.034337270341207in"}
+  [6]: readme_media/media/image7.png{width="0.3854166666666667in" height="0.3229166666666667in"}
+  [7]: readme_media/media/image8.png{width="0.9375in" height="0.40625in"}
+  [8]: readme_media/media/image9.png{width="2.4791666666666665in" height="4.4418405511811025in"}
+  [9]: readme_media/media/image10.png{width="0.6770833333333334in" height="0.3333333333333333in"}
+  [10]: readme_media/media/image11.png{width="0.7083333333333334in" height="0.3541666666666667in"}
+  [11]: readme_media/media/image12.png{width="3.4791666666666665in" height="6.209759405074366in"}
+  [12]: readme_media/media/image13.png{width="2.96875in" height="5.296192038495188in"}
+  [13]: readme_media/media/image14.png{width="3.0833333333333335in" height="5.333941382327209in"}
+  [14]: readme_media/media/image15.png{width="3.4791666666666665in" height="3.4961384514435694in"}
+  [15]: readme_media/media/image16.png{width="0.6770833333333334in" height="0.375in"}
+  [16]: readme_media/media/image17.png{width="3.2395833333333335in" height="5.782141294838145in"}
+  [17]: readme_media/media/image18.png{width="3.1979166666666665in" height="2.6909295713035872in"}
+  [18]: readme_media/media/image19.png{width="5.270833333333333in" height="7.520833333333333in"}
