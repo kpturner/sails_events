@@ -2065,7 +2065,7 @@ module.exports = {
 										if (err) {
 											sails.log.error(err);
 										}
-										Utility.diagnosticEmail("Late payers processed","Late payment daemon");
+										//Utility.diagnosticEmail("Late payers processed","Late payment daemon");
 									})									                                    
 								}
 							}	
