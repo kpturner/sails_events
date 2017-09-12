@@ -163,7 +163,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			$scope.eventForm.time=$scope.eventForm.time.toTimeString().split(" ")[0]		
 							
 			// Submit request to Sails.
-			var route='/updateevent/'+$scope.mode+((graceChanged)?"?gracechangedto="+SAILS_LOCALS.event.grace:"");			
+			var route='/updateevent/'+$scope.mode+(($scope.mode=="edit" && graceChanged)?"?gracechangedto="+SAILS_LOCALS.event.grace:"");			
 			$http.post(route, {
 				_csrf: SAILS_LOCALS._csrf,
 				data: $scope.eventForm			 
