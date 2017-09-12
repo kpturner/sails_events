@@ -16,7 +16,12 @@ module.exports = {
 		var deadline="N/A";
 		if (event.grace && event.grace>0 && !booking.paid) {
 			var dl=new Date(booking.bookingDate);
+			var ed=new Date(event.date);
 			dl.setDate(dl.getDate()+event.grace);
+			// Don't go beyond closing date
+			if (dl.getTime()>ed.getTime()) {
+				dl=ed;
+			}
 			//dl=dl.toString();
 			//deadline=dl.substr(0,dl.indexOf(":")-2);			
 			deadline=df(dl, "ddd, mmm dS, yyyy");
