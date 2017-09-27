@@ -268,6 +268,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.bookingForm.paymentDetails=$scope.event.paymentDetails;
 	$scope.bookingForm.blurb=$scope.event.blurb;
 	$scope.bookingForm.menu=$scope.event.menu;
+	$scope.bookingForm.dressCode=$scope.event.dressCode;
 
 	// Payment reminder info
 	if (!$scope.bookingForm.paid) {
