@@ -312,7 +312,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// The organiser needs to intervene for refunds etc
 		$scope.balance=$scope.bookingForm.amountPaid?($scope.bookingForm.cost-$scope.bookingForm.amountPaid):null;
 		if ($scope.balance) {
-			$scope.placesMin=($scope.bookingForm.amountPaid/$scope.event.price)||1;
+			$scope.placesMin=(Math.round($scope.bookingForm.amountPaid/$scope.event.price))||1;
 		}
 
 		// Make array for additional bookings
