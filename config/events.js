@@ -73,6 +73,9 @@ module.exports.events = {
 	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
 	multipleBookings: false,
 
+	// Booking card height (defaults to 255px) when viewing bookings on an event
+	//bookingCardHeight: "255px",
+
 	// Users can view bookings for an events
 	usersCanViewBookings: false,
 

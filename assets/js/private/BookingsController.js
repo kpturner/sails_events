@@ -32,6 +32,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		$scope.eventBookings= SAILS_LOCALS.eventBookings;
 		$scope.userBookings	= SAILS_LOCALS.userBookings;
 		$scope.event 		= SAILS_LOCALS.event;
+		$scope.bookingCardHeight = SAILS_LOCALS.bookingCardHeight;
 		$scope.selectedUser	= SAILS_LOCALS.selectedUser;
 		$scope.viewOnly		=SAILS_LOCALS.viewOnly;
 		// If not view only then make it so anyway if the user is not an admin or the organiser

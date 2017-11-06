@@ -1,9 +1,14 @@
 <div class="photo ng-scope">
     <a href="/booking?bookingid={{card.id}}&eventbookings=true&mode={{mother.viewOnly?'display':'edit'}}" class="a-unstyled" title="Click here to {{mother.event.bookInText}}">        
-        <div class="photo-description">
+        <div class="photo-description" style="height:{{mother.bookingCardHeight}}">
             <div>
                 <div class="user-name {{card.user.nameClass}}">
-                    <h3>{{card.user.surname}}, {{card.user.firstName}}</h3> 
+                    <h3>{{card.user.surname}}, {{card.user.firstName}}</h3>                        
+                </div> 
+                <div ng-show="card.user.showPicture" class="user-picture-right">
+                    <img src="{{card.user.gravatarUrl}}" class="user-avatar"></img>
+                </div>  
+                <div class="user-name">
                     <h5>Salutation: {{card.user.salutation}}</h5>    
                     <h5 ng-hide="!card.user.lodge">{{card.orderLabel}}: {{card.user.lodge}} {{card.user.lodgeNo}}</h5>    
                     <h5 ng-hide="!card.user.lodgeYear">Lodge year: {{card.user.lodgeYear}}</h5>       
@@ -11,10 +16,7 @@
                     <h5>Ref: {{card.ref}}</h5>    
                     <h5 ng-hide="!card.user.email || mother.viewOnly"><a href="mailto:{{card.user.email}}?Subject={{mother.event.name}}: {{ mother.event.date | date : 'EEE, MMM dd, yyyy'}} at {{mother.event.time}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
                     <h5 ng-hide="!card.user.phone || mother.viewOnly"><a href="tel:{{card.user.phone}}"><span class="fa fa-phone"></span> {{card.user.phone}}</a></h5>      
-                </div> 
-                <div ng-show="card.user.showPicture" class="user-picture-right">
-                    <img src="{{card.user.gravatarUrl}}" class="user-avatar"></img>
-                </div>      
+                </div>     
             </div>
         </div>        
     </a>
