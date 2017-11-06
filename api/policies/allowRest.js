@@ -30,5 +30,5 @@ module.exports = function(req, res, next) {
   // (default res.forbidden() behavior can be overridden in `config/403.js`)
   sails.log.error("REST api called illegally. Let page controller take over");
   //return res.forbidden('You are not permitted to perform this action.');
-  return res.redirect("/");  //Page controller can take ove
+  return res.redirect("/");  //Page controller can take over
 };
