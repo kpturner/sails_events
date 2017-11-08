@@ -1098,7 +1098,7 @@ module.exports = {
 						User.create(user).exec(function(err, newUser){
 							if (err) {
 								//!Ouch!
-								sails.log.error('res.genericErrorResponse() :: Sending '+errorCode+': '+errorMsg+' response');
+								sails.log.error('res.genericErrorResponse() :: Sending '+err.code+': '+err.message+' response');
 								return res.genericErrorResponse("455","Booking failed. Attempt to create new user failed!")
 							}
 							checkAndbookIt(newUser.id)
@@ -1110,8 +1110,18 @@ module.exports = {
 				if (bookingId) {
 					// Rebook for existing user
 					Booking.findOne(bookingId).exec(function(err,booking){
-						bookingRef=booking.ref;
-						checkAndbookIt(booking.user);	
+						if (err || !booking) {
+							// Arrgh!
+							if (err) {
+								sails.log.error('res.genericErrorResponse() :: Sending '+err.code+': '+err.message+' response');
+								return res.genericErrorResponse("455","Booking failed. Attempt to rebook failed!")
+							}
+							return res.genericErrorResponse("455","Booking failed. Attempt to rebook failed!. Existing booking not found for "+bookingId)
+						}
+						else {
+							bookingRef=booking.ref;
+							checkAndbookIt(booking.user);	
+						}						
 					})
 				}
 				else {
