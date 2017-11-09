@@ -56,7 +56,6 @@ module.exports = {
     
     mop: {
       type: 'string',
-      enum: ['Cheque', 'BACS', 'Cash', 'Paypal']
     },
     
     // Additional info
