@@ -311,8 +311,13 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// then the minimum cannot reduce the cost below that amount.
 		// The organiser needs to intervene for refunds etc
 		$scope.balance=$scope.bookingForm.amountPaid?($scope.bookingForm.cost-$scope.bookingForm.amountPaid):null;
-		if ($scope.balance) {
+		$scope.credit=false;
+		if ($scope.balance>0 && !$scope.user.isAdmin && !$scope.user.isOrganiser) {
 			$scope.placesMin=(Math.round($scope.bookingForm.amountPaid/$scope.event.price))||1;
+		}
+		else if ($scope.balance<0) {
+			// Credit
+			$scope.credit=true;
 		}
 
 		// Make array for additional bookings
