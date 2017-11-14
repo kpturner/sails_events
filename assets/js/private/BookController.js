@@ -313,6 +313,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.balance=$scope.bookingForm.amountPaid?($scope.bookingForm.cost-$scope.bookingForm.amountPaid):null;
 		if ($scope.balance>0 && !$scope.user.isAdmin && !$scope.user.isOrganiser) {
 			$scope.placesMin=(Math.round($scope.bookingForm.amountPaid/$scope.event.price))||1;
+			if ($scope.placesMin>$scope.bookingForm.places) {
+				$scope.placesMin=$scope.bookingForm.places;
+			}
 		}
 
 		// Make array for additional bookings
