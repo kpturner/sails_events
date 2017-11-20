@@ -37,6 +37,9 @@ module.exports.events = {
 	// Email developer on signup
 	emailDeveloperOnSignup: false,
 
+	// Hide closed events on dashboard
+	hideClosedEvents: true,
+
 	// Maintenance mode?
 	maintenance: false,
 
