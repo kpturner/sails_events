@@ -1,1 +1,1 @@
-web: node app.js
+web: eval '$WEB_START_COMMAND'
