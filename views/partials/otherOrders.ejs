@@ -84,8 +84,11 @@
 
             <!-- C E N T R E -->
             <div class="control-group form-group col-xs-10">
-                <label>Centre</label>  
-                <input type="text" class="form-control" placeholder="e.g. Winchester" name="centre_{{order}}" 
+                <label>Centre</label>
+                <select class="form-control" placeholder="e.g. Winchester" name="centre_{{order}}" ng-show="centres" ng-options="centre for centre in centres" ng-model="ordersModel[order].centre">
+                    <option value="">-- choose centre --</option>
+                  </select>  
+                <input type="text" ng-hide="centres" class="form-control" placeholder="e.g. Winchester" name="centre_{{order}}" 
                         ng-model="ordersModel[order].centre">            
             </div>
             
