@@ -195,13 +195,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	// Open for bookings?
 	$scope.openForBookings=true;
-	if (!$scope.eventBookings && !$scope.userBookings && $scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate>SAILS_LOCALS.now) {
-		$scope.openForBookings=false;			
-	}
-
-	$scope.closedForBookings=false;
-	if ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate<SAILS_LOCALS.now) {
-		$scope.closedForBookings=false;			
+	if (($scope.event.UTCClosingDate && $scope.event.UTCClosingDate<SAILS_LOCALS.now) ||
+			(!$scope.eventBookings && !$scope.userBookings && $scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate>SAILS_LOCALS.now)) {
+		$scope.openForBookings=false;				
 	}
 
 	// Warn if not open for bookings
@@ -209,7 +205,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     
     // Check whether or not the booking has been paid for
 	$scope.chkPaid=function(){
-        if(!$scope.closedForBookings && !$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
+        if($scope.openForBookings && !$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
             var opts={
                 template:"/templates/paidWarning.html",
                 className: 'ngdialog-theme-default',
