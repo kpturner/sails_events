@@ -220,7 +220,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     
     // Check whether or not we are actually open for bookings
 	$scope.chkOpenForBookings=function(){
-		if (!$scope.openForBookings && $scope.mode!="delete") {
+		if (!$scope.openForBookings && $scope.mode!="delete" && (!$scope.event.UTCClosingDate || ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate>=SAILS_LOCALS.now))) {
 			var opts={
 				className: 'ngdialog-theme-default'			
 			};
