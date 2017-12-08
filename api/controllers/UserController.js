@@ -272,6 +272,7 @@ module.exports = {
 					mode:mode,
 					salutations: sails.config.events.salutations,
 					areas: Utility.areas(),
+					centres: Utility.centres(),
 					lodgeMandatory: sails.config.events.lodgeMandatory,
 					form:'userdetails',
 					userDetails:user
@@ -283,6 +284,7 @@ module.exports = {
 				mode:mode,
 				salutations: sails.config.events.salutations,
 				areas: Utility.areas(),
+				centres: Utility.centres(),
 				lodgeMandatory: sails.config.events.lodgeMandatory,
 				form:'userdetails',
 				userDetails:{}

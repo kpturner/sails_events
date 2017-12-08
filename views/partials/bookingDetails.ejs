@@ -244,7 +244,10 @@ ng-class="{'has-error':<%-model%>.lodgeno.$invalid &&
   ng-class="{'has-error':<%-model%>.centre.$invalid &&
                         <%-model%>.centre.$dirty}">
   <label>Centre</label>  
-  <input type="text" class="form-control" placeholder="e.g. Woolston" name="centre" ng-model="<%-model%>Form.centre" ng-maxlength="50">  
+  <select class="form-control" placeholder="e.g. South Central" name="centre" ng-show="centres" ng-options="centre for centre in centres" ng-model="<%-model%>Form.centre">
+    <option value="">-- choose centre --</option>
+  </select>
+  <input type="text" class="form-control" ng-hide="centres" placeholder="e.g. Woolston" name="centre" ng-model="<%-model%>Form.centre" ng-maxlength="50">  
   <span class="help-block has-error" ng-if="<%-model%>.centre.$dirty">
     <span ng-show="<%-model%>.centre.$error.maxlength">The centre name cannot be more than 50 characters.</span>
   </span>
@@ -283,13 +286,13 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <input type="number" class="form-control" placeholder="e.g 10" name="tableno" ng-model="<%-model%>Form.tableNo">
 </div>
 
-<!-- V O ? -->
+<!-- E X E C ? -->
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':userdetails.isvo.$invalid &&
                         userdetails.isvo.$dirty}" ng-show="event.voReqd">
     <label>
     <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-model%>Form.isVO" />
-    &nbsp;&nbsp;&nbsp;Visiting Officer?
+    &nbsp;&nbsp;&nbsp;Area Exec (i.e. VO, AVC etc)?
     </label>
 </div>
            
@@ -298,11 +301,11 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-model%>.volodge.$invalid &&
                         <%-model%>.volodge.$dirty}" ng-show="event.voReqd && <%-model%>Form.isVO">
-  <label>VO lodge (if applic.)</label>
+  <label>Exec lodge (if applic.)</label>
   <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="<%-model%>Form.voLodge" ng-maxlength="50" 
     ng-disabled="mode!='create'">  
   <span class="help-block has-error" ng-if="<%-model%>.volodge.$dirty">
-    <span ng-show="<%-model%>.volodge.$error.maxlength">VO lodge name cannot be more than 50 characters.</span>
+    <span ng-show="<%-model%>.volodge.$error.maxlength">Exec lodge name cannot be more than 50 characters.</span>
   </span>
 </div>
 
@@ -310,10 +313,10 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <div class="control-group form-group col-xs-6 col-md-4"
   ng-class="{'has-error':<%-model%>.volodgeno.$invalid &&
                         <%-model%>.volodgeno.$dirty}" ng-show="event.voReqd && <%-model%>Form.isVO">
-  <label>VO lodge number</label>
+  <label>Exec lodge number</label>
   <input type="number" class="form-control"  name="volodgeno" ng-model="<%-model%>Form.voLodgeNo" ng-maxlength="5" ng-disabled="mode!='create'">  
   <span class="help-block has-error" ng-if="<%-model%>.volodgeno.$dirty">
-    <span ng-show="<%-model%>.volodgeno.$error.maxlength">The VO lodge number cannot be more than 5 characters.</span>
+    <span ng-show="<%-model%>.volodgeno.$error.maxlength">The Exec lodge number cannot be more than 5 characters.</span>
   </span>
 </div>
 
@@ -322,16 +325,19 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <div class="control-group form-group col-xs-10" 
   ng-class="{'has-error':<%-model%>.vocentre.$invalid &&
                         <%-model%>.vocentre.$dirty}" ng-show="event.voReqd && <%-model%>Form.isVO">
-  <label>VO centre</label>  
-  <input type="text" class="form-control" placeholder="e.g. Woolston" name="vocentre" ng-model="<%-model%>Form.voCentre" ng-maxlength="50" ng-disabled="mode!='create'">  
+  <label>Exec centre</label>  
+  <select class="form-control" placeholder="e.g. South Central" name="vocentre" ng-show="centres" ng-options="centre for centre in centres" ng-model="<%-model%>Form.voCentre">
+    <option value="">-- choose centre --</option>
+  </select>
+  <input type="text" class="form-control" ng-hide="centres" placeholder="e.g. Woolston" name="vocentre" ng-model="<%-model%>Form.voCentre" ng-maxlength="50" ng-disabled="mode!='create'">  
   <span class="help-block has-error" ng-if="<%-model%>.vocentre.$dirty">
-    <span ng-show="<%-model%>.vocentre.$error.maxlength">The centre name cannot be more than 50 characters.</span>
+    <span ng-show="<%-model%>.vocentre.$error.maxlength">The Exec centre name cannot be more than 50 characters.</span>
   </span>
 </div>
 
 <!-- V O  A R E A -->
 <div class="control-group form-group col-xs-10" ng-show="areas.length>0 && event.voReqd && <%-model%>Form.isVO">
-  <label>VO area</label>  
+  <label>Exec area</label>  
   <select class="form-control" placeholder="e.g. South Central" name="voarea" ng-options="area for area in areas" ng-model="<%-model%>Form.voArea" ng-disabled="mode!='create'">  
     <option value="">-- choose area --</option>
   </select>

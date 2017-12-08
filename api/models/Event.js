@@ -130,7 +130,7 @@ module.exports = {
       type: 'boolean',
     },   
 
-    // Visiting Officers details required? 
+    // Area exec details required? 
     voReqd: {
       type: 'boolean',
     },

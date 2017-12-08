@@ -287,6 +287,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
+
+	// Centres
+	$scope.centres=SAILS_LOCALS.centres;
 	
 	if (!$scope.eventBookings && !$scope.userBookings && !$scope.myBookings)
 		$scope.makingBooking=true;

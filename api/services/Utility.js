@@ -131,6 +131,27 @@ module.exports = {
         return areas
     },
 
+    /**
+     * @name            centres
+     * @method
+     * @description     Return an array of centres
+    
+     * @return {Array} 
+     */
+    centres: () => {
+        var centres=null;
+        if (sails.config.events.centres) {
+            centres=[];
+            if (typeof sails.config.events.centres=="string") {
+                centres.push(sails.config.events.centres)
+            }
+            else {
+                centres=sails.config.events.centres;
+            }
+        }
+        return centres
+    },
+
     isAdmin: function(user,event) {
         var isAdmin=false;
         // Allow for users configured in locals.js to be admins even if their profile says otherwise

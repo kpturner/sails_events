@@ -267,6 +267,7 @@ module.exports = {
 					res.locals.mops=sails.config.events.mops;
 					res.locals.selectedUserId=(selectedUserId)?selectedUserId:"";
 					res.locals.areas=Utility.areas();
+					res.locals.centres=Utility.centres();
 					res.locals.potentialDuplicates=potentialDuplicates;
 					res.locals.lodgeMandatory=sails.config.events.lodgeMandatory;					
 						

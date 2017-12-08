@@ -35,6 +35,9 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
     	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
+
+	// Centres
+	$scope.centres=SAILS_LOCALS.centres;
     
 	// Lodge required
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;

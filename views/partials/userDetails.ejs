@@ -152,8 +152,11 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 <div class="control-group form-group col-xs-10" 
   ng-class="{'has-error':<%-form%>.centre.$invalid &&
                         <%-form%>.centre.$dirty}">
-  <label>Centre</label>  
-  <input type="text" class="form-control" placeholder="e.g. Woolston" name="centre" ng-model="<%-form%>Form.centre" ng-maxlength="50">
+  <label>Centre</label>
+  <select class="form-control" placeholder="e.g. South Central" name="centre" ng-show="centres" ng-options="centre for centre in centres" ng-model="<%-form%>Form.centre">
+    <option value="">-- choose centre --</option>
+  </select>  
+  <input type="text" class="form-control" ng-hide="centres" placeholder="e.g. Woolston" name="centre" ng-model="<%-form%>Form.centre" ng-maxlength="50">
   <span class="help-block has-error" ng-if="<%-form%>.centre.$dirty">
     <span ng-show="<%-form%>.centre.$error.maxlength">The centre name cannot be more than 50 characters.</span>
   </span>

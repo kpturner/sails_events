@@ -28,6 +28,9 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
+	
+	// Centres
+	$scope.centres=SAILS_LOCALS.centres;
 
 	// Lodge required?
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;

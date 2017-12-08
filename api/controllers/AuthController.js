@@ -109,6 +109,7 @@ var AuthController = {
       form: 'signup',
       salutations: sails.config.events.salutations,
       areas: Utility.areas(),
+      centres: Utility.centres(),
       lodgeMandatory: sails.config.events.lodgeMandatory,
       errors: req.flash('error')
     });
@@ -259,6 +260,7 @@ var AuthController = {
       form: 'profile',
       salutations: sails.config.events.salutations,
       areas: Utility.areas(),
+      centres: Utility.centres(),
       errors: req.flash('error'),
       lodgeMandatory: sails.config.events.lodgeMandatory,
       signup: false,
