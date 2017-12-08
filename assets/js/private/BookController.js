@@ -199,12 +199,17 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.openForBookings=false;			
 	}
 
+	$scope.closedForBookings=false;
+	if ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate<SAILS_LOCALS.now) {
+		$scope.closedForBookings=false;			
+	}
+
 	// Warn if not open for bookings
 	$scope.bookingForm.bypassCode="";
     
     // Check whether or not the booking has been paid for
 	$scope.chkPaid=function(){
-        if(!$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
+        if(!$scope.closedForBookings && !$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
             var opts={
                 template:"/templates/paidWarning.html",
                 className: 'ngdialog-theme-default',

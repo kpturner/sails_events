@@ -108,7 +108,7 @@
         <h3 ng-show="balance>0">A BALANCE OF £{{balance}} IS DUE</h3> 
         <h3 ng-show="balance<0">A CREDIT OF £{{balance*-1}} IS DUE</h3> 
         <h4 ng-show="!eventBookings && !userBookings && !openForBookings">NOT OPEN FOR <span ng-hide="event.regInterest">BOOKINGS</span><span ng-show="event.regInterest">REGISTRATION</span> UNTIL {{ event.openingDate | date : 'EEE, MMM dd, yyyy'}}</h4>      
-        <h4 ng-show="!user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid && mode!='delete'"><i>Contact the organiser to reduce the number of places booked</i></h4>      
+        <h4 ng-show="!closedForBookings !user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid && mode!='delete'"><i>Contact the organiser to reduce the number of places booked</i></h4>      
         <h4 ng-show="!eventBookings && !userBookings && paid && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>
         <h4 ng-show="(eventBookings || userBookings) && !paid && bookingForm.remindersSent && bookingForm.remindersSent>0"><b>PAYMENT REMINDERS SENT: {{bookingForm.remindersSent}}</b></h4>   
         <h4 ng-show="(eventBookings || userBookings) && !paid && bookingForm.lastPaymentReminder"><b>LAST PAYMENT REMINDER: {{ bookingForm.lastPaymentReminder | date : 'EEE, MMM dd, yyyy'}}</b></h4>  
