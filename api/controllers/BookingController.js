@@ -2187,10 +2187,16 @@ module.exports = {
 			row.mop=mop;	
             row.creationDate=booking.bookingDate;
 			if (voReqd && booking.user.isVO) {
-				row.execLodge=booking.user.voLodge;
-				row.execLodgeNo=booking.user.voLodgeNo;
-				row.execCentre=booking.user.voCentre;
-				row.execArea=booking.user.voArea;
+				row.voLodge=booking.user.voLodge;
+				row.voLodgeNo=booking.user.voLodgeNo;
+				row.voAvcCentre=booking.user.voCentre;
+				row.voAvcAcArea=booking.user.voArea;
+			}
+			else {
+				row.voLodge="";
+				row.voLodgeNo="";
+				row.voAvcCentre="";
+				row.voAvcAcArea="";
 			}
             //row.createdAt=booking.createdAt;        
 			

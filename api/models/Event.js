@@ -130,7 +130,7 @@ module.exports = {
       type: 'boolean',
     },   
 
-    // Area exec details required? 
+    // VO (or AVC) details required? 
     voReqd: {
       type: 'boolean',
     },

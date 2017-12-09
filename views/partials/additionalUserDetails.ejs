@@ -42,7 +42,7 @@
                                   userdetails.isvo.$dirty}">
               <label>
               <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-form%>Form.isVO" />
-              &nbsp;&nbsp;&nbsp;Area Exec (i.e. VO, AVC etc)?
+              &nbsp;&nbsp;&nbsp;VO/AVC/AC?
               </label>
           </div>
                     
@@ -51,7 +51,7 @@
           <div class="control-group form-group col-xs-10"
             ng-class="{'has-error':<%-form%>.volodge.$invalid &&
                                   <%-form%>.volodge.$dirty}" ng-hide="!<%-form%>Form.isVO">
-            <label>Exec lodge (if applic.)</label>
+            <label>VO lodge (if applic.)</label>
             <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="<%-form%>Form.voLodge" ng-maxlength="50" >
             <span class="help-block has-error" ng-if="<%-form%>.volodge.$dirty">
               <span ng-show="<%-form%>.volodge.$error.maxlength">Exec lodge name cannot be more than 50 characters.</span>
@@ -62,7 +62,7 @@
           <div class="control-group form-group col-xs-6 col-md-4"
             ng-class="{'has-error':<%-form%>.volodgeno.$invalid &&
                                   <%-form%>.volodgeno.$dirty}" ng-hide="!<%-form%>Form.isVO">
-            <label>Exec lodge number</label>
+            <label>VO lodge number</label>
             <input type="number" class="form-control"  name="volodgeno" ng-model="<%-form%>Form.voLodgeNo" ng-min="1" ng-maxlength="5" >
             <span class="help-block has-error" ng-if="<%-form%>.volodgeno.$dirty">
               <span ng-show="<%-form%>.volodgeno.$error.maxlength">The Exec lodge number cannot be more than 5 characters.</span>
@@ -75,7 +75,7 @@
           <div class="control-group form-group col-xs-10" 
             ng-class="{'has-error':<%-form%>.vocentre.$invalid &&
                                   <%-form%>.vocentre.$dirty}" ng-hide="!<%-form%>Form.isVO">
-            <label>Exec centre</label>  
+            <label>VO/AVC centre</label>  
             <input type="text" class="form-control" placeholder="e.g. Woolston" name="vocentre" ng-hide="centres" ng-model="<%-form%>Form.voCentre" ng-maxlength="50">
             <select class="form-control" placeholder="e.g. South Central" name="vocentre" ng-show="centres" ng-options="centre for centre in centres" ng-model="<%-form%>Form.voCentre">
               <option value="">-- choose centre --</option>
@@ -87,7 +87,7 @@
 
           <!-- V O  A R E A -->
           <div class="control-group form-group col-xs-10" ng-hide="areas.length==0 || !<%-form%>Form.isVO">
-            <label>Exec area</label>  
+            <label>VO/AVC/AC area</label>  
             <select class="form-control" placeholder="e.g. South Central" name="voarea" ng-options="area for area in areas" ng-model="<%-form%>Form.voArea">
               <option value="">-- choose area --</option>
             </select>

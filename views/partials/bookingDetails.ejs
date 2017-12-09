@@ -292,7 +292,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
                         userdetails.isvo.$dirty}" ng-show="event.voReqd">
     <label>
     <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-model%>Form.isVO" />
-    &nbsp;&nbsp;&nbsp;Area Exec (i.e. VO, AVC etc)?
+    &nbsp;&nbsp;&nbsp;VO/AVC/AC?
     </label>
 </div>
            
@@ -301,7 +301,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <div class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-model%>.volodge.$invalid &&
                         <%-model%>.volodge.$dirty}" ng-show="event.voReqd && <%-model%>Form.isVO">
-  <label>Exec lodge (if applic.)</label>
+  <label>VO lodge (if applic.)</label>
   <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="<%-model%>Form.voLodge" ng-maxlength="50" 
     ng-disabled="mode!='create'">  
   <span class="help-block has-error" ng-if="<%-model%>.volodge.$dirty">
@@ -313,7 +313,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <div class="control-group form-group col-xs-6 col-md-4"
   ng-class="{'has-error':<%-model%>.volodgeno.$invalid &&
                         <%-model%>.volodgeno.$dirty}" ng-show="event.voReqd && <%-model%>Form.isVO">
-  <label>Exec lodge number</label>
+  <label>VO lodge number</label>
   <input type="number" class="form-control"  name="volodgeno" ng-model="<%-model%>Form.voLodgeNo" ng-maxlength="5" ng-disabled="mode!='create'">  
   <span class="help-block has-error" ng-if="<%-model%>.volodgeno.$dirty">
     <span ng-show="<%-model%>.volodgeno.$error.maxlength">The Exec lodge number cannot be more than 5 characters.</span>
@@ -325,7 +325,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 <div class="control-group form-group col-xs-10" 
   ng-class="{'has-error':<%-model%>.vocentre.$invalid &&
                         <%-model%>.vocentre.$dirty}" ng-show="event.voReqd && <%-model%>Form.isVO">
-  <label>Exec centre</label>  
+  <label>VO/AVC centre</label>  
   <select class="form-control" placeholder="e.g. South Central" name="vocentre" ng-show="centres" ng-options="centre for centre in centres" ng-model="<%-model%>Form.voCentre">
     <option value="">-- choose centre --</option>
   </select>
@@ -337,7 +337,7 @@ ng-class="{'has-error':<%-model%>.tableno.$invalid &&
 
 <!-- V O  A R E A -->
 <div class="control-group form-group col-xs-10" ng-show="areas.length>0 && event.voReqd && <%-model%>Form.isVO">
-  <label>Exec area</label>  
+  <label>VO/AVC/AC area</label>  
   <select class="form-control" placeholder="e.g. South Central" name="voarea" ng-options="area for area in areas" ng-model="<%-model%>Form.voArea" ng-disabled="mode!='create'">  
     <option value="">-- choose area --</option>
   </select>
