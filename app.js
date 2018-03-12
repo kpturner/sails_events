@@ -25,7 +25,7 @@ process.chdir(__dirname);
 var sails;
 
 // Ensure a "sails" can be located:
-(function() {  
+(function() {
   try {
     sails = require('sails');
   } catch (e) {
@@ -63,30 +63,30 @@ process.on('uncaughtException', function (err) {
     try {
         var msg='uncaughtException: '+err.message;
         msg+="<br>"+err.stack;
+        console.log(msg);
         if (sails && Utility) {
             sails.log.error('uncaughtException:', err.message);
             sails.log.error(err.stack);
             Utility.diagnosticEmail(msg,"Application crash",function(){
                 process.exit(1);   //Forever should restart us;
-            }); 
+            });
             // Make sure we exit if the email sending fails
-            setTimeout(function(){process.exit(1)},5000)  
+            setTimeout(function(){process.exit(1)},5000)
         }
         else {
-            console.log(msg);
             process.exit(1);   //Forever should restart us;
         }
     }
     catch(e) {
         if (sails) {
             sails.log.error("Error handling uncaught exception");
-            sails.log.error(e);            
+            sails.log.error(e);
         }
         else {
             console.log("Error handling uncaught exception");
-            console.log(e);  
+            console.log(e);
         }
         process.exit(1);   //Forever should restart us;
     }
-    
-})  
+
+})

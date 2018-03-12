@@ -1,18 +1,18 @@
 angular.module('EventsModule').controller('BookController', ['$scope', '$http', 'toastr', 'ngDialog', function($scope, $http, toastr, ngDialog){
 
-	
+
 	$scope.bookingForm = {
 		loading: false,
 		transferring: false,
 	}
 
-		
-	// Initialise "user" in the scope with the data set in the view script 
+
+	// Initialise "user" in the scope with the data set in the view script
 	$scope.user=SAILS_LOCALS.user;
 	$scope.event=SAILS_LOCALS.event;
 	$scope.mode=SAILS_LOCALS.mode;
 	$scope.selectedUserId=SAILS_LOCALS.selectedUserId; // Only populated when the administrator is making a booking on behalf of another user
-	
+
 	// Lodge required
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
 
@@ -31,17 +31,17 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	else {
 		$scope.orderlabel="Lodge";
 	}
-	
+
 	// Enable a repeater for additional attendees
 	$scope.linkedbookings=[];
 	$scope.linkedbookingsArr=[];
-	
+
 	// makeArray is called every time the number of places changes
 	$scope.makeArray = function(){
 		$scope.linkedbookingsArr.length=0;
 		for (var i=0;i<(parseInt($scope.bookingForm.places)-1);i++) {
 			$scope.linkedbookingsArr.push(i);
-		} 
+		}
 	}
 
 	// addGuest - a button to simply increment the number of places
@@ -50,14 +50,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.makeArray();
 	}
 
-	// RemoveGuest - Remove a guest 
+	// RemoveGuest - Remove a guest
 	$scope.removeGuest = function($event) {
 		var index=parseInt($($event.target).attr("name").replace("heading_",""));
 		$scope.linkedbookingsArr.pop();
 		$scope.linkedbookings.splice(index,1);
 		$scope.bookingForm.places-=1;
 	}
-	
+
 	// Build a list of MOPs from the config for the MOP dropdown
 	//$scope.mops=[];
 	//$.each(SAILS_LOCALS.mops, function(){
@@ -75,10 +75,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.initialiseLodgeInfo = function(userId,userOrders){
 
 		// <ake sure lodge numbers are numeric before starting
-		$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo);								
+		$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo);
 		if ($scope.bookingForm.voLodgeNo) {
-			$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
-		} 			
+			$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo);
+		}
 
 		// First of all get the users orders if not passed
 		if (userOrders) {
@@ -89,7 +89,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			$http.get("/otherorders/"+userId).success(function(data, status) {
 				if (typeof data == 'object') {
 					setInfo(data);
-				}				
+				}
 			})
 			.error(function(data, status, headers, config) {
 				console.log("Error retrieving other orders "+SAILS_LOCALS.userDetails.id)
@@ -108,23 +108,23 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						$scope.bookingForm.salutation=order.salutation;
 						$scope.bookingForm.centre=order.centre;
 						$scope.bookingForm.area=order.area;
-						$scope.bookingForm.rank=order.rank;	
+						$scope.bookingForm.rank=order.rank;
 						return false;
 					}
 				})
 			}
 			else {
 				// Convert lodge no to numeric
-				$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo);								
-			}	
+				$scope.bookingForm.lodgeNo = parseInt($scope.bookingForm.lodgeNo);
+			}
 			if ($scope.bookingForm.voLodgeNo) {
-				$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo); 	 
-			} 			
+				$scope.bookingForm.voLodgeNo = parseInt($scope.bookingForm.voLodgeNo);
+			}
 		}
 
 
-	} 
-	
+	}
+
 	// Do we have an existing booking to edit?
 	$scope.existingBooking=false;
 	$scope.deadline=SAILS_LOCALS.booking.deadline;
@@ -135,53 +135,53 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							$scope.event.maxBookingPlaces;
 	$scope.placesMax=($scope.event.capacity>=maxPlaces)?maxPlaces:$scope.event.capacity;
 	$scope.placesMin=$scope.event.minBookingPlaces||1;
-	
+
 	if ($scope.placesMin>$scope.placesMax) {
 		$scope.placesMin=$scope.placesMax
-	}	
+	}
 	if ($scope.mode!="create") {
 		if (SAILS_LOCALS.booking.id) {
-			$scope.bookingForm = SAILS_LOCALS.booking.user;			
+			$scope.bookingForm = SAILS_LOCALS.booking.user;
 			// Is the administrator managing a booking for somebody else?
 			if (SAILS_LOCALS.booking.user.id!=$scope.user.id) {
-				$scope.userBookings=true;	
-				$scope.selectedUserId=SAILS_LOCALS.booking.user.id;				
+				$scope.userBookings=true;
+				$scope.selectedUserId=SAILS_LOCALS.booking.user.id;
 			}
 			$scope.initialiseLodgeInfo(SAILS_LOCALS.booking.user.id);
 			// In this case we can allow the maximum places to be the same as the number of places on the booking
-			// so that (if the event has been changed to have fewer places per booking) we don't cause 
-			// confusion 
-			$scope.placesMax=(SAILS_LOCALS.booking.places>$scope.placesMax)?SAILS_LOCALS.booking.places:$scope.placesMax;	
+			// so that (if the event has been changed to have fewer places per booking) we don't cause
+			// confusion
+			$scope.placesMax=(SAILS_LOCALS.booking.places>$scope.placesMax)?SAILS_LOCALS.booking.places:$scope.placesMax;
 		}
 		else {
 			$scope.bookingForm = angular.extend($scope.bookingForm,$scope.user);
-			$scope.initialiseLodgeInfo($scope.user.id);							
-		}		
-		$scope.paidMsg="";		
+			$scope.initialiseLodgeInfo($scope.user.id);
+		}
+		$scope.paidMsg="";
 		// Initialise confirmation email
-		$scope.bookingForm.confirmemail = $scope.bookingForm.email;		
-	}	
+		$scope.bookingForm.confirmemail = $scope.bookingForm.email;
+	}
 	else {
 		if ($scope.selectedUserId) {
 			// Administrator is booking on behalf of another user
-			$scope.userBookings=true;			
+			$scope.userBookings=true;
 			$http.get("/user/"+	$scope.selectedUserId)
 				.success(function(data,status){
 					if (!SAILS_LOCALS.booking.id) {
 						$scope.bookingForm.places=$scope.placesMin;
 					}
 					else {
-						$scope.bookingForm.places = SAILS_LOCALS.booking.places;	
-					}              					
+						$scope.bookingForm.places = SAILS_LOCALS.booking.places;
+					}
 					if ($scope.bookingForm.places>1)
-						$scope.makeArray();			
+						$scope.makeArray();
 					$scope.bookingForm=angular.extend($scope.bookingForm,data);
 					$scope.paidMsg="";
 
 					$scope.initialiseLodgeInfo($scope.selectedUserId,data.orders);
-					
+
 					// Initialise confirmation email
-					$scope.bookingForm.confirmemail = $scope.bookingForm.email;					
+					$scope.bookingForm.confirmemail = $scope.bookingForm.email;
 				})
 				.error(function(data, status, headers, config) {
 					console.log("Error retrieving selected user for booking "+$scope.selectedUserId)
@@ -191,38 +191,38 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			/////Not necessary to do this because we are effectively bookingin a dummy user
 			/////$scope.initialiseLodgeInfo($scope.user.id);
 		}
-	}	
+	}
 
 	// Open for bookings?
 	$scope.openForBookings=true;
-	if (($scope.event.UTCClosingDate && $scope.event.UTCClosingDate<SAILS_LOCALS.now) ||
+	if (!SAILS_LOCALS.isAdmin && ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate<SAILS_LOCALS.now) ||
 			(!$scope.eventBookings && !$scope.userBookings && $scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate>SAILS_LOCALS.now)) {
-		$scope.openForBookings=false;				
+		$scope.openForBookings=false;
 	}
 
 	// Warn if not open for bookings
 	$scope.bookingForm.bypassCode="";
-    
+
     // Check whether or not the booking has been paid for
 	$scope.chkPaid=function(){
         if($scope.openForBookings && !$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode!='delete') {
             var opts={
                 template:"/templates/paidWarning.html",
                 className: 'ngdialog-theme-default',
-                scope: $scope	
+                scope: $scope
 			};
-			 
+
 			// Pop the dialog
 			ngDialog.open(opts)
-			 
+
         }
     }
-    
+
     // Check whether or not we are actually open for bookings
 	$scope.chkOpenForBookings=function(){
 		if (!$scope.openForBookings && $scope.mode!="delete" && (!$scope.event.UTCClosingDate || ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate>=SAILS_LOCALS.now))) {
 			var opts={
-				className: 'ngdialog-theme-default'			
+				className: 'ngdialog-theme-default'
 			};
 			var erOpts=$.extend({},opts);
 			opts.template="/templates/notOpenForBookings.html";
@@ -240,31 +240,31 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
                             bypassCode:$scope.bookingForm.bypassCode
                         })
 						.success(function(data, status) {
-							$scope.openForBookings=true;		
+							$scope.openForBookings=true;
 						}).
 						error(function(data, status, headers, config) {
 							ngDialog.open(erOpts)
-								.closePromise.then(function (value) {								 
-									$scope.chkOpenForBookings();							
-								});	
-						});				
-						
+								.closePromise.then(function (value) {
+									$scope.chkOpenForBookings();
+								});
+						});
+
 				}, function (reason) {
 					// Cannot continue
 				});
 		}
 	}
-	
+
 	// Check if open for bookings
 	$scope.chkOpenForBookings();
-	
+
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
 
 	// User categories
 	$scope.userCategories=SAILS_LOCALS.userCategories;
-	
-	
+
+
 	// Display the payment details & blurb
 	$scope.bookingForm.paymentDetails=$scope.event.paymentDetails;
 	$scope.bookingForm.blurb=$scope.event.blurb;
@@ -273,7 +273,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	// Payment reminder info
 	if (!$scope.bookingForm.paid) {
-		// When is the next reminder due?		
+		// When is the next reminder due?
 		if (SAILS_LOCALS.booking.remindersSent && SAILS_LOCALS.booking.remindersSent>0) {
 			// Add the interval to the last reminder date
 			$scope.nextPaymentReminder=new Date();
@@ -282,15 +282,15 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			if ($scope.nextPaymentReminder>cd) {
 				$scope.nextPaymentReminder=cd;
 			}
-		}		
+		}
 	}
-	
+
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
 
 	// Centres
 	$scope.centres=SAILS_LOCALS.centres;
-	
+
 	if (!$scope.eventBookings && !$scope.userBookings && !$scope.myBookings)
 		$scope.makingBooking=true;
 
@@ -307,7 +307,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.mop = SAILS_LOCALS.booking.mop;
 		$scope.bookingForm.tableNo = SAILS_LOCALS.booking.tableNo;
 		$scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;
-		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;        
+		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
 		$scope.bookingForm.info = SAILS_LOCALS.booking.info;
 		$scope.bookingForm.places = SAILS_LOCALS.booking.places;
 		$scope.bookingForm.remindersSent = SAILS_LOCALS.booking.remindersSent;
@@ -328,29 +328,29 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		if (SAILS_LOCALS.booking.places>1) {
 			$http.get("/linkedbooking/"+SAILS_LOCALS.booking.id).success(function(data, status) {
 				if (typeof data == 'object') {
-					$scope.linkedbookings=data;	 	
+					$scope.linkedbookings=data;
 					$scope.linkedbookings.forEach(function(v,i){
 						$scope.linkedbookings[i].lodgeNo=parseInt($scope.linkedbookings[i].lodgeNo)
-					})		
-				}				
+					})
+				}
 			}).
 			error(function(data, status, headers, config) {
 		   		console.log("Error retrieving linked bookings for booking "+SAILS_LOCALS.booking.id)
 		  	});
-			
+
 		}
-        
-        
+
+
         // Check if paid
         $scope.chkPaid();
-		
+
 	}
 	else {
 		if (!$scope.selectedUserId) {
 			$scope.bookingForm.places=$scope.placesMin;
 			if ($scope.bookingForm.places>1)
 				$scope.makeArray();
-		}		
+		}
 	}
 
 
@@ -366,14 +366,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// Pop the dialog
 		ngDialog.open(opts);
 	}
-	
+
 
 	/**
 	 * Test if the details are complete on the booking
 	 */
 	$scope.detailsComplete = function() {
 		errors=[];
-		validations=[]; 
+		validations=[];
 		var complete=true;
 		if (!$scope.bookingForm.salutation || $scope.bookingForm.salutation.length==0) {
 			complete=false;
@@ -394,7 +394,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			complete=false;
 			errors.push("First name");
 			validations.push($scope.booking.firstname);
-		} 
+		}
 		if ($scope.event.addressReqd && (!$scope.bookingForm.address1 || $scope.bookingForm.address1.length==0)) {
 			complete=false;
 			errors.push("Address line 1");
@@ -407,18 +407,18 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 		if ($scope.event.areaReqd && $scope.areas.length>0 && (!$scope.bookingForm.area || $scope.bookingForm.area.length==0)) {
 			complete=false;
-			errors.push("Area");	
-			validations.push($scope.booking.area);		
+			errors.push("Area");
+			validations.push($scope.booking.area);
 		}
 		if (($scope.bookingForm.email && (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0))
 			|| ($scope.bookingForm.confirmemail && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))
-			|| ($scope.bookingForm.email && $scope.bookingForm.confirmemail && $scope.bookingForm.email!=$scope.bookingForm.confirmemail) 
+			|| ($scope.bookingForm.email && $scope.bookingForm.confirmemail && $scope.bookingForm.email!=$scope.bookingForm.confirmemail)
 			) {
 			complete=false;
 			errors.push("Enter matching email address twice or not at all");
 			validations.push($scope.booking.email);
 			validations.push($scope.booking.confirmemail);
-		}		
+		}
 		if (!$scope.eventBookings && !$scope.userBookings) {
 			if ($scope.lodgeMandatory && (!$scope.bookingForm.lodge || $scope.bookingForm.lodge.length==0)) {
 				complete=false;
@@ -434,11 +434,11 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				complete=false;
 				errors.push("Email address");
 				validations.push($scope.booking.email);
-			}	
+			}
 			//if (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0) {
 			//	complete=false;
 			//	errors.push("Email confirmation ()")
-			//}	
+			//}
 		}
 		if ($scope.bookingForm.places>1) {
 			if (!$scope.linkedbookings || $scope.linkedbookings.length==0) {
@@ -477,21 +477,21 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					}
 				}
 			}
-			
-		} 
-			
+
+		}
+
 		if (!complete) {
 			$scope.validationErrors(errors);
 			angular.forEach(validations,function(field){
-				field.$setDirty();	
-				field.$setValidity("required",false);	
+				field.$setDirty();
+				field.$setValidity("required",false);
 			})
 			$scope.bookingForm.loading=false;
 		}
 
 		return complete;
-	}		
-	
+	}
+
 
 	/**
 	 * Validation errors
@@ -508,17 +508,17 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			};
 			// Pop the dialog
 			ngDialog.open(opts);
-			
+
 		}
 	}
 
 	/**
 	 * Submit booking
-	 */	
+	 */
 	$scope.submitBookingForm = function(){
-		
+
 		$scope.bookingForm.loading=true;
-		
+
 		if ($scope.mode=="delete") {
 			$scope.proceed();
 		}
@@ -530,31 +530,31 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			else {
 				$scope.linkedbookings=$.grep($scope.linkedbookings,function(obj,n){
 					return (n<=($scope.bookingForm.places-2))
-				})	
-			}	
-			
+				})
+			}
+
 			// Validation checking
 			if ($scope.detailsComplete()) {
 				// If we have additional linked bookings, do a quick check that that are not
 				// potentially double booked before proceeding
 				if ($scope.bookingForm.places<2) {
 					$scope.proceed()
-				}	
+				}
 				else {
 					$http.post("/validateadditions",{
 						_csrf: SAILS_LOCALS._csrf,
-						eventId: $scope.event.id,	
+						eventId: $scope.event.id,
 						linkedBookings: $scope.linkedbookings,
 						bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 					})
-					.then(function onSuccess(sailsResponse){	
+					.then(function onSuccess(sailsResponse){
 						if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {
-							toastr.error("Your session has expired. Please log in again")	
+							toastr.error("Your session has expired. Please log in again")
 							setTimeout(function(){
 								window.location="/homepage";
 							},1000);
 							return;
-						}		 
+						}
 						if (sailsResponse.data.length==0) {
 							// No potential problems
 							$scope.proceed()
@@ -576,53 +576,53 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 									// They bottled it
 									$scope.bookingForm.loading = false;
 								});
-								
+
 						}
 					})
-					.catch(function onError(sailsResponse){			 
+					.catch(function onError(sailsResponse){
 						// Cannot do much here
 					})
 					.finally(function eitherWay(){
 						// Nothing to do
 					})
-				}	
-			} 
+				}
+			}
 		}
-		
+
 	}
- 
-	
+
+
 	/**
 	 * Proceed with booking after successful checks
-	 * 
+	 *
 	 */
 	 // Private function to proceed with booking
 	$scope.proceed=function(){
-		
+
 		if ($scope.mode=="delete") {
 			// The only "mode" we care about is delete, since "create" is handled as a normal booking
 			var cancelBooking=function(){
 				$http.post('/updatebooking/'+$scope.mode, {
                     _csrf: SAILS_LOCALS._csrf,
-					bookingid: SAILS_LOCALS.booking.id			 
+					bookingid: SAILS_LOCALS.booking.id
 				})
 				.then(function onSuccess(sailsResponse){
 					if ($scope.event.regInterest) {
 						if ($scope.myBookings) {
-							toastr.success("You have successfully cancelled your interest")	
+							toastr.success("You have successfully cancelled your interest")
 						}
 						else {
-							toastr.success("You have successfully cancelled the interest")	
+							toastr.success("You have successfully cancelled the interest")
 						}
 					}
 					else {
 						if ($scope.myBookings) {
-							toastr.success("You have successfully cancelled your booking")	
+							toastr.success("You have successfully cancelled your booking")
 						}
 						else {
-							toastr.success("You have successfully cancelled the booking")	
+							toastr.success("You have successfully cancelled the booking")
 						}
-					}					
+					}
 					setTimeout(function(){
 						if ($scope.myBookings)
 							window.location='/mybookings'
@@ -631,21 +631,21 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						else if ($scope.userBookings)
 							window.location='/userbookings?userid='+$scope.selectedUserId;
 						else
-							window.location = '/'	
-					},1000)				
+							window.location = '/'
+					},1000)
 				})
 				.catch(function onError(sailsResponse){
-		
+
 					// Handle known error type(s).
 					toastr.error(sailsResponse.data, 'Error');
 					$scope.bookingForm.loading = false;
-		
+
 				})
 				.finally(function eitherWay(){
 					//$scope.bookingForm.loading = false;
 				})
 			}
-			
+
 			// If we are cancelling a paid up booking, seek confirmation
 			if ($scope.bookingForm.paid) {
 				var opts={
@@ -661,23 +661,23 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	                }, function (reason) {
 						// They bottled it
 	                    $scope.bookingForm.loading = false;
-	                });	
+	                });
 			}
 			else {
 				cancelBooking();
-			}			
-			
-			
+			}
+
+
 		}
 		else {
-						
+
 			/**
 			 * Private function to make the booking
-			 */	
+			 */
 			var makeBooking=function(route){
 				$http.post(route, {
                     _csrf: SAILS_LOCALS._csrf,
-					eventid: $scope.event.id,	
+					eventid: $scope.event.id,
 					salutation: $scope.bookingForm.salutation,
 					name: $scope.bookingForm.name,
 					surname: $scope.bookingForm.surname,
@@ -711,20 +711,20 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					linkedBookings: $scope.linkedbookings,
 					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 				})
-				.then(function onSuccess(sailsResponse){	
+				.then(function onSuccess(sailsResponse){
 					//console.log(sailsResponse)
 					$scope.booking=sailsResponse.data;
 					if ($scope.event.regInterest) {
 						if (SAILS_LOCALS.booking.id)	{
 							// An update rather than a new booking
 							if ($scope.eventBookings || $scope.userBookings) {
-								toastr.success("The interest has been updated successfully")								
+								toastr.success("The interest has been updated successfully")
 							}
 							else {
 								toastr.success("Your interest has been updated successfully")
-							}	
+							}
 						}
-						else {							
+						else {
 							toastr.success("Interest registration was successful")
 						}
 					}
@@ -732,26 +732,26 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						if (SAILS_LOCALS.booking.id)	{
 							// An update rather than a new booking
 							if ($scope.eventBookings || $scope.userBookings) {
-								toastr.success("The booking has been updated successfully")								
+								toastr.success("The booking has been updated successfully")
 							}
 							else {
 								toastr.success("Your booking has been updated successfully")
-							}	
+							}
 						}
 						else {
 							if ($scope.eventBookings || $scope.userBookings) {
 								toastr.success("The booking was successful")
-							}							
+							}
 							else {
  								toastr.success("Your booking was successful")
-							}		 
+							}
 						}
-					}					
-					// For my bookings or ordinary bookings we will issue a confirmation dialog, 
+					}
+					// For my bookings or ordinary bookings we will issue a confirmation dialog,
 					// otherwise we will return to where we came from
 					if ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id || $scope.selectedUserId) {
 						$scope.finish();
-					}	
+					}
 					else {
 						var opts={
 							template:"/templates/bookingConfirmation.html",
@@ -760,17 +760,17 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						};
 						// Pop the dialog
 						ngDialog.open(opts)
-							.closePromise.then(function (value) {								 
+							.closePromise.then(function (value) {
 								if ($scope.myBookings)
 									window.location='/mybookings'
 								else
-									window.location = '/'								
+									window.location = '/'
 							});
-												
+
 					}
-					
+
 				})
-				.catch(function onError(sailsResponse){			 
+				.catch(function onError(sailsResponse){
 					// Handle known error type(s).
 					toastr.error(sailsResponse.data, 'Error');
 					$scope.bookingForm.loading = false;
@@ -782,30 +782,30 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					//	else if ($scope.userBookings)
 					//		window.location='/userbookings?userid='+$scope.selectedUserId;
 					//	else
-					//		window.location = '/'	
-					//},3000)				
+					//		window.location = '/'
+					//},3000)
 				})
 				.finally(function eitherWay(){
 					//$scope.bookingForm.loading = false;
 				})
 			}
 			/*****************************************************************/
-			
-			// Normal booking creation/update	
+
+			// Normal booking creation/update
 			var route='/makebooking';
 			if ($scope.mode=="create") {
 				route+='/create';
 				// Check that we are not booking in a user that is potentially already registered
 				if (!$scope.selectedUserId) {
-                    
+
                     var uriEncodeSimpleJson=function(json) {
                         var out={}
                         angular.forEach(json,function(v,n){
                             out[n]=encodeURIComponent(v);
                         })
                         return out;
-                    }  
-					
+                    }
+
                     var sc=uriEncodeSimpleJson($scope.bookingForm);
 					var searchClause='where={"or":[{';
 					// First name, surname (and possibly lodge and lodge number) match
@@ -823,12 +823,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						searchClause+=',{"email":"'+sc.email+'"}';
 					}
 					searchClause+=']}'
-				 
+
 					$http.get("/user?_csrf="+SAILS_LOCALS._csrf+"&"+searchClause)
 					.then(function(sailsResponse){
 						// Session expired?
 						if (typeof sailsResponse.data=="string" && sailsResponse.data.indexOf("<!-- HOMEPAGE -->")>=0) {
-							toastr.error("Your session has expired. Please log in again")	
+							toastr.error("Your session has expired. Please log in again")
 							setTimeout(function(){
 								window.location="/homepage";
 							},1000);
@@ -846,7 +846,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 								.then(function (value) {
 									// Continue with booking for the duplicate user we found
                                     if ($scope.event.addressReqd) {
-                                        // If the user doesn't yet have any address information, 
+                                        // If the user doesn't yet have any address information,
                                         // use the address info the booking address
                                         if (!$scope.duplicateUser.address1) {
                                             $scope.duplicateUser.address1=$scope.bookingForm.address1;
@@ -854,34 +854,34 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
                                             $scope.duplicateUser.address3=$scope.bookingForm.address3;
                                             $scope.duplicateUser.address4=$scope.bookingForm.address4;
                                             $scope.duplicateUser.postcode=$scope.bookingForm.postcode;
-                                        }           
+                                        }
                                     }
 									angular.forEach($scope.duplicateUser,function(value,key){
-										$scope.bookingForm[key]=$scope.duplicateUser[key]	
-									})	
-                                    route+="?selecteduserid="+$scope.duplicateUser.id; 								
+										$scope.bookingForm[key]=$scope.duplicateUser[key]
+									})
+                                    route+="?selecteduserid="+$scope.duplicateUser.id;
 									makeBooking(route);
 				                }, function (reason) {
 									// They bottled it
 				                    $scope.bookingForm.loading = false;
-				                });	
+				                });
 						}
-						else 
+						else
 							makeBooking(route);
-					})	
+					})
 				}
 				else {
 					// Administrator making a booking for another user
-					route+="?selecteduserid="+$scope.selectedUserId; 
+					route+="?selecteduserid="+$scope.selectedUserId;
 					makeBooking(route);
 				}
 			}
 			else {
 				makeBooking(route);
-			}			 
-			
-		}				
-		
+			}
+
+		}
+
 	}
 
 	$scope.transferBooking = function() {
@@ -915,22 +915,22 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
                                  toastr.error(sailsResponse.data, 'Error');
 								 $scope.bookingForm.transferring=false;
                             })
-                        }, 
+                        },
                         function (reason) {
                             // Do nothing
 							$scope.bookingForm.transferring=false;
-                        });						
+                        });
                 }
                 else {
-                     toastr.error(origResponse.data, 'Error');  
+                     toastr.error(origResponse.data, 'Error');
                 }
             })
             .catch(function onError(sailsResponse){
-    
+
                 // Handle known error type(s).
                 toastr.error(sailsResponse.data, 'Error');
                 $scope.bookingForm.transferring=false;
-    
+
             })
             .finally(function eitherWay(){
                 // Nothing to do
@@ -948,7 +948,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				window.location='/userbookings?userid='+$scope.selectedUserId;
 			else
 				window.location = '/'
-		},1000);	
+		},1000);
 	}
 
 }])
