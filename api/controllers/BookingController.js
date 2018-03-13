@@ -261,7 +261,7 @@ module.exports = {
 						res.locals.event.capacity=0;
 					}
 					res.locals.booking=existingBooking;
-					res.locals.isAdmin=Utility.isAdmin(req.user,existingBooking.event)
+					res.locals.isAdmin=existingBooking ? Utility.isAdmin(req.user,existingBooking.event) : false;
 					res.locals.myBookings=myBookings;
 					res.locals.eventBookings=eventBookings;
 					res.locals.userBookings=userBookings;
