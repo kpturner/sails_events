@@ -37,7 +37,7 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		$scope.viewOnly		=SAILS_LOCALS.viewOnly;
 		// For view only we only want to see the name
 		if ($scope.viewOnly) {
-			$scope.bookingCardHeight = "100px";
+			$scope.bookingCardHeight = "40px";
 			$scope.filterForm.criteria.sortByName=true;
 		}
 		// If not view only then make it so anyway if the user is not an admin or the organiser

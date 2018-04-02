@@ -3,7 +3,8 @@
         <div class="photo-description" style="height:{{mother.bookingCardHeight}}">
             <div>
                 <div class="user-name {{card.user.nameClass}}">
-                    <h3>{{card.user.surname}}, {{card.user.firstName}}</h3>
+                    <h3 ng-hide="mother.viewOnly">{{card.user.surname}}, {{card.user.firstName}}</h3>
+                    <h5 ng-show="mother.viewOnly">{{card.user.surname}}, {{card.user.firstName}}</h5>
                 </div>
                 <div ng-show="card.user.showPicture && !mother.viewOnly" class="user-picture-right">
                     <img src="{{card.user.gravatarUrl}}" class="user-avatar"></img>
