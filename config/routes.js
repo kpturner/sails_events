@@ -45,6 +45,7 @@ module.exports.routes = {
   'get /dashboard': 'AuthController.dashboard',
   'get /logout': 'AuthController.logout',
   'get /register': 'AuthController.register',
+  'get /privacy': 'AuthController.privacy',
 
   'post /auth/local': 'AuthController.callback',
   'post /auth/local/:action': 'AuthController.callback',
@@ -54,13 +55,13 @@ module.exports.routes = {
 
   // Normal processing
   'get /': 'PageController.validateRequest',
-  
+
   // Profiles
   'get /profile': 'AuthController.profile',
   'post /updateprofile': 'AuthController.updateProfile',
   'get /reset': {view:'reset'},
   'post /auth/passwordreset': 'AuthController.passwordReset',
-    
+
   // Bookings
   'get /booking' : 'BookingController.prepareBooking',
   'get /booking/:action': 'BookingController.prepareBooking',
@@ -79,14 +80,14 @@ module.exports.routes = {
   'post /booking/transfer': 'BookingController.transferBookings',
   'get /lodgeroom': 'BookingController.lodgeRoom',
   'post /addpd/:eventid': 'BookingController.addPD',
-  
+
   // Apologies
   'get /apology': 'ApologyController.prepareApology',
   'get /apology/:action': 'ApologyController.prepareApology',
   'post /sendapology': 'ApologyController.sendApology',
   'get /eventapologies': 'ApologyController.eventApologies',
   'get /alleventapologies/:filter?': 'ApologyController.allEventApologies',
-  
+
   // Log
   'get /log': 'LogController.download',
   'post /log/:action': 'LogController.process',

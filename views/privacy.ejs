@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= sails.config.events.title %> | Privacy Policy</title>
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/angular-deckgrid.css">
+    <link rel="stylesheet" href="/styles/angular-toastr.css">
+    <link rel="stylesheet" href="/styles/bootstrap.3.1.1.css">
+    <link rel="stylesheet" href="/styles/events.css">
+    <link rel="stylesheet" href="/styles/forMobileIE.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/myth/ngDialog-theme-default.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/myth/ngDialog-theme-plain.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/myth/ngDialog.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog-custom-width.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog-theme-default.min.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog-theme-plain.min.css">
+    <link rel="stylesheet" href="/styles/ng-dialog/ngDialog.min.css">
+    <!--STYLES END-->
+
+    <link rel="stylesheet" href="/<%=sails.config.events.skin%>">
+
+    <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
+    <script type="text/javascript">
+    window.SAILS_LOCALS = {
+      _csrf: '<%= _csrf %>',
+    };
+    </script>
+  </head>
+  <body>
+
+    <!-- container = Fixed-width container container-fluid = full-width -->
+    <div class="container-fluid">
+      <% include partials/public/navbar.ejs %>
+
+      <div class="container">
+        <h1>Coming soon!</h1>
+      </div>
+
+      <% include partials/public/footer.ejs %>
+
+    </div>
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/jquery/jquery.js"></script>
+    <script src="/js/dependencies/angular.js"></script>
+    <script src="/js/dependencies/angular-deckgrid.js"></script>
+    <script src="/js/dependencies/angular-initial-value.min.js"></script>
+    <script src="/js/dependencies/angular-toastr.js"></script>
+    <script src="/js/dependencies/compareTo.module.js"></script>
+    <script src="/js/dependencies/forMobileIE.js"></script>
+    <script src="/js/dependencies/ngDialog.min.js"></script>
+    <script src="/js/dependencies/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="/js/EventsModule.js"></script>
+    <script src="/js/private/ApologiesController.js"></script>
+    <script src="/js/private/ApologyController.js"></script>
+    <script src="/js/private/BookController.js"></script>
+    <script src="/js/private/BookingsController.js"></script>
+    <script src="/js/private/DashboardController.js"></script>
+    <script src="/js/private/EventDetailsController.js"></script>
+    <script src="/js/private/EventsController.js"></script>
+    <script src="/js/private/ProfileController.js"></script>
+    <script src="/js/private/UserBookingsController.js"></script>
+    <script src="/js/private/UserDetailsController.js"></script>
+    <script src="/js/private/UsersController.js"></script>
+    <script src="/js/public/HomepageController.js"></script>
+    <script src="/js/public/ResetController.js"></script>
+    <script src="/js/public/SignupController.js"></script>
+    <!--SCRIPTS END-->
+
+  </body>
+</html>
