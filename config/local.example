@@ -8,9 +8,9 @@ module.exports = {
 
   // Event management details
   events: {
-     
+     reminderTestMode: true
   },
-  
+
   /***************************************************************************
    * Your SSL certificate and key, if you want to be able to serve HTTP      *
    * responses over https:// and/or use websockets over the wss:// protocol  *
@@ -36,23 +36,23 @@ module.exports = {
   //   key: require('fs').readFileSync(__dirname + '/ssl/my_apps_ssl.key'),
   //   cert: require('fs').readFileSync(__dirname + '/ssl/my_apps_ssl.crt')
   // },
-  
-  
-  // The example below uses a self-signed certificate (.pfx) converted to a key.pem and 
+
+
+  // The example below uses a self-signed certificate (.pfx) converted to a key.pem and
   // cert.pem file using openssl as follows (assumes mytest.pfx)
   // (info source is https://wiki.cac.washington.edu/display/infra/Extracting+Certificate+and+Private+Key+Files+from+a+.pfx+File):
   // "openssl pkcs12 -in mytest.pfx -nocerts -out key.pem -nodes"
   // "openssl pkcs12 -in mytest.pfx -nokeys -out cert.pem"
   // also did this but didn't use the resulting file
   // "openssl rsa -in key.pem -out server.key"
-  //ssl: {     
+  //ssl: {
   //   key: require('fs').readFileSync(__dirname + '/ssl/key.pem'),
   //   cert: require('fs').readFileSync(__dirname + '/ssl/cert.pem')
   //},
-  
+
   // IMPORTANT: Uncomment and correct the next line
-  //proxyHost: 'http://squareevents.org:1337/',  
-    
+  //proxyHost: 'http://squareevents.org:1337/',
+
   // Email configuration
   eventemail: {
    //service: "Gmail",
@@ -73,13 +73,13 @@ module.exports = {
       }
 	  },
     from:  process.env.SMTP_SENDER || 'Provincial Events <noreply@squareevents.org>', // sender address
-    testMode:  false 
+    testMode:  false
   },
-  
+
   log: {
     //level: 'silly'
   },
-  
+
   /***************************************************************************
    * The `port` setting determines which TCP port your app will be           *
    * deployed on.                                                            *
@@ -117,5 +117,5 @@ module.exports = {
    ***************************************************************************/
 
    // environment: process.env.NODE_ENV || 'development'
-  
+
 };
