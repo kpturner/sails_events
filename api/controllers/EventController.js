@@ -25,7 +25,7 @@ module.exports = {
 	/**
 	 * Get open events
      * Find all events for the current user that are open and not passed closing date
-	 * 
+	 *
 	 * @param {Object} req
 	 * @param {Object} res
 	 */
@@ -37,7 +37,7 @@ module.exports = {
 		today = new Date(today.setSeconds(0));
 		var selectedUserId = req.param("selecteduserid");  // If this exists, omit events for which this user is already booked in
 
-		// Get the orders that the user is a member of, then only pick 
+		// Get the orders that the user is a member of, then only pick
 		// events that match the order. If the event order is blank
 		// then that means it is open regardless of order
 		if (sails.config.events.orders.length <= 1) {
@@ -77,12 +77,12 @@ module.exports = {
 
 		function getEvents(clause) {
 			// An example using promises (bluebird)
-			/*				
+			/*
 			Event.find({
 					where:	{
 								open:true,
-								closingDate: { '>=': today } 
-							}, 
+								closingDate: { '>=': today }
+							},
 					sort: 	{
 								date:'desc',
 								time:'desc'
@@ -117,6 +117,8 @@ module.exports = {
 				// Dashboard - so event must be flagged as open
 				where.open = true;
 			}
+			where.date = { '>=': today };
+
 
 			if (clause) {
 				where = _.extend(where, clause);
@@ -124,7 +126,7 @@ module.exports = {
 
 			Event.find({
 				where: where,
-				// Sorted later        
+				// Sorted later
 				//sort: 	{
 				//			date:'desc',
 				//		}
@@ -133,127 +135,127 @@ module.exports = {
 				.populate("organiser2")
 				.populate("dc")
 				.exec(
-				function (err, events) {
-					if (err) {
-						sails.log.verbose('Error occurred trying to retrieve events.');
-						return res.negotiate(err);
-					}
+					function (err, events) {
+						if (err) {
+							sails.log.verbose('Error occurred trying to retrieve events.');
+							return res.negotiate(err);
+						}
 
-					// If session refers to a user who no longer exists, still allow logout.
-					if (!events) {
-						return res.json({});
-					}
+						// If session refers to a user who no longer exists, still allow logout.
+						if (!events) {
+							return res.json({});
+						}
 
-					function augmentEvents(events) {
-						// For each event, add capacity and booking text before returning JSON
-						var modifiedEvents = [];
-						async.each(events, function (event, next) {
-							// Get all the bookings for the event
-							event.interest = 0;
-							event.remaining = event.capacity;
-							_.bind(function () {
-								var event = this;
-								var places = 0;
-								Booking.find({ event: event.id }).exec(function (err, bookings) {
-									if (!err) {
-										bookings.forEach(function (booking, index) {
-											places += booking.places
-										})
-										if (event.regInterest) {
-											event.interest += places;
-										}
-										else {
-											event.remaining -= places;
-											if (event.remaining < 0) {
-												event.remaining = 0;
-											}
-										}
-									}
-									else {
-										next(err)
-									}
-									// Appropriate text
-									event.bookInText = (event.regInterest) ? "Register interest" : "Book in";
-									event.titleAugmentation = (event.regInterest) ? "register interest" : "book in";
-									modifiedEvents.push(event);
-									next();
-								})
-							}, event)();
-						},
-							function (err) {
-								if (err) {
-									sails.log.error(err)
-								}
-								else {
-									// Sort in descending date order
-									modifiedEvents.sort(
-										function (a, b) {
-											if (a.date > b.date) {
-												return -1
-											}
-											else if (a.date == b.date) {
-												return 0
+						function augmentEvents(events) {
+							// For each event, add capacity and booking text before returning JSON
+							var modifiedEvents = [];
+							async.each(events, function (event, next) {
+								// Get all the bookings for the event
+								event.interest = 0;
+								event.remaining = event.capacity;
+								_.bind(function () {
+									var event = this;
+									var places = 0;
+									Booking.find({ event: event.id }).exec(function (err, bookings) {
+										if (!err) {
+											bookings.forEach(function (booking, index) {
+												places += booking.places
+											})
+											if (event.regInterest) {
+												event.interest += places;
 											}
 											else {
-												return 1
+												event.remaining -= places;
+												if (event.remaining < 0) {
+													event.remaining = 0;
+												}
 											}
 										}
-									)
-								}
-								return res.json(modifiedEvents);
-							})
-					}
-
-					// If we have a selectedUserId then only include events that the user is NOT booked into already
-					// AND only if the current user is either an admin or the organiser of the event
-					if (selectedUserId && !sails.config.events.multipleBookings) {
-						var particularEvents = [];
-						async.each(events, function (event, next) {
-							// Is is a full admin so the event can be shown
-							if (req.user.isAdmin) {
-								particularEvents.push(event);
-								next();
-							}
-							else {
-								// Not an administrator, so only show the event of the user is the 
-								// event organiser (the Utility.isAdmin function will deal with that)
-								if (Utility.isAdmin(req.user, event)) {
-									// User is an organiser of this event so it can be shown IF the user is not 
-									// already booked in
-									Booking.find(
-										{
-											where: {
-												event: event.id,
-												user: selectedUserId
-											},
-											limit: 1
+										else {
+											next(err)
 										}
-									).exec(function (err, bookings) {
-										if (err || !bookings || (bookings && bookings.length == 0)) {
-											particularEvents.push(event);
-										}
+										// Appropriate text
+										event.bookInText = (event.regInterest) ? "Register interest" : "Book in";
+										event.titleAugmentation = (event.regInterest) ? "register interest" : "book in";
+										modifiedEvents.push(event);
 										next();
 									})
-								}
-								else {
-									// Ignore the event
+								}, event)();
+							},
+								function (err) {
+									if (err) {
+										sails.log.error(err)
+									}
+									else {
+										// Sort in descending date order
+										modifiedEvents.sort(
+											function (a, b) {
+												if (a.date > b.date) {
+													return -1
+												}
+												else if (a.date == b.date) {
+													return 0
+												}
+												else {
+													return 1
+												}
+											}
+										)
+									}
+									return res.json(modifiedEvents);
+								})
+						}
+
+						// If we have a selectedUserId then only include events that the user is NOT booked into already
+						// AND only if the current user is either an admin or the organiser of the event
+						if (selectedUserId && !sails.config.events.multipleBookings) {
+							var particularEvents = [];
+							async.each(events, function (event, next) {
+								// Is is a full admin so the event can be shown
+								if (req.user.isAdmin) {
+									particularEvents.push(event);
 									next();
 								}
-							}
-						}
-							, function (err) {
-								// End of the list of events
-								if (err) {
-									sails.log.error(err)
+								else {
+									// Not an administrator, so only show the event of the user is the
+									// event organiser (the Utility.isAdmin function will deal with that)
+									if (Utility.isAdmin(req.user, event)) {
+										// User is an organiser of this event so it can be shown IF the user is not
+										// already booked in
+										Booking.find(
+											{
+												where: {
+													event: event.id,
+													user: selectedUserId
+												},
+												limit: 1
+											}
+										).exec(function (err, bookings) {
+											if (err || !bookings || (bookings && bookings.length == 0)) {
+												particularEvents.push(event);
+											}
+											next();
+										})
+									}
+									else {
+										// Ignore the event
+										next();
+									}
 								}
-								return augmentEvents(particularEvents);
-							})
+							}
+								, function (err) {
+									// End of the list of events
+									if (err) {
+										sails.log.error(err)
+									}
+									return augmentEvents(particularEvents);
+								})
 
+						}
+						else {
+							return augmentEvents(events);
+						}
 					}
-					else {
-						return augmentEvents(events);
-					}
-				}
 				)
 		}
 
@@ -261,7 +263,7 @@ module.exports = {
 
 	/**
 	 * Get all events for editing
-     * 
+     *
 	 * @param {Object} req
 	 * @param {Object} res
 	 */
@@ -338,7 +340,7 @@ module.exports = {
 
 				return res.json(filteredEvents);
 			}
-			)
+		)
 
 	},
 
@@ -436,7 +438,7 @@ module.exports = {
 						})
 							.populate('user')
 							.then(function (bookings) {
-								// Prep some text for the email 
+								// Prep some text for the email
 								var wh;
 								if (diff < 0) {
 									wh = "decreased by " + (diff * -1) + " day(s)";
@@ -526,7 +528,7 @@ module.exports = {
 	},
 
 	/**
-	 * Verify bypass code 
+	 * Verify bypass code
 	 */
 	verifyBypassCode: function (req, res) {
 
