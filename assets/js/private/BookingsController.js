@@ -17,16 +17,6 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 		$scope.initialLimit=SAILS_LOCALS.criteria.limit;
 		$scope.initialPage=SAILS_LOCALS.criteria.page;
 		$scope.scrollPage=1;
-		$scope.scrollDisabled=$scope.filterForm.criteria.sortByName;
-
-		// If paging is not visible (i.e. the user cannot do it manually because of screen size)
-		// make sure that page is set to 1 regardless of what was stored in the session. This
-		// means that if the user has partially scrolled with dynamic update and then clicks
-		// on this screen again they go back to the beginning
-		if (!$("#page").is(":visible")) {
-			$scope.filterForm.criteria.page=1;
-		}
-
 
 		$scope.myBookings 	= SAILS_LOCALS.myBookings;
 		$scope.eventBookings= SAILS_LOCALS.eventBookings;
@@ -40,6 +30,16 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 			$scope.bookingCardHeight = "60px";
 			$scope.filterForm.criteria.sortByName=true;
 		}
+		$scope.scrollDisabled=$scope.filterForm.criteria.sortByName;
+
+		// If paging is not visible (i.e. the user cannot do it manually because of screen size)
+		// make sure that page is set to 1 regardless of what was stored in the session. This
+		// means that if the user has partially scrolled with dynamic update and then clicks
+		// on this screen again they go back to the beginning
+		if (!$("#page").is(":visible")) {
+			$scope.filterForm.criteria.page=1;
+		}
+
 		// If not view only then make it so anyway if the user is not an admin or the organiser
 		if (!$scope.viewOnly && $scope.eventBookings) {
 			$scope.viewOnly=!$scope.user.isAdmin;
