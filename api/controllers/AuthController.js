@@ -391,8 +391,8 @@ var AuthController = {
           sails.controllers.order.updateOtherOrders(updatedUser[0].id,req.param("orders"));
           // Success
           for(var field in updatedUser[0]) {
-            if (field === null) {
-              field = "";
+            if (updatedUser[0][field] === null) {
+              updatedUser[0][field] = "";
             }
           }
           if (!updatedUser[0].isVO)
