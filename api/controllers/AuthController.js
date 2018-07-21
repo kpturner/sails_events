@@ -389,31 +389,12 @@ var AuthController = {
 						 return res.negotiate(err);
 					}
           sails.controllers.order.updateOtherOrders(updatedUser[0].id,req.param("orders"));
-					// Success
-          if (updatedUser[0].area==null)
-              updatedUser[0].area=""
-          if (updatedUser[0].address1==null)
-              updatedUser[0].address1=""
-          if (updatedUser[0].address2==null)
-              updatedUser[0].address2=""
-          if (updatedUser[0].address3==null)
-              updatedUser[0].address3=""
-          if (updatedUser[0].address4==null)
-              updatedUser[0].address4=""
-          if (updatedUser[0].postcode==null)
-              updatedUser[0].postcode=""
-          if (updatedUser[0].dietary==null)
-              updatedUser[0].dietary=""
-          if (updatedUser[0].rank==null)
-              updatedUser[0].rank=""
-          if (updatedUser[0].centre==null)
-              updatedUser[0].centre=""
-          if (updatedUser[0].lodge==null)
-              updatedUser[0].lodge=""
-          if (updatedUser[0].lodgeYear==null)
-              updatedUser[0].lodgeYear=""
-          if (updatedUser[0].phone==null)
-              updatedUser[0].phone=""
+          // Success
+          for(var field in updatedUser[0]) {
+            if (field === null) {
+              field = "";
+            }
+          }
           if (!updatedUser[0].isVO)
               updatedUser[0].isVO=false
           if (!updatedUser[0].isDC)
