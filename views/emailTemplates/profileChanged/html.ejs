@@ -4,32 +4,32 @@
 
 <p>Dear <%=recipientName%>,</p>
 <p>This is a courtesy email to confirm that your profile details have been changed as follows:</p>
- 
+
 
 <p>
 	Surname: <%=details.surname%>
-	<br>First name: <%=details.firstName%>	
+	<br>First name: <%=details.firstName%>
 	<br>Full name: <%=details.name%>
-	<br>Login user name: <%=details.username%>	
+	<br>Login user name: <%=details.username%>
     <% if (sails.config.events.userCategories.length>0) {%>
 	<br>Category: <%=details.category%>
 	<% } %>
-    <% if  (details.address1 
+    <% if  (details.address1
             || details.address2
             || details.address3
             || details.address4
-            || details.postcode  
+            || details.postcode
      ) {%>
     <br>
-    <br><i>Address</i>       
+    <br><i>Address</i>
     <br><%=details.address1%>
-    <br><%=details.address2%>  
-    <br><%=details.address3%>  
-    <br><%=details.address4%>  
-    <br><%=details.postcode%> 
-    <br> 	
+    <br><%=details.address2%>
+    <br><%=details.address3%>
+    <br><%=details.address4%>
+    <br><%=details.postcode%>
+    <br>
     <% } %>
-	<br>Contact no: <%=details.phone%>	
+	<br>Contact no: <%=details.phone%>
 	<br>Lodge: <%=details.lodge%>
 	<br>Lodge no: <%=details.lodgeNo%>
     <% if (sails.config.events.lodgeYear) {%>
@@ -38,6 +38,7 @@
     <br>Centre: <%=details.centre%>
 	<br>Area: <%=details.area%>
     <% if  (details.isVO) {%>
+    <br>Exec officer (VO/AVC/VC): true
     <br>Exec lodge: <%=details.voLodge%>
     <br>Exec lodge no: <%=details.voLodgeNo%>
     <br>Exec lodge centre: <%=details.voCentre%>
@@ -47,15 +48,15 @@
 	<br>Rank: <%=details.rank%>
 	<br>Dietary reqs: <%=details.dietary%>
 	<br>Email address: <%=details.email%>
-	<br>Admin: <%=details.isAdmin%> 
-	<br>Organiser: <%=details.isOrganiser%> 
-    <br>Event DC: <%=details.isDC%> 
+	<br>Admin: <%=details.isAdmin%>
+	<br>Organiser: <%=details.isOrganiser%>
+    <br>Event DC: <%=details.isDC%>
 
     <% if (orders.length>0) {%>
-	  <br><b>Other orders</b>	
+	  <br><b>Other orders</b>
       <% orders.forEach(function (order,place) { %>
 	  	<br><i>Other order <%=place+1%></i>
-		<br>&nbsp;&nbsp;Order: <%=order.desc%>  
+		<br>&nbsp;&nbsp;Order: <%=order.desc%>
         <br>&nbsp;&nbsp;Salutation: <%=order.salutation%>
         <br>&nbsp;&nbsp;<%=order.label%>: <%=order.name%>
 		<br>&nbsp;&nbsp;Number: <%=order.number%>
@@ -67,7 +68,7 @@
 		<br>&nbsp;&nbsp;Rank: <%=order.rank%>
       <% }) %>
     <% } %>
-	
+
 
 <p>Yours S&F,<br/><%=senderName%></p>
 

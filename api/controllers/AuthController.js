@@ -308,8 +308,11 @@ var AuthController = {
 
       var profile=req.param("profile");
       for(var field in profile) {
-        if (!(profile[field]==undefined) && profile[field]!=currentUser[field])
-          delta[field]=profile[field];
+        if (!profile[field]) {
+          delta[field]=null;
+        } else if (profile[field]!=currentUser[field]) {
+            delta[field]=profile[field];
+        }
       }
 
       /*

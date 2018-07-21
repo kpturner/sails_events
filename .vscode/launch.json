@@ -1,26 +1,18 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Launch",
-			"type": "node",
-			"protocol": "auto",
-			"request": "launch",
-			"program": "${workspaceRoot}/app.js",
-			"stopOnEntry": false,
-			"args": [],
-			"cwd": "${workspaceRoot}/.",
-			"runtimeExecutable": null,
-			"runtimeArgs": [
-				"--nolazy"
-			],
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/app.js",
 			"env": {
 				"NODE_ENV": "development"
 			},
-			"externalConsole": false,
-			"sourceMaps": false,
-			"outDir": null
-		},
+        },
 		{
 			"name": "Attach",
 			"type": "node",
@@ -34,5 +26,5 @@
 			"address": "localhost",
 			"port": 5859
 		}
-	]
+    ]
 }
