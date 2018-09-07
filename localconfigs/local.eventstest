@@ -5,19 +5,19 @@ module.exports = {
      admins:['kevin.p.turner@googlemail.com','kevin.turner@coraltree.co.uk'],
      developer:'kevin.turner@coraltree.co.uk',
      reminderTestMode: true,
-     //latePaymentInterval: 30000,  
+     //latePaymentInterval: 30000,
      latePaymentDaemon: false,
      heading: "Test System",
      title: "Test System",
      domain: "http://test.squareevents.org",
      updateAvatars: true,
   },
-  
+
   session: {
     secret: 'b6d843339ae032a03af593ca4a98298g',
   },
 
-  proxyHost: 'http://test.squareevents.org/',  
+  proxyHost: 'https://test.squareevents.org/',
   port: 1338,
   connections: {
      localhostMysqlServer: {
@@ -27,8 +27,8 @@ module.exports = {
        password: 'Hercule2',
        database: 'squaretest',
      }
-  }, 
-  
+  },
+
   // Email configuration
   eventemail: {
    //service: "Gmail",
@@ -49,11 +49,11 @@ module.exports = {
       }
 	 },
    from: 'Test System <noreply@squareevents.org>', // sender address
-   testMode:  false 
+   testMode:  false
   },
-  
+
   log: {
     level: 'debug'
   }
-  
+
 };

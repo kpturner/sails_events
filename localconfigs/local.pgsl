@@ -6,7 +6,7 @@ module.exports = {
      admins:['kevin@kpturner.co.uk'],
      developer:'kevin@kpturner.co.uk',
      reminderTestMode: false,
-     //latePaymentInterval: 30000,  
+     //latePaymentInterval: 30000,
      latePaymentDaemon: true,
      title: 'PGSL 9263',
      heading: 'PGSL 9263',
@@ -17,8 +17,8 @@ module.exports = {
      updateAvatars: false,
      skin: "skins/pgslskin.css",
   },
-  
-  proxyHost: 'http://pgsl.squareevents.org/',  
+
+  proxyHost: 'http://pgsl.squareevents.org/',
   port: 1341,
   connections: {
      localhostMysqlServer: {
@@ -31,9 +31,9 @@ module.exports = {
   },
 
   session: {
-     secret: 'b6d843339ae032a03af593ca4a98298i',  
+     secret: 'b6d843339ae032a03af593ca4a98298i',
   },
-     
+
   // Email configuration
   eventemail: {
    //service: "Gmail",
@@ -54,11 +54,11 @@ module.exports = {
       }
 	 },
    from: 'PGSL 9263 Dining <noreply@squareevents.org>', // sender address
-   testMode:  false 
+   testMode:  false
   },
-  
+
   log: {
     level: 'debug'
   }
-  
+
 };

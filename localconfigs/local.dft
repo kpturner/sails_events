@@ -6,7 +6,7 @@ module.exports = {
      admins:['kevin.p.turner@googlemail.com','kevin.turner@coraltree.co.uk'],
      developer:'kevin.turner@coraltree.co.uk',
      reminderTestMode: false,
-     //latePaymentInterval: 30000,  
+     //latePaymentInterval: 30000,
      latePaymentDaemon: true,
      title: 'H&IoW Events',
      heading: 'H&IoW Events',
@@ -19,21 +19,21 @@ module.exports = {
       "Basingstoke",
       "Bordon",
       "Botley",
-      "Brockenhurst", 
+      "Brockenhurst",
       "Chandlers Ford",
-      "Christchurch", 
-      "Cosham", 
+      "Christchurch",
+      "Cosham",
       "Cowes",
       "East Cowes",
       "Eastleigh",
       "Fareham",
-      "Farnborough", 
+      "Farnborough",
       "Farnham",
       "Gosport",
       "Havant",
       "Horndean",
       "Hursley",
-      "Knole", 
+      "Knole",
       "Lymington",
       "New Milton",
       "Newport",
@@ -48,14 +48,14 @@ module.exports = {
       "Shanklin",
       "Totton",
       "Ventnor",
-      "Winchester", 
+      "Winchester",
       "Woolston"
      ]
   },
-  
- 
-  proxyHost: 'http://squareevents.org/',  
-    
+
+
+  proxyHost: 'https://squareevents.org/',
+
   // Email configuration
   eventemail: {
    //service: "Gmail",
@@ -67,21 +67,21 @@ module.exports = {
 	  * Custom transporter passed directly to nodemailer.createTransport (overrides service/auth)
 	  */
 	transporter:	{
-      
+
       host: 'mail.squareevents.org',
       port: 25,
     	tls:{rejectUnauthorized: false},
       auth: {
-        user: "noreply@squareevents.org",        
+        user: "noreply@squareevents.org",
         pass: "klaatuberada"
       }
 	 },
    from: 'H&IoW Event Management <noreply@squareevents.org>', // sender address
-   testMode:  false 
+   testMode:  false
   },
-  
+
   log: {
     level: 'debug'
   }
-  
+
 };

@@ -6,7 +6,7 @@ module.exports = {
      admins:['kevin.p.turner@googlemail.com','kevin.turner@coraltree.co.uk'],
      developer:'kevin.turner@coraltree.co.uk',
      reminderTestMode: false,
-     //latePaymentInterval: 30000,  
+     //latePaymentInterval: 30000,
      latePaymentDaemon: true,
      title: 'Surrey Events',
      heading: 'Surrey Events',
@@ -16,8 +16,8 @@ module.exports = {
      logo: '/images/surrey/crest-small.png',
      updateAvatars: false,
   },
-  
-  proxyHost: 'http://surrey.squareevents.org/',  
+
+  proxyHost: 'https://surrey.squareevents.org/',
   port: 1339,
   connections: {
      localhostMysqlServer: {
@@ -30,9 +30,9 @@ module.exports = {
   },
 
   session: {
-     secret: 'b6d843339ae032a03af593ca4a98298h',  
+     secret: 'b6d843339ae032a03af593ca4a98298h',
   },
-     
+
   // Email configuration
   eventemail: {
    //service: "Gmail",
@@ -53,11 +53,11 @@ module.exports = {
       }
 	 },
    from: 'Surrey Events Management <noreply@squareevents.org>', // sender address
-   testMode:  false 
+   testMode:  false
   },
-  
+
   log: {
     level: 'debug'
   }
-  
+
 };
