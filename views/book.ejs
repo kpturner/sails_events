@@ -7,7 +7,6 @@
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="http://addtocalendar.com/atc/1.5/atc-style-button-icon.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-cookie-law.min.css">
@@ -73,24 +72,6 @@
         <h3 class="form-signin-heading"><span ng-hide="event.regInterest">Booking</span><span ng-show="event.regInterest">Interest</span> for {{event.name}}</h3>
         <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
         <h4>{{event.venue}}<h4>
-
-        <h4><span class="addtocalendar atc-style-icon atc-style-menu-wb" id="atc_icon_calbw1" data-on-button-click="" data-on-calendar-click="tidyCalendarEvent">
-              <!-- Addtocalendar link -->
-              <a class="atcb-link" tabindex="1" id="atc_icon_calbw1_link" title="Add to calendar">
-                <span class="fa fa-calendar-plus-o"></span> Add to calendar
-              </a>
-              <var class="atc_event">
-                  <var class="atc_date_start">{{ event.date | date : 'yyyy-MM-dd'}} {{event.time}}</var>
-                  <var class="atc_date_end">{{ event.date | date : 'yyyy-MM-dd'}} 23:59:00</var>
-                  <var class="atc_timezone">Europe/London</var>
-                  <var class="atc_title">{{event.name}}</var>
-                  <var class="atc_description">{{event.blurb}}</var>
-                  <var class="atc_location">{{event.venue}}</var>
-                  <var class="atc_organizer">{{event.organiser.name}}</var>
-                  <var class="atc_organizer_email">{{event.organiser.email}}</var>
-              </var>
-          </span>
-        </h4>
 
         <h5 ng-hide="event.free">Price per place: £{{event.price.toFixed(2)}}</h5>
         <div ng-hide="event.regInterest">
@@ -170,28 +151,6 @@
     <% include partials/public/footer.ejs %>
 
 
-
-
-    <!-- addtocalendar code -->
-    <script>
-      function tidyCalendarEvent(mouseEvent){
-        // We cannot have the extra angularjs classes in the data or it will not work
-        $(".atcb-item").find("a").each(function(){
-          var $this=$(this);
-          var href=$this.attr("href");
-          href=href.replace(RegExp(" ng-binding","g"),"");
-          $this.attr("href",href);
-        })
-      }
-
-    </script>
-    <script type="text/javascript">(function () {
-          if (window.addtocalendar)if(typeof window.addtocalendar.start == "function")return;
-          if (window.ifaddtocalendar == undefined) { window.ifaddtocalendar = 1;
-              var d = document, s = d.createElement('script'), g = 'getElementsByTagName';
-              s.type = 'text/javascript';s.charset = 'UTF-8';s.async = true;
-              s.src = 'http://addtocalendar.com/atc/1.5/atc.min.js';
-              var h = d[g]('body')[0];h.appendChild(s); }})();
     </script>
 
 
