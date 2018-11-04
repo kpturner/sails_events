@@ -15,11 +15,6 @@
         ],
         "no-conditional-assignment": true,
         "no-constant-condition": true,
-        "no-console": [
-            true,
-            "log",
-            "error"
-        ],
         "no-control-regex": true,
         "no-debugger": true,
         "no-duplicate-case": true,
@@ -37,7 +32,6 @@
         "no-sparse-arrays": true,
         "no-unexpected-multiline": true,
         "no-unsafe-finally": true,
-        "no-require-imports": true,
         "use-isnan": true,
         "valid-typeof": true,
         "cyclomatic-complexity": [

@@ -1,13 +1,37 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Utility = require("./api/services/Utility");
+/**
+ * app.js
+ *
+ * Use `app.js` to run your app without `sails lift`.
+ * To start the server, run: `node app.js`.
+ *
+ * This is handy in situations where the sails CLI is not relevant or useful.
+ *
+ * For example:
+ *   => `node app.js`
+ *   => `forever start app.js`
+ *   => `node debug app.js`
+ *   => `modulus deploy`
+ *   => `heroku scale`
+ *
+ *
+ * The same command-line arguments are supported, e.g.:
+ * `node app.js --silent --port=80 --prod`
+ */
+
+// Ensure we're in the project directory, so relative paths work as expected
+// no matter where we actually lift from.
+
+import * as Utility from './api/services/Utility';
+
 process.chdir(__dirname);
-let sails;
-(function () {
+
+let sails: any;
+
+// Ensure a 'sails' can be located:
+(function (): void {
     try {
         sails = require('sails');
-    }
-    catch (e) {
+    } catch (e) {
         console.error('To run an app using `node app.js`, you usually need to have a version of `sails` installed in the same directory as your app.');
         console.error('To do that, run `npm install sails`');
         console.error('');
@@ -16,50 +40,52 @@ let sails;
         console.error('but if it doesn\'t, the app will run with the global sails instead!');
         return;
     }
-    let rc;
+
+    // Try to get `rc` dependency
+    let rc: any;
     try {
         rc = require('rc');
-    }
-    catch (e0) {
+    } catch (e0) {
         try {
             rc = require('sails/node_modules/rc');
-        }
-        catch (e1) {
+        } catch (e1) {
             console.error('Could not find dependency: `rc`.');
             console.error('Your `.sailsrc` file(s) will be ignored.');
             console.error('To resolve this, run:');
             console.error('npm install rc --save');
-            rc = function () { return {}; };
+            rc = function (): any { return {}; };
         }
     }
+
+
+    // Start server
     sails.lift(rc('sails'));
 })();
-process.on('uncaughtException', function (err) {
+
+process.on('uncaughtException', function (err: Error): void {
     try {
-        const msg = `uncaughtException: ${err.message} <br> ${err.stack}`;
+        const msg: string = `uncaughtException: ${err.message} <br> ${err.stack}`;
         console.log(msg);
         if (sails && Utility) {
             sails.log.error('uncaughtException:', err.message);
             sails.log.error(err.stack);
-            Utility.diagnosticEmail(msg, 'Application crash', function () {
-                process.exit(1);
+            Utility.diagnosticEmail(msg, 'Application crash', function (): void {
+                process.exit(1);   // Forever should restart us;
             });
-            setTimeout(function () { process.exit(1); }, 5000);
+            // Make sure we exit if the email sending fails
+            setTimeout(function (): void { process.exit(1); }, 5000);
+        } else {
+            process.exit(1);   // Forever should restart us;
         }
-        else {
-            process.exit(1);
-        }
-    }
-    catch (e) {
+    } catch (e) {
         if (sails) {
             sails.log.error('Error handling uncaught exception');
             sails.log.error(e);
-        }
-        else {
+        } else {
             console.log('Error handling uncaught exception');
             console.log(e);
         }
-        process.exit(1);
+        process.exit(1);   // Forever should restart us;
     }
+
 });
-//# sourceMappingURL=app.js.map
