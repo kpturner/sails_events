@@ -63,8 +63,12 @@
     "winston": "^1.0.1"
   },
   "scripts": {
+    "lint": "tslint --exclude 'node_modules/**/*.ts' --exclude '**/*.d.ts' -p tsconfig.json",
+    "lint:fix": "tslint --fix -p tsconfig.json",
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "npm run build && node app.js",
+    "build": "npm run lint && npm run transpile",
+    "transpile": "tsc -p ."
   },
   "main": "app.js",
   "repository": {
@@ -72,5 +76,14 @@
     "url": "git://github.com/anonymous node/sails user/events.git"
   },
   "author": "anonymous node/sails user",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "@types/angularjs": "^1.5.14-alpha",
+    "@types/express": "^4.16.0",
+    "@types/jquery": "^3.3.22",
+    "@types/node": "^10.12.2",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.1.6"
+  }
 }

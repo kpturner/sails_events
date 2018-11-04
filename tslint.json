@@ -1,0 +1,142 @@
+{
+    "extends": [
+        "tslint-eslint-rules"
+    ],
+    "rules": {
+        "object-literal-key-quotes": [
+            "consistent-as-needed"
+        ],
+        "trailing-comma": [
+            true,
+            {
+                "multiline": "never",
+                "singleline": "never"
+            }
+        ],
+        "no-conditional-assignment": true,
+        "no-constant-condition": true,
+        "no-console": [
+            true,
+            "log",
+            "error"
+        ],
+        "no-control-regex": true,
+        "no-debugger": true,
+        "no-duplicate-case": true,
+        "no-empty-character-class": true,
+        "no-ex-assign": true,
+        "no-extra-boolean-cast": true,
+        "no-extra-semi": true,
+        "no-inner-declarations": [
+            true,
+            "functions"
+        ],
+        "no-invalid-regexp": true,
+        "no-irregular-whitespace": true,
+        "no-regex-spaces": true,
+        "no-sparse-arrays": true,
+        "no-unexpected-multiline": true,
+        "no-unsafe-finally": true,
+        "no-require-imports": true,
+        "use-isnan": true,
+        "valid-typeof": true,
+        "cyclomatic-complexity": [
+            true,
+            35
+        ],
+        "curly": true,
+        "switch-default": true,
+        "triple-equals": [
+            true,
+            "allow-null-check"
+        ],
+        "forin": true,
+        "no-eval": true,
+        "no-empty": true,
+        "no-switch-case-fall-through": true,
+        "no-construct": true,
+        "no-duplicate-variable": true,
+        "radix": true,
+        "handle-callback-err": [
+            true,
+            "error"
+        ],
+        "prefer-const": true,
+        "eofline": true,
+        "class-name": true,
+        "comment-format": [
+            true,
+            "check-space"
+        ],
+        "indent": [
+            true,
+            "spaces"
+        ],
+        "ter-indent": [
+            true,
+            4,
+            {
+              "SwitchCase": 1
+            }
+        ],
+        "no-internal-module": true,
+        "no-trailing-whitespace": true,
+        "no-var-keyword": true,
+        "one-line": [
+            true,
+            "check-open-brace",
+            "check-whitespace",
+            "check-catch",
+            "check-finally",
+            "check-else"
+        ],
+        "quotemark": [
+            true,
+            "single",
+            "avoid-template"
+        ],
+        "semicolon": [
+            true,
+            "always"
+        ],
+        "typedef-whitespace": [
+            true,
+            {
+                "call-signature": "nospace",
+                "index-signature": "nospace",
+                "parameter": "nospace",
+                "property-declaration": "nospace",
+                "variable-declaration": "nospace"
+            }
+        ],
+        "variable-name": [
+            true,
+            "ban-keywords"
+        ],
+        "member-access": true,
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type"
+        ],
+        "space-within-parens": true,
+        "object-curly-spacing": true,
+        "typedef": {
+            "options": [
+                "call-signature",
+                "parameter",
+                "property-declaration",
+                "member-variable-declaration"
+            ],
+            "severity": "warning" // This should be removed/increased to error in the next major version
+        }
+    },
+    "linterOptions": {
+        "exclude": [
+            "**/*.d.ts"
+        ]
+    }
+}

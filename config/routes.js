@@ -36,6 +36,7 @@ module.exports.routes = {
   //  view: 'homepage'
   //}
 
+  'get /typescript': 'SomeController.hello',
   // Application control
   'get /updateappconfirmation': 'AppController.updateAppConfirmation',
   'get /updateapp': 'AppController.updateApp',
