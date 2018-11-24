@@ -35,7 +35,7 @@
     "include-all": "~0.1.3",
     "json2csv": "^2.8.2",
     "lockfile": "^1.0.3",
-    "lodash": "^3.10.1",
+    "lodash": ">=4.17.5",
     "machinepack-gravatar": "^1.2.0",
     "machinepack-passwords": "^2.3.0",
     "moment-timezone": "^0.5.13",
