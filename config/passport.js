@@ -21,7 +21,7 @@ module.exports.passport = {
 
   rememberme : {
     strategy: require('passport-remember-me').Strategy,
-    maxAge: 7 * 24 * 60 * 60 * 1000,   // Time to live for remember me cookie             
+    maxAge: 7 * 24 * 60 * 60 * 1000,   // Time to live for remember me cookie
   },
 
   //bearer: {
@@ -34,10 +34,6 @@ module.exports.passport = {
     klass:  'omb_btn-twitter',
     protocol: 'oauth',
     strategy: require('passport-twitter').Strategy,
-    options: {
-      consumerKey: 'fLH76TvwfV68upVcBc2DQs4aK',
-      consumerSecret: 'kBacijgm6vWbJPdPvv8lc23GMFPlek4YCBd1kJGIusEELjmAi2'
-    }
   },
 
   //github: {
@@ -57,8 +53,6 @@ module.exports.passport = {
     protocol: 'oauth2',
     strategy: require('passport-facebook').Strategy,
     options: {
-      clientID: '999387826772688',
-      clientSecret: '2ba728651b3b4d40029c54d7019545b6',
       scope: ['email'], /* email is necessary for login behavior */
       profileFields: ['emails','displayName']
     }
@@ -71,11 +65,8 @@ module.exports.passport = {
     protocol: 'oauth2',
     strategy: require('passport-google-oauth').OAuth2Strategy,
     options: {
-      clientID: '1044760933538-h91m7atpd59n9ieurq49msne5p98sbsb.apps.googleusercontent.com',
-      clientSecret: 'PGEGQRLVeEeyP_5Ah3HqDig7',
       max_auth_age: '0',
-      scope: ['email'] /* email is necessary for login behavior */,
-      apiKey: 'AIzaSyDd-uWS_YzY_dUoYbL6N4_Zf8P6RvX7anQ'
+      scope: ['email'] /* email is necessary for login behavior */
     }
   },
 

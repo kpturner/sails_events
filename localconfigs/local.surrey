@@ -58,6 +58,30 @@ module.exports = {
 
   log: {
     level: 'debug'
+  },
+
+  passport: {
+    twitter: {
+      options: {
+        consumerKey: '',
+        consumerSecret: ''
+      }
+    },
+
+    facebook: {
+      options: {
+        clientID: '',
+        clientSecret: '',
+      }
+    },
+
+    google: {
+      options: {
+        clientID: '',
+        clientSecret: '',
+        apiKey: ''
+      }
+    }
   }
 
 };

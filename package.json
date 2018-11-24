@@ -10,7 +10,7 @@
     "angular-ui-bootstrap": "^0.13.0",
     "async": "^1.5.0",
     "bcryptjs": "^2.2.0",
-    "bootstrap": "^3.1.1",
+    "bootstrap": ">=4.1.2",
     "captains-log": "^0.11.11",
     "child-process-debug": "0.0.7",
     "connect-redis": "1.4.5",
@@ -65,7 +65,7 @@
   "scripts": {
     "lint": "tslint --exclude 'node_modules/**/*.ts' --exclude '**/*.d.ts' -p tsconfig.json",
     "lint:fix": "tslint --fix -p tsconfig.json",
-    "debug": "node debug app.js",
+    "debug": "node -debug app.js",
     "start": "npm run build && node app.js",
     "build": "npm run lint && npm run transpile",
     "transpile": "tsc -p ."
