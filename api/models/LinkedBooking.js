@@ -1,14 +1,14 @@
 /**
- * Linked booking model.  These are details of additional people added to a 
+ * Linked booking model.  These are details of additional people added to a
  * single booking
  *
  */
 var LinkedBooking = {
-  
+
   schema: true,
-  
+
   attributes: {
-    
+
     booking:{
         model:'booking'
     },
@@ -16,26 +16,26 @@ var LinkedBooking = {
     seq:{
       type: 'integer'
     },
-    
+
     // Salutation
     salutation: {
       type: 'string'
     },
-    
+
     // Preferred name
     surname: {
       type: 'string'
     },
-    
+
     firstName: {
       type: 'string'
     },
-    
+
     // The user's lodge
     lodge: {
       type: 'string'
     },
-    
+
     // The user's lodge no
     lodgeNo: {
       type: 'string'
@@ -45,7 +45,7 @@ var LinkedBooking = {
     lodgeYear: {
       type: 'string'
     },
-    
+
     // The user's centre
     centre: {
       type: 'string'
@@ -55,20 +55,24 @@ var LinkedBooking = {
     area: {
       type: 'string'
     },
-    
+
     // The user's rank
     rank: {
       type: 'string'
     },
-    
+
     // The user's dietary requirements
     dietary: {
       type: 'string'
     },
-     
+
+    // Menu choice
+    menuChoice: {
+      type: 'integer'
+    }
 
   },
- 
+
 };
 
 module.exports = LinkedBooking;

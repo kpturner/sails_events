@@ -450,6 +450,17 @@ module.exports = {
 		var formattedDate = opts.formattedDate;
 		var linkedBookings = opts.linkedBookings;
 		var bookingRef = opts.bookingRef;
+		var menu = "n/a";
+		if (event.menu) {
+			menu = event.menu;
+			if (booking.menuChoice === 2) {
+				menu = event.menu2;
+			} else {
+				if (booking.menuChoice === 3) {
+					menu = event.menu3;
+				}
+			}
+		}
 
 		Email.send(
 			"bookingConfirmation",
@@ -470,7 +481,8 @@ module.exports = {
 				organiserEmail: event.organiser.email,
 				organiserContactNo: event.organiser.phone || "",
 				eventBlurb: (event.blurb || "n/a").replace(/[\n\r]/g, '<br>'),
-				eventMenu: (event.menu || "n/a").replace(/[\n\r]/g, '<br>'),
+				menuChoice: booking.menuChoice,
+				eventMenu: menu.replace(/[\n\r]/g, '<br>'),
 				eventDressCode: (event.dressCode || "n/a").replace(/[\n\r]/g, '<br>'),
 				email: user.email,
 				salutation: user.salutation || "",
@@ -641,6 +653,10 @@ module.exports = {
 										}
 										booking.user = user.id;
 										booking.event = eventId;
+										booking.menuChoice = req.param("menuChoice");
+										if (booking.menuChoice > event.menusOnOffer || booking.menuChoice < 0) {
+											booking.menuChoice = 1;
+										}
 										booking.info = req.param("info");
 										if (req.param("places")) {
 											booking.places = req.param("places")
@@ -720,6 +736,9 @@ module.exports = {
 														linkedBooking.area = ""
 													if (!linkedBooking.centre)
 														linkedBooking.centre = ""
+													if (linkedBooking.menuChoice > event.menusOnOffer || booking.menuChoice < 0) {
+														linkedBooking.menuChoice = 1;
+													}
 													//LinkedBooking.create(linkedBooking).exec(function(err,lb){
 													//	if (err)
 													//		console.log(err)
@@ -2179,6 +2198,7 @@ module.exports = {
 			row.email = booking.user.email || "";
 			row.phone = (booking.user.phone) ? "Tel: " + booking.user.phone : ""; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
 			row.dietary = booking.dietary || "";
+			row.menuChoice = booking.menuChoice || "";
 			row.info = booking.info || "";
 			row.places = booking.places;
 			row.paid = booking.paid || "";
@@ -2304,6 +2324,7 @@ module.exports = {
 				row.centre = addition.centre || booking.user.centre || "";
 				row.area = addition.area || booking.user.area || "";
 				row.dietary = addition.dietary || "";
+				row.menuChoice = addition.menuChoice || "";
 				row.paid = booking.paid || "";
 				row.amountPaid = amountPaid || "";
 				row.balance = "";

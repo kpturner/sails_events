@@ -268,7 +268,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Display the payment details & blurb
 	$scope.bookingForm.paymentDetails=$scope.event.paymentDetails;
 	$scope.bookingForm.blurb=$scope.event.blurb;
+
 	$scope.bookingForm.menu=$scope.event.menu;
+	$scope.bookingForm.menu2=$scope.event.menu2;
+	$scope.bookingForm.menu3=$scope.event.menu3;
 	$scope.bookingForm.dressCode=$scope.event.dressCode;
 
 	// Payment reminder info
@@ -302,6 +305,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		if ($scope.paid)
 			$scope.paidMsg=" AND PAID"
 		$scope.bookingForm.ref = SAILS_LOCALS.booking.ref;
+		$scope.bookingForm.menuChoice = SAILS_LOCALS.booking.menuChoice;
 		$scope.bookingForm.cost = SAILS_LOCALS.booking.cost;
 		$scope.bookingForm.paid = SAILS_LOCALS.booking.paid;
 		$scope.bookingForm.mop = SAILS_LOCALS.booking.mop;
@@ -329,6 +333,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			$http.get("/linkedbooking/"+SAILS_LOCALS.booking.id).success(function(data, status) {
 				if (typeof data == 'object') {
 					$scope.linkedbookings=data;
+					if (!$scope.linkedbookings.menuChoice) {
+						$scope.linkedbookings.menuChoice = 1;
+					}
 					$scope.linkedbookings.forEach(function(v,i){
 						$scope.linkedbookings[i].lodgeNo=parseInt($scope.linkedbookings[i].lodgeNo)
 					})
@@ -351,6 +358,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			if ($scope.bookingForm.places>1)
 				$scope.makeArray();
 		}
+		$scope.bookingForm.menuChoice = 1;
 	}
 
 
@@ -708,6 +716,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					mop: $scope.bookingForm.mop,
 					amountPaid: $scope.bookingForm.amountPaid,
 					places: $scope.bookingForm.places,
+					menuChoice: $scope.bookingForm.menuChoice,
 					linkedBookings: $scope.linkedbookings,
 					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 				})

@@ -6,54 +6,55 @@
 
 <% if (regInterest) {%>
 	<p>This is a courtesy email to confirm your interest<%-updated%>.</p>
-<% } %> 
+<% } %>
 <% if (!regInterest) {%>
 	<p>This is a courtesy email to confirm your booking<%-updated%>.</p>
-<% } %> 
+<% } %>
 <p>Details:</p>
 <p>
 	<% if (regInterest) {%>
 	Interest ref: <b><%=bookingRef%></b>
-	<% } %> 
+	<% } %>
 	<% if (!regInterest) {%>
 	Booking ref: <b><%=bookingRef%></b>
-	<% } %> 
+	<% } %>
 	<br>Event: <%=eventName%>
 	<br>On: <%=eventDate%> at <%=eventTime%>
-	<br>At: <%-eventVenue%> 
+	<br>At: <%-eventVenue%>
 	<br>Organiser: <%=eventOrganiser%> (<%=organiserEmail%>) <%=organiserContactNo%>
     <br>Info: <%-eventBlurb%>
     <% if (eventAdditionalInfo) {%>
 	<br>Additional info: <%-eventAdditionalInfo%>
     <% } %>
 	<% if  (!regInterest) {%>
-    <br>Menu: <%-eventMenu%> 
-	<br>Dress code: <%-eventDressCode%> 
+	<br>Menu choice: <%=menuChoice%>
+    <br>Menu: <%-eventMenu%>
+	<br>Dress code: <%-eventDressCode%>
 	<% } %>
 	<br><br><b>Your details:</b>
     <br>Salutation: <%=salutation%>
     <br>First name: <%=firstName%>
-    <br>Surname: <%=surname%> 
+    <br>Surname: <%=surname%>
 	<% if (sails.config.events.userCategories.length>0) {%>
 	<br>Category: <%=category%>
 	<% } %>
     <% if (addressReqd) {%>
-	  <br><i>Address</i>       
+	  <br><i>Address</i>
 	  	<br><%=address1%>
-		<br><%=address2%>  
-        <br><%=address3%>  
-        <br><%=address4%>  
-        <br><%=postcode%> 
-        <br> 
+		<br><%=address2%>
+        <br><%=address3%>
+        <br><%=address4%>
+        <br><%=postcode%>
+        <br>
     <% } %>
-    <br>Contact no: <%=phone%> 
+    <br>Contact no: <%=phone%>
 	<br><%=orderLabel%>: <%=lodge%>
 	<br><%=orderLabel%> no: <%=lodgeNo%>
 	<% if (sails.config.events.lodgeYear) {%>
 	<br><%=lodgeYearLabel%>: <%=lodgeYear%>
 	<% } %>
-	<br>Centre: <%=centre%>	
-	<br>Area: <%=area%>	
+	<br>Centre: <%=centre%>
+	<br>Area: <%=area%>
 	<% if  (voReqd && isVO) {%>
     <br>Exec lodge: <%=voLodge%>
     <br>Exec lodge no: <%=voLodgeNo%>
@@ -70,19 +71,19 @@
 	<% } %>
 	<br>Places: <%=places%>
 	<% if  (!eventFree && !regInterest && !paid) {%>
-	<br>Payment deadline: <%=deadline%>	
+	<br>Payment deadline: <%=deadline%>
 	<br>Amount to pay: £<%=total%>
 	<% } %>
 	<% if  (regInterest) {%>
 	<br>Cost of event: £<%=total%>
 	<% } %>
 	<br>
-	
+
 	<% if (linkedBookings.length>0) {%>
-	  <br><b>Additional places</b>	
+	  <br><b>Additional places</b>
       <% linkedBookings.forEach(function (linkedBooking,place) { %>
 	  	<br><i>Additional attendee <%=place+1%></i>
-		<br>&nbsp;&nbsp;Salutation: <%=linkedBooking.salutation%>  
+		<br>&nbsp;&nbsp;Salutation: <%=linkedBooking.salutation%>
         <br>&nbsp;&nbsp;Surname: <%=linkedBooking.surname%>
 		<br>&nbsp;&nbsp;First name: <%=linkedBooking.firstName%>
 		<br>&nbsp;&nbsp;<%=orderLabel%>: <%=linkedBooking.lodge%>
@@ -94,13 +95,14 @@
 		<br>&nbsp;&nbsp;Area: <%=linkedBooking.area%>
 		<br>&nbsp;&nbsp;Rank: <%=linkedBooking.rank%>
 		<br>&nbsp;&nbsp;Dietary reqs: <%=linkedBooking.dietary%>
+		<br>&nbsp;&nbsp;Menu choice: <%=linkedBooking.menuChoice%>
       <% }) %>
     <% } %>
-	
+
 	<% if  (!eventFree && !regInterest && !paid) {%>
 	<p> Payment details: <b><%-paymentDetails%></b>
 	<% } %>
-	
+
 <p>Yours S&F,<br/><%=senderName%></p>
 
 <p><i>Do not reply to this email. The recipient is not a human!</i></p>

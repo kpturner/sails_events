@@ -6,88 +6,93 @@
 */
 
 module.exports = {
-  
+
   // Enforce model schema in the case of schemaless databases
   schema: true,
 
   attributes: {
 
     // Who made the booking
-    user: { 
-      model: 'User', 
-      required: true 
+    user: {
+      model: 'User',
+      required: true
     },
-       
+
     // Which event?
     event: {
       model: 'Event',
       required: true
-    },    
-      
+    },
+
+    // Menu choice
+    menuChoice: {
+      type: 'integer'
+    },
+
     // Booking reference
     ref:{
-      type: 'string' 
-    }, 
-      
+      type: 'string'
+    },
+
     // The user's dietary requirements
     dietary: {
       type: 'string'
-    },  
-      
+    },
+
     // Places booked
     places: {
       type: 'integer'
-    },  
-          
+    },
+
     // Total cost
     cost: {
       type: 'float',
       size: 15.2 // Decimal
     },
-    
+
     amountPaid: {
-      type: 'float',      
+      type: 'float',
       size: 15.2 // Decimal
     },
-    
+
     paid: {
       type: 'boolean'
     },
-    
+
     mop: {
       type: 'string',
     },
-    
+
     // Additional info
     info: {
       type: 'text'
     },
-    
+
     // Additional linked bookings
-    additions : { 
-      collection: 'LinkedBooking', via: 'booking' 
+    additions : {
+      collection: 'LinkedBooking', via: 'booking'
     },
 
     // Booking date
     bookingDate: {
        type: 'date',
     },
-    
+
     // Last payment reminder
     lastPaymentReminder: {
-      type: 'date', 
+      type: 'date',
     },
-    
+
     // Reminders sent (total)
     remindersSent: {
-      type: 'integer'  
+      type: 'integer'
     },
-    
+
     // Table no
     tableNo: {
       type: 'integer'
-    }, 
-    
+    },
+
     // Created by
     createdBy: {
         model:  'user',
