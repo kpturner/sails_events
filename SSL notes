@@ -1,0 +1,44 @@
+================
+Apache redirect:
+================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} ^/.well-known/acme-challenge [NC]
+    RewriteRule .* - [L]
+
+	RewriteEngine on
+	RewriteCond %{HTTPS} !=on
+	RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R,QSA]
+</IfModule>
+
+
+======
+nginx:
+======
+
+## Allow lets encrypt challenge through untouched
+location ^~ /.well-known/acme-challenge/ {
+	allow all;
+	default_type "text/plain";
+}
+
+## Redirect for SSL and sails
+if ($ssl_protocol = "") {
+	rewrite ^/(.*) https://$server_name/$1 permanent;
+}
+
+location ~ / {
+
+	proxy_pass http://31.193.141.234:1337;
+
+	proxy_http_version 1.1;
+
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-IP $remote_addr;
+
+	## Allow websockets
+	proxy_set_header Upgrade $http_upgrade;
+	proxy_set_header Connection "upgrade";
+
+}
