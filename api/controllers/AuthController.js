@@ -420,6 +420,7 @@ var AuthController = {
           // Send confirmation email
 					Email.send(
 						"profileChanged", {
+                  timestamp: new Date(),
     				      recipientName: Utility.recipient(updatedUser[0].salutation,updatedUser[0].firstName,updatedUser[0].surname),
     				      senderName: sails.config.events.title,
                   lodgeYearLabel: sails.config.events.lodgeYearLabel || "Lodge year",
