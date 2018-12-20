@@ -207,7 +207,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	var notYetReachedOpeningTime = nowTime < openingTime;
 	var pastTheClosingDate = ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate < SAILS_LOCALS.now);
 	var notYetReachedOpeningDate = ($scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate > SAILS_LOCALS.now);
-	var notYetReachedOpeningTime = ($scope.event.openingTime && $scope.event.openingTime > currentTime);
+	var notYetReachedOpeningTime = ($scope.event.openingTime && $scope.event.openingTime > nowTime);
 	var userBookingHimselfIn = (!$scope.eventBookings && !$scope.userBookings);
 	if 	(!SAILS_LOCALS.isAdmin && pastTheClosingDate ||
 	   	(userBookingHimselfIn && (notYetReachedOpeningDate || notYetReachedOpeningTime))) {

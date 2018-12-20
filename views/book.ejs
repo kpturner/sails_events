@@ -32,6 +32,9 @@
     window.SAILS_LOCALS = {
       _csrf: "<%= _csrf %>",
       now: <%- res.locals.now %>,
+      nowHH: <%- res.locals.nowHH %>,
+      nowMM: <%- res.locals.nowMM %>,
+      nowSS: <%- res.locals.nowSS %>,
       isAdmin: <%- (res.locals.isAdmin)?true:false %>,
       user: <%- JSON.stringify(res.locals.user) %>,
       event: <%- JSON.stringify(res.locals.event) %>,
