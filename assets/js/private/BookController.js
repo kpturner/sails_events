@@ -198,7 +198,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	var currentHH = SAILS_LOCALS.nowHH;
 	var currentMM = SAILS_LOCALS.nowMM;
 	var currentSS = SAILS_LOCALS.nowSS;
-	var openingSplit = $scope.event.openingTime.split(':');
+	var openingSplit = $scope.event.openingTime ? $scope.event.openingTime.split(':') : '00:00:00';
 	var hh = parseInt(openingSplit[0]);
 	var mm = parseInt(openingSplit[1]);
 	var ss = parseInt(openingSplit[2]);
