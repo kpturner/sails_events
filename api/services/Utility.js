@@ -19,42 +19,45 @@ var util        = require('util');
 var async       = require("async");
 var path        = require("path");
 var fs          = require("fs");
-var graph       = require("fbgraph"); 
+var graph       = require("fbgraph");
 var Twit        = require("twit");
 var google      = require('googleapis');
-var plus        = google.plus('v1'); 
+var plus        = google.plus('v1');
 var Gravatar    = require('machinepack-gravatar');
 var moment      = require('moment-timezone');
-var redisClient;  
+var redisClient;
 
-module.exports = { 
+module.exports = {
 
-    /** 
+    /**
      * Return todays date at 00:00:00 (catering for DST which is not in use on some centos/plesk servers)
      */
     today: function(){
         var realDate=moment.tz(new Date(),sails.config.events.timezone).format();
         var splits=realDate.split("-");
         splits[2]=splits[2].split("T")[0];
-        var t=new Date(parseInt(splits[0]),parseInt(splits[1])-1,splits[2],0,0,0,0);	
+        var t=new Date(parseInt(splits[0]),parseInt(splits[1])-1,splits[2],0,0,0,0);
         return t;
     },
 
     /**
      * Return a database date in UTC format ignoring DST
-     * The Mysql adaptor will return a date file set to 
-     * 23:00:00 the previous day when DST in in use and 
+     * The Mysql adaptor will return a date file set to
+     * 23:00:00 the previous day when DST in in use and
      * we don't want that
      */
-    UTCDBdate: function(dateIn) {
+    UTCDBdate: function(dateIn, hoursIn, minutesIn, secondsIn) {
         var hh=dateIn.getUTCHours()-(dateIn.getTimezoneOffset()/60);
-        var offset=(hh>=24)?1:(hh<0)?-1:0;
+        var offset=(hh>=24) ? 1 : (hh<0) ? -1 : 0;
+        hh = hoursIn | 0;
+        mm = minutesIn | 0;
+        ss = secondsIn | 0;
 		var dateOut=Date.UTC(   dateIn.getUTCFullYear(),
                                 dateIn.getUTCMonth(),
                                 dateIn.getUTCDate()-offset,
-                                0,
-                                0,
-                                0
+                                hh,
+                                mm,
+                                ss
         );
         return dateOut;
     },
@@ -80,8 +83,8 @@ module.exports = {
                         sails.log.debug("Running "+cmd);
                         sails.models[indexInfo.table].query(cmd,function(err,res){
                             if (err) {
-                                // Probably means it doesn't exist yet   
-                            }                                
+                                // Probably means it doesn't exist yet
+                            }
                             // Build the index
                             cmd="CREATE INDEX `"+index+"` ON `"+indexInfo.table+"` (";
                             indexInfo.columns.forEach(function(col,c){
@@ -90,35 +93,35 @@ module.exports = {
                                 cmd+='`'+col+'`';
                             })
                             cmd+=");";
-                            sails.log.debug("Running "+cmd); 
+                            sails.log.debug("Running "+cmd);
                             sails.models[indexInfo.table].query(cmd,function(err,res){
                                 if (err) {
-                                    sails.log.error(err);   
+                                    sails.log.error(err);
                                     next(err)
                                 }
                                 else {
                                     next();
-                                }     
-                            });   
+                                }
+                            });
                         })
                     }
                 })
-                
+
             },
             function(err){
                 // Here when all done
-                cb();                 
+                cb();
             })
-        }  
-        
-    },   
-    
+        }
+
+    },
+
     /**
      * @name            areas
      * @method
      * @description     Return an array of areas
-    
-     * @return {Array} 
+
+     * @return {Array}
      */
     areas: function() {
         var areas=[];
@@ -135,8 +138,8 @@ module.exports = {
      * @name            centres
      * @method
      * @description     Return an array of centres
-    
-     * @return {Array} 
+
+     * @return {Array}
      */
     centres: () => {
         var centres=null;
@@ -159,7 +162,7 @@ module.exports = {
             if (user.isAdmin) {
                 isAdmin=true;
             }
-            else {        
+            else {
                 var admins=sails.config.events.admins;
                 if (admins) {
                     if (Array.isArray(admins)) {
@@ -167,8 +170,8 @@ module.exports = {
                     }
                     else {
                         isAdmin=((user.username==admins || user.email==admins))
-                    }  
-                }        
+                    }
+                }
             }
         }
         if (!isAdmin) {
@@ -180,16 +183,16 @@ module.exports = {
                 isAdmin=(
                     (id1 && id1==user.id) ||
                     (id2 && id2==user.id) ||
-                    (id3 && id3==user.id) 
+                    (id3 && id3==user.id)
                 );
             }
         }
-        return isAdmin 
+        return isAdmin
     },
 
 
     diagnosticEmail: function(err,subject,cb){
-                
+
             if (sails.config.events.developer) {
                 if (!cb)
                     cb=function(){}
@@ -209,27 +212,27 @@ module.exports = {
                     subject: subject
                     },
                     cb
-                )	
-            }         
+                )
+            }
         },
 
     jsonSort: function(field, reverse, primer){
-    
+
     var s=field.split(".");
     var o=s[0];
     var f
     if (s.length>1)
-        f=s[1];  
-        
-    var key = primer ? 
-        function(x) {return primer(f&&x[o]?x[o][f]:x[o])} : 
+        f=s[1];
+
+    var key = primer ?
+        function(x) {return primer(f&&x[o]?x[o][f]:x[o])} :
         function(x) {return f&&x[o]?x[o][f]:x[o]};
 
     reverse = !reverse ? 1 : -1;
 
     return function (a, b) {
         return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-        } 
+        }
     },
 
     getRequestAction: function (req) {
@@ -291,7 +294,7 @@ module.exports = {
         if (associationActions.length > 0) return associationActions[0];
         }
     },
-    
+
         /**
          * @name            service.Utility.clearDir
          * @method
@@ -300,12 +303,12 @@ module.exports = {
          * @param {Boolean} [RemoveSelf=false] Remove the target directory as well as its contents
          */
         clearDir: function(dirPath,removeSelf) {
-            try { 
-                var files = fs.readdirSync(dirPath); 
+            try {
+                var files = fs.readdirSync(dirPath);
             }
-            catch(err) { 
+            catch(err) {
                 sails.log.error(err)
-                return; 
+                return;
             }
             if (files.length > 0) {
                 for (var i = 0; i < files.length; i++) {
@@ -315,19 +318,19 @@ module.exports = {
                     }
                     else {
                         this.clearDir(filePath,true);
-                    }                    
+                    }
                 }
             }
             if (removeSelf)  {
-                fs.rmdirSync(dirPath);    
-            }                 
-        }, 
-    
+                fs.rmdirSync(dirPath);
+            }
+        },
+
         /**
          * @name            service.Utility.memoryLeakCheck
          * @method
          * @description     Periodically produce a heapdump for memory leak analysis
-         *  
+         *
          */
         memoryLeakCheck: function(){
             if (sails.config.heapdumpInterval) {
@@ -335,16 +338,16 @@ module.exports = {
                 var heapdump    = require("heapdump");
                 var xpath=path.join(sails.config.appPath,"heapdump");
                 this.clearDir(xpath);
-                var hd=path.join(xpath,"0.baseline.heapsnapshot");        
+                var hd=path.join(xpath,"0.baseline.heapsnapshot");
                 heapdump.writeSnapshot(hd,function(err, filename) {
                     sails.log.debug('Dump written to', filename);
                 });
                 setInterval(function(){
-                    var hd=path.join(xpath,Date.now().toString()+".heapsnapshot");        
+                    var hd=path.join(xpath,Date.now().toString()+".heapsnapshot");
                     heapdump.writeSnapshot(hd,function(err, filename) {
                         sails.log.debug('Dump written to', filename);
                     });
-                },sails.config.heapdumpInterval)  
+                },sails.config.heapdumpInterval)
             }
         },
 
@@ -355,7 +358,7 @@ module.exports = {
          * @param {String}  Salutation
          * @param {String}  First name
          * @param {String}  Surname
-         * @return {String} 
+         * @return {String}
          */
         recipient: function(salutation,firstName,surname) {
             var recip;
@@ -372,10 +375,10 @@ module.exports = {
          * @name            service.Utility.updateAvatars
          * @method
          * @description     Update all user avatars
-         
+
          */
         updateAvatars: function(){
-            User.find({               
+            User.find({
                 //where: {
                 //    or: [
                 //        {authProvider:"facebook"},
@@ -398,7 +401,7 @@ module.exports = {
                                 }
                                 else {
                                     sails.log.debug("Avatar updated for "+updatedUsers[0].name)
-                                }                                
+                                }
                             })
                         }
                     })
@@ -419,7 +422,7 @@ module.exports = {
             if (!user.passports) {
                 Passport.findOne({ user: user.id })
                     .then(function(pp) {
-                        passport=pp;         
+                        passport=pp;
                         getIt();
                     });
             }
@@ -428,14 +431,14 @@ module.exports = {
                     // There will only be one passport per user in this system
                     passport=user.passports[0];
                 }
-                getIt();     
+                getIt();
             }
-           
+
             function getIt(){
-                if (passport) {               
+                if (passport) {
                     try {
                         // Get the piccie
-                        switch (user.authProvider) {                            
+                        switch (user.authProvider) {
                             case "facebook":
                                 avatar="";
                                 if (passport.tokens) {
@@ -445,20 +448,20 @@ module.exports = {
                                             sails.log.error("Cannot get avatar for Facebook user "+user.name+": "+err.message);
                                         }
                                         else {
-                                            avatar=res.location;                                              
-                                        } 
-                                        cb(e,avatar); 
-                                    }) 
+                                            avatar=res.location;
+                                        }
+                                        cb(e,avatar);
+                                    })
                                 }
                                 else {
                                     sails.log.debug("Cannot find passport tokens for user "+user.name+" ("+user.id+")");
-                                    cb(e,avatar); 
-                                }               
+                                    cb(e,avatar);
+                                }
                                 break;
                             case "twitter":
                                 avatar="";
                                 if (passport.tokens) {
-                                    // Create twitter interface 
+                                    // Create twitter interface
                                     twitter=new Twit({
                                         consumer_key:       sails.config.passport.twitter.options.consumerKey,
                                         consumer_secret:    sails.config.passport.twitter.options.consumerSecret,
@@ -468,41 +471,41 @@ module.exports = {
                                     twitter.get("users/show",{user_id:passport.identifier},function(err,data,res){
                                         if (err) {
                                             e=err;
-                                            sails.log.error("Cannot get avatar for Twitter user "+user.name+": "+err.message);                                           
+                                            sails.log.error("Cannot get avatar for Twitter user "+user.name+": "+err.message);
                                         }
                                         else {
                                             avatar=data.profile_image_url;
                                         }
-                                        cb(e,avatar); 
-                                    }) 
+                                        cb(e,avatar);
+                                    })
                                 }
                                 else {
                                     sails.log.debug("Cannot find passport tokens for user "+user.name+" ("+user.id+")");
-                                    cb(e,avatar); 
-                                }                        
+                                    cb(e,avatar);
+                                }
                                 break;
                             case "google":
                                 avatar="";
                                 if (passport.tokens) {
                                     plus.people.get({
                                         userId: passport.identifier,
-                                        auth:   sails.config.passport.google.options.apiKey      
+                                        auth:   sails.config.passport.google.options.apiKey
                                     },function(err, data){
                                         if (err) {
                                             e=err;
-                                            sails.log.error("Cannot get avatar for Google user "+user.name+": "+err.message);                                            
+                                            sails.log.error("Cannot get avatar for Google user "+user.name+": "+err.message);
                                         }
                                         else {
                                             avatar=data.image.url;
-                                        } 
-                                        cb(e,avatar); 
-                                    })  
+                                        }
+                                        cb(e,avatar);
+                                    })
                                 }
                                 else {
                                     sails.log.debug("Cannot find passport tokens for user "+user.name+" ("+user.id+")");
-                                    cb(e,avatar);  
-                                }                                                                                            
-                                break;    
+                                    cb(e,avatar);
+                                }
+                                break;
                             default:
                                 if (user.useGravatar) {
                                     Gravatar.getImageUrl({
@@ -519,8 +522,8 @@ module.exports = {
                                             sails.log.debug("Gravatar for user "+user.name+" set to: "+gravatar)
                                             avatar=gravatar;
                                             cb(null,avatar);
-                                        }	
-                                    });	
+                                        }
+                                    });
                                 }
                                 else {
                                     sails.log.debug("Removing Gravatar for user "+user.name)
@@ -538,7 +541,7 @@ module.exports = {
                     cb(null,"");
                 }
             }
-            
+
         },
 
 
@@ -554,17 +557,17 @@ module.exports = {
                         _.forEach(orders,function(order){
                             if (event.order==order.code) {
                                 user.salutation=order.salutation || "";
-                                user.rank=order.rank || "";							 
+                                user.rank=order.rank || "";
                                 user.lodge=order.name || "";
-                                user.lodgeNo=order.number || "";							 						
+                                user.lodgeNo=order.number || "";
                                 user.centre=order.centre || "";
-                                user.area=order.area || "";		
+                                user.area=order.area || "";
                             }
                             return false;
                         })
                         cb(user)
-                    });						
-                }	
+                    });
+                }
                 else {
                     cb(user)
                 }
@@ -596,7 +599,7 @@ module.exports = {
             }
             return orderLabel;
         },
-  
+
         /**
          * Order details
          */
@@ -648,7 +651,7 @@ module.exports = {
                                     subject: "Email failure"
                                 },
                                 function(){}
-                            )	
+                            )
                         }
                         catch(e) {
                             // No dice!
@@ -671,35 +674,35 @@ module.exports = {
 	  ,   download_dir = path.join(".tmp","downloads")
 	  ,   filename = options && options.filename ? options.filename : 'file_' + ((new Date().getTime().toString())) + '.csv'
       ,   fullpath = path.join(download_dir,filename);
-	
-	  	
+
+
 	  sails.log.silly('res.csv() :: Sending 200 ("OK") response');
-	
-		
+
+
 	  //PUT THE DATA THROUGH THE GAUNTLET...
-	
+
 	  if(!data){
 	    throw new Error('data cannot be null');
 	  }
-	
+
 	  if(!_.isArray(data)){
 	    throw new Error('data must be of type array');
 	  }
-	
+
 	  var columns = data.length ? _.keys(data[0]) : [];
-	
+
 	  // if we made it this far, send the file
-	
+
 	  // Set status code
 	  res.status(200);
-	
+
 	  options.data=data;
 	  options.fields=columns;
-	
+
 	  json2csv(options, function(err, csv) {
-	
+
 	    if (err) { throw err; }
-	
+
 	    //make the download dir if it doesnt exist
 	    fs.mkdir(download_dir, 0777, function(err){
 	      if(err){
@@ -708,7 +711,7 @@ module.exports = {
 	          throw err;
 	        }
 	      }
-	
+
 	      //create the csv file and upload it to our directory
 	      fs.writeFile(fullpath, csv, function(err) {
 	        if (err) throw err;
@@ -717,19 +720,19 @@ module.exports = {
 	          if(err) {
 	            throw err;
 	          }
-	
+
 	          //delete the file after we are done with it.
 	          fs.unlink(fullpath,function(){});
-	
+
 	        });
 	      });
-	
+
 	    });
-	
-	
-	
+
+
+
 	  });
-	  
+
 	},
 
     /**
@@ -738,13 +741,13 @@ module.exports = {
      * @description      Delete redis keys en-masse
      * @param {Array}    keys   An array of key search strings. It is also possible to pass a single  key as a string.
      * @param {Function} [cb]   callback
-     *  
+     *
      */
-    deleteRedisKeys: function(keys, cb) {    
+    deleteRedisKeys: function(keys, cb) {
         if (!redisClient) {
              // Add function to client
              libredis.RedisClient.prototype.delWildcard = function(key, callback) {
-                var redis = this            
+                var redis = this
                 redis.keys(key, function(err, rows) {
                     async.each(rows, function(row, callbackDelete) {
                         sails.log.verbose("Deleting "+row)
@@ -754,23 +757,23 @@ module.exports = {
             }
             var opts={
                  port:      sails.config.mutex.port,
-                 host:      sails.config.mutex.host,            
-            }            
+                 host:      sails.config.mutex.host,
+            }
             if (sails.config.mutex.db) {
                  opts.db=sails.config.mutex.db;
             }
             // Create a client
-            redisClient=libredis.createClient(opts) 
-             
-        }            
-         
+            redisClient=libredis.createClient(opts)
+
+        }
+
         // Function to actually do the business
         var del=_.bind(function(){
             var self=this;
             // String or array of keys?
             if (typeof this.keys=="string") {
                redisClient.delWildcard(this.keys, this.cb)
-            } 
+            }
             else {
                 // Array of keys
                 async.forEach(this.keys,function(key,next){
@@ -779,12 +782,12 @@ module.exports = {
                 function(err){
                     // All done
                     if (err) {
-                        sails.log.error(err);                        
+                        sails.log.error(err);
                     }
                     self.cb();
                 })
             }
-        },{keys:keys,cb:cb})   
+        },{keys:keys,cb:cb})
 
         // Create a test then delete it
         /*
@@ -802,19 +805,19 @@ module.exports = {
                     if (err) {
                         console.log(err)
                     }
-                    console.log("Del "+reply);        
-                });    
+                    console.log("Del "+reply);
+                });
             });
         });
         */
 
-        // Authenticate if need be before calling function        
+        // Authenticate if need be before calling function
         if (sails.config.mutex.pass) {
             redisClient.auth(sails.config.mutex.pass, del);
         }
         else {
             del();
         }
-    }, 
+    },
 
 };

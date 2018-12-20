@@ -107,6 +107,12 @@ module.exports = {
       required: false
     },
 
+    // Opening time for bookings (seems to be a bug in sails-mysql with regard to using a type of "time" so switched to "string")
+    //  https://github.com/balderdashy/sails-mysql/issues/241
+    openingTime: {
+      type: 'string'
+    },
+
     // When do booking close
     closingDate: {
       type: 'date',

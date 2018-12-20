@@ -194,9 +194,23 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	}
 
 	// Open for bookings?
-	$scope.openForBookings=true;
-	if (!SAILS_LOCALS.isAdmin && ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate<SAILS_LOCALS.now) ||
-			(!$scope.eventBookings && !$scope.userBookings && $scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate>SAILS_LOCALS.now)) {
+	$scope.openForBookings = true;
+	var currentHH = SAILS_LOCALS.nowHH;
+	var currentMM = SAILS_LOCALS.nowMM;
+	var currentSS = SAILS_LOCALS.nowSS;
+	var openingSplit = $scope.event.openingTime.split(':');
+	var hh = parseInt(openingSplit[0]);
+	var mm = parseInt(openingSplit[1]);
+	var ss = parseInt(openingSplit[2]);
+	var openingTime = (hh * 3600) + (mm * 60) + ss;
+	var nowTime = (currentHH * 3600) + (currentSS * 60) + currentSS;
+	var notYetReachedOpeningTime = nowTime < openingTime;
+	var pastTheClosingDate = ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate < SAILS_LOCALS.now);
+	var notYetReachedOpeningDate = ($scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate > SAILS_LOCALS.now);
+	var notYetReachedOpeningTime = ($scope.event.openingTime && $scope.event.openingTime > currentTime);
+	var userBookingHimselfIn = (!$scope.eventBookings && !$scope.userBookings);
+	if 	(!SAILS_LOCALS.isAdmin && pastTheClosingDate ||
+	   	(userBookingHimselfIn && (notYetReachedOpeningDate || notYetReachedOpeningTime))) {
 		$scope.openForBookings=false;
 	}
 

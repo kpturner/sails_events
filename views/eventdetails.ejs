@@ -280,7 +280,7 @@
               ng-class="{'has-error':eventdetails.time.$invalid &&
                                     eventdetails.time.$dirty}">
                 <label>* Time</label>
-                <input type="time" class="form-control" placeholder="e.g. 18:00:00" name="time" ng-model="eventForm.time" required/>
+                <input type="time" class="form-control" placeholder="e.g. 18:00" name="time" ng-model="eventForm.time" required/>
                 <span class="help-block has-error" ng-if="eventdetails.time.$dirty">
                   <span ng-show="eventdetails.time.$error.required">Time is required.</span>
                 </span>
@@ -435,6 +435,18 @@
               <span class="help-block has-error" ng-if="eventdetails.openingdate.$dirty">
                 <span ng-show="eventdetails.openingdate.$error.required">Opening date is required.</span>
               </span>
+            </div>
+
+            <!-- O P E N I N G  T I M E -->
+
+            <div class="control-group form-group col-md-10 col-md-6"
+              ng-class="{'has-error':eventdetails.openingtime.$invalid &&
+                                    eventdetails.openingtime.$dirty}">
+                <label>* Opening Time</label>
+                <input type="time" class="form-control" placeholder="e.g. 18:00" name="openingtime" ng-model="eventForm.openingTime" required/>
+                <span class="help-block has-error" ng-if="eventdetails.openingtime.$dirty">
+                  <span ng-show="eventdetails.openingtime.$error.required">Opening time is required.</span>
+                </span>
             </div>
 
             <!-- C L O S I N G  D A T E -->

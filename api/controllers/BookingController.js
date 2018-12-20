@@ -256,6 +256,10 @@ module.exports = {
 					if (res.locals.event.bypassCode)
 						res.locals.event.bypassCode = "*redacted";
 					res.locals.now = Utility.UTCDBdate(Utility.today());
+					var now = new Date();
+					res.locals.nowHH = now.getHours();
+					res.locals.nowMM = now.getMinutes();
+					res.locals.nowSS = now.getSeconds();
 					res.locals.event.capacity -= places;
 					if (res.locals.event.capacity < 0) {
 						res.locals.event.capacity = 0;
