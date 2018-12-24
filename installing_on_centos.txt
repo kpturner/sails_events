@@ -1,4 +1,4 @@
-Log in to CENTOS (Plesk on Parallels) using putty.exe 
+Log in to CENTOS (Plesk on Parallels) using putty.exe
 Log in as "root"
 Run the following commands to install node.js and npm
 
@@ -55,10 +55,23 @@ Plesk
 Ensure that nginx is installed. We need this to create a reverse proxy to the sails.js application in the
 squareevents.org domain.
 
-In Plesk, create the squareevents.org domain and add a MySql database and user - usually called 
+In Plesk, create the squareevents.org domain and add a MySql database and user - usually called
 "squareevents" but double check the localhostMySqlServer settings in /usr/sails/projects/events/config/connections.js
 
 In the squareevents.org domain settings take the "Apache and nginx settings" option.
+
+Apache http overrides to allow lets-encrypt to work:
+##################################################
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteCond %{REQUEST_URI} ^/.well-known/acme-challenge [NC]
+	RewriteRule .* - [L]
+
+	RewriteEngine on
+	RewriteCond %{HTTPS} !=on
+	RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R,QSA]
+</IfModule>
+##################################################
 
 In "Additional nginx directives" we need to reverse proxy to sails by adding the following (remembering to change the IP address):
 
@@ -83,18 +96,18 @@ location ~ / {
 
 First time in
 =============
-Make a new folder structure in /usr:   /sails/projects 
+Make a new folder structure in /usr:   /sails/projects
 
 Clone the repo from github:
 git clone https://github.com/kpturner/sails_events.git /usr/sails/projects/events
 
-cd /usr/sails/projects/events 
+cd /usr/sails/projects/events
 
 Install missing modules:  "npm install"
 
 Look in "events-service" file for instructions on installing a service to run this application.
 
-run "sails lift" to fire everything up for the first time - this will also set up the database. 
+run "sails lift" to fire everything up for the first time - this will also set up the database.
 
 
 Install Redis (for sessions)
@@ -115,7 +128,7 @@ To make sure redis is working, run command “redis-cli ping” from command lin
 
 Not first time in
 =================
-cd /usr/sails/projects/events 
+cd /usr/sails/projects/events
 
 Pull updates from GitHub using: "bash gitupdate.sh"
 
