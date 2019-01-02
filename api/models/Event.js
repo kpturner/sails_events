@@ -78,6 +78,10 @@ module.exports = {
       type: 'text'
     },
 
+    menu4: {
+      type: 'text'
+    },
+
     // Dress code
     dressCode: {
       type: 'string'

@@ -363,10 +363,10 @@
               ng-class="{'has-error':eventdetails.menusonoffer.$invalid &&
                             eventdetails.menusonoffer.$dirty}">
               <label>Menus on offer</label>
-              <input type="number" class="form-control" placeholder="1" name="menusonoffer" ng-model="eventForm.menusOnOffer" min="1" max="3">
+              <input type="number" class="form-control" placeholder="1" name="menusonoffer" ng-model="eventForm.menusOnOffer" min="1" max="4">
               <span class="help-block has-error" ng-if="eventdetails.menusonoffer.$dirty">
                 <span ng-show="eventdetails.menusonoffer.$error.min">Menus on offer cannot be less than 1.</span>
-                <span ng-show="eventdetails.menusonoffer.$error.max">Menus on offer cannot exceed 3.</span>
+                <span ng-show="eventdetails.menusonoffer.$error.max">Menus on offer cannot exceed 4.</span>
               </span>
             </div>
 
@@ -397,6 +397,16 @@
                                     eventdetails.menu3.$dirty}">
               <label>Menu 3</label>
               <textarea type="text" class="form-control" placeholder="menu details if known" name="menu3" ng-model="eventForm.menu3" rows="4"></textarea>
+
+            </div>
+
+             <!-- M E N U  4 -->
+
+             <div class="control-group form-group col-md-10" ng-show="eventForm.menusOnOffer>3"
+              ng-class="{'has-error':eventdetails.menu4.$invalid &&
+                                    eventdetails.menu4.$dirty}">
+              <label>Menu 4</label>
+              <textarea type="text" class="form-control" placeholder="menu details if known" name="menu4" ng-model="eventForm.menu4" rows="4"></textarea>
 
             </div>
 

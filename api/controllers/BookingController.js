@@ -462,6 +462,10 @@ module.exports = {
 			} else {
 				if (booking.menuChoice === 3) {
 					menu = event.menu3;
+				} else {
+					if (booking.menuChoice === 4) {
+						menu = event.menu4;
+					}
 				}
 			}
 		}

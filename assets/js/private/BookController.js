@@ -204,13 +204,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	var ss = parseInt(openingSplit[2]);
 	var openingTime = (hh * 3600) + (mm * 60) + ss;
 	var nowTime = (currentHH * 3600) + (currentSS * 60) + currentSS;
-	var notYetReachedOpeningTime = nowTime < openingTime;
 	var pastTheClosingDate = ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate < SAILS_LOCALS.now);
 	var notYetReachedOpeningDate = ($scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate > SAILS_LOCALS.now);
-	var notYetReachedOpeningTime = ($scope.event.openingTime && openingTime > nowTime);
+	var isOpeningDate = ($scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate === SAILS_LOCALS.now);
 	var userBookingHimselfIn = (!$scope.eventBookings && !$scope.userBookings);
 	if 	(!SAILS_LOCALS.isAdmin && pastTheClosingDate ||
-	   	(userBookingHimselfIn && (notYetReachedOpeningDate || notYetReachedOpeningTime))) {
+	   	(userBookingHimselfIn && (notYetReachedOpeningDate || (isOpeningDate && $scope.event.openingTime && openingTime > nowTime)))) {
 		$scope.openForBookings=false;
 	}
 
@@ -286,6 +285,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.bookingForm.menu=$scope.event.menu;
 	$scope.bookingForm.menu2=$scope.event.menu2;
 	$scope.bookingForm.menu3=$scope.event.menu3;
+	$scope.bookingForm.menu4=$scope.event.menu4;
 	$scope.bookingForm.dressCode=$scope.event.dressCode;
 
 	// Payment reminder info

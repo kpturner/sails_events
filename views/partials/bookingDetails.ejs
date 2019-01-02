@@ -92,6 +92,15 @@
 
 </div>
 
+<!-- M E N U  4 -->
+
+<div class="control-group form-group col-md-10" ng-show="<%-model%>Form.menu4 && event.menusOnOffer>3">
+
+  <label>Menu 4</label>
+  <textarea type="text" class="form-control" name="menu4" ng-model="<%-model%>Form.menu4" rows="4" readonly></textarea>
+
+</div>
+
 <!-- M E N U  C H O I C E -->
 
 <div class="control-group form-group col-xs-6 col-md-4" ng-class="{'has-error':<%-model%>.menuchoice.$invalid &&
