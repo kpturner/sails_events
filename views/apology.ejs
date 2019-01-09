@@ -55,7 +55,7 @@
 
       <!-- APOLOGY FORM -->
       <form ng-submit="submitApologyForm()" id="apology-form" name="apology"
-          ng-class="{'form-other':'<%- req.device.type %>'=='desktop'}">
+          ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}">
 
         <h3 class="form-heading">Booking for {{event.name}}</h3>
         <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
