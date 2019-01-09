@@ -5,7 +5,7 @@
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-cookie-law.min.css">
@@ -39,20 +39,20 @@
 
     <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
-      <% include partials/private/navbar.ejs %>  
-       
-      <!-- EVENT FORM --> 
-      <form ng-submit="filterEvents()" id="filter-form" name="filterform" 
-          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}"> 
-        <h3 class="form-signin-heading">Event Maintenance</h3>
-        
+      <% include partials/private/navbar.ejs %>
+
+      <!-- EVENT FORM -->
+      <form ng-submit="filterEvents()" id="filter-form" name="filterform"
+          ng-class="{'form-other':'<%- req.device.type %>'=='desktop'}">
+        <h3 class="form-heading">Event Maintenance</h3>
+
         <div class="row">
-  
+
           <!-- F I L T E R -->
-           
-          <div class="control-group form-group col-sm-8 col-xs-6">             
-            <input type="text" class="form-control" placeholder="key text to filter events" name="filter" ng-model="filterForm.criteria.filter">  
-          </div>                    
+
+          <div class="control-group form-group col-sm-8 col-xs-6">
+            <input type="text" class="form-control" placeholder="key text to filter events" name="filter" ng-model="filterForm.criteria.filter">
+          </div>
 
            <div class="control-group form-group col-sm-4 col-xs-6">
               <label>
@@ -60,32 +60,32 @@
                 &nbsp;&nbsp;&nbsp;Include closed?
               </label>
             </div>
-         
+
         </div>
-         
+
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(!filterform.filter.$dirty && !filterform.incclosed.$dirty) || filterForm.loading">
           <span class="fa fa-filter"></span><span ng-show="!filterForm.loading"> Filter events</span>
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
-        <a class="btn-block" href="/event/create/" class="a-unstyled">     
+        <a class="btn-block" href="/event/create/" class="a-unstyled">
           <button type="button"  class="btn btn-primary btn-lg btn-block">
               <span>Create an event</span>
           </button>
-        </a>      
-      
-  
+        </a>
+
+
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
-      </form> 
-        
-      
-      <div class="container">      
-        <h4 class="hidden-md hidden-lg">Tap an event name to edit it</h4>  
-        <h4 class="hidden-xs hidden-sm">Click an event to edit it</h4>   
+      </form>
+
+
+      <div class="container">
+        <h4 class="hidden-md hidden-lg">Tap an event name to edit it</h4>
+        <h4 class="hidden-xs hidden-sm">Click an event to edit it</h4>
         <div deckgrid source="events" cardTemplate="/templates/events.html" class="deckgrid"></div>
-      </div>    
-    
-      <% include partials/public/footer.ejs %>   
+      </div>
+
+      <% include partials/public/footer.ejs %>
 
     </div>
     <!--SCRIPTS-->

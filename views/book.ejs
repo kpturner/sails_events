@@ -70,9 +70,9 @@
 
       <!-- BOOKING FORM -->
       <form ng-submit="submitBookingForm()" id="booking-up-form" name="booking"
-          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
+          ng-class="{'form-other':'<%- req.device.type %>'=='desktop'}">
 
-        <h3 class="form-signin-heading"><span ng-hide="event.regInterest">Booking</span><span ng-show="event.regInterest">Interest</span> for {{event.name}}</h3>
+        <h3 class="form-heading"><span ng-hide="event.regInterest">Booking</span><span ng-show="event.regInterest">Interest</span> for {{event.name}}</h3>
         <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
         <h4>{{event.venue}}<h4>
 

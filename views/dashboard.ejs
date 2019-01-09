@@ -5,8 +5,8 @@
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">    
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-cookie-law.min.css">
     <link rel="stylesheet" href="/styles/angular-deckgrid.css">
@@ -41,32 +41,32 @@
 
     <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
-      <% include partials/private/navbar.ejs %> 
+      <% include partials/private/navbar.ejs %>
 
-      <div ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}" ng-show="<%-sails.config.events.developer && req.user && sails.config.events.developer==req.user.email %>">
+      <div ng-class="{'form-other':'<%- req.device.type %>'=='desktop'}" ng-show="<%-sails.config.events.developer && req.user && sails.config.events.developer==req.user.email %>">
         <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
-          <span class="fa fa-download"></span><span> Download log</span>         
-        </button> 
+          <span class="fa fa-download"></span><span> Download log</span>
+        </button>
         <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="deleteLog()">
-          <span> Clear log</span>         
-        </button> 
+          <span> Clear log</span>
+        </button>
       </div>
 
-      <div class="container">  
-        <span class="fa fa-spinner fa-pulse fa-3x fa-fw loading-spinner" ng-show="loadingMimicUsers"></span>      
+      <div class="container">
+        <span class="fa fa-spinner fa-pulse fa-3x fa-fw loading-spinner" ng-show="loadingMimicUsers"></span>
         <div ng-show="events.length>0">
-          <h4 class="hidden-md hidden-lg">Tap an event name to book in</h4>  
-          <!-- <h4 class="hidden-xs hidden-sm">Click an event to book in</h4> -->  
+          <h4 class="hidden-md hidden-lg">Tap an event name to book in</h4>
+          <!-- <h4 class="hidden-xs hidden-sm">Click an event to book in</h4> -->
         </div>
         <div ng-show="events.length==0">
-          <h4>There are no events open for bookings</h4>  
+          <h4>There are no events open for bookings</h4>
         </div>
-        
+
         <div ng-hide="loadingMimicUsers" deckgrid source="events" cardTemplate="/templates/dashboard.html" class="deckgrid"></div>
       </div>
 
-    
-      <% include partials/public/footer.ejs %>   
+
+      <% include partials/public/footer.ejs %>
 
     </div>
     <!--SCRIPTS-->
@@ -96,6 +96,6 @@
     <script src="/js/public/ResetController.js"></script>
     <script src="/js/public/SignupController.js"></script>
     <!--SCRIPTS END-->
-   
+
   </body>
 </html>

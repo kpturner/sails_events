@@ -42,36 +42,36 @@
       orders: <%- JSON.stringify(sails.config.events.orders) %>,
       permanentDiningList: <%- sails.config.events.permanentDiningList %>,
     };
-    
+
     </script>
-    
+
   </head>
 
   <body ng-app="EventsModule" data-ng-controller="UserDetailsController" ng-cloak>
-    
-                     
-    <div class="container-fluid">
-       
-      <% include partials/private/navbar.ejs %>     
 
-      <!-- USER FORM --> 
-      <form ng-submit="submitUserForm()" id="profile-form" name="userdetails" 
-          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h3 class="form-signin-heading">User - <%=mode%></h3>
+
+    <div class="container-fluid">
+
+      <% include partials/private/navbar.ejs %>
+
+      <!-- USER FORM -->
+      <form ng-submit="submitUserForm()" id="profile-form" name="userdetails"
+          ng-class="{'form-other':'<%- req.device.type %>'=='desktop'}">
+        <h3 class="form-heading">User - <%=mode%></h3>
 
         <h5>Items marked with * are mandatory</h5>
 
-                
+
         <!-- A V A T A R -->
         <div class="control-group form-group" ng-show="<%-form%>Form.gravatarUrl">
             <img ng-src="{{<%-form%>Form.gravatarUrl}}"></img>
-        </div>   
+        </div>
 
-        
+
         <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->
-  
+
            <!-- A D M I N ? -->
-  
+
           <div class="control-group form-group col-sm-5"
             ng-class="{'has-error':userdetails.isadmin.$invalid &&
                                   userdetails.isadmin.$dirty}" ng-show="user.isAdmin">
@@ -80,9 +80,9 @@
               &nbsp;&nbsp;&nbsp;System administrator?
              </label>
            </div>
-           
+
            <!-- E V E N T   O R G A N I S E R ? -->
-  
+
           <div class="control-group form-group col-sm-5"
             ng-class="{'has-error':userdetails.isorganiser.$invalid &&
                                   userdetails.isorganiser.$dirty}">
@@ -90,10 +90,10 @@
               <input type="checkbox" class="bigcheckbox" name="isorganiser" ng-model="userdetailsForm.isOrganiser" />
               &nbsp;&nbsp;&nbsp;Event organiser?
              </label>
-           </div>   
+           </div>
 
            <!-- E V E N T   D C  ? -->
-  
+
           <div class="control-group form-group col-sm-5"
             ng-class="{'has-error':userdetails.isdc.$invalid &&
                                   userdetails.isdc.$dirty}">
@@ -101,22 +101,22 @@
               <input type="checkbox" class="bigcheckbox" name="isdc" ng-model="userdetailsForm.isDC" />
               &nbsp;&nbsp;&nbsp;Event DC?
              </label>
-           </div>   
-  
-           
+           </div>
+
+
           <!-- A U T H E N T I C A T I O N   P R O V I D E R -->
           <div class="control-group form-group col-xs-12" ng-hide="userdetailsForm.authProvider=='dummy'">
-            <label>Auth provider</label>  
+            <label>Auth provider</label>
             <input type="text" class="form-control" name="authprovider" ng-model="userdetailsForm.authProvider" readonly />
           </div>
-           
-           <% include partials/userDetails.ejs %>   
-           <% include partials/additionalUserDetails.ejs %> 
+
+           <% include partials/userDetails.ejs %>
+           <% include partials/additionalUserDetails.ejs %>
            <% include partials/otherOrders.ejs %>
-  
-        </div>  
+
+        </div>
         <br/>
-  
+
         <!-- Disable button until something has been edited and the form has no errors -->
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (!detailsComplete() || userdetails.$invalid)) || userdetailsForm.loading">
           <span ng-show="!userdetailsForm.loading && mode!='delete'">Save Details</span>
@@ -125,14 +125,14 @@
           <span ng-show="userdetailsForm.loading && mode!='delete'">Saving user details...</span>
           <span ng-show="userdetailsForm.loading && mode=='delete'">Deleting user...</span>
         </button>
-  
+
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form>
-     
-     </div>  
 
-    <% include partials/public/footer.ejs %>   
-      
+     </div>
+
+    <% include partials/public/footer.ejs %>
+
     <!--SCRIPTS-->
     <script src="/js/dependencies/jquery/jquery.js"></script>
     <script src="/js/dependencies/angular.js"></script>

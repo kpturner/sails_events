@@ -47,40 +47,40 @@
          lodgeNo: <%- sails.config.events.lodgeNoDefault || 0 %>,
       },
     };
-    
+
     </script>
-    
+
   </head>
 
   <body ng-app="EventsModule" data-ng-controller="ProfileController" ng-cloak>
-    
-                     
-    <div class="container-fluid">
-       
-      <% include partials/private/navbar.ejs %>     
 
-      <!-- PROFILE FORM --> 
-      <form ng-submit="submitProfileForm()" id="profile-form" name="profile" 
-          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h3 class="form-signin-heading">Edit profile</h3>
+
+    <div class="container-fluid">
+
+      <% include partials/private/navbar.ejs %>
+
+      <!-- PROFILE FORM -->
+      <form ng-submit="submitProfileForm()" id="profile-form" name="profile"
+          ng-class="{'form-other':'<%- req.device.type %>'=='desktop'}">
+        <h3 class="form-heading">Edit profile</h3>
         <h5>Items marked with * are mandatory</h5>
 
-                
+
         <!-- A V A T A R -->
         <div class="control-group form-group" ng-show="<%-form%>Form.gravatarUrl">
             <img ng-show="<%-form%>Form.authProvider!='local'" ng-src="{{<%-form%>Form.gravatarUrl}}"></img>
             <a ng-show="<%-form%>Form.authProvider=='local'" target="_blank" href="https://en.gravatar.com/" title="Click to manage Gravatars">
                <img ng-src="{{<%-form%>Form.gravatarUrl}}"></img>
             </a>
-        </div>   
+        </div>
 
 
-        <div class="row">         
-           
-          <% include partials/userDetails.ejs %>  
+        <div class="row">
+
+          <% include partials/userDetails.ejs %>
 
           <!-- P A S S W O R D -->
-  
+
           <div class="control-group form-group col-xs-10"
             ng-class="{'has-error':profile.password.$invalid &&
                                 profile.password.$dirty}" ng-hide="user.authProvider!='local'">
@@ -92,9 +92,9 @@
               <span ng-show="profile.password.$error.minlength">Password must be at least 8 characters.</span>
             </span>
           </div>
-  
+
           <!-- C O N F I R M  P A S S W O R D -->
-  
+
           <div class="control-group form-group col-xs-10"  ng-hide="user.authProvider!='local'">
             <label>Re-enter your password</label>
             <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="profileForm.confirmPassword" >
@@ -102,35 +102,35 @@
               <span ng-show="profile.password.$error.compareTo">Password must match.</span>
               <span ng-show="profile.confirmation.$error.required">Confirmation password is required.</span>
             </span>
-          </div>        
+          </div>
 
           <div ng-hide="signup">
 
-            <% include partials/additionalUserDetails.ejs %>  
-  
-          </div>  
+            <% include partials/additionalUserDetails.ejs %>
+
+          </div>
 
 
-          <% include partials/otherOrders.ejs %>     
+          <% include partials/otherOrders.ejs %>
 
         </div>
-  
+
         <br/>
-  
+
         <!-- Disable button until something has been edited and the form has no errors -->
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="!detailsComplete() || profileForm.loading">
           <span ng-show="!profileForm.loading">Save Details</span>
           <span class="fa-pulse fa fa-spinner" ng-show="profileForm.loading" ></span>
           <span ng-show="profileForm.loading">Saving your details...</span>
         </button>
-  
+
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form>
-     
-     </div>  
 
-    <% include partials/public/footer.ejs %>   
-      
+     </div>
+
+    <% include partials/public/footer.ejs %>
+
     <!--SCRIPTS-->
     <script src="/js/dependencies/jquery/jquery.js"></script>
     <script src="/js/dependencies/angular.js"></script>

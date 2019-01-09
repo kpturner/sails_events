@@ -6,7 +6,7 @@
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/angular-cookie-law.min.css">
@@ -41,58 +41,58 @@
         viewOnly: <%- viewOnly %>,
         permanentDiningList: <%- sails.config.events.permanentDiningList %>,
         bookingCardHeight: "<%- sails.config.events.bookingCardHeight || '255px'%>",
-      };      
+      };
     </script>
-    
+
   </head>
 
   <body ng-app="EventsModule" data-ng-controller="BookingsController" ng-cloak>
 
     <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
-      <% include partials/private/navbar.ejs %>  
-       
-      <!--BOOKING FORM --> 
-      <form ng-submit="filterBookings()" id="filter-form" name="filterform" 
-          ng-class="{'form-signin':'<%- req.device.type %>'=='desktop'}">
-        <h3 class="form-signin-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span><span ng-hide="event.regInterest">Bookings </span><span ng-show="event.regInterest">Interest </span><span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
-        
+      <% include partials/private/navbar.ejs %>
+
+      <!--BOOKING FORM -->
+      <form ng-submit="filterBookings()" id="filter-form" name="filterform"
+          ng-class="{'form-other':'<%- req.device.type %>'=='desktop'}">
+        <h3 class="form-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span><span ng-hide="event.regInterest">Bookings </span><span ng-show="event.regInterest">Interest </span><span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
+
         <div ng-show="userBookings">
-          <h5 ng-hide="!selectedUser.email"><a href="mailto:{{selectedUser.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>                             
-          <h5 ng-hide="!selectedUser.phone"><a href="tel:{{selectedUser.phone}}"><span class="fa fa-phone"></span> {{selectedUser.phone}}</a></h5>  
-        </div>  
-        
+          <h5 ng-hide="!selectedUser.email"><a href="mailto:{{selectedUser.email}}" target="_top"><span class="fa fa-envelope"></span> Send email</a></h5>
+          <h5 ng-hide="!selectedUser.phone"><a href="tel:{{selectedUser.phone}}"><span class="fa fa-phone"></span> {{selectedUser.phone}}</a></h5>
+        </div>
+
         <div ng-show="eventBookings">
           <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
           <h4>{{event.venue}}<h4>
-          <h5 ng-hide="event.regInterest || hideCapacity">Places remaining: {{capacity}}</h5>  
-          <h5><a href="mailto:{{event.organiser.email}}?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}" target="_top"><span class="fa fa-envelope"></span> Organiser: {{event.organiser.name}}</a></h5>     
+          <h5 ng-hide="event.regInterest || hideCapacity">Places remaining: {{capacity}}</h5>
+          <h5><a href="mailto:{{event.organiser.email}}?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}" target="_top"><span class="fa fa-envelope"></span> Organiser: {{event.organiser.name}}</a></h5>
         </div>
-         
-        
+
+
         <div class="row">
-  
+
           <!-- F I L T E R -->
-           
+
           <div class="control-group form-group"
-             ng-class="{'col-sm-8 col-xs-12':eventBookings,'col-xs-12':!eventBookings}">              
-            <input type="text" class="form-control" placeholder="filter (hint: 'paid'/'unpaid'/'late')" name="filter" ng-model="filterForm.criteria.filter" ng-change="filterChanged()" />  
-          </div>                    
+             ng-class="{'col-sm-8 col-xs-12':eventBookings,'col-xs-12':!eventBookings}">
+            <input type="text" class="form-control" placeholder="filter (hint: 'paid'/'unpaid'/'late')" name="filter" ng-model="filterForm.criteria.filter" ng-change="filterChanged()" />
+          </div>
           <div ng-show="eventBookings" class="control-group form-group col-sm-4 col-xs-12">
             <label>
               <input type="checkbox" class="bigcheckbox" name="sortbyname" ng-model="filterForm.criteria.sortByName" ng-change="filterChanged()" />
               &nbsp;&nbsp;&nbsp;Sort by name?
             </label>
           </div>
-         
+
         </div>
-         
+
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(!filterform.filter.$dirty && !filterform.sortbyname.$dirty) || filterForm.loading">
           <span class="fa fa-filter"></span> <span ng-show="!filterForm.loading"> Filter </span><span ng-hide="event.regInterest || filterForm.loading">bookings </span><span ng-show="event.regInterest && !filterForm.loading">interest </span>
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
         </button>
-       
+
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="createNewBooking()" ng-disabled="newBooking" ng-show="(eventBookings || userBookings) && !viewOnly">
           <span ng-show="!newBooking">Create </span><span ng-hide="newBooking || event.regInterest">booking </span><span ng-show="!newBooking && event.regInterest">interest </span>
           <span class="fa-pulse fa fa-spinner" ng-show="newBooking" ></span>
@@ -101,20 +101,20 @@
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addPD()" ng-disabled="addingPD"  ng-show="!viewOnly && permanentDiningList && eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest">
           <span ng-show="!addingPD">Add permanent diners</span>
           <span class="fa-pulse fa fa-spinner" ng-show="addingPD" ></span>
-          <span ng-show="addingPD">Adding diners...</span>        
-        </button> 
+          <span ng-show="addingPD">Adding diners...</span>
+        </button>
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadBookings()"  ng-hide="newBooking || viewOnly">
-          <span class="fa fa-download"></span><span> Download </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>         
-        </button>  
+          <span class="fa fa-download"></span><span> Download </span><span ng-hide="event.regInterest">bookings </span><span ng-show="event.regInterest">interest </span>
+        </button>
         <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="downloadLodgeRoom()"  ng-show="!newBooking && eventBookings && (user.isAdmin || user.isOrganiser) && !event.regInterest && !viewOnly && event.dc">
-          <span class="fa fa-download"></span><span> Download Lodge Room</span>         
-        </button>  
-        
-        <br>  
+          <span class="fa fa-download"></span><span> Download Lodge Room</span>
+        </button>
+
+        <br>
         <!-- P A G I N A T I O N -->
         <!-- Only show this on desktops etc -->
         <div ng-hide="newBooking" class="form-horizontal hidden-sm hidden-xs">
-          
+
           <div class="form-group">
             <label for="page" class="col-md-1 control-label text-left">Page</label>
             <div class="col-md-3">
@@ -124,50 +124,50 @@
             <div class="col-md-3">
               <input type="number" class="form-control" id="limit" placeholder="limit" ng-change="filterChanged();" title="Maximum number of items to show per page" ng-model="filterForm.criteria.limit" min="1">
             </div>
-             
+
             <button class="btn btn-primary" type="button" ng-click="filterBookings(true)" ng-disabled="filterForm.paging || filterForm.loading">
               <span class="fa fa-arrow-right"></span><span ng-show="!filterForm.paging"> Go</span>
               <span class="fa-pulse fa fa-spinner" ng-show="filterForm.paging" ></span>
               <span ng-show="filterForm.paging">Paging...</span>
             </button>
-          
+
           </div>
        </div>
-           
-  
+
+
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
-      </form> 
-            
-     
-      <div class="container">   
-        <div ng-show="bookings.length>0 && !viewOnly"> 
+      </form>
+
+
+      <div class="container">
+        <div ng-show="bookings.length>0 && !viewOnly">
           <h4 class="hidden-xs hidden-sm">
-            <a href="mailto:?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}&bcc={{allAddresses}}" 
+            <a href="mailto:?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}&bcc={{allAddresses}}"
                 target="_top">
                   <span class="fa fa-envelope"></span> Email all below
             </a>
-          </h4>    
-          <h4 class="hidden-md hidden-lg">Tap to edit</h4>  
-          <h4 class="hidden-xs hidden-sm">Click to edit</h4>  
-        </div>    
-        <div ng-show="bookings.length==0">   
-          <h4 ng-hide="event.regInterest">There are no bookings to show you!</h4>  
-          <h4 ng-show="event.regInterest">There is no interest yet!</h4>  
-        </div>      
-        <span class="fa fa-spinner fa-pulse fa-3x fa-fw loading-spinner" ng-hide="!loading"></span>    
-        <% if (myBookings) {%> 
-        <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div> 
+          </h4>
+          <h4 class="hidden-md hidden-lg">Tap to edit</h4>
+          <h4 class="hidden-xs hidden-sm">Click to edit</h4>
+        </div>
+        <div ng-show="bookings.length==0">
+          <h4 ng-hide="event.regInterest">There are no bookings to show you!</h4>
+          <h4 ng-show="event.regInterest">There is no interest yet!</h4>
+        </div>
+        <span class="fa fa-spinner fa-pulse fa-3x fa-fw loading-spinner" ng-hide="!loading"></span>
+        <% if (myBookings) {%>
+        <div deckgrid source="bookings" cardTemplate="/templates/myBookings.html" class="deckgrid"></div>
         <% } %>
-        <% if (eventBookings) {%> 
-        <div deckgrid source="bookings" cardTemplate="/templates/eventBookings.html" class="deckgrid"></div> 
+        <% if (eventBookings) {%>
+        <div deckgrid source="bookings" cardTemplate="/templates/eventBookings.html" class="deckgrid"></div>
         <% } %>
-        <% if (userBookings) {%> 
-        <div deckgrid source="bookings" cardTemplate="/templates/userBookings.html" class="deckgrid"></div> 
-        <% } %>  
-      </div>  
-     
-    
-      <% include partials/public/footer.ejs %>   
+        <% if (userBookings) {%>
+        <div deckgrid source="bookings" cardTemplate="/templates/userBookings.html" class="deckgrid"></div>
+        <% } %>
+      </div>
+
+
+      <% include partials/public/footer.ejs %>
 
     </div>
     <!--SCRIPTS-->
