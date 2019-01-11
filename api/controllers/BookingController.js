@@ -435,7 +435,7 @@ module.exports = {
 	},
 
 	/**
-	 * Booing confirmation email
+	 * Booking confirmation email
 	 */
 	bookingConfirmationEmail: function (opts) {
 
@@ -661,7 +661,7 @@ module.exports = {
 										}
 										booking.user = user.id;
 										booking.event = eventId;
-										booking.menuChoice = req.param("menuChoice");
+										booking.menuChoice = req.param("menuChoice") || 1;
 										if (booking.menuChoice > event.menusOnOffer || booking.menuChoice < 0) {
 											booking.menuChoice = 1;
 										}
@@ -744,6 +744,9 @@ module.exports = {
 														linkedBooking.area = ""
 													if (!linkedBooking.centre)
 														linkedBooking.centre = ""
+													if (!linkedBooking.menuChoice) {
+														linkedBooking.menuChoice = 1;
+													}
 													if (linkedBooking.menuChoice > event.menusOnOffer || booking.menuChoice < 0) {
 														linkedBooking.menuChoice = 1;
 													}
