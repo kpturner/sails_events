@@ -6,7 +6,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		loading: false
 	}
 
-	$scope.orders=$.extend({},SAILS_LOCALS.orders);
+	$scope.orders=$.extend([],SAILS_LOCALS.orders);
 	$scope.eventForm=$.extend({},SAILS_LOCALS.event);
 
 	if (SAILS_LOCALS.mode=="create") {
