@@ -59,13 +59,24 @@ module.exports = {
 			// Include the users orders
 			Order.find({ user: userId })
 				.then(function (orders) {
+					var craft = false;
 					if (orders.length > 0) {
 						_.forEach(orders, function (order) {
+							if (order === 'C') {
+								craft = true;
+							}
 							clause.or.push({
 								order: order.code
 							})
 						})
+						if (!craft) {
+							clause.or.push({
+								order: 'C'
+							})
+						}
 					}
+					// Always include Craft
+
 				})
 				.catch(function (err) {
 					sails.log.error(err)
