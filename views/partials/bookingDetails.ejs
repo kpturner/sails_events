@@ -106,12 +106,13 @@
 <div class="control-group form-group col-xs-10 col-md-4" ng-class="{'has-error':<%-model%>.menuchoice.$invalid &&
   <%-model%>.menuchoice.$dirty}" ng-show="event.menusOnOffer > 1">
   <label>Menu choice</label>
-  <input type="number" class="form-control" placeholder="1" name="menuchoice" ng-model="<%-model%>Form.menuChoice" min="1"
+  <input type="number" class="form-control" name="menuchoice" ng-model="<%-model%>Form.menuChoice" min="1"
     max="{{event.menusOnOffer}}">
   <span class="help-block has-error" ng-if="<%-model%>.menuchoice.$dirty">
     <span ng-show="<%-model%>.menuchoice.$error.min">Menus choice cannot be less than 1.</span>
     <span ng-show="<%-model%>.menuchoice.$error.max && event.menusOnOffer===2">Menus choice must be 1 or 2.</span>
     <span ng-show="<%-model%>.menuchoice.$error.max && event.menusOnOffer===3">Menus choice must be 1, 2 or 3.</span>
+    <span ng-show="<%-model%>.menuchoice.$error.max && event.menusOnOffer===4">Menus choice must be 1, 2, 3 or 4.</span>
   </span>
 </div>
 
@@ -527,12 +528,13 @@ and/or maxlength) -->
     <div class="control-group form-group col-xs-10 col-md-6" ng-class="{'has-error':<%-model%>.menuchoice_{{place}}.$invalid &&
       <%-model%>.menuchoice_{{place}}.$dirty}" ng-show="event.menusOnOffer > 1">
       <label>Menu choice</label>
-      <input type="number" class="form-control" placeholder="1" name="menuchoice_{{place}}" ng-model="linked<%-model%>s[place].menuChoice" min="1"
+      <input type="number" class="form-control" name="menuchoice_{{place}}" ng-model="linked<%-model%>s[place].menuChoice" min="1"
         max="{{event.menusOnOffer}}">
         <span class="help-block has-error" ng-if="<%-model%>.menuchoice_{{place}}.$dirty">
         <span ng-show="<%-model%>.menuchoice_{{place}}.$error.min">Menus choice cannot be less than 1.</span>
         <span ng-show="<%-model%>.menuchoice_{{place}}.$error.max && event.menusOnOffer===2">Menus choice must be 1 or 2.</span>
         <span ng-show="<%-model%>.menuchoice_{{place}}.$error.max && event.menusOnOffer===3">Menus choice must be 1, 2 or 3.</span>
+        <span ng-show="<%-model%>.menuchoice_{{place}}.$error.max && event.menusOnOffer===4">Menus choice must be 1, 2, 3 or 4.</span>
       </span>
     </div>
 

@@ -372,7 +372,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			if ($scope.bookingForm.places>1)
 				$scope.makeArray();
 		}
-		$scope.bookingForm.menuChoice = 1;
+		if ($scope.event.menusOnOffer <= 1) {
+			$scope.bookingForm.menuChoice = 1;
+		}
 	}
 
 
@@ -432,6 +434,13 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			errors.push("Area");
 			validations.push($scope.booking.area);
 		}
+		if ($scope.event.menusOnOffer > 1) {
+			if (!$scope.bookingForm.menuChoice) {
+				complete=false;
+				errors.push("Menu choice");
+				validations.push($scope.booking.menuchoice);
+			}
+		}
 		if (($scope.bookingForm.email && (!$scope.bookingForm.confirmemail || $scope.bookingForm.confirmemail.length==0))
 			|| ($scope.bookingForm.confirmemail && (!$scope.bookingForm.email || $scope.bookingForm.email.length==0))
 			|| ($scope.bookingForm.email && $scope.bookingForm.confirmemail && $scope.bookingForm.email!=$scope.bookingForm.confirmemail)
@@ -484,6 +493,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							if (!this.firstName || this.firstName.length==0) {
 								complete=false;
 								errors.push("First name for additional attendee "+(index+1).toString())
+							}
+							if ($scope.event.menusOnOffer > 1) {
+								if (!this.menuChoice) {
+									complete=false;
+									errors.push("Menu choice for additional attendee "+(index+1).toString());
+								}
 							}
 						}
 					}
@@ -730,7 +745,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					mop: $scope.bookingForm.mop,
 					amountPaid: $scope.bookingForm.amountPaid,
 					places: $scope.bookingForm.places,
-					menuChoice: $scope.bookingForm.menuChoice,
+					menuChoice: $scope.bookingForm.menuChoice || 1,
 					linkedBookings: $scope.linkedbookings,
 					bookingId: (SAILS_LOCALS.booking.id)?SAILS_LOCALS.booking.id:null
 				})
