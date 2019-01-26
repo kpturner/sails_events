@@ -529,7 +529,7 @@ and/or maxlength) -->
       <label>Menu choice</label>
       <input type="number" class="form-control" placeholder="1" name="menuchoice_{{place}}" ng-model="linked<%-model%>s[place].menuChoice" min="1"
         max="{{event.menusOnOffer}}">
-      <span class="help-block has-error" ng-if="<%-model%>.menuchoice.$dirty">
+        <span class="help-block has-error" ng-if="<%-model%>.menuchoice_{{place}}.$dirty">
         <span ng-show="<%-model%>.menuchoice_{{place}}.$error.min">Menus choice cannot be less than 1.</span>
         <span ng-show="<%-model%>.menuchoice_{{place}}.$error.max && event.menusOnOffer===2">Menus choice must be 1 or 2.</span>
         <span ng-show="<%-model%>.menuchoice_{{place}}.$error.max && event.menusOnOffer===3">Menus choice must be 1, 2 or 3.</span>
