@@ -22,7 +22,8 @@ var fs          = require("fs");
 var graph       = require("fbgraph");
 var Twit        = require("twit");
 var google      = require('googleapis');
-var plus        = google.plus('v1');
+// var plus        = google.plus('v1');
+var googlePeople = new google.people_v1.People();
 var Gravatar    = require('machinepack-gravatar');
 var moment      = require('moment-timezone');
 var redisClient;
@@ -487,6 +488,9 @@ module.exports = {
                             case "google":
                                 avatar="";
                                 if (passport.tokens) {
+                                    /**
+                                     * Google+ is deprecated
+                                     *
                                     plus.people.get({
                                         userId: passport.identifier,
                                         auth:   sails.config.passport.google.options.apiKey
@@ -500,6 +504,21 @@ module.exports = {
                                         }
                                         cb(e,avatar);
                                     })
+                                    */
+                                    googlePeople.people.get({
+                                        resourceName: `people/${passport.identifier}`,
+                                        personFields: 'photos',
+                                        key: sails.config.passport.google.options.apiKey
+                                    },function(err, data){
+                                        if (err) {
+                                            e=err;
+                                            sails.log.error("Cannot get avatar for Google user "+user.name+": "+err.message);
+                                        }
+                                        else {
+                                            avatar=data.data.photos[0].url;
+                                        }
+                                        cb(e,avatar);
+                                    });
                                 }
                                 else {
                                     sails.log.debug("Cannot find passport tokens for user "+user.name+" ("+user.id+")");

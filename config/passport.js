@@ -66,7 +66,8 @@ module.exports.passport = {
     strategy: require('passport-google-oauth').OAuth2Strategy,
     options: {
       max_auth_age: '0',
-      scope: ['email'] /* email is necessary for login behavior */
+      scope: ['email'], /* email is necessary for login behavior */
+      userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
     }
   },
 
