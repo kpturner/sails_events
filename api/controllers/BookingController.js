@@ -1113,7 +1113,7 @@ module.exports = {
 								User.create(user).exec(function (err, newUser) {
 									if (err) {
 										//!Ouch!
-										sails.log.error('res.genericErrorResponse() :: Sending ' + errorCode + ': ' + errorMsg + ' response');
+										sails.log.error('res.genericErrorResponse() :: Sending ' + err.code + ': ' + err.message + ' response');
 										return res.genericErrorResponse("455", "Booking failed. Attempt to create new user failed!")
 									}
 									checkAndbookIt(newUser.id)
