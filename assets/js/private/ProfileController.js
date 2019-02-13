@@ -1,36 +1,36 @@
 angular.module('EventsModule').controller('ProfileController', ['$scope', '$http', '$timeout', 'toastr', 'ngDialog', function($scope, $http, $timeout, toastr, ngDialog){
 
-	
+
 	$scope.profileForm = {
 		loading: false
 	}
 
-		
-	// Initialise "user" in the scope with the data set in the view script 
+
+	// Initialise "user" in the scope with the data set in the view script
 	$scope.user=SAILS_LOCALS.user;
 	$scope.profileForm = $scope.user;
 	$scope.permanentDiningList=SAILS_LOCALS.permanentDiningList;
-	
+
 	// Convert lodge no to numeric
-	$scope.profileForm.lodgeNo = parseInt($scope.user.lodgeNo); 
-	$scope.profileForm.voLodgeNo = parseInt($scope.user.voLodgeNo); 
+	$scope.profileForm.lodgeNo = parseInt($scope.user.lodgeNo);
+	$scope.profileForm.voLodgeNo = parseInt($scope.user.voLodgeNo);
 	// Defaults if not entered
 	if (!$scope.profileForm.lodge) {
 		$scope.profileForm.lodge=SAILS_LOCALS.defaults.lodge;
 	}
 	if (!$scope.profileForm.lodgeNo) {
 		$scope.profileForm.lodgeNo=SAILS_LOCALS.defaults.lodgeNo;
-	}	
-	
+	}
+
 	// Set the confirm email
-	$scope.profileForm.confirmemail=$scope.profileForm.email; 
-	 
+	$scope.profileForm.confirmemail=$scope.profileForm.email;
+
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
-	
+
 	// User categories
 	$scope.userCategories=SAILS_LOCALS.userCategories;
-		
+
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
 
@@ -41,9 +41,9 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
 
 	// Signup mode?
-	$scope.signup=SAILS_LOCALS.signup;	
- 
- 	// Set elements that have validity checking to dirty straight away 
+	$scope.signup=SAILS_LOCALS.signup;
+
+ 	// Set elements that have validity checking to dirty straight away
  	angular.element(document).ready(function () {
 		 $timeout($scope.setDirty);
 	});
@@ -53,7 +53,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 	$scope.ordersArr=[];
 	$scope.ordersModel=[];
 	$scope.profileForm.otherorders=0;
-	
+
 	// makeOrdersArray is called every time the number of other orders changes
 	$scope.makeOrdersArray = function(){
 		$scope.ordersArr.length=0;
@@ -64,38 +64,38 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
                     code: $scope.orders[0].code
                 });
             }
-		} 
+		}
 	}
 
 	// Get users other orders (if any)
 	$http.get("/otherorders/"+SAILS_LOCALS.user.id).success(function(data, status) {
 		if (typeof data == 'object') {
-			$scope.ordersModel=data;	 	
+			$scope.ordersModel=data;
 			$scope.ordersModel.forEach(function(v,i){
 				$scope.ordersModel[i].number=parseInt($scope.ordersModel[i].number)
 			});
 			$scope.profileForm.otherorders=data.length;
-			$scope.makeOrdersArray();		
-		}				
+			$scope.makeOrdersArray();
+		}
 	})
 	.error(function(data, status, headers, config) {
 		console.log("Error retrieving other orders "+SAILS_LOCALS.user.id)
 	});
-	
-	
+
+
 	/**
 	 * Make erroneous fields dirty
 	 */
 	$scope.setDirty = function() {
 		angular.forEach($scope.profile.$error.required, function(field) {
 			field.$setDirty();
-		}); 
+		});
 		if ($scope.lodgeMandatory && (!$scope.profileForm.lodgeNo || isNaN($scope.profileForm.lodgeNo))) {
-			$scope.profile.lodgeno.$setDirty();	
-			$scope.profile.lodgeno.$setValidity("required",false);	
-		}				
+			$scope.profile.lodgeno.$setDirty();
+			$scope.profile.lodgeno.$setValidity("required",false);
+		}
 	}
-	
+
 	/**
 	 * Test if the details are complete on the profile
 	 */
@@ -117,12 +117,12 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 			$scope.setDirty();
 			complete=false;
 		}
-			
+
 		return complete;
 	}
-    
+
     /**
-     * Check user name 
+     * Check user name
      **/
     $scope.checkUsername=function(){
         $scope.invalidUsername=false;
@@ -131,12 +131,15 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
         if ($scope.profileForm.username.indexOf(" ")>=0) {
             $scope.invalidUsername=true;
         }
-    } 		
-	
+    }
+
 	$scope.submitProfileForm = function(){
 		$scope.profileForm.loading=true;
-		
+
 		var submitForm=function(){
+			while ($scope.ordersModel.length > $scope.profileForm.otherorders) {
+				$scope.ordersModel.pop();
+			}
 			// Submit request to Sails.
 			$http.post('/updateprofile', {
                 _csrf: SAILS_LOCALS._csrf,
@@ -147,16 +150,16 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 				window.location = '/';
 			})
 			.catch(function onError(sailsResponse){
-	
+
 				// Handle known error type(s).
 				toastr.error(sailsResponse.data, 'Error');
-	
+
 			})
 			.finally(function eitherWay(){
 				$scope.profileForm.loading = false;
 			})
 		}
-		
+
 		// Before submitting the form, check the domain and issue SPAM warning
 		// if required
 		var submit=true;
@@ -164,10 +167,10 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 			var domain;
 			if ($scope.profileForm.email) {
 				domain=$scope.profileForm.email.split("@")[1]
-			} 
+			}
 			var details;
 			if (domain) {
-				details=SAILS_LOCALS.spamDomains[domain.toLowerCase()];				
+				details=SAILS_LOCALS.spamDomains[domain.toLowerCase()];
 			}
 			if (details) {
 				// It is a troublesome domain
@@ -185,12 +188,12 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 				// Pop the dialog
 				ngDialog.open(opts)
 					.closePromise.then(function (value) {
-						// Continue  
+						// Continue
 						$scope.profileForm.spamAck=true;
 						submitForm();
 					});
 			}
-		}	 
+		}
 		// Submit if we are not sending any warnings
 		if (submit)
 			submitForm()
