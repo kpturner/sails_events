@@ -103,7 +103,7 @@
 
 <!-- M E N U  C H O I C E -->
 
-<div class="control-group form-group col-xs-10 col-md-4" ng-class="{'has-error':<%-model%>.menuchoice.$invalid &&
+<div class="control-group form-group col-xs-12 col-md-4" ng-class="{'has-error':<%-model%>.menuchoice.$invalid &&
   <%-model%>.menuchoice.$dirty}" ng-show="event.menusOnOffer > 1">
   <label>* Menu choice</label>
   <input type="number" class="form-control" name="menuchoice" ng-model="<%-model%>Form.menuChoice" min="1"
@@ -525,7 +525,7 @@ and/or maxlength) -->
     </div>
 
     <!-- M E N U  C H O I C E -->
-    <div class="control-group form-group col-xs-10 col-md-6" ng-class="{'has-error':<%-model%>.menuchoice_{{place}}.$invalid &&
+    <div class="control-group form-group col-xs-12 col-md-6" ng-class="{'has-error':<%-model%>.menuchoice_{{place}}.$invalid &&
       <%-model%>.menuchoice_{{place}}.$dirty}" ng-show="event.menusOnOffer > 1">
       <label>* Menu choice</label>
       <input type="number" class="form-control" name="menuchoice_{{place}}" ng-model="linked<%-model%>s[place].menuChoice" min="1"
