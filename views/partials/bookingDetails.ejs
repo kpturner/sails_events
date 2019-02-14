@@ -103,7 +103,7 @@
 
 <!-- M E N U  C H O I C E -->
 
-<div class="control-group form-group col-xs-12 col-md-4" ng-class="{'has-error':<%-model%>.menuchoice.$invalid &&
+<div class="control-group form-group col-md-10" ng-class="{'has-error':<%-model%>.menuchoice.$invalid &&
   <%-model%>.menuchoice.$dirty}" ng-show="event.menusOnOffer > 1">
   <label>* Menu choice</label>
   <input type="number" class="form-control" name="menuchoice" ng-model="<%-model%>Form.menuChoice" min="1"
@@ -118,7 +118,7 @@
 
 <!-- B O O K I N G   R E F -->
 
-<div class="control-group form-group col-xs-12 col-md-10" ng-show="bookingForm.ref.length>0">
+<div class="control-group form-group col-md-10" ng-show="bookingForm.ref.length>0">
   <label>Booking/Payment Reference</label>
   <input type="text" class="form-control" name="ref" ng-model="<%-model%>Form.ref" readonly>
 </div>
@@ -525,7 +525,7 @@ and/or maxlength) -->
     </div>
 
     <!-- M E N U  C H O I C E -->
-    <div class="control-group form-group col-xs-12 col-md-6" ng-class="{'has-error':<%-model%>.menuchoice_{{place}}.$invalid &&
+    <div class="control-group form-group col-xs-10" ng-class="{'has-error':<%-model%>.menuchoice_{{place}}.$invalid &&
       <%-model%>.menuchoice_{{place}}.$dirty}" ng-show="event.menusOnOffer > 1">
       <label>* Menu choice</label>
       <input type="number" class="form-control" name="menuchoice_{{place}}" ng-model="linked<%-model%>s[place].menuChoice" min="1"
