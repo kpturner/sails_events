@@ -153,7 +153,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
     
     $scope.transferDialog = function(origResponse) {
         // Get a list of users that excludes this user
-        $http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent(SAILS_LOCALS.userDetails.id.toString())+'"}}&sort=surname')
+        $http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent(SAILS_LOCALS.userDetails.id.toString())+'"}}&sort=surname&limit=10000')
             .then(function onSuccess(sailsResponse){
                 if (typeof sailsResponse.data == 'object') {
                     $scope.users = sailsResponse.data;
