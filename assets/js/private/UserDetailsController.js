@@ -8,17 +8,17 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	}
 
 	$scope.userdetailsForm=SAILS_LOCALS.userDetails;
-	
+
 	// Convert lodge no to numeric
-	$scope.userdetailsForm.lodgeNo = parseInt($scope.userdetailsForm.lodgeNo); 
-	$scope.userdetailsForm.voLodgeNo = parseInt($scope.userdetailsForm.voLodgeNo); 
+	$scope.userdetailsForm.lodgeNo = parseInt($scope.userdetailsForm.lodgeNo);
+	$scope.userdetailsForm.voLodgeNo = parseInt($scope.userdetailsForm.voLodgeNo);
 	// Set the confirm email
-	$scope.userdetailsForm.confirmemail=$scope.userdetailsForm.email; 
-	
+	$scope.userdetailsForm.confirmemail=$scope.userdetailsForm.email;
+
 	// Get a list of users in name order
 	$http.get("/organisers")
 		.then(function onSuccess(sailsResponse){
-			$scope.organisers=sailsResponse.data;			
+			$scope.organisers=sailsResponse.data;
 		})
 		.catch(function onError(sailsResponse){
 
@@ -26,22 +26,22 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 			toastr.error(sailsResponse.data, 'Error');
 
 		})
-	
+
 	// Salutations
 	$scope.salutations=SAILS_LOCALS.salutations;
 
 	// User categories
-	$scope.userCategories=SAILS_LOCALS.userCategories;	
-    	
+	$scope.userCategories=SAILS_LOCALS.userCategories;
+
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
 
 	// Centres
 	$scope.centres=SAILS_LOCALS.centres;
-    
+
 	// Lodge required
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
-    
+
     // New user for transferring bookings
     $scope.userdetailsForm.newuser="";
 
@@ -61,24 +61,25 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
                     code: $scope.orders[0].code
                 });
             }
-		} 
+		}
+		$scope.ordersArr = $scope.ordersArr.filter(order => order.code !== 'C');
 	}
 
     // Get users other orders (if any)
 	$http.get("/otherorders/"+SAILS_LOCALS.userDetails.id).success(function(data, status) {
 		if (typeof data == 'object') {
-			$scope.ordersModel=data;	 	
+			$scope.ordersModel=data;
 			$scope.ordersModel.forEach(function(v,i){
 				$scope.ordersModel[i].number=parseInt($scope.ordersModel[i].number)
 			});
             $scope.userdetailsForm.otherorders=data.length;
-			$scope.makeOrdersArray();		
-		}				
+			$scope.makeOrdersArray();
+		}
 	})
 	.error(function(data, status, headers, config) {
 		console.log("Error retrieving other orders "+SAILS_LOCALS.userDetails.id)
 	});
-	
+
 	/**
 	 * Test if the details are complete on the user
 	 */
@@ -104,13 +105,13 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 				)
 		) {
 			complete=false;
-		} 
-			
+		}
+
 		return complete;
-	}		
-	
+	}
+
     /**
-     * Check user name 
+     * Check user name
      **/
     $scope.checkUsername=function(){
         $scope.invalidUsername=false;
@@ -119,38 +120,38 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
         if ($scope.userdetailsForm.username.indexOf(" ")>=0) {
             $scope.invalidUsername=true;
         }
-    } 		
-    
+    }
+
 	$scope.submitUserForm = function(){
 		$scope.userdetailsForm.loading=true;
-						
+
 		// Submit request to Sails.
 		$http.post('/updateuser/'+$scope.mode, {
             _csrf: SAILS_LOCALS._csrf,
 			data: $scope.userdetailsForm,
-            orders: $scope.ordersModel			 
+            orders: $scope.ordersModel
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/users';
 		})
 		.catch(function onError(sailsResponse){
 
-            // Response status of 460 means the user has bookings. Offer the option of allocating them to 
+            // Response status of 460 means the user has bookings. Offer the option of allocating them to
             // another user if this user is a "dummy" created by the organiser
             if (sailsResponse.status==460 && SAILS_LOCALS.userDetails.authProvider=="dummy") {
-                $scope.transferDialog(sailsResponse);                    
-            }  
+                $scope.transferDialog(sailsResponse);
+            }
             else {
                 // Handle known error type(s).
-                toastr.error(sailsResponse.data, 'Error');  
-                $scope.userdetailsForm.loading = false; 
+                toastr.error(sailsResponse.data, 'Error');
+                $scope.userdetailsForm.loading = false;
             }
 		})
 		.finally(function eitherWay(){
-			
+
 		})
 	}
-    
+
     $scope.transferDialog = function(origResponse) {
         // Get a list of users that excludes this user
         $http.get('/user?_csrf='+SAILS_LOCALS._csrf+'&where={"id":{"not":"'+encodeURIComponent(SAILS_LOCALS.userDetails.id.toString())+'"}}&sort=surname&limit=10000')
@@ -181,22 +182,22 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
                                 $scope.userdetailsForm.loading = false;
                                 toastr.error(sailsResponse.data, 'Error');
                             })
-                        }, 
+                        },
                         function (reason) {
                             $scope.userdetailsForm.loading = false;
-                            toastr.error(origResponse.data, 'Error');  
-                        });						
+                            toastr.error(origResponse.data, 'Error');
+                        });
                 }
                 else {
-                     toastr.error(origResponse.data, 'Error');  
+                     toastr.error(origResponse.data, 'Error');
                 }
             })
             .catch(function onError(sailsResponse){
-    
+
                 // Handle known error type(s).
                 toastr.error(sailsResponse.data, 'Error');
                 $scope.userdetailsForm.loading = false;
-    
+
             })
             .finally(function eitherWay(){
                 // Nothing to do

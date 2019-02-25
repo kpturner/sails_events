@@ -9,7 +9,7 @@
         ng-class="{'has-error':<%-form%>.otherorders.$invalid &&
                             <%-form%>.otherorders.$dirty}">
         <label>Other orders</label>
-        <br><span>If you are looking to book into events for other orders (like RA or Mark) you need to define the other orders that you are a member of:</span>
+        <br><span>If you are looking to book into events for other orders other than Craft (like RA or Mark) you need to define the other orders that you are a member of:</span>
         <input type="number" class="form-control" placeholder="other orders" name="otherorders" ng-model="<%-form%>Form.otherorders" min="0"
             ng-change="makeOrdersArray()"  ng-disabled="mode=='delete'">
         <span class="help-block has-error" ng-if="<%-form%>.otherorders.$dirty">

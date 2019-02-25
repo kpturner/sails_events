@@ -11,12 +11,12 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	$scope.detailsComplete=function() {
 		var complete=true;
 		if (   (!$scope.signupForm.salutation || $scope.signupForm.salutation.length==0)
-		    || ($scope.invalidUsername)	
+		    || ($scope.invalidUsername)
 		) {
 			$scope.setDirty();
 			complete=false;
 		}
-			
+
 		return complete;
 	}
 
@@ -25,10 +25,10 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 
 	// User categories
 	$scope.userCategories=SAILS_LOCALS.userCategories;
-	
+
 	// Areas
 	$scope.areas=SAILS_LOCALS.areas;
-	
+
 	// Centres
 	$scope.centres=SAILS_LOCALS.centres;
 
@@ -46,7 +46,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	}
 	if (SAILS_LOCALS.defaults.lodgeNo) {
 		$scope.signupForm.lodgeNo=SAILS_LOCALS.defaults.lodgeNo;
-	}	
+	}
 
 	// makeOrdersArray is called every time the number of other orders changes
 	$scope.makeOrdersArray = function(){
@@ -58,32 +58,33 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
                     code: $scope.orders[0].code
                 });
             }
-		} 
+		}
+		$scope.ordersArr = $scope.ordersArr.filter(order => order.code !== 'C');
 	}
 
-    	 
-	// Set elements that have validity checking to dirty straight away 
+
+	// Set elements that have validity checking to dirty straight away
  	angular.element(document).ready(function () {
 		 $timeout($scope.setDirty);
 	});
-	
+
 	/**
 	 * Make erroneous fields dirty
 	 */
 	$scope.setDirty = function() {
 		angular.forEach($scope.signup.$error.required, function(field) {
 			field.$setDirty();
-		}); 
-		$scope.signup.username.$setDirty();	
+		});
+		$scope.signup.username.$setDirty();
         if (!$scope.signup.username || $scope.signup.username.length==0)
-            $scope.signup.username.$setValidity("required",false);	
-		$scope.signup.lodgeno.$setDirty();	
+            $scope.signup.username.$setValidity("required",false);
+		$scope.signup.lodgeno.$setDirty();
 		if (!$scope.signup.lodgeno || $scope.signup.lodgeno.length==0)
-            $scope.signup.lodgeno.$setValidity("required",false);							
+            $scope.signup.lodgeno.$setValidity("required",false);
 	}
-	
+
     /**
-     * Check user name 
+     * Check user name
      **/
     $scope.checkUsername=function(){
         $scope.invalidUsername=false;
@@ -92,7 +93,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
         if ($scope.signupForm.username.indexOf(" ")>=0) {
             $scope.invalidUsername=true;
         }
-    } 		 
+    }
 
 	$scope.submitSignupForm = function(){
 		$scope.signupForm.loading=true;
@@ -100,7 +101,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 		$http.post('/auth/local/register', {
             _csrf: SAILS_LOCALS._csrf,
 			user: $scope.signupForm,
-            orders: $scope.ordersModel			
+            orders: $scope.ordersModel
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/';

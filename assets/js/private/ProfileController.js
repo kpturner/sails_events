@@ -65,6 +65,7 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
                 });
             }
 		}
+		$scope.ordersArr = $scope.ordersArr.filter(order => order.code !== 'C');
 	}
 
 	// Get users other orders (if any)
