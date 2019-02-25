@@ -36,7 +36,7 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
 	$scope.lodgeMandatory=SAILS_LOCALS.lodgeMandatory;
 
 	// Enable a repeater for other orders
-	$scope.orders=SAILS_LOCALS.orders;
+	$scope.orders=SAILS_LOCALS.orders.filter(order => order.code !== 'C');
 	$scope.ordersArr=[];
 	$scope.ordersModel=[];
 	// Defaults
@@ -59,7 +59,6 @@ angular.module('EventsModule').controller('SignupController', ['$scope', '$http'
                 });
             }
 		}
-		$scope.ordersArr = $scope.ordersArr.filter(order => order.code !== 'C');
 	}
 
 

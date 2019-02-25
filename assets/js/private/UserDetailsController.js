@@ -46,7 +46,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
     $scope.userdetailsForm.newuser="";
 
     // Enable a repeater for other orders
-	$scope.orders=SAILS_LOCALS.orders;
+	$scope.orders=SAILS_LOCALS.orders.filter(order => order.code !== 'C');
 	$scope.ordersArr=[];
 	$scope.ordersModel=[];
 	$scope.userdetailsForm.otherorders=0;
@@ -62,7 +62,6 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
                 });
             }
 		}
-		$scope.ordersArr = $scope.ordersArr.filter(order => order.code !== 'C');
 	}
 
     // Get users other orders (if any)
