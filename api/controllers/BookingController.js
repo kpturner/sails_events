@@ -629,7 +629,7 @@ module.exports = {
 						}
 
 
-						Order.find({ user: req.user.id }).exec(function (err, orders) {
+						Order.find({ user: userId }).exec(function (err, orders) {
 							// Before making the booking, make doubly sure we have capacity
 							var places = 0;
 							var criteria = {};
