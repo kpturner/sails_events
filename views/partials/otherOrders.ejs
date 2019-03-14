@@ -1,17 +1,16 @@
-
-
 <!-- O T H E R  O R D E R S -->
 <div ng-show="orders.length>=1">
 
     <!-- O T H E R  O R D E R S -->
 
-    <div class="control-group form-group col-xs-6 col-md-4"
-        ng-class="{'has-error':<%-form%>.otherorders.$invalid &&
+    <div class="control-group form-group col-xs-6 col-md-4" ng-class="{'has-error':<%-form%>.otherorders.$invalid &&
                             <%-form%>.otherorders.$dirty}">
         <label>Other orders</label>
-        <br><span>If you are looking to book into events for other orders other than Craft (like RA or Mark) you need to define the other orders that you are a member of:</span>
-        <input type="number" class="form-control" placeholder="other orders" name="otherorders" ng-model="<%-form%>Form.otherorders" min="0"
-            ng-change="makeOrdersArray()"  ng-disabled="mode=='delete'">
+        <br><span>If you are looking to book into events for orders other than Craft (like RA or Mark) you need to
+            define the other orders that you are a member of. Increment this number for each order that you wish to
+            add:</span>
+        <input type="number" class="form-control" placeholder="other orders" name="otherorders"
+            ng-model="<%-form%>Form.otherorders" min="0" ng-change="makeOrdersArray()" ng-disabled="mode=='delete'">
         <span class="help-block has-error" ng-if="<%-form%>.otherorders.$dirty">
 
         </span>
@@ -28,8 +27,8 @@
             <!-- O R D E R -->
             <div class="control-group form-group col-xs-10">
                 <label>* Order</label>
-                <select class="form-control" placeholder="e.g. Mark, Royal Arch etc" name="order_{{order}}" ng-options="order.code as order.desc for order in orders"
-                        ng-model="ordersModel[order].code">
+                <select class="form-control" placeholder="e.g. Mark, Royal Arch etc" name="order_{{order}}"
+                    ng-options="order.code as order.desc for order in orders" ng-model="ordersModel[order].code">
                 </select>
             </div>
 
@@ -37,36 +36,35 @@
             <div class="control-group form-group col-xs-10">
                 <label>Salutation</label>
                 <input type="text" class="form-control" placeholder="e.g. Companion" name="salutation_{{order}}"
-                        ng-model="ordersModel[order].salutation"  >
+                    ng-model="ordersModel[order].salutation">
             </div>
 
             <!-- R A N K -->
             <div class="control-group form-group col-xs-10">
                 <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
                 <input type="text" class="form-control" placeholder="e.g. Principal Sojourner" name="rank_{{order}}"
-                        ng-model="ordersModel[order].rank"  >
+                    ng-model="ordersModel[order].rank">
             </div>
 
             <!-- O R D E R  N A M E -->
             <div class="control-group form-group col-xs-10">
                 <label>Unit</label>
                 <input type="text" class="form-control" placeholder="e.g. Name of Chapter" name="name_{{order}}"
-                        ng-model="ordersModel[order].name"  >
+                    ng-model="ordersModel[order].name">
 
             </div>
 
             <!-- O R D E R  N U M B E R-->
-	        <div class="control-group form-group col-xs-6 col-md-4">
-	            <label>Number</label>
-	            <input type="number" class="form-control" placeholder="e.g. Chapter no." name="number_{{order}}"
-                        ng-model="ordersModel[order].number">
+            <div class="control-group form-group col-xs-6 col-md-4">
+                <label>Number</label>
+                <input type="number" class="form-control" placeholder="e.g. Chapter no." name="number_{{order}}"
+                    ng-model="ordersModel[order].number">
 
-	        </div>
+            </div>
 
             <!-- Y E A R-->
 
-            <div class="control-group form-group col-xs-10"
-                ng-show="<%-sails.config.events.lodgeYear%>">
+            <div class="control-group form-group col-xs-10" ng-show="<%-sails.config.events.lodgeYear%>">
                 <!--
                    Doesn't work with variable names
                    ng-class="{'has-error':<%-form%>.year_{{order}}.$invalid &&
@@ -74,7 +72,7 @@
                 -->
                 <label>Year</label>
                 <input type="text" class="form-control" placeholder="e.g. year you joined" name="year_{{order}}"
-                        ng-model="ordersModel[order].year" ng-maxlength="4" >
+                    ng-model="ordersModel[order].year" ng-maxlength="4">
                 <!--
                    Doesn't work with variable names
                 <span class="help-block has-error" ng-if="<%-form%>.year_{{order}}.$dirty">
@@ -86,18 +84,19 @@
             <!-- C E N T R E -->
             <div class="control-group form-group col-xs-10">
                 <label>Centre</label>
-                <select class="form-control" placeholder="e.g. Winchester" name="centre_{{order}}" ng-show="centres" ng-options="centre for centre in centres" ng-model="ordersModel[order].centre">
+                <select class="form-control" placeholder="e.g. Winchester" name="centre_{{order}}" ng-show="centres"
+                    ng-options="centre for centre in centres" ng-model="ordersModel[order].centre">
                     <option value="">-- choose centre --</option>
-                  </select>
-                <input type="text" ng-hide="centres" class="form-control" placeholder="e.g. Winchester" name="centre_{{order}}"
-                        ng-model="ordersModel[order].centre">
+                </select>
+                <input type="text" ng-hide="centres" class="form-control" placeholder="e.g. Winchester"
+                    name="centre_{{order}}" ng-model="ordersModel[order].centre">
             </div>
 
             <!-- A R E A -->
             <div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
                 <label>Area</label>
-                <select class="form-control" placeholder="e.g. South Central" name="area_{{order}}" ng-options="area for area in areas"
-                        ng-model="ordersModel[order].area">
+                <select class="form-control" placeholder="e.g. South Central" name="area_{{order}}"
+                    ng-options="area for area in areas" ng-model="ordersModel[order].area">
                     <option value="">-- choose area --</option>
                 </select>
             </div>
