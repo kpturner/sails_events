@@ -171,6 +171,8 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 			}
 			$scope.eventForm.time=$scope.eventForm.time.toTimeString().split(" ")[0];
 			$scope.eventForm.openingTime=$scope.eventForm.openingTime.toTimeString().split(" ")[0];
+			var offset = $scope.eventForm.openingDate.getTimezoneOffset();
+			$scope.eventForm.openingDate.setMinutes($scope.eventForm.openingDate.getMinutes() - offset);
 
 			// Submit request to Sails.
 			var route='/updateevent/'+$scope.mode+(($scope.mode=="edit" && graceChanged)?"?gracechangedto="+SAILS_LOCALS.event.grace:"");
