@@ -90,20 +90,20 @@ passport.connect = function (req, query, profile, next) {
   }
   else {
     // We need something from a database perspective
-    user.username = user.email; 
+    user.username = user.email;
   }
   // Some redundancy, but store the provider on the user record
   user.authProvider = provider;
-  
+
   // If neither an email or a username was available in the profile, we don't
   // have a way of identifying the user in the future. Throw an error and let
   // whoever's next in the line take care of it.
   if (!user.username && !user.email) {
     return next(new Error('Neither a username nor email was available'));
   }
-  
+
   // If the profile object contains a displayName, add it to the user.
-  if (profile.hasOwnProperty('displayName')) {
+  if (profile.hasOwnProperty('displayName') && profile.displayName) {
     user.name = profile.displayName;
     var splits = user.name.split(" ");
     if (splits.length>1) {
@@ -126,54 +126,54 @@ passport.connect = function (req, query, profile, next) {
       // Action:   Create a new user and assign them a passport.
       if (!passport) {
         User.create(user, function (err, user) {
-          
-          var createPassport=function(next,user){             
+
+          var createPassport=function(next,user){
               query.user = user.id;
-  
+
               Passport.create(query, function (err, passport) {
                 // If a passport wasn't created, bail out
                 if (err) {
                   return next(err);
                 }
-    
+
                 next(err, user);
-              });                  
+              });
           }
-          
+
           if (err) {
             if (err.code === 'E_VALIDATION') {
               if (err.invalidAttributes.email) {
                 // Get the user details and find out the provider
                 User.findOne({
-                  email: profile.emails[0].value  
+                  email: profile.emails[0].value
                 },function(err, already){
                   var ok=false;
                   if (already.authProvider=="dummy") {
-                                                          
+
                     // This is OK.  A dummy user with this email address was created for bookings before
                     // they attempted to sign-up. Use this and carry on with passport sign-up
                     ok=true;
                     user=already;
                     user.authProvider=provider;
-                    
+
                     // Asynchronously email the developer
                     if (sails.config.events.developer) {
                       Email.send(
                       "dummyUserConversion", {
-                            convertedUser: user                      
+                            convertedUser: user
                           },
                           {
                             to: sails.config.events.developer,
                             subject: sails.config.events.title + " - Dummy user conversion"
                           },
                           function(err) {if (err) console.log(err);}
-                      )       
-                    }  
-                                 
+                      )
+                    }
+
                     // Convert the user
                     User.update(user.id,user).exec(function(){
-                      return createPassport(next,user);  
-                    });                    
+                      return createPassport(next,user);
+                    });
                   }
                   else if (already.authProvider=="twitter")
                     req.flash('error', 'Error.Passport.Email.Exists.Twitter');
@@ -184,17 +184,17 @@ passport.connect = function (req, query, profile, next) {
                   else
                     req.flash('error', 'Error.Passport.Email.Exists');
                   if (!ok) return next(err)
-                })               
+                })
               }
               else {
                 req.flash('error', 'Error.Passport.User.Exists');
                 return next(err);
-              }              
+              }
             }
             else {
               return next(err);
             }
-           
+
           }
           if (user) {
             createPassport(next, user);
@@ -223,7 +223,7 @@ passport.connect = function (req, query, profile, next) {
           }
           else {
             User.findOne(passport.user.id, next);
-          }          
+          }
         });
       }
     } else {
@@ -274,7 +274,7 @@ passport.endpoint = function (req, res) {
   // Attach scope if it has been set in the config
   if (strategies[provider].hasOwnProperty('scope')) {
     options.scope = strategies[provider].scope;
-  } 
+  }
 
   // Redirect the user to the provider for authentication. When complete,
   // the provider will redirect the user back to the application at
@@ -375,15 +375,15 @@ passport.loadStrategies = function () {
       }
 
     } else if (key === 'rememberme') {
-      
+
       // The remember me authentication strategy authenticates users using a token stored
-      // in a remember me cookie. The strategy requires a verify callback, which consumes 
+      // in a remember me cookie. The strategy requires a verify callback, which consumes
       // the token and calls done providing a user.
 
-      // The strategy also requires an issue callback, which issues a new token. 
-      // For security reasons, remember me tokens should be invalidated after being used. 
+      // The strategy also requires an issue callback, which issues a new token.
+      // For security reasons, remember me tokens should be invalidated after being used.
       // The issue callback supplies a new token that will be stored in the cookie for next use.
-      
+
       Strategy = strategies[key].strategy;
       self.use(new Strategy(
          function(token, done) {
@@ -394,19 +394,19 @@ passport.loadStrategies = function () {
                 if (!token.user) { return done(null, false); }
                 token.destroy();
                 return done(null, token.user);
-              })              
+              })
           },
           function(user, done) {
               //console.log("issuing new token")
               var crypto    = require('crypto');
-              var token = crypto.randomBytes(64).toString('base64'); 
+              var token = crypto.randomBytes(64).toString('base64');
               Token.create({token:token, user: user.id }, function(err) {
               if (err) { return done(err); }
               return done(null, token);
             });
           }
       ));
-        
+
     } else {
       var protocol = strategies[key].protocol
         , callback = strategies[key].callback;
