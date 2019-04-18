@@ -76,6 +76,12 @@ Apache http overrides to allow lets-encrypt to work:
 In "Additional nginx directives" we need to reverse proxy to sails by adding the following (remembering to change the IP address):
 
 ##################################################
+## Allow lets encrypt challenge through untouched
+location ^~ /.well-known/acme-challenge/ {
+	allow all;
+	default_type "text/plain";
+}
+
 ## Set the location routing to our Sails.js application.
 location ~ / {
 
