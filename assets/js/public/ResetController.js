@@ -1,11 +1,11 @@
 angular.module('EventsModule').controller('ResetController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
-	
+
 	$scope.resetForm = {
 		loading: false
 	}
 
-		
+
 	/**
 	 * Test if the details are complete on the profile
 	 */
@@ -14,16 +14,16 @@ angular.module('EventsModule').controller('ResetController', ['$scope', '$http',
 		if ( !$scope.resetForm.email || $scope.resetForm.email.length==0) {
 			complete=false;
 		}
-			
+
 		return complete;
-	}		
-	
+	}
+
 	$scope.submitResetForm = function(){
 		$scope.resetForm.loading=true;
 		// Submit request to Sails.
 		$http.post('/auth/passwordreset', {
             _csrf: SAILS_LOCALS._csrf,
-			email: $scope.resetForm.email,
+			email: $scope.resetForm.email.trim(),
 		})
 		.then(function onSuccess(sailsResponse){
 			window.location = '/';

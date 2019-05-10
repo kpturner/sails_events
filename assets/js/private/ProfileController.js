@@ -163,6 +163,10 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		// Before submitting the form, check the domain and issue SPAM warning
 		// if required
 		var submit=true;
+		$scope.profileForm.email = $scope.profileForm.email.trim();
+		if ($scope.profileForm.password) {
+			$scope.profileForm.password = $scope.profileForm.password.trim();
+		}
 		if (!$scope.user.spamAck) {
 			var domain;
 			if ($scope.profileForm.email) {
