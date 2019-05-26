@@ -1962,7 +1962,8 @@ module.exports = {
 				or: [{ regInterest: false }, { regInterest: null }],
 				latePaymentChecking: true,
 				closingDate: { '>=': today },
-				grace: { '>': 0 }
+				grace: { '>': 0 },
+				price: { '>': 0 }
 			},
 			sort: {
 				date: 'desc',
