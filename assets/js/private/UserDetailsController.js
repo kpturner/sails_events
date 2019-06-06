@@ -124,6 +124,10 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	$scope.submitUserForm = function(){
 		$scope.userdetailsForm.loading=true;
 
+		while ($scope.ordersModel.length > $scope.userdetailsForm.otherorders) {
+			$scope.ordersModel.pop();
+		}
+
 		// Submit request to Sails.
 		$http.post('/updateuser/'+$scope.mode, {
             _csrf: SAILS_LOCALS._csrf,
