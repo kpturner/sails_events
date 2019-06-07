@@ -61,7 +61,7 @@ In Plesk, create the squareevents.org domain and add a MySql database and user -
 In the squareevents.org domain settings take the "Apache and nginx settings" option.
 
 Apache http overrides to allow lets-encrypt to work:
-##################################################
+######## MOT NEEDED ON PLESK 17 ##########################################
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteCond %{REQUEST_URI} ^/.well-known/acme-challenge [NC]
@@ -75,12 +75,13 @@ Apache http overrides to allow lets-encrypt to work:
 
 In "Additional nginx directives" we need to reverse proxy to sails by adding the following (remembering to change the IP address):
 
-##################################################
+######## MOT NEEDED ON PLESK 17 ##########################################
 ## Allow lets encrypt challenge through untouched
 location ^~ /.well-known/acme-challenge/ {
 	allow all;
 	default_type "text/plain";
 }
+##########################################################################
 
 ## Set the location routing to our Sails.js application.
 location ~ / {
