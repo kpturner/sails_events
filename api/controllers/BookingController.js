@@ -845,7 +845,7 @@ module.exports = {
 														subject: subject,
 														from: event.name + ' <' + sails.config.events.email + '>',
 														to: user.email,
-														bcc: [event.organiser.email || "", (event.organiser2) ? (event.organiser2.email || "") : "", (sails.config.events.emailDeveloperOnBooking && sails.config.events.developer) || ""],
+														bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
 														user: user,
 														event: event,
 														booking: booking,
@@ -1685,6 +1685,37 @@ module.exports = {
 	},
 
 	/**
+	 *
+	 * Build BCC for booking emails
+	 */
+	bookingBCC: function (booking, organisers) {
+		var bcc = [];
+		var organiserIsDev = false;
+		var eventOrganiserId = booking.event.organiser;
+		organisers.forEach(function (organiser, o) {
+			if (organiser) {
+				if (organiser.email) {
+					bcc.push(organiser.email)
+					if (organiser.email == sails.config.events.developer) {
+						organiserIsDev = true;
+					}
+				}
+				if (organiser.id = eventOrganiserId) {
+					//mainOrganiser=organiser;
+					booking.event.organiser = organiser;
+				}
+				else {
+					booking.event.organiser2 = organiser;
+				}
+			}
+		})
+		if (!organiserIsDev && sails.config.events.emailDeveloperOnBooking) {
+			bcc.push(sails.config.events.developer)
+		}
+		return bcc;
+	},
+
+	/**
 	 * Filter bookings so that we only have those that are late in paying
 	 */
 	filterLate: function (bookings, grace) {
@@ -1746,30 +1777,10 @@ module.exports = {
 					if (!organisers) {
 						organisers = []
 					}
-					var bcc = [];
 					var mainOrganiser = {
 						name: "Unknown"
 					};
-					var organiserIsDev = false;
-					var eventOrganiserId = booking.event.organiser;
-					organisers.forEach(function (organiser, o) {
-						if (organiser.email) {
-							bcc.push(organiser.email)
-							if (organiser.email == sails.config.events.developer) {
-								organiserIsDev = true;
-							}
-						}
-						if (organiser.id = eventOrganiserId) {
-							//mainOrganiser=organiser;
-							booking.event.organiser = organiser;
-						}
-						else {
-							booking.event.organiser2 = organiser;
-						}
-					})
-					if (!organiserIsDev && sails.config.events.emailDeveloperOnBooking) {
-						bcc.push(sails.config.events.developer)
-					}
+					var bcc = sails.controllers.booking.bookingBCC(booking, organisers);
 
 					// Create linked bookings
 					var linkedBookings = booking.additions;
