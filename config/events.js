@@ -25,6 +25,9 @@ module.exports.events = {
 	// Email developer when a booking is made/changed
 	emailDeveloperOnBooking: false,
 
+	// Verify email address on booking
+	verifyEmailAddressOnBooking: true,
+
 	// Email developer on password reset
 	emailDeveloperOnPasswordReset: false,
 

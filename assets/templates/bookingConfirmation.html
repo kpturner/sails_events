@@ -3,10 +3,10 @@
     <p>An email confirmation has been sent to <b>{{user.email}}</b>.</p>
     <p>PLEASE CHECK YOUR SPAM FOLDER!</p>
     <p>Your reference is <b><i>{{booking.ref}}</i></b>.</p>
-    <div ng-hide="event.regInterest || event.free">    
+    <div ng-hide="event.regInterest || event.free">
         <h4>Payment Details</h4>
         <textarea type="text" class="form-control" name="paymentdetails" ng-model="event.paymentDetails" rows="4" readonly></textarea>
-    </div>     
+    </div>
 </div>
 <div class="ngdialog-buttons">
     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Close</button>

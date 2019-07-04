@@ -1,0 +1,11 @@
+<div class="ngdialog-message">
+    <h3>VERIFY YOUR EMAIL ADDRESS</h3>
+    <div class="control-group form-group col-xs-12">
+        <input type="email" name="checkemail" style="width:100%" ng-model="bookingForm.email">
+    </div>
+    <p>You must be contactable on this email address. If not, your booking may be cancelled. Please ensure that you receive a confirmation email (check your SPAM).</p>
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Confirm</button>
+</div>

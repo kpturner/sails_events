@@ -600,7 +600,6 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							}
 							else {
 								$scope.duplicates = sailsResponse.data;
-								// Give the user the chance to pull out
 								var opts = {
 									template: "/templates/bookingDialog.html",
 									className: 'ngdialog-theme-default',
@@ -710,10 +709,39 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 		else {
 
+			var makeBooking = function(route) {
+
+				// For MyBookings we need to confirm the email address
+				if (!userBookingHimselfIn || !SAILS_LOCALS.verifyEmailAddressOnBooking) {
+					postBooking(route);
+				} else {
+					var opts={
+						template:"/templates/emailConfirmation.html",
+						className: 'ngdialog-theme-default',
+						scope: $scope
+					};
+					$scope.checkemail = $scope.bookingForm.email;
+					// Pop the dialog
+					ngDialog.openConfirm(opts)
+					.then(function (value) {
+						// Continue with booking
+						if ($scope.checkemail.trim() !== $scope.bookingForm.email.trim()) {
+							$scope.bookingForm.confirmEmail = $scope.bookingForm.email;
+							$scope.user.email = $scope.bookingForm.email;
+						}
+						postBooking(route);
+					}, function (reason) {
+						// They bottled it
+						$scope.bookingForm.loading = false;
+					});
+				}
+			}
+
+
 			/**
 			 * Private function to make the booking
 			 */
-			var makeBooking = function (route) {
+			var postBooking = function (route) {
 				$http.post(route, {
 					_csrf: SAILS_LOCALS._csrf,
 					eventid: $scope.event.id,
