@@ -126,8 +126,8 @@
           <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addGuest()" ng-show="(openForBookings && bookingForm.places<placesMax && mode!='delete')">
             <span>Add guest</span>
           </button>
-          {{(myBookings && paid && mode==='delete')}}
-          <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="bookingForm.loading || (myBookings && paid && mode==='delete') || (!openForBookings && mode!=='delete' || event.capacity<=0">
+
+          <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="bookingForm.loading || (myBookings && paid && mode==='delete') || (!openForBookings && mode!=='delete') || event.capacity<=0">
             <span ng-show="!bookingForm.loading && mode=='delete' && !event.regInterest">Cancel booking</span>
             <span ng-show="!bookingForm.loading && mode=='delete' && event.regInterest">Cancel interest</span>
             <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete' && !event.regInterest">Book now</span>
