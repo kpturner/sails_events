@@ -6,9 +6,9 @@
     <div class="control-group form-group col-xs-6 col-md-4" ng-class="{'has-error':<%-form%>.otherorders.$invalid &&
                             <%-form%>.otherorders.$dirty}">
         <label>Other orders</label>
-        <br><span>If you are looking to book into events for orders other than Craft (like RA or Mark) you need to
-            define the other orders that you are a member of. Increment this number for each order that you wish to
-            add:</span>
+        <br><span>We currently have events for the following orders: Craft{{otherOrdersString}}.</span>
+        <br><span>To book into events for orders (other than Craft) membership details are required.
+            Increment this number for each order to be added:</span>
         <input type="number" class="form-control" placeholder="other orders" name="otherorders"
             ng-model="<%-form%>Form.otherorders" min="0" ng-change="makeOrdersArray()" ng-disabled="mode=='delete'">
         <span class="help-block has-error" ng-if="<%-form%>.otherorders.$dirty">
@@ -27,7 +27,7 @@
             <!-- O R D E R -->
             <div class="control-group form-group col-xs-10">
                 <label>* Order</label>
-                <select class="form-control" placeholder="e.g. Mark, Royal Arch etc" name="order_{{order}}"
+                <select class="form-control" name="order_{{order}}"
                     ng-options="order.code as order.desc for order in orders" ng-model="ordersModel[order].code">
                 </select>
             </div>

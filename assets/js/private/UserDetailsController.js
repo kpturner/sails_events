@@ -50,6 +50,10 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
 	$scope.ordersArr=[];
 	$scope.ordersModel=[];
 	$scope.userdetailsForm.otherorders=0;
+	$scope.otherOrdersString = '';
+	for (var i=0;i<$scope.orders.length;i++) {
+		$scope.otherOrdersString += ', ' + $scope.orders[i].desc;
+	}
 
 	// makeOrdersArray is called every time the number of other orders changes
 	$scope.makeOrdersArray = function(){
