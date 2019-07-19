@@ -375,6 +375,11 @@ and/or maxlength) -->
     ng-model="<%-model%>Form.voCentre">
     <option value="">-- choose centre --</option>
   </select>
+  <input type="text" class="form-control" ng-hide="centres" placeholder="e.g. Woolston" name="vocentre" ng-model="<%-model%>Form.voCentre"
+    ng-maxlength="50">
+  <span class="help-block has-error" ng-if="<%-model%>.vocentre.$dirty">
+    <span ng-show="<%-model%>.vocentre.$error.maxlength">The Exec centre name cannot be more than 50 characters.</span>
+  </span>
 </div>
 
 <!-- V O  A R E A -->
