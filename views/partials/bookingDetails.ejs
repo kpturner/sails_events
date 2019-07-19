@@ -348,7 +348,7 @@ and/or maxlength) -->
   ng-show="event.voReqd && <%-model%>Form.isVO">
   <label>VO lodge (if applic.)</label>
   <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="<%-model%>Form.voLodge"
-    ng-maxlength="50" ng-disabled="mode!='create'">
+    ng-maxlength="50">
   <span class="help-block has-error" ng-if="<%-model%>.volodge.$dirty">
     <span ng-show="<%-model%>.volodge.$error.maxlength">Exec lodge name cannot be more than 50 characters.</span>
   </span>
@@ -359,8 +359,7 @@ and/or maxlength) -->
                         <%-model%>.volodgeno.$dirty}"
   ng-show="event.voReqd && <%-model%>Form.isVO">
   <label>VO lodge number</label>
-  <input type="number" class="form-control" name="volodgeno" ng-model="<%-model%>Form.voLodgeNo" ng-maxlength="5"
-    ng-disabled="mode!='create'">
+  <input type="number" class="form-control" name="volodgeno" ng-model="<%-model%>Form.voLodgeNo" ng-maxlength="5">
   <span class="help-block has-error" ng-if="<%-model%>.volodgeno.$dirty">
     <span ng-show="<%-model%>.volodgeno.$error.maxlength">The Exec lodge number cannot be more than 5 characters.</span>
   </span>
@@ -376,18 +375,13 @@ and/or maxlength) -->
     ng-model="<%-model%>Form.voCentre">
     <option value="">-- choose centre --</option>
   </select>
-  <input type="text" class="form-control" ng-hide="centres" placeholder="e.g. Woolston" name="vocentre" ng-model="<%-model%>Form.voCentre"
-    ng-maxlength="50" ng-disabled="mode!='create'">
-  <span class="help-block has-error" ng-if="<%-model%>.vocentre.$dirty">
-    <span ng-show="<%-model%>.vocentre.$error.maxlength">The Exec centre name cannot be more than 50 characters.</span>
-  </span>
 </div>
 
 <!-- V O  A R E A -->
 <div class="control-group form-group col-xs-10" ng-show="areas.length>0 && event.voReqd && <%-model%>Form.isVO">
   <label>VO/AVC/AC area</label>
   <select class="form-control" placeholder="e.g. South Central" name="voarea" ng-options="area for area in areas"
-    ng-model="<%-model%>Form.voArea" ng-disabled="mode!='create'">
+    ng-model="<%-model%>Form.voArea">
     <option value="">-- choose area --</option>
   </select>
 </div>
