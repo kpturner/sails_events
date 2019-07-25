@@ -522,7 +522,7 @@ module.exports = {
 				places: booking.places,
 				paid: booking.paid,
 				linkedBookings: linkedBookings,
-				paymentDetails: (event.paymentDetails || "n/a").replace(/[\n\r]/g, '<br>').replace(new RegExp('<%BOOKINREF%>', 'g'), bookingRef),
+				paymentDetails: (event.paymentDetails || "n/a").replace(/[\n\r]/g, '<br>').replace(new RegExp('<%BOOKINGREF%>', 'g'), bookingRef),
 				total: (booking.places * event.price),
 				deadline: deadline,
 			},

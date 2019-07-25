@@ -821,6 +821,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							$scope.finish();
 						}
 						else {
+							$scope.event.paymentDetails = $scope.event.paymentDetails.replace(new RegExp('<%BOOKINGREF%>', 'g'), '*BOOKING REFERENCE WILL BE ON YOUR CONFIRMATION EMAIL*');
 							var opts = {
 								template: "/templates/bookingConfirmation.html",
 								className: 'ngdialog-theme-default',
