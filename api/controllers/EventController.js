@@ -181,6 +181,10 @@ module.exports = {
 										// Appropriate text
 										event.bookInText = (event.regInterest) ? "Register interest" : "Book in";
 										event.titleAugmentation = (event.regInterest) ? "register interest" : "book in";
+										// Put all visible dates to midday to avoid timezone offset confusion
+										event.date = new Date(new Date(event.date).setHours(12));
+										event.openingDate = new Date(new Date(event.openingDate).setHours(12));
+										event.closingDate = new Date(new Date(event.closingDate).setHours(12));
 										modifiedEvents.push(event);
 										next();
 									})
@@ -334,10 +338,14 @@ module.exports = {
 					return res.json({});
 				}
 
-				// If the user is not ad administrator then filter out events that they are not an organiser of
+				// If the user is not an administrator then filter out events that they are not an organiser of
 				var filteredEvents = [];
 				_.forEach(events, function (event) {
 					if (Utility.isAdmin(req.user, event)) {
+						// Put all visible dates to midday to avoid timezone offset confusion
+						event.date = new Date(new Date(event.date).setHours(12));
+						event.openingDate = new Date(new Date(event.openingDate).setHours(12));
+						event.closingDate = new Date(new Date(event.closingDate).setHours(12));
 						filteredEvents.push(event)
 					}
 				})
