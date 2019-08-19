@@ -135,6 +135,14 @@ module.exports = {
         return areas
     },
 
+    sanitiseEventDates: (event) => {
+        // Put all visible dates to midday to avoid timezone offset confusion
+        event.date = new Date(new Date(event.date).setHours(12));
+        event.openingDate = new Date(new Date(event.openingDate).setHours(12));
+        event.closingDate = new Date(new Date(event.closingDate).setHours(12));
+        return event;
+    },
+
     /**
      * @name            centres
      * @method

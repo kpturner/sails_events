@@ -86,7 +86,7 @@ module.exports = {
 		req.session.userBookings = false;
 		res.locals.selectedUser = {};
 		Event.findOne(req.param("eventid")).populate("organiser").populate("organiser2").exec(function (err, event) {
-			res.locals.event = event;
+			res.locals.event = Utility.sanitiseEventDates(event);
 			res.view('bookings', {
 				criteria: sails.controllers.booking.criteria(req),
 				myBookings: false,
@@ -244,7 +244,7 @@ module.exports = {
 
 					}
 
-					res.locals.event = event;
+					res.locals.event = Utility.sanitiseEventDates(event);
 					// Remember that mysql adaptor will very unhelpfully adjust the date for DST so use a utility to get UTC date
 					if (event.openingDate) {
 						res.locals.event.UTCOpeningDate = Utility.UTCDBdate(event.openingDate);
