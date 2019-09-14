@@ -38,6 +38,7 @@
     "lodash": ">=4.17.5",
     "machinepack-gravatar": "^1.2.0",
     "machinepack-passwords": "^2.3.0",
+    "mailgun-js": "^0.22.0",
     "moment-timezone": "^0.5.13",
     "mutex": "^1.0.4",
     "ng-dialog": "^0.4.0",

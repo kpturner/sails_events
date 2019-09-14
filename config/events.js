@@ -38,7 +38,15 @@ module.exports.events = {
 	emailDeveloperOnLatePayment: false,
 
 	// Email developer on signup
-	emailDeveloperOnSignup: false,
+    emailDeveloperOnSignup: false,
+
+    smtpApi: "mailgun",
+
+    mailgun: {
+        apiKey: '',
+        domain: 'mg.squareadmin.org',
+        host: 'api.eu.mailgun.net'
+    },
 
 	// Hide closed events on dashboard
 	hideClosedEvents: true,
