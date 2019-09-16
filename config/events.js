@@ -44,7 +44,7 @@ module.exports.events = {
 
     mailgun: {
         apiKey: '',
-        domain: 'mg.squareadmin.org',
+        domain: 'mg.squareevents.org',
         host: 'api.eu.mailgun.net'
     },
 
