@@ -32,12 +32,13 @@ module.exports = {
 
     /**
      * Return todays date at 00:00:00 (catering for DST which is not in use on some centos/plesk servers)
+     * * Use midday to avoid DST confusion also
      */
     today: function(){
         var realDate=moment.tz(new Date(),sails.config.events.timezone).format();
         var splits=realDate.split("-");
         splits[2]=splits[2].split("T")[0];
-        var t=new Date(parseInt(splits[0]),parseInt(splits[1])-1,splits[2],0,0,0,0);
+        var t=new Date(parseInt(splits[0]),parseInt(splits[1])-1,splits[2],12,0,0,0);
         return t;
     },
 
