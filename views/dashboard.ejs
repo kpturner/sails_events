@@ -43,7 +43,7 @@
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %>
 
-      <div ng-class="{'form-max-30':'<%- req.device.type %>'=='desktop'}" ng-show="<%-sails.config.events.developer && req.user && sails.config.events.developer==req.user.email %>">
+      <div ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}" ng-show="<%-sails.config.events.developer && req.user && sails.config.events.developer==req.user.email %>">
         <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
           <span class="fa fa-download"></span><span> Download log</span>
         </button>

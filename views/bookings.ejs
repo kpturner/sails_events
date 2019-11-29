@@ -54,7 +54,7 @@
 
       <!--BOOKING FORM -->
       <form ng-submit="filterBookings()" id="filter-form" name="filterform"
-          ng-class="{'form-max-30':'<%- req.device.type %>'=='desktop'}">
+          ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}">
         <h3 class="form-heading"><span ng-show="myBookings">My </span><span ng-show="eventBookings">Event </span><span ng-hide="event.regInterest">Bookings </span><span ng-show="event.regInterest">Interest </span><span ng-show="eventBookings">for {{event.name}}</span><span ng-show="userBookings">for {{ selectedUser.name}}</span></h3>
 
         <div ng-show="userBookings">
