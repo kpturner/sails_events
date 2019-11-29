@@ -48,7 +48,7 @@
 
       <!--APOLOGY FORM -->
       <form ng-submit="filterApologies()" id="filter-form" name="filterform"
-          ng-class="{'form-max-30':'<%- req.device.type %>'=='desktop'}">
+          ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}">
          <h3 class="form-heading">Event apologies for {{event.name}}</h3>
         <div>
           <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
