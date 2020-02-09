@@ -908,10 +908,12 @@ module.exports = {
 																.then((sessionId) => {
 																	const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
 																							.find(config => config.code === event.onlinePaymentConfig);
-																	booking.stripePublishableKey = paymentConfig.publishableKey;
-																	booking.paymentCheckoutSessionId = sessionId;
-																	// Finalise booking
-																	finalise();
+																	Booking.update(booking.id, { paymentSessionId: sessionId }).exec(() => {
+																		booking.stripePublishableKey = paymentConfig.publishableKey;
+																		booking.paymentSessionId = sessionId;
+																		// Finalise booking
+																		finalise();
+																	});					
 																})
 														} else {
 															// Finalise booking

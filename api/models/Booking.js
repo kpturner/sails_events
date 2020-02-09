@@ -98,8 +98,13 @@ module.exports = {
         model:  'user',
     },
 
-    // Online payment metadata
-    paymentMetaData: {
+    // Online payment session id
+    paymentSessionId: {
+      type: 'string'
+    },
+
+    // Online payment reference
+    paymentReference: {
       type: 'string'
     }
 

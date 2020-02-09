@@ -325,6 +325,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		$scope.bookingForm.cost = SAILS_LOCALS.booking.cost;
 		$scope.bookingForm.paid = SAILS_LOCALS.booking.paid;
 		$scope.bookingForm.mop = SAILS_LOCALS.booking.mop;
+		$scope.bookingForm.paymentReference = SAILS_LOCALS.booking.paymentReference;
 		$scope.bookingForm.tableNo = SAILS_LOCALS.booking.tableNo;
 		$scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;
 		$scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
@@ -822,7 +823,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						}
 						else {
 							// Now decide if we are taking online bookings or not
-							if ($scope.booking.paymentCheckoutSessionId) {
+							if ($scope.booking.paymentSessionId) {
 								var opts = {
 									template: "/templates/checkoutConfirmation.html",
 									className: 'ngdialog-theme-default',
@@ -835,7 +836,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 										var stripe = Stripe($scope.booking.stripePublishableKey);
 										stripe
 											.redirectToCheckout({
-												sessionId: $scope.booking.paymentCheckoutSessionId
+												sessionId: $scope.booking.paymentSessionId
 											})
 											.then((result) => {
 												if (result.error) {

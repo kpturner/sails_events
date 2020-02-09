@@ -10,7 +10,7 @@ module.exports = {
 	/**
 	 * Get initialised stripe object
 	 */
-	getStripe: async (event) => {
+	getStripe: async (eventArg) => {
 
 		const getStripeObject = (event) => {
 			const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
@@ -19,11 +19,11 @@ module.exports = {
 		}
 
 		return new Promise((resolve, reject) => {
-			if (event.id) {
+			if (eventArg.id) {
 				// Already a populated event object
-				return resolve(getStripeObject(event));
+				return resolve(getStripeObject(eventArg));
 			} else {
-				Event.findOne(eventId).exec(function (err, event) {
+				Event.findOne(eventArg).exec(function (err, event) {
 					if (err) {
 						return reject(err);
 					}
@@ -87,15 +87,9 @@ module.exports = {
 	/**
 	 * Get payment checkout session
 	 */
-	getCheckoutSession: async (req, res) => {
-		try {
-			const { sessionId, eventId } = req.query;
-			const stripe = await sails.controllers.payment.getStripe(eventId);
-			const session = await stripe.checkout.sessions.retrieve(sessionId);
-			res.send(session);
-		} catch (err) {
-			return res.negotiate(err);
-		}
+	getCheckoutSession: async (sessionId, eventId) => {
+		const stripe = await sails.controllers.payment.getStripe(eventId);
+		return await stripe.checkout.sessions.retrieve(sessionId);
 	},
 
 	/**
@@ -118,6 +112,28 @@ module.exports = {
 	 */
 	paymentSuccess: async (req, res) => {
 		sails.log.debug(`Successful payment ${req.query.session_id}`);
+		Booking.find({ paymentSessionId: req.query.session_id }).exec(async (err, bookings) => {
+			if (err) {
+				return res.negotiate(err);
+			}
+			try {
+				const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event);
+				// Update the booking
+				Booking.update(bookings[0].id, { 
+					paymentReference: session.payment_intent,
+					paid: true,
+					mop: 'Online',
+					amountPaid: session.display_items[0].amount / 100 
+				}).exec(()=> {
+					res.view('dashboard',{
+						appUpdateRequested: false,
+						mimicUserRequested: false
+					});
+				});
+			} catch (err) {
+				return res.negotiate(err);
+			}
+		});	
 	},
 
 	/**
@@ -125,6 +141,15 @@ module.exports = {
 	 */
 	paymentCancelled: async (req, res) => {
 		sails.log.debug('Payment cancelled');
+		Booking.destroy({ paymentSessionId: sessionId }).exec(async (err) => {
+			if (err) {
+				return res.negotiate(err);
+			}
+			res.view('dashboard',{
+				appUpdateRequested: false,
+				mimicUserRequested: false
+			});
+		});	
 	}
 
 };
