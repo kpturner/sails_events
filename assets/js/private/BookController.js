@@ -694,7 +694,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				// Pop the dialog
 				ngDialog.openConfirm(opts)
 					.then(function (value) {
-						// Continue with booking
+						// Continue with cancellation
 						cancelBooking()
 					}, function (reason) {
 						// They bottled it
@@ -821,21 +821,51 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 							$scope.finish();
 						}
 						else {
-							$scope.event.paymentDetails = $scope.event.paymentDetails.replace(new RegExp('<%BOOKINGREF%>', 'g'), '*BOOKING REFERENCE WILL BE ON YOUR CONFIRMATION EMAIL*');
-							var opts = {
-								template: "/templates/bookingConfirmation.html",
-								className: 'ngdialog-theme-default',
-								scope: $scope,
-							};
-							// Pop the dialog
-							ngDialog.open(opts)
-								.closePromise.then(function (value) {
-									if ($scope.myBookings)
-										window.location = '/mybookings'
-									else
-										window.location = '/'
-								});
+							// Now decide if we are taking online bookings or not
+							if ($scope.booking.paymentCheckoutSessionId) {
+								var opts = {
+									template: "/templates/checkoutConfirmation.html",
+									className: 'ngdialog-theme-default',
+									scope: $scope,
+								};
+								// Pop the dialog
+								ngDialog.openConfirm(opts)
+									.then(function (value) {
+										// Continue to checkout
+										var stripe = Stripe($scope.booking.stripePublishableKey);
+										stripe
+											.redirectToCheckout({
+												sessionId: $scope.booking.paymentCheckoutSessionId
+											})
+											.then((result) => {
+												if (result.error) {
+													toastr.error(result.error.message, 'Error');
+												}
+											});
+									}, function (reason) {
+										// They bottled it
+										$scope.mode = "delete";
+										SAILS_LOCALS.booking.id = $scope.booking.id;
+										$scope.proceed();
+									});
+							} else {
+								$scope.event.paymentDetails = $scope.event.paymentDetails.replace(new RegExp('<%BOOKINGREF%>', 'g'), '*BOOKING REFERENCE WILL BE ON YOUR CONFIRMATION EMAIL*');
+								var opts = {
+									template: "/templates/bookingConfirmation.html",
+									className: 'ngdialog-theme-default',
+									scope: $scope,
+								};
+								// Pop the dialog
+								ngDialog.open(opts)
+									.closePromise.then(function (value) {
+										if ($scope.myBookings)
+											window.location = '/mybookings'
+										else
+											window.location = '/'
+									});
 
+							}
+							
 						}
 
 					})

@@ -82,6 +82,12 @@ module.exports.routes = {
   'get /lodgeroom': 'BookingController.lodgeRoom',
   'post /addpd/:eventid': 'BookingController.addPD',
 
+  // Online payments
+  'post /create-checkout-session': 'PaymentController.createCheckoutSession',
+  'get /checkout-session': 'PaymentController.getCheckoutSession',
+  'get /paymentsuccess': 'PaymentController.paymentSuccess',
+  'get /paymentcancelled': 'PaymentController.paymentCancelled',
+
   // Apologies
   'get /apology': 'ApologyController.prepareApology',
   'get /apology/:action': 'ApologyController.prepareApology',

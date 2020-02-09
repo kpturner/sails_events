@@ -101,7 +101,7 @@ module.exports.events = {
 	userCategories: [],
 
 	// Methods of payment
-	mops: ['Cheque', 'BACS', 'Cash', 'Paypal'],
+	mops: ['Cheque', 'BACS', 'Cash', 'Paypal', 'Online'],
 
 	// Salutations
 	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr', 'Mrs', 'Ms', 'Miss'],
@@ -155,6 +155,9 @@ module.exports.events = {
       domainName: "squareevents.org",
       keySelector: "default",
       privateKey: "default.squareevents.org.pem"
-    },
+	},
+	
+	onlinePaymentPlatforms: [
+	]
 
 };

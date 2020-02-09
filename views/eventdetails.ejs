@@ -33,6 +33,7 @@
       _csrf: "<%= _csrf %>",
       user: <%- JSON.stringify(res.locals.user) %>,
       event: <%- JSON.stringify(event) %>,
+      paymentPlatforms: <%- JSON.stringify(onlinePaymentPlatforms) %> ,
       logo: "<%- sails.config.events.defaultEventLogo || sails.config.events.logo %>",
       orders: <%- JSON.stringify(sails.config.events.orders) %>,
       mode: "<%= mode.toLowerCase() %>"
@@ -141,6 +142,7 @@
               <label>Order</label>
               <select class="form-control" placeholder="e.g. Craft, Royal Arch etc" name="order" ng-options="order.code as order.desc for order in orders"
                   ng-model="eventForm.order">
+                  <option value="">-- choose masonic order --</option>
               </select>
             </div>
 
@@ -480,28 +482,45 @@
 
             <!-- P A Y M E N T   D E T A I L S -->
 
+              <!-- Online? -->
+              <div class="control-group form-group col-sm-6" ng-hide="eventForm.free || eventForm.regInterest || paymentPlatformsAvailable.length <= 0"
+                ng-class="{'has-error':eventdetails.onlinepayments.$invalid &&
+                                      eventdetails.onlinepayments.$dirty}">
+                <label>
+                  <input type="checkbox" class="bigcheckbox" name="onlinepayments" ng-model="eventForm.onlinePayments"/>
+                  &nbsp;&nbsp;&nbsp;Online payment platform?
+                </label>
+              </div>
+
+              <!-- Platform -->
+              <div class="control-group form-group col-md-10" ng-show="eventForm.onlinePayments">
+                <label>Platform</label>
+                <select class="form-control" name="onlinepaymentplatform" ng-options="platform.code as platform.desc for platform in paymentPlatformsAvailable"
+                    ng-model="eventForm.onlinePaymentPlatform">
+                    <option value="">-- choose payment platform --</option>
+                </select>
+              </div>
+
+              <!-- Platform config -->
+              <div class="control-group form-group col-md-10" ng-show="eventForm.onlinePayments">
+                <label>Platform account</label>
+                <select class="form-control" name="onlinepaymentconfig" ng-options="config.code as config.desc for config in paymentPlatforms[eventForm.onlinePaymentPlatform]"
+                    ng-model="eventForm.onlinePaymentConfig">
+                    <option value="">-- choose payment account --</option>
+                </select>
+              </div>
+
               <div class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.paymentdetails.$invalid &&
-                                      eventdetails.paymentdetails.$dirty}" ng-hide="eventForm.free">
+                                      eventdetails.paymentdetails.$dirty}" ng-hide="eventForm.free || eventForm.onlinePayments">
                 <label>Payment details</label>
                 <textarea type="text" class="form-control" placeholder="e.g. Bank details for BACS payments" name="paymentdetails" ng-model="eventForm.paymentDetails" rows="4"></textarea>
 
               </div>
 
-              <!-- I N S T A N T  P A Y M E N T  ? -->
-
-              <div style="display:none" class="control-group form-group col-md-10"
-                ng-class="{'has-error':eventdetails.instantpayment.$invalid &&
-                                      eventdetails.instantpayment.$dirty}">
-                <label>
-                  <input type="checkbox" class="bigcheckbox" name="instantpayment" ng-model="eventForm.instantPayment" />
-                  &nbsp;&nbsp;&nbsp;Instant payment required?
-                </label>
-              </div>
-
               <!-- G R A C E   P E R I O D -->
 
-              <div class="control-group form-group col-md-10" ng-hide="eventForm.free || eventForm.regInterest"
+              <div class="control-group form-group col-md-10" ng-hide="eventForm.free || eventForm.regInterest || eventForm.onlinePayments"
                     ng-class="{'has-error':eventdetails.grace.$invalid &&
                                     eventdetails.grace.$dirty}">
                   <label>Grace period for payment (days)</label>
@@ -523,7 +542,7 @@
 
               <div class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
-                                      eventdetails.latePaymentChecking.$dirty}" ng-hide="eventForm.free || eventForm.regInterest">
+                                      eventdetails.latePaymentChecking.$dirty}" ng-hide="eventForm.free || eventForm.regInterest || eventForm.onlinePayments">
                 <label>
                   <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" />
                   &nbsp;&nbsp;&nbsp;Late payment checking?

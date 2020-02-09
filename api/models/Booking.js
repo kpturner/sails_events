@@ -96,6 +96,11 @@ module.exports = {
     // Created by
     createdBy: {
         model:  'user',
+    },
+
+    // Online payment metadata
+    paymentMetaData: {
+      type: 'string'
     }
 
   }
