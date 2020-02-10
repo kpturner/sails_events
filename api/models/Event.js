@@ -173,10 +173,6 @@ module.exports = {
       defaultsTo: 10
     },
 
-    instantPayment: {
-      type: 'boolean'
-    },
-
     paymentDetails: {
       type: 'text'
     },
@@ -206,6 +202,18 @@ module.exports = {
       type: 'integer',
       defaultsTo: 0
     },
+
+    onlinePayments: {
+      type: 'boolean'
+    },
+
+    onlinePaymentPlatform: {
+      type: 'string'
+    },
+
+    onlinePaymentConfig: {
+      type: 'string'
+    }
 
   },
 

@@ -29,7 +29,7 @@ module.exports = {
       usersCanViewBookings: true, 
       help: "wilkinsongd@gmail.com", 
       // Methods of payment
-	    mops: ['Cheque', 'BACS', 'Non-paying Guest', 'Cash', 'Paypal'],
+	    mops: ['Cheque', 'BACS', 'Non-paying Guest', 'Cash', 'Online'],
   },  
    
   mutex: {

@@ -551,7 +551,6 @@ module.exports = {
 		var bookingRef = null;
 		var lodgeRoomArr = [];
 
-
 		Event.findOne(eventId).populate("organiser").populate("organiser2").exec(function (err, event) {
 			if (err) {
 				return res.negotiate(err);
@@ -899,10 +898,27 @@ module.exports = {
 														catch (e) { }
 													}
 													// Update the booking ref
-													Booking.update(booking.id, { ref: bookingRef }).exec(function () { });
-													booking.ref = bookingRef;
-													// Finalise booking
-													finalise();
+													Booking.update(booking.id, { ref: bookingRef }).exec(function () {
+														booking.ref = bookingRef;
+
+														// If we are using online payments, add a checkout session if to the booking
+														if (event.onlinePayments && event.onlinePaymentConfig && !booking.paid) {
+															sails.controllers.payment.getNewCheckoutSession(booking.id)
+																.then((sessionId) => {
+																	const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
+																							.find(config => config.code === event.onlinePaymentConfig);
+																	Booking.update(booking.id, { paymentSessionId: sessionId }).exec(() => {
+																		booking.stripePublishableKey = paymentConfig.publishableKey;
+																		booking.paymentSessionId = sessionId;
+																		// Finalise booking
+																		finalise();
+																	});					
+																})
+														} else {
+															// Finalise booking
+															finalise();
+														}
+													});
 												})
 											}
 											else {

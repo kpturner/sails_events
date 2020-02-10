@@ -41,6 +41,11 @@ module.exports.models = {
             table:      "lodgeroom",
             columns:    ["booking"]
         }, 
+
+        booking_payment_session:    { 
+            table:      "booking",
+            columns:    ["paymentSessionId"]
+        },  
          
         booking_user:    { 
             table:      "booking",

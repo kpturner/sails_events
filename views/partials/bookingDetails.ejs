@@ -12,7 +12,7 @@
   ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
   <label>Amount paid</label>
   <input type="number" class="form-control" placeholder="e.g. 20.00" name="amountpaid" ng-model="<%-model%>Form.amountPaid"
-    ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display'" />
+    ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display' || <%-model%>Form.paymentReference"" />
 
 </div>
 
@@ -22,7 +22,7 @@
                         <%-model%>.paid.$dirty}"
   ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
   <label>
-    <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display'" />
+    <input type="checkbox" class="bigcheckbox" name="open" ng-model="<%-model%>Form.paid" ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display' || <%-model%>Form.paymentReference"" />
     &nbsp;&nbsp;&nbsp;Fully paid?
   </label>
 </div>
@@ -43,9 +43,15 @@
   ng-hide="(!eventBookings && !userBookings) || event.free || event.regInterest">
   <label>Method of Payment</label>
   <select class="form-control" placeholder="e.g. BACS" name="mop" ng-options="mop for mop in mops" ng-model="<%-model%>Form.mop"
-    ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display'">
+    ng-disabled="(!eventBookings && !userBookings) || mode=='delete' || mode=='display' || <%-model%>Form.paymentReference"">
     <option value="">-- choose mop --</option>
   </select>
+</div>
+
+<!-- P A Y M E N T   R E F  -->
+<div class="control-group form-group col-md-5" ng-hide="(!eventBookings && !userBookings) || !<%-model%>Form.paymentReference">
+  <label>Payment reference</label>
+  <input class="form-control" name="paymentreference" ng-model="<%-model%>Form.paymentReference" readonly />
 </div>
 
 <!-- B L U R B -->
@@ -125,7 +131,7 @@
 
 <!-- P A Y M E N T   D E T A I L S -->
 
-<div class="control-group form-group col-md-10" ng-show="openForBookings && !event.free && !event.regInterest">
+<div class="control-group form-group col-md-10" ng-show="openForBookings && !event.free && !event.regInterest && !event.onlinePayments">
   <label>Payment details</label>
   <textarea type="text" class="form-control" name="paymentdetails" ng-model="<%-model%>Form.paymentDetails" rows="4"
     readonly></textarea>

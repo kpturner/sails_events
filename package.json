@@ -58,6 +58,7 @@
     "sails-generate-auth": "^0.3.1",
     "sails-hook-email": "^0.12.0",
     "sails-mysql": "^0.11.0",
+    "stripe": "^8.14.0",
     "twit": "^2.2.5",
     "uuid": "^3.2.1",
     "validator": "^3.41.2",

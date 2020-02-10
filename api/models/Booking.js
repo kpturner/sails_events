@@ -96,6 +96,16 @@ module.exports = {
     // Created by
     createdBy: {
         model:  'user',
+    },
+
+    // Online payment session id
+    paymentSessionId: {
+      type: 'string'
+    },
+
+    // Online payment reference
+    paymentReference: {
+      type: 'string'
     }
 
   }
