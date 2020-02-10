@@ -838,7 +838,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 											.redirectToCheckout({
 												sessionId: $scope.booking.paymentSessionId
 											})
-											.then((result) => {
+											.then(function (result) {
 												if (result.error) {
 													toastr.error(result.error.message, 'Error');
 												}
