@@ -4,7 +4,7 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 	$scope.mode=SAILS_LOCALS.mode;
 	$scope.paymentPlatformsAvailable=[];
 	$scope.paymentPlatforms=$.extend({}, SAILS_LOCALS.paymentPlatforms);
-	for (const platform in $scope.paymentPlatforms) {
+	for (var platform in $scope.paymentPlatforms) {
 		if ($scope.paymentPlatforms.hasOwnProperty(platform)) {
 			$scope.paymentPlatformsAvailable.push({ code: platform, desc: platform })
 		}
