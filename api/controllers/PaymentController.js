@@ -71,7 +71,7 @@ module.exports = {
 							client_reference_id: booking.ref,
 							// ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
 							success_url: `${domainURL}paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
-							cancel_url: `${domainURL}paymentcancelled`
+							cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
 						});
 
 						return resolve(session.id);
@@ -88,8 +88,14 @@ module.exports = {
 	 * Get payment checkout session
 	 */
 	getCheckoutSession: async (sessionId, eventId) => {
-		const stripe = await sails.controllers.payment.getStripe(eventId);
-		return await stripe.checkout.sessions.retrieve(sessionId);
+		try {
+			const stripe = await sails.controllers.payment.getStripe(eventId);
+			return await stripe.checkout.sessions.retrieve(sessionId);
+		} catch (err) {
+			sails.log.error(err);
+			return null;
+		}
+
 	},
 
 	/**
@@ -112,28 +118,55 @@ module.exports = {
 	 */
 	paymentSuccess: async (req, res) => {
 		sails.log.debug(`Successful payment ${req.query.session_id}`);
-		Booking.find({ paymentSessionId: req.query.session_id }).exec(async (err, bookings) => {
-			if (err) {
-				return res.negotiate(err);
-			}
-			try {
-				const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event);
-				// Update the booking
-				Booking.update(bookings[0].id, { 
-					paymentReference: session.payment_intent,
-					paid: true,
-					mop: 'Online',
-					amountPaid: session.display_items[0].amount / 100 
-				}).exec(()=> {
-					res.view('dashboard',{
-						appUpdateRequested: false,
-						mimicUserRequested: false
-					});
-				});
-			} catch (err) {
-				return res.negotiate(err);
-			}
-		});	
+		Booking.find({ paymentSessionId: req.query.session_id })
+			.populate('event')
+			.populate('user')
+			.exec(async (err, bookings) => {
+				if (err || !bookings || bookings.length === 0) {
+					return res.negotiate(err);
+				} else {
+					const booking = bookings[0];
+					const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
+					if (session && booking.paymentReference !== session.payment_intent) {
+						// Update the booking
+						const amountPaid = session.display_items[0].amount / 100;
+						Booking.update(bookings[0].id, {
+							paymentReference: session.payment_intent,
+							paid: true,
+							mop: 'Online',
+							amountPaid: amountPaid
+						}).exec((err) => {
+							if (err) {
+								return res.negotiate(err);
+							}
+							Email.send(
+								"onlinePaymentSuccess",
+								{
+									recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+									senderName: sails.config.events.title,
+									amountPaid,
+									booking,
+									event: booking.event
+								},
+								{
+									from: booking.event.name + ' <' + sails.config.events.email + '>',
+									to: booking.user.email,
+									bcc: sails.controllers.booking.bookingBCC(booking, [booking.event.organiser, booking.event.organiser2, sails.config.events.developer]),
+									subject: 'Event booking payment processed'
+								},
+								function (err) {
+									Utility.emailError(err);
+								}
+							);
+
+						});
+					}
+				}
+			});
+		res.view('dashboard', {
+			appUpdateRequested: false,
+			mimicUserRequested: false
+		});
 	},
 
 	/**
@@ -141,15 +174,50 @@ module.exports = {
 	 */
 	paymentCancelled: async (req, res) => {
 		sails.log.debug('Payment cancelled');
-		Booking.destroy({ paymentSessionId: sessionId }).exec(async (err) => {
-			if (err) {
-				return res.negotiate(err);
-			}
-			res.view('dashboard',{
-				appUpdateRequested: false,
-				mimicUserRequested: false
+		const sessionId = req.query.session_id;
+		Booking.find({ paymentSessionId: sessionId })
+			.populate('user')
+			.populate('event')
+			.exec(async (err, bookings) => {
+				if (err || !bookings || bookings.length === 0) {
+					sails.log.error(`Unable to update booking for payment reference ${sessionId}`);
+				} else {
+					const booking = bookings[0];
+					Booking.destroy({ id: booking.id }).exec(async (err) => {
+						if (err) {
+							sails.log.error(`Unable to destory booking for payment reference ${sessionId}`);
+						} else {
+							const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
+							if (session) {
+								const amountPaid = session.display_items[0].amount / 100;
+								Email.send(
+									"onlinePaymentCancelled",
+									{
+										recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+										senderName: sails.config.events.title,
+										booking,
+										event: booking.event,
+										amountPaid
+									},
+									{
+										from: booking.event.name + ' <' + sails.config.events.email + '>',
+										to: booking.user.email,
+										bcc: sails.controllers.booking.bookingBCC(booking, [booking.event.organiser, booking.event.organiser2, sails.config.events.developer]),
+										subject: 'Event booking payment cancelled'
+									},
+									function (err) {
+										Utility.emailError(err);
+									}
+								);
+							}
+						}
+					});
+				}
 			});
-		});	
+		res.view('dashboard', {
+			appUpdateRequested: false,
+			mimicUserRequested: false
+		});
 	}
 
 };

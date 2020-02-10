@@ -551,7 +551,6 @@ module.exports = {
 		var bookingRef = null;
 		var lodgeRoomArr = [];
 
-
 		Event.findOne(eventId).populate("organiser").populate("organiser2").exec(function (err, event) {
 			if (err) {
 				return res.negotiate(err);
