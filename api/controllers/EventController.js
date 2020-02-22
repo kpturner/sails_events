@@ -48,26 +48,17 @@ module.exports = {
 			if (selectedUserId) {
 				userId = selectedUserId;
 			}
-			var clause = { or: [] };
+
 			// Events with no particular order defined are included
-			clause.or.push({
-				order: ""
-			})
-			clause.or.push({
-				order: null
-			})
-			// Craft events are always included
-			clause.or.push({
-				order: "C"
-			})
+			// and Craft events are always included
+			let ordersToInclude = ['', null, 'C'];
+			
 			// Include the users orders
 			Order.find({ user: userId })
 				.then(function (orders) {
 					if (orders.length > 0) {
 						_.forEach(orders, function (order) {
-							clause.or.push({
-								order: order.code
-							})
+							ordersToInclude.push(order.code);
 						})
 					}
 				})
@@ -75,36 +66,11 @@ module.exports = {
 					sails.log.error(err)
 				})
 				.finally(function () {
-					getEvents(clause);
+					getEvents(ordersToInclude);
 				})
 		}
 
-		function getEvents(clause) {
-			// An example using promises (bluebird)
-			/*
-			Event.find({
-					where:	{
-								open:true,
-								closingDate: { '>=': today }
-							},
-					sort: 	{
-								date:'desc',
-								time:'desc'
-							}
-					})
-					.populate('organiser')
-					.populate("organiser2")
-					.then(function(events){
-						console.log(events.length)
-						return events;
-					}).spread(function(event1,event2){
-						// Promises are awesome!
-						console.log(event1)
-						console.log(event2)
-					}).catch(function(err){
-						// An error occurred
-					})
-			*/
+		function getEvents(ordersToInclude) {
 			var where = {
 				or: [
 					{ hide: false },
@@ -123,17 +89,8 @@ module.exports = {
 			}
 			where.date = { '>=': today };
 
-
-			if (clause) {
-				where = _.extend(where, clause);
-			}
-
 			Event.find({
 				where: where,
-				// Sorted later
-				//sort: 	{
-				//			date:'desc',
-				//		}
 			})
 				.populate("organiser")
 				.populate("organiser2")
@@ -148,6 +105,13 @@ module.exports = {
 						// If session refers to a user who no longer exists, still allow logout.
 						if (!events) {
 							return res.json({});
+						}
+
+						// Filter by order if required
+						if (ordersToInclude) {
+							events = events.filter(event => {
+								return (ordersToInclude.indexOf(event.order) >= 0);
+							});
 						}
 
 						function augmentEvents(events) {
