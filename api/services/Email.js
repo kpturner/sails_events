@@ -119,7 +119,7 @@ module.exports = {
                         sails.log.error(`Email error: ${err}`);
                     }
                 }
-            }, sails.config.eventemail.throttleRate * 6000);
+            }, (1 / sails.config.eventemail.throttleRate) * 6000);
         }
         return true;
     },
