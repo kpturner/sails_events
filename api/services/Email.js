@@ -13,6 +13,8 @@
  * Module dependencies
  */
 
+const emailQueue = []; 
+let emailQueueTimer = null;
 
 module.exports = {
 
@@ -91,12 +93,35 @@ module.exports = {
     send: function (template, data, opts, cb) {
 
        if (sails.config.events.smtpApi === 'mailgun') {
-            return Email.mailgun(template, data, opts, cb);
+            return Email.enqueueEmail(template, data, opts, cb);
        } else {
             return Email.nodemailer(template, data, opts, cb);
        }
 
     },
 
+    enqueueEmail: function (template, data, opts, cb) {
+        emailQueue.push({
+            template,
+            data,
+            opts,
+            cb
+        });
+
+        if (!emailQueueTimer) {
+            emailQueueTimer = setInterval(() => {
+                if (emailQueue.length > 0) {
+                    try {
+                        const email = emailQueue.shift();
+                        Email.mailgun(email.template, email.data, email.opts, email.cb);
+                        sails.log.debug('Email sent successfully');
+                    } catch (err) {
+                        sails.log.error(`Email error: ${err}`);
+                    }
+                }
+            }, sails.config.eventemail.throttleRate * 6000);
+        }
+        return true;
+    },
 
 };

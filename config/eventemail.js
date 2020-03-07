@@ -23,10 +23,10 @@ module.exports.eventemail = {
         auth: (process.env.SMTP_USER) ? {
             user: process.env.SMTP_USER || null,
             pass: process.env.SMTP_PASS || null
-        } : null
+        } : null,
+        sendingRate: 1 // Messages per second
     },
     from: process.env.SMTP_SENDER || 'Provincial Events <noreply@squareevents.org>', // sender address
     testMode: (process.env.SMTP_TESTMODE == '1') ? true : false,
-
-
+    throttleRate: 1, // Per second (for nodemailer)
 };
