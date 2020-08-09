@@ -8,8 +8,6 @@
 
 module.exports = {
 
-	 graph: require('fbgraph'),
-	
 	/**
 	 * Users
 	 *

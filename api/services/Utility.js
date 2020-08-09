@@ -452,7 +452,8 @@ module.exports = {
                             case "facebook":
                                 avatar="";
                                 if (passport.tokens) {
-                                     graph.get("me/picture?height=48&width=48&access_token="+passport.tokens.accessToken,function(err,res){
+                                    graph.setVersion( sails.config.facebook.version );
+                                    graph.get("me/picture?height=48&width=48&access_token="+passport.tokens.accessToken,function(err,res){
                                         if (err) {
                                             e=err;
                                             sails.log.error("Cannot get avatar for Facebook user "+user.name+": "+err.message);
