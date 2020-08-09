@@ -138,19 +138,19 @@
             			</div>
             		</div>
                 <!-- Quick start guide -->
-                <div ng-hide="<%-sails.config.events.quickStart%> === false" class="row omb_row-sm-offset-3">
-            			 <div class="col-xs-12 col-sm-5" ng-show="developer">
-                    <p class="omb_guide">
-            					<a href="<%-sails.config.events.quickStart%>" target="_blank">Quick start guide</a>
-            				</p>
-                  </div>
-            		</div>
+                <div ng-hide="'<%-sails.config.events.quickStart%>' === 'false'" class="row omb_row-sm-offset-3">
+            		<div class="col-xs-12 col-sm-5" ng-show="developer">
+                        <p class="omb_guide">
+            				<a href="<%-sails.config.events.quickStart%>" target="_blank">Quick start guide</a>
+            			</p>
+                    </div>
+            	</div>
                 <!-- Stuck! -->
                 <div class="row omb_row-sm-offset-3">
-            			 <div class="col-xs-12 col-sm-5" ng-show="developer">
-                    <p class="omb_stuck">
-            					<a href="mailto:<%- res.locals.help || res.locals.developer %>?Subject=I am stuck! Please help me" target="_top">I'm stuck!</a>
-            				</p>
+            		<div class="col-xs-12 col-sm-5" ng-show="developer">
+                        <p class="omb_stuck">
+            				<a href="mailto:<%- res.locals.help || res.locals.developer %>?Subject=I am stuck! Please help me" target="_top">I'm stuck!</a>
+            			</p>
                   </div>
             		</div>
                 <input type="hidden" name="_csrf" value="<%= _csrf %>" />
