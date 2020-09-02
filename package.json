@@ -18,7 +18,7 @@
     "ejs": "~2.5.5",
     "express-device": "^0.3.11",
     "fbgraph": "^1.4.4",
-    "googleapis": "^37.1.0",
+    "googleapis": "^39.1.0",
     "grunt": "0.4.2",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-coffee": "~0.10.1",
