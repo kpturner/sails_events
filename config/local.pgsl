@@ -27,10 +27,29 @@ module.exports = {
       lodgeNoDefault: 9263,  
       quickStart: "/doc/pgsl/quick_start.pdf", 
       usersCanViewBookings: true, 
-      help: "wilkinsongd@gmail.com", 
+      help: "jon.masters@yougo.world", 
       // Methods of payment
-	    mops: ['Cheque', 'BACS', 'Non-paying Guest', 'Cash', 'Online'],
-  },  
+      mops: ['Cheque', 'BACS', 'Non-paying Guest', 'Cash', 'Online'],
+      smtpApi: "nodemailer",
+      DKIM: null,
+  },
+  
+  passport: {
+    local: {
+        strategy: require('passport-local').Strategy
+    },
+
+    rememberme : {
+        strategy: require('passport-remember-me').Strategy,
+        maxAge: 7 * 24 * 60 * 60 * 1000,   // Time to live for remember me cookie
+    },
+
+    twitter: null,
+    
+    facebook: null,
+    
+    google: null,
+  },
    
   mutex: {
     adapter: 'lockfile'
@@ -77,13 +96,13 @@ module.exports = {
   
   // IMPORTANT: Uncomment and correct the next line
   proxyHost: 'http://9263dining.org.uk/',
-  port: 9558,
+  port: 1337,
   connections: {
     localhostMysqlServer: {
       adapter: 'sails-mysql',
-      host: '10.169.0.141',
+      host: 'localhost',
       user: '9263dini_sailsdb',
-      password: 'woodyskipper',
+      password: 'Squ@reEvents9263',
       database: '9263dini_sailsdb'
     }
   },  

@@ -1,6 +1,6 @@
-var path     = require('path')
-  , url      = require('url')
-  , passport = require('passport');
+var path = require('path')
+    , url = require('url')
+    , passport = require('passport');
 
 /**
  * Passport Service
@@ -63,192 +63,192 @@ passport.protocols = require('./protocols');
  * @param {Function} next
  */
 passport.connect = function (req, query, profile, next) {
-  var user = {}
-    , provider;
+    var user = {}
+        , provider;
 
-  // Get the authentication provider from the query.
-  query.provider = req.param('provider');
+    // Get the authentication provider from the query.
+    query.provider = req.param('provider');
 
-  // Use profile.provider or fallback to the query.provider if it is undefined
-  // as is the case for OpenID, for example
-  provider = profile.provider || query.provider;
+    // Use profile.provider or fallback to the query.provider if it is undefined
+    // as is the case for OpenID, for example
+    provider = profile.provider || query.provider;
 
-  // If the provider cannot be identified we cannot match it to a passport so
-  // throw an error and let whoever's next in line take care of it.
-  if (!provider){
-    return next(new Error('No authentication provider was identified.'));
-  }
-
-  // If the profile object contains a list of emails, grab the first one and
-  // add it to the user.
-  if (profile.hasOwnProperty('emails')) {
-    user.email = profile.emails[0].value;
-  }
-  // If the profile object contains a username, add it to the user (it could be undefined)
-  if (profile.hasOwnProperty('username') && profile.username) {
-    user.username = profile.username;
-  }
-  else {
-    // We need something from a database perspective
-    user.username = user.email;
-  }
-  // Some redundancy, but store the provider on the user record
-  user.authProvider = provider;
-
-  // If neither an email or a username was available in the profile, we don't
-  // have a way of identifying the user in the future. Throw an error and let
-  // whoever's next in the line take care of it.
-  if (!user.username && !user.email) {
-    return next(new Error('Neither a username nor email was available'));
-  }
-
-  // If the profile object contains a displayName, add it to the user.
-  if (profile.hasOwnProperty('displayName') && profile.displayName) {
-    user.name = profile.displayName;
-    var splits = user.name.split(" ");
-    if (splits.length>1) {
-      user.firstName=splits[0];
-      user.surname=splits[1];
-    }
-  }
-
-  Passport.findOne({
-    provider   : provider
-  , identifier : query.identifier.toString()
-  }, function (err, passport) {
-    if (err) {
-      return next(err);
+    // If the provider cannot be identified we cannot match it to a passport so
+    // throw an error and let whoever's next in line take care of it.
+    if (!provider) {
+        return next(new Error('No authentication provider was identified.'));
     }
 
-    if (!req.user) {
-      // Scenario: A new user is attempting to sign up using a third-party
-      //           authentication provider.
-      // Action:   Create a new user and assign them a passport.
-      if (!passport) {
-        User.create(user, function (err, user) {
+    // If the profile object contains a list of emails, grab the first one and
+    // add it to the user.
+    if (profile.hasOwnProperty('emails')) {
+        user.email = profile.emails[0].value;
+    }
+    // If the profile object contains a username, add it to the user (it could be undefined)
+    if (profile.hasOwnProperty('username') && profile.username) {
+        user.username = profile.username;
+    }
+    else {
+        // We need something from a database perspective
+        user.username = user.email;
+    }
+    // Some redundancy, but store the provider on the user record
+    user.authProvider = provider;
 
-          var createPassport=function(next,user){
-              query.user = user.id;
+    // If neither an email or a username was available in the profile, we don't
+    // have a way of identifying the user in the future. Throw an error and let
+    // whoever's next in the line take care of it.
+    if (!user.username && !user.email) {
+        return next(new Error('Neither a username nor email was available'));
+    }
 
-              Passport.create(query, function (err, passport) {
-                // If a passport wasn't created, bail out
-                if (err) {
-                  return next(err);
-                }
+    // If the profile object contains a displayName, add it to the user.
+    if (profile.hasOwnProperty('displayName') && profile.displayName) {
+        user.name = profile.displayName;
+        var splits = user.name.split(" ");
+        if (splits.length > 1) {
+            user.firstName = splits[0];
+            user.surname = splits[1];
+        }
+    }
 
-                next(err, user);
-              });
-          }
-
-          if (err) {
-            if (err.code === 'E_VALIDATION') {
-              if (err.invalidAttributes.email) {
-                // Get the user details and find out the provider
-                User.findOne({
-                  email: profile.emails[0].value
-                },function(err, already){
-                  var ok=false;
-                  if (already.authProvider=="dummy") {
-
-                    // This is OK.  A dummy user with this email address was created for bookings before
-                    // they attempted to sign-up. Use this and carry on with passport sign-up
-                    ok=true;
-                    user=already;
-                    user.authProvider=provider;
-
-                    // Asynchronously email the developer
-                    if (sails.config.events.developer) {
-                      Email.send(
-                      "dummyUserConversion", {
-                            convertedUser: user
-                          },
-                          {
-                            to: sails.config.events.developer,
-                            subject: sails.config.events.title + " - Dummy user conversion"
-                          },
-                          function(err) {if (err) console.log(err);}
-                      )
-                    }
-
-                    // Convert the user
-                    User.update(user.id,user).exec(function(){
-                      return createPassport(next,user);
-                    });
-                  }
-                  else if (already.authProvider=="twitter")
-                    req.flash('error', 'Error.Passport.Email.Exists.Twitter');
-                  else if (already.authProvider=="facebook")
-                    req.flash('error', 'Error.Passport.Email.Exists.Facebook');
-                  else if (already.authProvider=="google")
-                    req.flash('error', 'Error.Passport.Email.Exists.Google');
-                  else
-                    req.flash('error', 'Error.Passport.Email.Exists');
-                  if (!ok) return next(err)
-                })
-              }
-              else {
-                req.flash('error', 'Error.Passport.User.Exists');
-                return next(err);
-              }
-            }
-            else {
-              return next(err);
-            }
-
-          }
-          if (user) {
-            createPassport(next, user);
-          }
-        });
-      }
-      // Scenario: An existing user is trying to log in using an already
-      //           connected passport.
-      // Action:   Get the user associated with the passport.
-      else {
-        // If the tokens have changed since the last session, update them
-        if (query.hasOwnProperty('tokens') && query.tokens !== passport.tokens) {
-          passport.tokens = query.tokens;
+    Passport.findOne({
+        provider: provider
+        , identifier: query.identifier.toString()
+    }, function (err, passport) {
+        if (err) {
+            return next(err);
         }
 
-        // Save any updates to the Passport before moving on
-        passport.save(function (err) {
-          if (err) {
-            return next(err);
-          }
+        if (!req.user) {
+            // Scenario: A new user is attempting to sign up using a third-party
+            //           authentication provider.
+            // Action:   Create a new user and assign them a passport.
+            if (!passport) {
+                User.create(user, function (err, user) {
 
-          // Fetch the user associated with the Passport
-          if (!passport.user) {
-            passport.destroy();
-            return next();
-          }
-          else {
-            User.findOne(passport.user, next);
-          }
-        });
-      }
-    } else {
-      // Scenario: A user is currently logged in and trying to connect a new
-      //           passport.
-      // Action:   Create and assign a new passport to the user.
-      if (!passport) {
-        query.user = req.user.id;
+                    var createPassport = function (next, user) {
+                        query.user = user.id;
 
-        Passport.create(query, function (err, passport) {
-          // If a passport wasn't created, bail out
-          if (err) {
-            return next(err);
-          }
+                        Passport.create(query, function (err, passport) {
+                            // If a passport wasn't created, bail out
+                            if (err) {
+                                return next(err);
+                            }
 
-          next(err, req.user);
-        });
-      }
-      // Scenario: The user is a nutjob or spammed the back-button.
-      // Action:   Simply pass along the already established session.
-      else {
-        next(null, req.user);
-      }
-    }
-  });
+                            next(err, user);
+                        });
+                    }
+
+                    if (err) {
+                        if (err.code === 'E_VALIDATION') {
+                            if (err.invalidAttributes.email) {
+                                // Get the user details and find out the provider
+                                User.findOne({
+                                    email: profile.emails[0].value
+                                }, function (err, already) {
+                                    var ok = false;
+                                    if (already.authProvider == "dummy") {
+
+                                        // This is OK.  A dummy user with this email address was created for bookings before
+                                        // they attempted to sign-up. Use this and carry on with passport sign-up
+                                        ok = true;
+                                        user = already;
+                                        user.authProvider = provider;
+
+                                        // Asynchronously email the developer
+                                        if (sails.config.events.developer) {
+                                            Email.send(
+                                                "dummyUserConversion", {
+                                                convertedUser: user
+                                            },
+                                                {
+                                                    to: sails.config.events.developer,
+                                                    subject: sails.config.events.title + " - Dummy user conversion"
+                                                },
+                                                function (err) { if (err) console.log(err); }
+                                            )
+                                        }
+
+                                        // Convert the user
+                                        User.update(user.id, user).exec(function () {
+                                            return createPassport(next, user);
+                                        });
+                                    }
+                                    else if (already.authProvider == "twitter")
+                                        req.flash('error', 'Error.Passport.Email.Exists.Twitter');
+                                    else if (already.authProvider == "facebook")
+                                        req.flash('error', 'Error.Passport.Email.Exists.Facebook');
+                                    else if (already.authProvider == "google")
+                                        req.flash('error', 'Error.Passport.Email.Exists.Google');
+                                    else
+                                        req.flash('error', 'Error.Passport.Email.Exists');
+                                    if (!ok) return next(err)
+                                })
+                            }
+                            else {
+                                req.flash('error', 'Error.Passport.User.Exists');
+                                return next(err);
+                            }
+                        }
+                        else {
+                            return next(err);
+                        }
+
+                    }
+                    if (user) {
+                        createPassport(next, user);
+                    }
+                });
+            }
+            // Scenario: An existing user is trying to log in using an already
+            //           connected passport.
+            // Action:   Get the user associated with the passport.
+            else {
+                // If the tokens have changed since the last session, update them
+                if (query.hasOwnProperty('tokens') && query.tokens !== passport.tokens) {
+                    passport.tokens = query.tokens;
+                }
+
+                // Save any updates to the Passport before moving on
+                passport.save(function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    // Fetch the user associated with the Passport
+                    if (!passport.user) {
+                        passport.destroy();
+                        return next();
+                    }
+                    else {
+                        User.findOne(passport.user, next);
+                    }
+                });
+            }
+        } else {
+            // Scenario: A user is currently logged in and trying to connect a new
+            //           passport.
+            // Action:   Create and assign a new passport to the user.
+            if (!passport) {
+                query.user = req.user.id;
+
+                Passport.create(query, function (err, passport) {
+                    // If a passport wasn't created, bail out
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(err, req.user);
+                });
+            }
+            // Scenario: The user is a nutjob or spammed the back-button.
+            // Action:   Simply pass along the already established session.
+            else {
+                next(null, req.user);
+            }
+        }
+    });
 };
 
 /**
@@ -261,25 +261,25 @@ passport.connect = function (req, query, profile, next) {
  * @param  {Object} res
  */
 passport.endpoint = function (req, res) {
-  var strategies = sails.config.passport
-    , provider   = req.param('provider')
-    , options    = {};
+    var strategies = sails.config.passport
+        , provider = req.param('provider')
+        , options = {};
 
-  // If a provider doesn't exist for this endpoint, send the user back to the
-  // login page
-  if (!strategies.hasOwnProperty(provider)) {
-    return res.redirect('/login');
-  }
+    // If a provider doesn't exist for this endpoint, send the user back to the
+    // login page
+    if (!strategies.hasOwnProperty(provider)) {
+        return res.redirect('/login');
+    }
 
-  // Attach scope if it has been set in the config
-  if (strategies[provider].hasOwnProperty('scope')) {
-    options.scope = strategies[provider].scope;
-  }
+    // Attach scope if it has been set in the config
+    if (strategies[provider].hasOwnProperty('scope')) {
+        options.scope = strategies[provider].scope;
+    }
 
-  // Redirect the user to the provider for authentication. When complete,
-  // the provider will redirect the user back to the application at
-  //     /auth/:provider/callback
-  this.authenticate(provider, options)(req, res, req.next);
+    // Redirect the user to the provider for authentication. When complete,
+    // the provider will redirect the user back to the application at
+    //     /auth/:provider/callback
+    this.authenticate(provider, options)(req, res, req.next);
 };
 
 /**
@@ -293,35 +293,35 @@ passport.endpoint = function (req, res) {
  * @param {Function} next
  */
 passport.callback = function (req, res, next) {
-  var provider = req.param('provider', 'local')
-    , action   = req.param('action');
+    var provider = req.param('provider', 'local')
+        , action = req.param('action');
 
-  // Passport.js wasn't really built for local user registration, but it's nice
-  // having it tied into everything else.
-  if (provider === 'local' && action !== undefined) {
-    if (action === 'register' && !req.user) {
-      this.protocols.local.register(req, res, next);
-    }
-    else if (action === 'connect' && req.user) {
-      this.protocols.local.connect(req, res, next);
-    }
-    else if (action === 'disconnect' && req.user) {
-      this.disconnect(req, res, next);
-    }
-    else {
-      next(new Error('Invalid action'));
-    }
-  } else {
-    if (action === 'disconnect' && req.user) {
-      this.disconnect(req, res, next) ;
+    // Passport.js wasn't really built for local user registration, but it's nice
+    // having it tied into everything else.
+    if (provider === 'local' && action !== undefined) {
+        if (action === 'register' && !req.user) {
+            this.protocols.local.register(req, res, next);
+        }
+        else if (action === 'connect' && req.user) {
+            this.protocols.local.connect(req, res, next);
+        }
+        else if (action === 'disconnect' && req.user) {
+            this.disconnect(req, res, next);
+        }
+        else {
+            next(new Error('Invalid action'));
+        }
     } else {
-      // The provider will redirect the user to this URL after approval. Finish
-      // the authentication process by attempting to obtain an access token. If
-      // access was granted, the user will be logged in. Otherwise, authentication
-      // has failed.
-      this.authenticate(provider, next)(req, res, req.next);
+        if (action === 'disconnect' && req.user) {
+            this.disconnect(req, res, next);
+        } else {
+            // The provider will redirect the user to this URL after approval. Finish
+            // the authentication process by attempting to obtain an access token. If
+            // access was granted, the user will be logged in. Otherwise, authentication
+            // has failed.
+            this.authenticate(provider, next)(req, res, req.next);
+        }
     }
-  }
 };
 
 /**
@@ -347,99 +347,102 @@ passport.callback = function (req, res, next) {
  *
  */
 passport.loadStrategies = function () {
-  var self       = this
-    , strategies = sails.config.passport;
+    var self = this
+        , strategies = sails.config.passport;
 
-  Object.keys(strategies).forEach(function (key) {
-    var options = { passReqToCallback: true }, Strategy;
+    Object.keys(strategies).forEach(function (key) {
 
-    if (key === 'local') {
-      // Since we need to allow users to login using both usernames as well as
-      // emails, we'll set the username field to something more generic.
-      _.extend(options, { usernameField: 'identifier' });
+        if (strategies[key]) {
+            var options = { passReqToCallback: true }, Strategy;
 
-      //Let users override the username and passwordField from the options
-      _.extend(options, strategies[key].options || {});
+            if (key === 'local') {
+                // Since we need to allow users to login using both usernames as well as
+                // emails, we'll set the username field to something more generic.
+                _.extend(options, { usernameField: 'identifier' });
 
-      // Only load the local strategy if it's enabled in the config
-      if (strategies.local) {
-        Strategy = strategies[key].strategy;
+                //Let users override the username and passwordField from the options
+                _.extend(options, strategies[key].options || {});
 
-        self.use(new Strategy(options, self.protocols.local.login));
-      }
-    } else if (key === 'bearer') {
+                // Only load the local strategy if it's enabled in the config
+                if (strategies.local) {
+                    Strategy = strategies[key].strategy;
 
-      if (strategies.bearer) {
-        Strategy = strategies[key].strategy;
-        self.use(new Strategy(self.protocols.bearer.authorize));
-      }
+                    self.use(new Strategy(options, self.protocols.local.login));
+                }
+            } else if (key === 'bearer') {
 
-    } else if (key === 'rememberme') {
+                if (strategies.bearer) {
+                    Strategy = strategies[key].strategy;
+                    self.use(new Strategy(self.protocols.bearer.authorize));
+                }
 
-      // The remember me authentication strategy authenticates users using a token stored
-      // in a remember me cookie. The strategy requires a verify callback, which consumes
-      // the token and calls done providing a user.
+            } else if (key === 'rememberme') {
 
-      // The strategy also requires an issue callback, which issues a new token.
-      // For security reasons, remember me tokens should be invalidated after being used.
-      // The issue callback supplies a new token that will be stored in the cookie for next use.
+                // The remember me authentication strategy authenticates users using a token stored
+                // in a remember me cookie. The strategy requires a verify callback, which consumes
+                // the token and calls done providing a user.
 
-      Strategy = strategies[key].strategy;
-      self.use(new Strategy(
-         function(token, done) {
-              //console.log("verifying token")
-              Token.findOne(token).populate('user').exec(function(err, token){
-                if (err) { return done(err); }
-                if (!token) { return done(null, false); }
-                if (!token.user) { return done(null, false); }
-                token.destroy();
-                return done(null, token.user);
-              })
-          },
-          function(user, done) {
-              //console.log("issuing new token")
-              var crypto    = require('crypto');
-              var token = crypto.randomBytes(64).toString('base64');
-              Token.create({token:token, user: user.id }, function(err) {
-              if (err) { return done(err); }
-              return done(null, token);
-            });
-          }
-      ));
+                // The strategy also requires an issue callback, which issues a new token.
+                // For security reasons, remember me tokens should be invalidated after being used.
+                // The issue callback supplies a new token that will be stored in the cookie for next use.
 
-    } else {
-      var protocol = strategies[key].protocol
-        , callback = strategies[key].callback;
+                Strategy = strategies[key].strategy;
+                self.use(new Strategy(
+                    function (token, done) {
+                        //console.log("verifying token")
+                        Token.findOne(token).populate('user').exec(function (err, token) {
+                            if (err) { return done(err); }
+                            if (!token) { return done(null, false); }
+                            if (!token.user) { return done(null, false); }
+                            token.destroy();
+                            return done(null, token.user);
+                        })
+                    },
+                    function (user, done) {
+                        //console.log("issuing new token")
+                        var crypto = require('crypto');
+                        var token = crypto.randomBytes(64).toString('base64');
+                        Token.create({ token: token, user: user.id }, function (err) {
+                            if (err) { return done(err); }
+                            return done(null, token);
+                        });
+                    }
+                ));
 
-      if (!callback) {
-        callback = 'auth/' + key + '/callback';
-      }
+            } else {
+                var protocol = strategies[key].protocol
+                    , callback = strategies[key].callback;
 
-      Strategy = strategies[key].strategy;
+                if (!callback) {
+                    callback = 'auth/' + key + '/callback';
+                }
 
-      var baseUrl = sails.getBaseurl();
+                Strategy = strategies[key].strategy;
 
-      switch (protocol) {
-        case 'oauth':
-        case 'oauth2':
-          options.callbackURL = url.resolve(baseUrl, callback);
-          break;
+                var baseUrl = sails.getBaseurl();
 
-        case 'openid':
-          options.returnURL = url.resolve(baseUrl, callback);
-          options.realm     = baseUrl;
-          options.profile   = true;
-          break;
-      }
+                switch (protocol) {
+                    case 'oauth':
+                    case 'oauth2':
+                        options.callbackURL = url.resolve(baseUrl, callback);
+                        break;
 
-      // Merge the default options with any options defined in the config. All
-      // defaults can be overriden, but I don't see a reason why you'd want to
-      // do that.
-      _.extend(options, strategies[key].options);
+                    case 'openid':
+                        options.returnURL = url.resolve(baseUrl, callback);
+                        options.realm = baseUrl;
+                        options.profile = true;
+                        break;
+                }
 
-      self.use(new Strategy(options, self.protocols[protocol]));
-    }
-  });
+                // Merge the default options with any options defined in the config. All
+                // defaults can be overriden, but I don't see a reason why you'd want to
+                // do that.
+                _.extend(options, strategies[key].options);
+
+                self.use(new Strategy(options, self.protocols[protocol]));
+            }
+        }
+    });
 };
 
 /**
@@ -449,34 +452,34 @@ passport.loadStrategies = function () {
  * @param  {Object} res
  */
 passport.disconnect = function (req, res, next) {
-  var user     = req.user
-    , provider = req.param('provider', 'local')
-    , query    = {};
+    var user = req.user
+        , provider = req.param('provider', 'local')
+        , query = {};
 
-  query.user = user.id;
-  query[provider === 'local' ? 'protocol' : 'provider'] = provider;
+    query.user = user.id;
+    query[provider === 'local' ? 'protocol' : 'provider'] = provider;
 
-  Passport.findOne(query, function (err, passport) {
-    if (err) {
-      return next(err);
-    }
+    Passport.findOne(query, function (err, passport) {
+        if (err) {
+            return next(err);
+        }
 
-    Passport.destroy(passport.id, function (error) {
-      if (err) {
-          return next(err);
-      }
+        Passport.destroy(passport.id, function (error) {
+            if (err) {
+                return next(err);
+            }
 
-      next(null, user);
+            next(null, user);
+        });
     });
-  });
 };
 
 passport.serializeUser(function (user, next) {
-  next(null, user.id);
+    next(null, user.id);
 });
 
 passport.deserializeUser(function (id, next) {
-  User.findOne(id, next);
+    User.findOne(id, next);
 });
 
 module.exports = passport;

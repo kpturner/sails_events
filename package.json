@@ -67,7 +67,7 @@
   "scripts": {
     "lint": "tslint --exclude 'node_modules/**/*.ts' --exclude '**/*.d.ts' -p tsconfig.json",
     "lint:fix": "tslint --fix -p tsconfig.json",
-    "debug": "node -debug app.js",
+    "debug": "node --inspect app.js",
     "start": "npm run build && node app.js",
     "build": "npm run lint && npm run transpile",
     "transpile": "tsc -p ."

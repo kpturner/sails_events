@@ -1,0 +1,75 @@
+#!/bin/sh
+
+# /etc/init.d/events-pgsldining
+# chkconfig: 35 99 99
+# description: SailsJS Event Management Service
+#
+# Save in /etc/init.d
+# then "cd /etc/init.d"
+# Switch it on: update-rc.d events-pgsldining defaults
+# Set the permissions: chmod a+rwx events-pgsldining
+#  
+# Start the service using 
+#   service events-pgsldining start
+#
+# Stop the service using
+#   service events-pgsldining stop
+#
+#
+#
+
+. /lib/lsb/init-functions
+
+USER="root"
+
+DAEMON="/root/.nvm/versions/node/v8.16.0/bin/forever"
+ROOT_DIR="/root/sails/events"
+OPTS="--prod"
+
+SERVER="$ROOT_DIR/app.js"
+LOG_FILE="$ROOT_DIR/app.js.log"
+
+LOCK_FILE="/var/lock/subsys/events-pgsl"
+
+do_start()
+{
+        if [ ! -f "$LOCK_FILE" ] ; then
+                echo -n $"Running $DAEMON start $SERVER $OPTS: "
+                runuser -l "$USER" -c "$DAEMON start $SERVER $OPTS >> $LOG_FILE &" && log_success_msg || log_failure_msg
+                RETVAL=$?
+                echo
+                [ $RETVAL -eq 0 ] && touch $LOCK_FILE
+        else
+                echo "$SERVER is locked."
+                RETVAL=1
+        fi
+}
+do_stop()
+{
+        echo -n $"Stopping $SERVER: "
+        # pid=`ps -aefw | grep "$DAEMON $SERVER" | grep -v " grep " | awk '{print $2}'`
+        #kill -9 $pid > /dev/null 2>&1 && echo_success || echo_failure
+        echo -n $"$DAEMON stop $SERVER "
+        runuser -l "$USER" -c "$DAEMON stop $SERVER >> $LOG_FILE &" && log_success_msg || log_failure_msg
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+}
+
+case "$1" in
+        start)
+                do_start
+                ;;
+        stop)
+                do_stop
+                ;;
+        restart)
+                do_stop
+                do_start
+                ;;
+        *)
+                echo "Usage: $0 {start|stop|restart}"
+                RETVAL=1
+esac
+
+exit $RETVAL

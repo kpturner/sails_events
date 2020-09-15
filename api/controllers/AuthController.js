@@ -49,13 +49,15 @@ var AuthController = {
                 return;
             }
 
-            providers[key] = {
-                name: strategies[key].name,
-                icon: strategies[key].icon,
-                klass: strategies[key].klass,
-                label: strategies[key].label,
-                slug: key
-            };
+            if (strategies[key]) {
+                providers[key] = {
+                    name: strategies[key].name,
+                    icon: strategies[key].icon,
+                    klass: strategies[key].klass,
+                    label: strategies[key].label,
+                    slug: key
+                };
+            }
         });
 
         // Clear the user out of the session also
