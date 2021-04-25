@@ -17,14 +17,14 @@
 			"name": "Attach",
 			"type": "node",
 			"request": "attach",
-			"port": 5858
+			"port": 9229
 		},
 		{
 			"name": "Daemon",
 			"type": "node",
             "request": "attach",
 			"address": "localhost",
-			"port": 5859
+			"port": 9229
 		}
     ]
 }

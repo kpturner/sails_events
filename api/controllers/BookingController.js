@@ -902,7 +902,8 @@ module.exports = {
 														booking.ref = bookingRef;
 
 														// If we are using online payments, add a checkout session if to the booking
-														if (event.onlinePayments && event.onlinePaymentConfig && !booking.paid) {
+                                                        // But only if this is a registered user booking themselves in.
+														if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig && !booking.paid) {
 															sails.controllers.payment.getNewCheckoutSession(booking.id)
 																.then((sessionId) => {
 																	const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
