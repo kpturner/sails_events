@@ -197,6 +197,10 @@ module.exports = {
                 );
             }
         }
+        if (!isAdmin) {
+            // Allow DCs to see Official Visits
+            isAdmin = (user.isDC && event.order === 'OV');
+        }
         return isAdmin
     },
 
