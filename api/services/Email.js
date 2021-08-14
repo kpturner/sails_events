@@ -13,19 +13,81 @@
  * Module dependencies
  */
 
-const emailQueue = []; 
+const emailQueue = [];
 let emailQueueTimer = null;
 
 module.exports = {
 
-    compile: function(templateName, data) {
+    compile: function (templateName, data) {
         const path = require('path');
         const fs = require('fs');
-        const ejs= require('ejs');
+        const ejs = require('ejs');
         const pathToTemplate = path.resolve(sails.config.appPath, 'views/emailTemplates');
         const templateString = fs.readFileSync(path.join(pathToTemplate, templateName, 'html.ejs')).toString();
         const template = ejs.render(templateString, data);
         return template;
+    },
+
+    sendinblue: function (template, data, opts, cb) {
+        const SibApiV3Sdk = require('sib-api-v3-sdk');
+        const defaultClient = SibApiV3Sdk.ApiClient.instance;
+
+        // Configure API key authorization: api-key
+        defaultClient.authentications['api-key'].apiKey = sails.config.events.sendinblue.apiKey;
+
+        const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+        let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
+
+        const senderSplit = (opts.from || sails.config.eventemail.from).split(' <');
+        const sender = {
+            name: senderSplit[0],
+            email: senderSplit[1].replace('>', '')
+        }
+
+        const format = (addr) => {
+            if (typeof addr === 'string') {
+                return [{
+                    email: addr
+                }];
+            }
+            return addr.map((email) => {
+                return {
+                    email
+                };
+            });
+        }
+
+        let to = format(opts.to || []);
+        let cc = format(opts.cc || []);
+        let bcc = format(opts.bcc || []);
+
+        sendSmtpEmail = Object.assign(sendSmtpEmail, {
+            sender,
+            subject: opts.subject,
+            htmlContent: Email.compile(template, data),
+            headers: {
+                'X-Mailin-custom': 'custom_header_1:custom_value_1|custom_header_2:custom_value_2'
+            }
+        });
+
+        if (to.length) {
+            sendSmtpEmail.to = to;
+        }
+        if (cc.length) {
+            sendSmtpEmail.cc = cc;
+        }
+        if (bcc.length) {
+            sendSmtpEmail.bcc = bcc;
+        }
+
+        apiInstance.sendTransacEmail(sendSmtpEmail).then(function (data) {
+            sails.log.info('API called successfully. Returned data: ' + data);
+            cb(null, data);
+        }, function (error) {
+            sails.log.error(error);
+            cb(error, null);
+        });
     },
 
     mailgun: function (template, data, opts, cb) {
@@ -38,11 +100,11 @@ module.exports = {
             bcc: opts.bcc || [],
             subject: opts.subject,
             html: Email.compile(template, data)
-          };
+        };
 
-          mailgun.messages().send(payload, function(err, body) {
-              cb(err, body)
-          });
+        mailgun.messages().send(payload, function (err, body) {
+            cb(err, body)
+        });
     },
 
     nodemailer: function (template, data, opts, cb) {
@@ -92,11 +154,13 @@ module.exports = {
 
     send: function (template, data, opts, cb) {
 
-       if (sails.config.events.smtpApi === 'mailgun') {
+        if (sails.config.events.smtpApi === 'mailgun') {
             return Email.enqueueEmail(template, data, opts, cb);
-       } else {
+        } else if (sails.config.events.smtpApi === 'sendinblue') {
+            return Email.sendinblue(template, data, opts, cb);
+        } else {
             return Email.nodemailer(template, data, opts, cb);
-       }
+        }
 
     },
 

@@ -40,12 +40,16 @@ module.exports.events = {
 	// Email developer on signup
     emailDeveloperOnSignup: false,
 
-    smtpApi: "mailgun",
+    smtpApi: "sendinblue",
 
     mailgun: {
         apiKey: '',
         domain: 'mg.squareevents.org',
         host: 'api.eu.mailgun.net'
+    },
+
+    sendinblue: {
+        apiKey: ''
     },
 
 	// Hide closed events on dashboard
