@@ -454,11 +454,11 @@ and/or maxlength) -->
     <!-- S A L U T A T I O N -->
     <div class="control-group form-group col-xs-10">
       <label>* Salutation</label>
-      <select ng-show="!event.order || event.order=='C'" class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc"
+      <select ng-show="!event.order || event.order=='C' || event.order=='OV'" class="form-control" placeholder="e.g. Mr or Bro. or W.Bro etc"
         name="salutation_{{place}}" ng-options="salutation for salutation in salutations" ng-model="linked<%-model%>s[place].salutation">
         <option value="">-- choose salutation --</option>
       </select>
-      <input ng-hide="!event.order || event.order=='C'" type="text" class="form-control" placeholder="salutation" name="salutation_{{place}}"
+      <input ng-hide="!event.order || event.order=='C' || event.order=='OV'" type="text" class="form-control" placeholder="salutation" name="salutation_{{place}}"
         ng-model="linked<%-model%>s[place].salutation" ng-maxlength="50">
     </div>
 
