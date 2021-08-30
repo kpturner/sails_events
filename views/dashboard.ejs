@@ -54,16 +54,13 @@
                 <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
                 <span ng-show="filterForm.loading">Filtering...</span>
             </button>
+            <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
+                <span class="fa fa-download"></span><span> Download log</span>
+            </button>
+            <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="deleteLog()">
+                <span> Clear log</span>
+            </button>
         </form>
-      
-      <div ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}" ng-show="<%-sails.config.events.developer && req.user && sails.config.events.developer==req.user.email %>">
-        <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
-          <span class="fa fa-download"></span><span> Download log</span>
-        </button>
-        <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="deleteLog()">
-          <span> Clear log</span>
-        </button>
-      </div>
 
       <div class="container">
         <span class="fa fa-spinner fa-pulse fa-3x fa-fw loading-spinner" ng-show="loadingMimicUsers"></span>
