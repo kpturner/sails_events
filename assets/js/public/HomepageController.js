@@ -7,6 +7,8 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
 
   $scope.developer=SAILS_LOCALS.developer;
 
+  localStorage.setItem('dashboardFilter', '');
+
   // Check that cookies are allowed
   $scope.checkCookie=function(){
     var cookieEnabled=(navigator.cookieEnabled)? true : false;

@@ -42,7 +42,20 @@
     <!-- container = Fixed-width container container-fluid = full-width -->
     <div class="container-fluid">
       <% include partials/private/navbar.ejs %>
-
+        <form ng-submit="filterEvents()" id="filter-form" name="filterform"
+          ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}">
+          <div class="row">
+                <div class="control-group form-group col-sm-8 col-xs-6">
+                    <input type="text" class="form-control" placeholder="key text to filter events" name="filter" ng-model="filterForm.filter">
+                </div>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="filterEvents()" ng-disabled="filterForm.loading">
+                <span class="fa fa-filter"></span><span ng-show="!filterForm.loading"> Filter events</span>
+                <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
+                <span ng-show="filterForm.loading">Filtering...</span>
+            </button>
+        </form>
+      
       <div ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}" ng-show="<%-sails.config.events.developer && req.user && sails.config.events.developer==req.user.email %>">
         <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
           <span class="fa fa-download"></span><span> Download log</span>

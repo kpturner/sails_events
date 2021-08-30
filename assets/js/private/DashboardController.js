@@ -8,6 +8,17 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 		$scope.usersCanViewBookings=SAILS_LOCALS.usersCanViewBookings;
 		$scope.loadingMimicUsers=false;
 
+        $scope.filterForm = {
+			loading: false,
+			filter: localStorage.getItem('dashboardFilter')
+		}
+
+        $scope.filterEvents = function(){
+			$scope.filterForm.loading=true;
+            localStorage.setItem('dashboardFilter', $scope.filterForm.filter);
+			$scope.getEvents();
+		}
+
 		// Has an applicationm update been requested?
 		if (SAILS_LOCALS.appUpdateRequested) {
 			var opts={
@@ -79,50 +90,62 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 				})
 		}
 
-		// Get the events
-		$http.get('/openevents?_csrf='+SAILS_LOCALS._csrf).success(function(data, status) {
-			if (typeof data == 'object') {
-				// Filter out VO only events if this user is not a VO
-				//if (!$scope.user.isVO) {
-				//	data=$.grep(data,function(event,index){
-				//		return (!event.voOnly)
-				//	})
-				//}
-				$scope.events = data;	
-                // Traverse the events and calculate an appropriate width
-                    // for each event name
-                    angular.forEach($scope.events,function(event){
-                        // Calculate an appropriate width for the event name
-                        event.nameClass="event-name-100";
-                        if (event.logoRight) {
-                            if (event.logo) {
-                                event.nameClass="event-name-60";
-                            }
+        $scope.getEvents = function() {
+            // Get the events
+            $http.get('/openevents?_csrf='+SAILS_LOCALS._csrf).success(function(data, status) {
+                if (typeof data == 'object') {
+                    // Filter out VO only events if this user is not a VO
+                    //if (!$scope.user.isVO) {
+                    //	data=$.grep(data,function(event,index){
+                    //		return (!event.voOnly)
+                    //	})
+                    //}
+                    // Filter if required
+                    if ($scope.filterForm.filter) {
+                        data=$.grep(data,function(event, index){
+                            return event.name.toLowerCase().indexOf($scope.filterForm.filter.toLowerCase()) >= 0;
+                        })
+                    }
+                    $scope.events = data;	
+                    // Traverse the events and calculate an appropriate width
+                        // for each event name
+                        angular.forEach($scope.events,function(event){
+                            // Calculate an appropriate width for the event name
+                            event.nameClass="event-name-100";
+                            if (event.logoRight) {
+                                if (event.logo) {
+                                    event.nameClass="event-name-60";
+                                }
+                                else {
+                                    event.nameClass="event-name-80";
+                                }
+                            }   
                             else {
-                                event.nameClass="event-name-80";
+                                if (event.logo) {
+                                    event.nameClass="event-name-80";
+                                }
                             }
-                        }   
-                        else {
-                            if (event.logo) {
-                                event.nameClass="event-name-80";
-                            }
-                        }
-						// Font size override?
-						event.eventNameStyle=null;
-						if (event.eventNameSize) {
-							event.eventNameStyle="font-size:"+event.eventNameSize;
-						} 		
-                    })				
-			}
-			else {
-				window.location = '/';
-			}
-		}).
-		error(function(data, status, headers, config) {
-	   		// called asynchronously if an error occurs
-	    	// or server returns response with an error status.
-			window.location = '/';
-	  	});
+                            // Font size override?
+                            event.eventNameStyle=null;
+                            if (event.eventNameSize) {
+                                event.eventNameStyle="font-size:"+event.eventNameSize;
+                            } 		
+                        })				
+                }
+                else {
+                    window.location = '/';
+                }
+                $scope.filterForm.loading = false;
+            }).
+            error(function(data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                $scope.filterForm.loading = false;
+                window.location = '/';
+            }); 
+        };
+
+		$scope.getEvents();
 		
 		/**
 		 * Download log
