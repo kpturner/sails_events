@@ -54,10 +54,10 @@
                 <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
                 <span ng-show="filterForm.loading">Filtering...</span>
             </button>
-            <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
+            <button ng-show="user.isAdmin" class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
                 <span class="fa fa-download"></span><span> Download log</span>
             </button>
-            <button class="btn btn-primary btn-lg btn-block" type="button"  ng-click="deleteLog()">
+            <button ng-show="user.isAdmin" class="btn btn-primary btn-lg btn-block" type="button"  ng-click="deleteLog()">
                 <span> Clear log</span>
             </button>
         </form>
