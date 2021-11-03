@@ -1,0 +1,13 @@
+<div class="ngdialog-message">
+    <h3>WARNING</h3>
+    <p>The booking details you have entered match more than one person already registered in the system:</p>
+    <div ng-repeat="duplicate in duplicates">
+      <p><b>{{duplicate.salutation}} {{duplicate.name}}</b><p>
+      <p><b>Lodge: {{duplicate.lodge}} {{duplicate.lodgeNo}}</b><p>
+    </div>
+    <p>Click 'Cancel' to provide more specific details, including the correct lodge and lodge number.</p>
+
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
+</div>

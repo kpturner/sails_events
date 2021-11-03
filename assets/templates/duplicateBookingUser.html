@@ -1,10 +1,10 @@
 <div class="ngdialog-message">
     <h3>WARNING</h3>
     <p>You appear to be booking in a person already registered in the system:</p>
-    <p><b>{{duplicateUser.salutation}} {{duplicateUser.name}}</b><p>
+    <p><b>{{duplicateUser.salutation}} {{duplicateUser.salutation}} {{duplicateUser.name}}</b><p>
     <p><b>Lodge: {{duplicateUser.lodge}} {{duplicateUser.lodgeNo}}</b><p>
-    <p>Click 'Continue' to complete the booking for <b>{{duplicateUser.name}}</b>, or 'Cancel' to abandon this request.</p>    
-    
+    <p>Click 'Continue' to complete the booking for <b>{{duplicateUser.name}}</b>, or 'Cancel' to abandon this request.</p>
+
 </div>
 <div class="ngdialog-buttons">
     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>

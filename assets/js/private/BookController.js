@@ -850,7 +850,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 										$scope.proceed();
 									});
 							} else {
-								$scope.event.paymentDetails = $scope.event.paymentDetails ? 
+								$scope.event.paymentDetails = $scope.event.paymentDetails ?
 																$scope.event.paymentDetails.replace(new RegExp('<%BOOKINGREF%>', 'g'), '*BOOKING REFERENCE WILL BE ON YOUR CONFIRMATION EMAIL*') :
 																'';
 								var opts = {
@@ -868,7 +868,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 									});
 
 							}
-							
+
 						}
 
 					})
@@ -916,7 +916,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 					if ($scope.bookingForm.lodge && $scope.bookingForm.lodge.length > 0) {
 						searchClause += ',"lodge":"' + sc.lodge + '"';
 					}
-					if ($scope.bookingForm.lodgeNo && $scope.bookingForm.lodgeNo.length > 0) {
+					if ($scope.bookingForm.lodgeNo) {
 						searchClause += ',"lodgeNo":' + sc.lodgeNo;
 					}
 					searchClause += "}"
@@ -936,7 +936,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 								}, 1000);
 								return;
 							}
-							if (sailsResponse.data.length > 0) {
+							if (sailsResponse.data.length === 1) {
 								$scope.duplicateUser = sailsResponse.data[0];
 								var opts = {
 									template: "/templates/duplicateBookingUser.html",
@@ -965,6 +965,20 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 										makeBooking(route);
 									}, function (reason) {
 										// They bottled it
+										$scope.bookingForm.loading = false;
+									});
+							}
+              else if (sailsResponse.data.length > 1) {
+								$scope.duplicates = sailsResponse.data;
+								var opts = {
+									template: "/templates/duplicateBookingUsers.html",
+									className: 'ngdialog-theme-default',
+									scope: $scope
+								};
+								// Pop the dialog
+								ngDialog.openConfirm(opts)
+									.then(function () {
+									}, function () {
 										$scope.bookingForm.loading = false;
 									});
 							}
