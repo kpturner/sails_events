@@ -210,8 +210,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	var userBookingHimselfIn = (!$scope.eventBookings && !$scope.userBookings);
   var canAmend = SAILS_LOCALS.isAdmin;
   if (!canAmend) {
-    canAmend = SAILS_LOCALS.organiser.username === SAILS_LOCALS.user.username;
-    if (!canAmend && SAILS_LOCALS.organiser2 && SAILS_LOCALS.organiser2.username === SAILS_LOCALS.user.username);
+    canAmend = SAILS_LOCALS.event.organiser.username === SAILS_LOCALS.user.username;
+    if (!canAmend && SAILS_LOCALS.event.organiser2 && SAILS_LOCALS.event.organiser2.username === SAILS_LOCALS.user.username);
   }
 	if (!canAmend && pastTheClosingDate ||
 		(userBookingHimselfIn && (notYetReachedOpeningDate || (isOpeningDate && $scope.event.openingTime && openingTime > nowTime)))) {
