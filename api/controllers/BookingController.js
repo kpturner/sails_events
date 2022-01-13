@@ -913,8 +913,11 @@ module.exports = {
 																		booking.paymentSessionId = sessionId;
 																		// Finalise booking
 																		finalise();
-																	});					
+																	});
 																})
+                                .catch((err) => {
+                                  return res.genericErrorResponse("455", "Booking failed. Unable to create a payment session")
+                                })
 														} else {
 															// Finalise booking
 															finalise();

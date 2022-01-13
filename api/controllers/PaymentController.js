@@ -44,8 +44,16 @@ module.exports = {
 						if (err) {
 							return reject(err);
 						}
-						const stripe = await sails.controllers.payment.getStripe(booking.event);
-
+            let stripe;
+						try {
+              sails.log.debug(`Getting Stripe object for event ${booking.event.id}`);
+              stripe = await sails.controllers.payment.getStripe(booking.event);
+            } catch(err) {
+              sails.log.error(`Error occurred getting Stripe object for event ${booking.event.id}`);
+              sails.log.error(err);
+              return reject(err);
+            }
+            sails.log.debug('Got stripe object successfully');
 						const domainURL = sails.config.proxyHost;
 
 						// Create new Checkout Session for the order
@@ -55,25 +63,32 @@ module.exports = {
 						// [payment_intent_data] - lets capture the payment later
 						// [customer_email] - lets you prefill the email input in the form
 						// For full details see https://stripe.com/docs/api/checkout/sessions/create
-						session = await stripe.checkout.sessions.create({
-							payment_method_types: ['card'],
-							locale: 'en',
-							line_items: [
-								{
-									name: booking.event.name,
-									description: booking.event.blurb,
-									quantity: booking.places,
-									currency: 'gbp',
-									amount: booking.event.price * 100,
-								}
-							],
-							customer_email: booking.user.email,
-							client_reference_id: booking.ref,
-							// ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-							success_url: `${domainURL}paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
-							cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
-						});
-
+            try {
+              sails.log.debug(`Getting Stripe session for booking ref ${booking.ref}`);
+              session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                locale: 'en',
+                line_items: [
+                  {
+                    name: booking.event.name,
+                    description: booking.event.blurb,
+                    quantity: booking.places,
+                    currency: 'gbp',
+                    amount: booking.event.price * 100,
+                  }
+                ],
+                customer_email: booking.user.email,
+                client_reference_id: booking.ref,
+                // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+                success_url: `${domainURL}paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
+              });
+            } catch(err) {
+              sails.log.error(`Error occurred getting Stripe session for booking ref ${booking.ref}`);
+              sails.log.error(err);
+              return reject(err);
+            }
+            sails.log.debug(`Successfully got Stripe session for booking ref ${booking.ref}`);
 						return resolve(session.id);
 					});
 			} catch (err) {
