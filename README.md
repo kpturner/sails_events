@@ -13,13 +13,13 @@ The screenshots here are from an iPhone 6.
 
 The following screen will be displayed:
 
-![](readme_media/media/image1.png) 
+![](readme_media/media/image1.png)
 
 If you use Social Media regularly, you may find it convenient to register with your Twitter, Facebook or Google account simply by clicking the relevant button and following the instructions. This is known as using a “Social Media passport” Alternatively you can register manually by clicking “**Create an account**”.
 
 The following screen is then shown. You must complete all the fields whose label is flagged with an asterisk. Some fields will be already filled in if you have used a Social Media passport.
 
-![](readme_media/media/image2.png) 
+![](readme_media/media/image2.png)
 
 *The user name and password field(s) are only shown if you are signing up manually (as opposed to using your Social Media passport).* When all the required fields are complete, you can click or tap the “Create Account” button. Assuming no errors occur, you will then be logged in.
 
@@ -34,11 +34,11 @@ Booking in
 
 The home screen is presented when you first log in. You can also access it by clicking/tapping the “Book in” text in the top left hand corner. Clicking the provincial logo will take you to the provincial web site. On this screen you will see a list of events that are available.
 
-![](readme_media/media/image4.png) 
+![](readme_media/media/image4.png)
 
 Simply tab or click an event to book in. The following screen is displayed:
 
-![](readme_media/media/image5.png) 
+![](readme_media/media/image5.png)
 
 Simply fill in your details (some will filled in automatically) and click “Book now”.
 
@@ -49,13 +49,13 @@ If you need to book other people in as well as yourself, change the “Places”
 Managing your bookings
 ======================
 
-On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png) 
+On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png)
 
 On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the options that are available to you. Click on
 
-![](readme_media/media/image8.png) 
+![](readme_media/media/image8.png)
 
 And you will get a list of your bookings:
 
@@ -74,13 +74,13 @@ The “Download bookings” button will export your bookings (filtered if applic
 Managing your profile
 =====================
 
-On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png) 
+On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png)
 
 On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the options that are available to you. Click on
 
-![](readme_media/media/image10.png) 
+![](readme_media/media/image10.png)
 
 This will take you to the same page that you saw when you registered. Here you can edit and save your profile details (i.e. you registered information).
 
@@ -89,48 +89,55 @@ Administering events
 
 ***This option is only available to administrators.***
 
-On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png) 
+On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png)
 
 On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the options that are available to you. Click on
 
-![](readme_media/media/image11.png) 
+![](readme_media/media/image11.png)
 
 You will get a list of existing events that you can filter, create, copy, change or delete.
 
 You can also view all the bookings associated with an event, and edit/download those.
 
-![](readme_media/media/image12.png) 
+![](readme_media/media/image12.png)
 
 The event maintenance page looks like this:
 
-![](readme_media/media/image13.png)  ![](readme_media/media/image14.png) 
+![](readme_media/media/image13.png)  ![](readme_media/media/image14.png)
 
-![](readme_media/media/image15.png) 
+![](readme_media/media/image15.png)
 
 Administering users
 ===================
 
 ***This option is only available to administrators.***
 
-On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png) 
+On small screens there is a menu button in the top right hand corner: ![](readme_media/media/image7.png)
 
 On bigger screens the menu is already visible.
 
 This toggles the menu (visible/invisible) and from here you can see the options that are available to you. Click on
 
-![](readme_media/media/image16.png) 
+![](readme_media/media/image16.png)
 
 You will then get a list of the users that you can filter, edit or delete.
 
-![](readme_media/media/image17.png) 
+![](readme_media/media/image17.png)
 
 The user maintenance screen is similar to the profile maintenance screen, but has some extra fields that only administrators can see:
 
-![](readme_media/media/image18.png) 
+![](readme_media/media/image18.png)
 
 Email example
 =============
 
-![](readme_media/media/image19.png) 
+![](readme_media/media/image19.png)
+
+## Social Media Logins
+Google URL for managing authorised domains
+https://console.cloud.google.com/apis/api/people.googleapis.com/credentials
+
+Twitter: https://developer.twitter.com/en/apps/8547501
+
