@@ -1,12 +1,16 @@
 
 
 .navbar-inverse {
-	background-color:#969696;
+	background-color:#70748C;
+}
+
+.btn-primary {
+	background-color:#70748C;
 }
 
 .navbar-inverse .navbar-toggle:hover,
 .navbar-inverse .navbar-toggle:focus {
-  background-color: #969696;
+  background-color: #70748C;
 }
 
 
