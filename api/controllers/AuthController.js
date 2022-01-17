@@ -512,9 +512,9 @@ var AuthController = {
                             // Create new password
                             while (newPassword.length < 8) {
                                 var tempPassword = crypto.randomBytes(32).toString('base64');
-                                // We only want the first 8 letters of the alphabet
+                                // We only want the first 8 letters of the alphabet (ignoring ambiguous letters)
                                 for (var i = 0; i < 31; i++) {
-                                    if (('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ').indexOf(tempPassword.substr(i, 1)) >= 0) {
+                                    if (('abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ').indexOf(tempPassword.substr(i, 1)) >= 0) {
                                         newPassword += tempPassword.substr(i, 1);
                                         if (newPassword.length == 8) {
                                             i = 31; //exits loop
