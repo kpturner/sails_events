@@ -17,7 +17,7 @@ module.exports = {
 		const getStripeObject = (event) => {
 			const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
 				.find(config => config.code === event.onlinePaymentConfig);
-      sails.log.debug(`Getting Stripe object with secret key ${paymentConfig.secretKey}`);
+      // sails.log.debug(`Getting Stripe object with secret key ${paymentConfig.secretKey}`);
 			return stripe(paymentConfig.secretKey);
 		}
 
@@ -74,7 +74,7 @@ module.exports = {
                 line_items: [
                   {
                     name: booking.event.name,
-                    description: booking.event.blurb,
+                    description: booking.event.blurb || ".",
                     quantity: booking.places,
                     currency: 'gbp',
                     amount: booking.event.price * 100,
