@@ -149,41 +149,46 @@ module.exports = {
 					return res.negotiate(err);
 				} else {
 					const booking = bookings[0];
-					const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
-					if (session && booking.paymentReference !== session.payment_intent) {
-						// Update the booking
-						const amountPaid = session.display_items[0].amount / 100;
-						Booking.update(bookings[0].id, {
-							paymentReference: session.payment_intent,
-							paid: true,
-							mop: 'Online',
-							amountPaid: amountPaid
-						}).exec((err) => {
-							if (err) {
-								return res.negotiate(err);
-							}
-							Email.send(
-								"onlinePaymentSuccess",
-								{
-									recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-									senderName: sails.config.events.title,
-									amountPaid,
-									booking,
-									event: booking.event
-								},
-								{
-									from: booking.event.name + ' <' + sails.config.events.email + '>',
-									to: booking.user.email,
-									bcc: sails.controllers.booking.bookingBCC(booking, [booking.event.organiser, booking.event.organiser2, sails.config.events.developer]),
-									subject: 'Event booking payment processed'
-								},
-								function (err) {
-									Utility.emailError(err);
-								}
-							);
+          Event.findOne(booking.event.id)
+            .populate('organiser')
+            .populate('organiser2')
+            .exec(async (err, event) => {
+              const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
+              if (session && booking.paymentReference !== session.payment_intent) {
+                // Update the booking
+                const amountPaid = session.display_items[0].amount / 100;
+                Booking.update(bookings.id, {
+                  paymentReference: session.payment_intent,
+                  paid: true,
+                  mop: 'Online',
+                  amountPaid: amountPaid
+                }).exec((err) => {
+                  if (err) {
+                    return res.negotiate(err);
+                  }
+                  Email.send(
+                    "onlinePaymentSuccess",
+                    {
+                      recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                      senderName: sails.config.events.title,
+                      amountPaid,
+                      booking,
+                      event: booking.event
+                    },
+                    {
+                      from: booking.event.name + ' <' + sails.config.events.email + '>',
+                      to: booking.user.email,
+                      bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                      subject: 'Event booking payment processed'
+                    },
+                    function (err) {
+                      Utility.emailError(err);
+                    }
+                  );
 
-						});
-					}
+                });
+              }
+            });
 				}
 			});
 		res.view('dashboard', {
@@ -213,25 +218,30 @@ module.exports = {
 							const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
 							if (session) {
 								const amountPaid = session.display_items[0].amount / 100;
-								Email.send(
-									"onlinePaymentCancelled",
-									{
-										recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-										senderName: sails.config.events.title,
-										booking,
-										event: booking.event,
-										amountPaid
-									},
-									{
-										from: booking.event.name + ' <' + sails.config.events.email + '>',
-										to: booking.user.email,
-										bcc: sails.controllers.booking.bookingBCC(booking, [booking.event.organiser, booking.event.organiser2, sails.config.events.developer]),
-										subject: 'Event booking payment cancelled'
-									},
-									function (err) {
-										Utility.emailError(err);
-									}
-								);
+                Event.findOne(booking.event.id)
+                  .populate('organiser')
+                  .populate('organiser2')
+                  .exec(async (err, event) => {
+                    Email.send(
+                      "onlinePaymentCancelled",
+                      {
+                        recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                        senderName: sails.config.events.title,
+                        booking,
+                        event: booking.event,
+                        amountPaid
+                      },
+                      {
+                        from: booking.event.name + ' <' + sails.config.events.email + '>',
+                        to: booking.user.email,
+                        bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                        subject: 'Event booking payment cancelled'
+                      },
+                      function (err) {
+                        Utility.emailError(err);
+                      }
+                    );
+                  });
 							}
 						}
 					});

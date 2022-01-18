@@ -1719,14 +1719,21 @@ module.exports = {
 					if (organiser.email == sails.config.events.developer) {
 						organiserIsDev = true;
 					}
-				}
-				if (organiser.id = eventOrganiserId) {
-					//mainOrganiser=organiser;
-					booking.event.organiser = organiser;
-				}
-				else {
-					booking.event.organiser2 = organiser;
-				}
+				} else {
+          if (typeof organiser === 'string') {
+            bcc.push(organiser)
+          }
+        }
+        if (booking.event.id && organiser.id) {
+          // It is an event object
+          if (organiser.id = eventOrganiserId) {
+            //mainOrganiser=organiser;
+            booking.event.organiser = organiser;
+          }
+          else {
+            booking.event.organiser2 = organiser;
+          }
+        }
 			}
 		})
 		if (!organiserIsDev && sails.config.events.emailDeveloperOnBooking) {
