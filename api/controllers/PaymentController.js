@@ -19,7 +19,7 @@ module.exports = {
 			const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
 				.find(config => config.code === event.onlinePaymentConfig);
       sails.log.debug(`Found online payment config ${JSON.stringify(paymentConfig)}`);
-      sails.log.debug(`Getting online payment object with secret key ${paymentConfig.secretKey}`);
+      // sails.log.debug(`Getting online payment object with secret key ${paymentConfig.secretKey}`);
 			return stripe(paymentConfig.secretKey);
 		}
 

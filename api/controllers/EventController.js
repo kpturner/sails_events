@@ -5,7 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-var async = require("async");
+const async = require("async");
+const _ = require('lodash');
 
 module.exports = {
 
@@ -52,7 +53,7 @@ module.exports = {
 			// Events with no particular order defined are included
 			// and Craft events are always included
 			let ordersToInclude = ['', null, 'C'];
-			
+
 			// Include the users orders
 			Order.find({ user: userId })
 				.then(function (orders) {
@@ -324,7 +325,7 @@ module.exports = {
 		var action = req.param("action");
 		var eventId = req.param("eventid");
 		var mode = action.substr(0, 1).toUpperCase() + action.substr(1);
-		const onlinePaymentPlatforms = Object.assign({}, sails.config.events.onlinePaymentPlatforms);
+		const onlinePaymentPlatforms = _.cloneDeep(sails.config.events.onlinePaymentPlatforms);
 		// Remove secrets before sending it to the client
 		for (const platform in onlinePaymentPlatforms) {
 			if (onlinePaymentPlatforms.hasOwnProperty(platform)) {
@@ -336,7 +337,7 @@ module.exports = {
 							}
 						}
 					}
-				}) 
+				})
 			}
 		}
 		// If we have an event id, retrieve it
