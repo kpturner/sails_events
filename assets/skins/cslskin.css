@@ -10,9 +10,21 @@
 
 .navbar-inverse .navbar-toggle:hover,
 .navbar-inverse .navbar-toggle:focus {
-  background-color: lightgrey;
+  background-color:lightgrey;
+  border-color: lightgrey
 }
 
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color: #1C1C6A;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+  border-color: lightgrey
+}
+
+.navbar-brand {
+  color: #1C1C6A
+}
 
 .omb_login .omb_socialButtons a {
 	color: white;
