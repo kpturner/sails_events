@@ -25,7 +25,7 @@
   border-color: lightgrey
 }
 
-.navbar-brand {
+.navbar-inverse .navbar-brand {
   color: #1C1C6A
 }
 
