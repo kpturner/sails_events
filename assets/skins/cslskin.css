@@ -11,6 +11,9 @@
 .navbar-inverse .navbar-toggle:hover,
 .navbar-inverse .navbar-toggle:focus {
   background-color:lightgrey;
+}
+
+.navbar-default .navbar-toggle {
   border-color: lightgrey
 }
 
