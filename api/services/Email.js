@@ -156,17 +156,19 @@ module.exports = {
     send: function (template, data, opts, cb) {
 
         if (sails.config.events.smtpApi === 'mailgun') {
-            return Email.enqueueEmail(template, data, opts, cb);
+            return Email.enqueueEmail(sails.config.events.smtpApi, template, data, opts, cb);
         } else if (sails.config.events.smtpApi === 'sendinblue') {
-            return Email.sendinblue(template, data, opts, cb);
+            // return Email.sendinblue(template, data, opts, cb);
+            return Email.enqueueEmail(sails.config.events.smtpApi, template, data, opts, cb);
         } else {
             return Email.nodemailer(template, data, opts, cb);
         }
 
     },
 
-    enqueueEmail: function (template, data, opts, cb) {
+    enqueueEmail: function (api, template, data, opts, cb) {
         emailQueue.push({
+            api,
             template,
             data,
             opts,
@@ -178,7 +180,13 @@ module.exports = {
                 if (emailQueue.length > 0) {
                     try {
                         const email = emailQueue.shift();
-                        Email.mailgun(email.template, email.data, email.opts, email.cb);
+                        if (email.api === 'mailgun') {
+                          Email.mailgun(email.template, email.data, email.opts, email.cb);
+                        } else {
+                          if (email.api === 'sendinblue') {
+                            Email.sendinblue(email.template, email.data, email.opts, email.cb);
+                          }
+                        }
                         sails.log.debug('Email sent successfully');
                     } catch (err) {
                         sails.log.error(`Email error: ${err}`);

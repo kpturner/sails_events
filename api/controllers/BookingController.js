@@ -2158,7 +2158,7 @@ module.exports = {
                                                 next(); // Next booking
                                             }
                                         );
-                                        sails.log.debug("Success: Late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "))
+                                        sails.log.debug("Success: Late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "));
                                     }
                                     else {
                                         next(); // Next booking
