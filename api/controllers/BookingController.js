@@ -2067,7 +2067,10 @@ module.exports = {
                                                 subject: event.name + " - Late payment reminder warning"
                                             },
                                             function (err) {
-                                                if (err) sails.log.error(err);
+                                                if (err) {
+                                                  sails.log.error("Error occurred sending email to " + to);
+                                                  sails.log.error(err);
+                                                }
                                                 emailLate();
                                             }
                                         )
@@ -2138,7 +2141,10 @@ module.exports = {
                                                 subject: event.name + " - Late payment reminder"
                                             },
                                             function (err) {
-                                                if (err) sails.log.error(err);
+                                                if (err) {
+                                                  sails.log.error("Error occurred sending email to " + to);
+                                                  sails.log.error(err);
+                                                }
                                                 next(); // Next booking
                                             }
                                         )
