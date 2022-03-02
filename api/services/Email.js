@@ -158,8 +158,8 @@ module.exports = {
         if (sails.config.events.smtpApi === 'mailgun') {
             return Email.enqueueEmail(sails.config.events.smtpApi, template, data, opts, cb);
         } else if (sails.config.events.smtpApi === 'sendinblue') {
-            // return Email.sendinblue(template, data, opts, cb);
-            return Email.enqueueEmail(sails.config.events.smtpApi, template, data, opts, cb);
+            return Email.sendinblue(template, data, opts, cb);
+            // return Email.enqueueEmail(sails.config.events.smtpApi, template, data, opts, cb);
         } else {
             return Email.nodemailer(template, data, opts, cb);
         }
