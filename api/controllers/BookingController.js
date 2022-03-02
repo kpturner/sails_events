@@ -2073,7 +2073,7 @@ module.exports = {
                                                 if (err) {
                                                   sails.log.error("Error occurred sending late payment warning email to " + to);
                                                   sails.log.error(recipients);
-                                                  sails.log.error(latePaymentWarning);
+                                                  // sails.log.error(latePaymentWarning);
                                                   sails.log.error(err);
                                                 }
                                                 emailLate();

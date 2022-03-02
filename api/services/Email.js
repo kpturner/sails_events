@@ -85,7 +85,7 @@ module.exports = {
             sails.log.info('API called successfully. Returned data: ' + data);
             cb(null, data);
         }, function (error) {
-            sails.log.error('Sendinblue API call failed sending to ' + sendSmtpEmail.to);
+            sails.log.error('Sendinblue API call failed sending to ' + JSON.stringify(sendSmtpEmail.to));
             sails.log.error(error);
             cb(error, null);
         });
@@ -187,7 +187,6 @@ module.exports = {
                             Email.sendinblue(email.template, email.data, email.opts, email.cb);
                           }
                         }
-                        sails.log.debug('Email sent successfully');
                     } catch (err) {
                         sails.log.error(`Email error: ${err}`);
                     }
