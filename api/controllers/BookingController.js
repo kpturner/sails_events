@@ -2051,24 +2051,29 @@ module.exports = {
                                         ////	to="";
                                         ////}
                                         remindersSent = true;
+                                        const latePaymentWarning = {
+                                          recipientName: Utility.recipient(event.organiser.salutation, event.organiser.firstName, event.organiser.surname),
+                                          senderName: sails.config.events.title,
+                                          reminderTestMode: sails.config.events.reminderTestMode,
+                                          eventDate: formattedDate,
+                                          event: event,
+                                          bookings: nw
+                                        };
+                                        const recipients = {
+                                          //to: booking.user.email,
+                                          to: to,
+                                          bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
+                                          subject: event.name + " - Late payment reminder warning"
+                                        };
                                         Email.send(
-                                            "latePaymentWarning", {
-                                            recipientName: Utility.recipient(event.organiser.salutation, event.organiser.firstName, event.organiser.surname),
-                                            senderName: sails.config.events.title,
-                                            reminderTestMode: sails.config.events.reminderTestMode,
-                                            eventDate: formattedDate,
-                                            event: event,
-                                            bookings: nw
-                                        },
-                                            {
-                                                //to: booking.user.email,
-                                                to: to,
-                                                bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
-                                                subject: event.name + " - Late payment reminder warning"
-                                            },
+                                            "latePaymentWarning",
+                                            latePaymentWarning,
+                                            recipients,
                                             function (err) {
                                                 if (err) {
-                                                  sails.log.error("Error occurred sending email to " + to);
+                                                  sails.log.error("Error occurred sending late payment warning email to " + to);
+                                                  sails.log.error(recipients);
+                                                  sails.log.error(latePaymentWarning);
                                                   sails.log.error(err);
                                                 }
                                                 emailLate();
@@ -2124,25 +2129,30 @@ module.exports = {
                                         var deadline = dl.substr(0, dl.indexOf(":") - 2);
 
                                         // Send email reminder
+                                        const latePaymentReminder = {
+                                          recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                                          senderName: sails.config.events.title,
+                                          eventDate: formattedDate,
+                                          event: event,
+                                          deadline: deadline,
+                                          details: booking
+                                        };
+                                        const recipients = {
+                                          //to: booking.user.email,
+                                          to: to,
+                                          cc: cc,
+                                          bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
+                                          subject: event.name + " - Late payment reminder"
+                                        };
                                         Email.send(
-                                            "latePaymentReminder", {
-                                            recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-                                            senderName: sails.config.events.title,
-                                            eventDate: formattedDate,
-                                            event: event,
-                                            deadline: deadline,
-                                            details: booking
-                                        },
-                                            {
-                                                //to: booking.user.email,
-                                                to: to,
-                                                cc: cc,
-                                                bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
-                                                subject: event.name + " - Late payment reminder"
-                                            },
+                                            "latePaymentReminder",
+                                            latePaymentReminder,
+                                            recipients,
                                             function (err) {
                                                 if (err) {
-                                                  sails.log.error("Error occurred sending email to " + to);
+                                                  sails.log.error("Error occurred sending late payment reminder email to " + to);
+                                                  sails.log.error(recipients);
+                                                  sails.log.error(latePaymentReminder);
                                                   sails.log.error(err);
                                                 }
                                                 next(); // Next booking
