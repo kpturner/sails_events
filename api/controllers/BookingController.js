@@ -2107,7 +2107,7 @@ module.exports = {
                                             sails.log.debug("Reminder test mode: " + Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname));
                                             next();
                                         }
-                                        sails.log.debug("Late booking reminder issued for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "))
+                                        sails.log.debug("Issuing late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "));
                                         // Update the booking so we don't spam them
                                         var to = booking.user.email.toLowerCase();
                                         var cc = [(event.organiser.email.toLowerCase() || ""), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
@@ -2157,7 +2157,8 @@ module.exports = {
                                                 }
                                                 next(); // Next booking
                                             }
-                                        )
+                                        );
+                                        sails.log.debug("Success: Late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "))
                                     }
                                     else {
                                         next(); // Next booking
