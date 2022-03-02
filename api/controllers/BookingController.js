@@ -2046,7 +2046,7 @@ module.exports = {
                                     if (nw.length > 0) {
                                         // Send a list to the organiser warning of bookings that will get late payment reminders within
                                         // 48 hours
-                                        var to = [event.organiser.email, (event.organiser2 ? event.organiser2.email || "" : "")];
+                                        var to = [event.organiser.email.toLowerCase(), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
                                         ////if (sails.config.events.reminderTestMode) {
                                         ////	to="";
                                         ////}
@@ -2104,8 +2104,8 @@ module.exports = {
                                         }
                                         sails.log.debug("Late booking reminder issued for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "))
                                         // Update the booking so we don't spam them
-                                        var to = booking.user.email;
-                                        var cc = [(event.organiser.email || ""), (event.organiser2 ? event.organiser2.email || "" : "")];
+                                        var to = booking.user.email.toLowerCase();
+                                        var cc = [(event.organiser.email.toLowerCase() || ""), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
                                         // Update the booking whether we are in test mode or not
                                         var howMany = (!booking.remindersSent) ? 1 : booking.remindersSent + 1;
                                         Booking.update(booking.id, {
