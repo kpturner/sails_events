@@ -2152,7 +2152,7 @@ module.exports = {
                                                 if (err) {
                                                   sails.log.error("Error occurred sending late payment reminder email to " + to);
                                                   sails.log.error(recipients);
-                                                  sails.log.error(latePaymentReminder);
+                                                  // sails.log.error(latePaymentReminder);
                                                   sails.log.error(err);
                                                 }
                                                 next(); // Next booking
