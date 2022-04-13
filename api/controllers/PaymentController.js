@@ -153,7 +153,7 @@ module.exports = {
       sails.log.error(`Unable to determine amount paid from session ${session}`);
     }
     return amountPaid;
-  }
+  },
 
   /**
    * Online payment success
