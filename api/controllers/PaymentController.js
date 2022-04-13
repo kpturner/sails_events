@@ -170,7 +170,7 @@ module.exports = {
                   sails.log.error(`Failed to fetch session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
                 }
                 if (session && booking.paymentReference !== session.payment_intent) {
-                  sails.log.debug(`Online payment - flagging booking ${booking.id} as paid etc ${session}`);
+                  sails.log.debug(`Online payment - flagging booking ${booking.id} as paid etc ${JSON.stringify(session)}`);
                   // Update the booking
                   const amountPaid = session.display_items[0].amount / 100;
                   Booking.update(booking.id, {
