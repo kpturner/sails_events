@@ -235,34 +235,40 @@ module.exports = {
           const booking = bookings[0];
           Booking.destroy({ id: booking.id }).exec(async (err) => {
             if (err) {
-              sails.log.error(`Unable to destory booking for payment reference ${sessionId}`);
+              sails.log.error(`Unable to destroy booking for payment reference ${sessionId}`);
             } else {
               const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
               if (session) {
                 const amountPaid = session.display_items[0].amount / 100;
+                sails.log.debug(`Fetching event for cancelled booking using id ${booking.event.id}`);
                 Event.findOne(booking.event.id)
                   .populate('organiser')
                   .populate('organiser2')
                   .exec(async (err, event) => {
-                    Email.send(
-                      "onlinePaymentCancelled",
-                      {
-                        recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-                        senderName: sails.config.events.title,
-                        booking,
-                        event: booking.event,
-                        amountPaid
-                      },
-                      {
-                        from: booking.event.name + ' <' + sails.config.events.email + '>',
-                        to: booking.user.email,
-                        bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
-                        subject: 'Event booking payment cancelled'
-                      },
-                      function (err) {
-                        Utility.emailError(err);
-                      }
-                    );
+                    if (err) {
+                      sails.log.error(`Error occurred fetching event`);
+                      sails.log.error(err);
+                    } else {
+                      Email.send(
+                        "onlinePaymentCancelled",
+                        {
+                          recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                          senderName: sails.config.events.title,
+                          booking,
+                          event: booking.event,
+                          amountPaid
+                        },
+                        {
+                          from: booking.event.name + ' <' + sails.config.events.email + '>',
+                          to: booking.user.email,
+                          bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                          subject: 'Event booking payment cancelled'
+                        },
+                        function (err) {
+                          Utility.emailError(err);
+                        }
+                      );
+                    }
                   });
               }
             }
