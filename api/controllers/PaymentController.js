@@ -116,7 +116,7 @@ module.exports = {
       const stripe = await sails.controllers.payment.getStripe(eventId);
       sails.log.debug(`Getting checkout session details for session id ${sessionId}`);
       const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
-      sails.log.debug(`Got checkout session ${checkoutSession}`);
+      sails.log.debug(`Got checkout session ${JSON.stringify(checkoutSession)}`);
       return checkoutSession;
     } catch (err) {
       sails.log.error(err);
@@ -167,8 +167,7 @@ module.exports = {
               else {
                 const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, booking.event.id);
                 if (session) {
-                  sails.log.debug(`Successfully fetched checkout session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
-                  sails.log.debug(`Online payment checkout session: ${session}`);
+                  sails.log.debug(`Successfully fetched checkout session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id} paymentReference: ${booking.paymentReference})`);
                 } else {
                   sails.log.error(`Failed to fetch session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
                 }
