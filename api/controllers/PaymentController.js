@@ -168,10 +168,12 @@ module.exports = {
                 const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, booking.event.id);
                 if (session) {
                   sails.log.debug(`Successfully fetched checkout session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
+                  sails.log.debug(`Online payment checkout session: ${session}`);
                 } else {
                   sails.log.error(`Failed to fetch session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
                 }
                 if (session && booking.paymentReference !== session.payment_intent) {
+                  sails.log.debug(`Online payment - flagging booking as paid etc`);
                   // Update the booking
                   const amountPaid = session.display_items[0].amount / 100;
                   Booking.update(booking.id, {
