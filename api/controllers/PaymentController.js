@@ -270,6 +270,8 @@ module.exports = {
                       );
                     }
                   });
+              } else {
+                sails.log.error('No checkout session found!');
               }
             }
           });
