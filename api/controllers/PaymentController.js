@@ -143,10 +143,14 @@ module.exports = {
    */
   amountPaid: (session) => {
     let amountPaid = 0;
-    if (session.display_items) {
-      amountPaid = session.display_items[0].amount / 100;
-    } else {
-      amountPaid = session.amount_total / 100;
+    try {
+      if (session.display_items) {
+        amountPaid = session.display_items[0].amount / 100;
+      } else {
+        amountPaid = session.amount_total / 100;
+      }
+    } catch (err) {
+      sails.log.error(`Unable to determine amount paid from session ${session}`);
     }
     return amountPaid;
   }
