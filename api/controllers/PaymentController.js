@@ -9,68 +9,68 @@ const stripe = require("stripe");
 
 module.exports = {
 
-	/**
-	 * Get initialised stripe object
-	 */
-	getStripe: async (eventArg) => {
+  /**
+   * Get initialised stripe object
+   */
+  getStripe: async (eventArg) => {
 
-		const getStripeObject = (event) => {
+    const getStripeObject = (event) => {
       sails.log.debug(`Looking for online payment details for ${event.onlinePaymentPlatform} config ${event.onlinePaymentConfig}`);
-			const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
-				.find(config => config.code === event.onlinePaymentConfig);
+      const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
+        .find(config => config.code === event.onlinePaymentConfig);
       if (!paymentConfig) {
         throw new Error(`Unable to find payment config for ${event.onlinePaymentConfig}`);
       }
       // sails.log.debug(`Found online payment config ${JSON.stringify(paymentConfig)}`);
       // sails.log.debug(`Getting online payment object with secret key ${paymentConfig.secretKey}`);
-			return stripe(paymentConfig.secretKey);
-		}
+      return stripe(paymentConfig.secretKey);
+    }
 
-		return new Promise((resolve, reject) => {
-			if (eventArg.id) {
-				// Already a populated event object
-				return resolve(getStripeObject(eventArg));
-			} else {
-				Event.findOne(eventArg).exec(function (err, event) {
-					if (err) {
-						return reject(err);
-					}
-					return resolve(getStripeObject(event));
-				});
-			}
-		});
-	},
+    return new Promise((resolve, reject) => {
+      if (eventArg.id) {
+        // Already a populated event object
+        return resolve(getStripeObject(eventArg));
+      } else {
+        Event.findOne(eventArg).exec(function (err, event) {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(getStripeObject(event));
+        });
+      }
+    });
+  },
 
-	getNewCheckoutSession: async (bookingId) => {
+  getNewCheckoutSession: async (bookingId) => {
 
-		return new Promise((resolve, reject) => {
-			try {
-				Booking.findOne(bookingId)
-					.populate('user') // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
-					.populate("event")
-					.exec(async (err, booking) => {
-						if (err) {
-							return reject(err);
-						}
+    return new Promise((resolve, reject) => {
+      try {
+        Booking.findOne(bookingId)
+          .populate('user') // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
+          .populate("event")
+          .exec(async (err, booking) => {
+            if (err) {
+              return reject(err);
+            }
             let stripe;
-						try {
+            try {
               sails.log.debug(`Getting Stripe object for event ${booking.event.id}`);
               stripe = await sails.controllers.payment.getStripe(booking.event);
-            } catch(err) {
+            } catch (err) {
               sails.log.error(`Error occurred getting Stripe object for event ${booking.event.id}`);
               sails.log.error(err);
               return reject(err);
             }
             sails.log.debug('Got stripe object successfully');
-						const domainURL = sails.config.proxyHost;
+            const domainURL = sails.config.proxyHost;
 
-						// Create new Checkout Session for the order
-						// Other optional params include:
-						// [billing_address_collection] - to display billing address details on the page
-						// [customer] - if you have an existing Stripe Customer ID
-						// [payment_intent_data] - lets capture the payment later
-						// [customer_email] - lets you prefill the email input in the form
-						// For full details see https://stripe.com/docs/api/checkout/sessions/create
+            // Create new Checkout Session for the order
+            // Other optional params include:
+            // [billing_address_collection] - to display billing address details on the page
+            // [customer] - if you have an existing Stripe Customer ID
+            // [payment_intent_data] - lets capture the payment later
+            // [customer_email] - lets you prefill the email input in the form
+            // For full details see https://stripe.com/docs/api/checkout/sessions/create
             try {
               sails.log.debug(`Getting Stripe session for booking ref ${booking.ref}`);
               session = await stripe.checkout.sessions.create({
@@ -91,133 +91,146 @@ module.exports = {
                 success_url: `${domainURL}paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
               });
-            } catch(err) {
+            } catch (err) {
               sails.log.error(`Error occurred getting Stripe session for booking ref ${booking.ref}`);
               sails.log.error(err);
               return reject(err);
             }
             sails.log.debug(`Successfully got Stripe session for booking ref ${booking.ref}`);
-						return resolve(session.id);
-					});
-			} catch (err) {
-				return reject(err);
-			}
+            return resolve(session.id);
+          });
+      } catch (err) {
+        return reject(err);
+      }
 
-		});
+    });
 
-	},
+  },
 
-	/**
-	 * Get payment checkout session
-	 */
-	getCheckoutSession: async (sessionId, eventId) => {
-		try {
-			const stripe = await sails.controllers.payment.getStripe(eventId);
-			return await stripe.checkout.sessions.retrieve(sessionId);
-		} catch (err) {
-			sails.log.error(err);
-			return null;
-		}
+  /**
+   * Get payment checkout session
+   */
+  getCheckoutSession: async (sessionId, eventId) => {
+    try {
+      const stripe = await sails.controllers.payment.getStripe(eventId);
+      return await stripe.checkout.sessions.retrieve(sessionId);
+    } catch (err) {
+      sails.log.error(err);
+      return null;
+    }
 
-	},
+  },
 
-	/**
-	 * Create checkout session
-	 */
-	createCheckoutSession: async (req, res) => {
+  /**
+   * Create checkout session
+   */
+  createCheckoutSession: async (req, res) => {
 
-		try {
-			res.send({
-				sessionId: await sails.controllers.payment.getNewCheckoutSession(req.body.bookingId)
-			});
-		} catch (err) {
-			return res.negotiate(err);
-		}
+    try {
+      res.send({
+        sessionId: await sails.controllers.payment.getNewCheckoutSession(req.body.bookingId)
+      });
+    } catch (err) {
+      return res.negotiate(err);
+    }
 
-	},
+  },
 
-	/**
-	 * Online payment success
-	 */
-	paymentSuccess: async (req, res) => {
-		sails.log.debug(`Successful payment ${req.query.session_id}`);
-		Booking.find({ paymentSessionId: req.query.session_id })
-			.populate('event')
-			.populate('user')
-			.exec(async (err, bookings) => {
-				if (err || !bookings || bookings.length === 0) {
-					return res.negotiate(err);
-				} else {
-					const booking = bookings[0];
+  /**
+   * Online payment success
+   */
+  paymentSuccess: async (req, res) => {
+    sails.log.debug(`Successful payment ${req.query.session_id}`);
+    Booking.find({ paymentSessionId: req.query.session_id })
+      .populate('event')
+      .populate('user')
+      .exec(async (err, bookings) => {
+        if (err || !bookings || bookings.length === 0) {
+          sails.log.error(`Online payment - failed to retrieve booking for ${req.query.session_id}`);
+          sails.log.error(err);
+          return res.negotiate(err);
+        } else {
+          const booking = bookings[0];
           Event.findOne(booking.event.id)
             .populate('organiser')
             .populate('organiser2')
             .exec(async (err, event) => {
-              const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
-              if (session && booking.paymentReference !== session.payment_intent) {
-                // Update the booking
-                const amountPaid = session.display_items[0].amount / 100;
-                Booking.update(bookings.id, {
-                  paymentReference: session.payment_intent,
-                  paid: true,
-                  mop: 'Online',
-                  amountPaid: amountPaid
-                }).exec((err) => {
-                  if (err) {
-                    return res.negotiate(err);
-                  }
-                  Email.send(
-                    "onlinePaymentSuccess",
-                    {
-                      recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-                      senderName: sails.config.events.title,
-                      amountPaid,
-                      booking,
-                      event: booking.event
-                    },
-                    {
-                      from: booking.event.name + ' <' + sails.config.events.email + '>',
-                      to: booking.user.email,
-                      bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
-                      subject: 'Event booking payment processed'
-                    },
-                    function (err) {
-                      Utility.emailError(err);
+              if (err) {
+                sails.log.error(`Online payment - failed to retrieve event for booking ${booking.event.id}`);
+                sails.log.error(err);
+                return res.negotiate(err);
+              }
+              else {
+                const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, booking.event.id);
+                sails.log.debug(`Successfully fetched checkout session for ${req.query.session_id} (event ${booking.event.id})`);
+                if (session && booking.paymentReference !== session.payment_intent) {
+                  // Update the booking
+                  const amountPaid = session.display_items[0].amount / 100;
+                  Booking.update(booking.id, {
+                    paymentReference: session.payment_intent,
+                    paid: true,
+                    mop: 'Online',
+                    amountPaid: amountPaid
+                  }).exec((err) => {
+                    if (err) {
+                      sails.log.error(`Online payment - to find booking to update for id ${booking.id}`);
+                      sails.log.error(err);
+                      return res.negotiate(err);
                     }
-                  );
+                    sails.log.debug(`Successfully updated payment details on booking ${booking.id}. Sending confirmation email.`)
+                    Email.send(
+                      "onlinePaymentSuccess",
+                      {
+                        recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                        senderName: sails.config.events.title,
+                        amountPaid,
+                        booking,
+                        event: booking.event
+                      },
+                      {
+                        from: booking.event.name + ' <' + sails.config.events.email + '>',
+                        to: booking.user.email,
+                        bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                        subject: 'Event booking payment processed'
+                      },
+                      function (err) {
+                        Utility.emailError(err);
+                      }
+                    );
 
-                });
+                  });
+                }
               }
             });
-				}
-			});
-		res.view('dashboard', {
-			appUpdateRequested: false,
-			mimicUserRequested: false
-		});
-	},
+        }
+      });
+    res.view('dashboard', {
+      appUpdateRequested: false,
+      mimicUserRequested: false
+    });
+  },
 
-	/**
-	 * Online payment cancelled
-	 */
-	paymentCancelled: async (req, res) => {
-		sails.log.debug('Payment cancelled');
-		const sessionId = req.query.session_id;
-		Booking.find({ paymentSessionId: sessionId })
-			.populate('user')
-			.populate('event')
-			.exec(async (err, bookings) => {
-				if (err || !bookings || bookings.length === 0) {
-					sails.log.error(`Unable to update booking for payment reference ${sessionId}`);
-				} else {
-					const booking = bookings[0];
-					Booking.destroy({ id: booking.id }).exec(async (err) => {
-						if (err) {
-							sails.log.error(`Unable to destory booking for payment reference ${sessionId}`);
-						} else {
-							const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
-							if (session) {
-								const amountPaid = session.display_items[0].amount / 100;
+  /**
+   * Online payment cancelled
+   */
+  paymentCancelled: async (req, res) => {
+    sails.log.debug('Payment cancelled');
+    const sessionId = req.query.session_id;
+    Booking.find({ paymentSessionId: sessionId })
+      .populate('user')
+      .populate('event')
+      .exec(async (err, bookings) => {
+        if (err || !bookings || bookings.length === 0) {
+          sails.log.error(`Unable to update booking for payment reference ${sessionId}`);
+        } else {
+          const booking = bookings[0];
+          Booking.destroy({ id: booking.id }).exec(async (err) => {
+            if (err) {
+              sails.log.error(`Unable to destory booking for payment reference ${sessionId}`);
+            } else {
+              const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
+              if (session) {
+                const amountPaid = session.display_items[0].amount / 100;
                 Event.findOne(booking.event.id)
                   .populate('organiser')
                   .populate('organiser2')
@@ -242,16 +255,16 @@ module.exports = {
                       }
                     );
                   });
-							}
-						}
-					});
-				}
-			});
-		res.view('dashboard', {
-			appUpdateRequested: false,
-			mimicUserRequested: false
-		});
-	}
+              }
+            }
+          });
+        }
+      });
+    res.view('dashboard', {
+      appUpdateRequested: false,
+      mimicUserRequested: false
+    });
+  }
 
 };
 
