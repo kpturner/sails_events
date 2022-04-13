@@ -115,9 +115,7 @@ module.exports = {
       sails.log.debug(`Getting Stripe for event id ${eventId}`);
       const stripe = await sails.controllers.payment.getStripe(eventId);
       sails.log.debug(`Getting checkout session details for session id ${sessionId}`);
-      const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
-      sails.log.debug(`Got checkout session ${JSON.stringify(checkoutSession)}`);
-      return checkoutSession;
+      return await stripe.checkout.sessions.retrieve(sessionId);
     } catch (err) {
       sails.log.error(err);
       return null;
