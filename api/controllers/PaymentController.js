@@ -139,6 +139,19 @@ module.exports = {
   },
 
   /**
+   * Online payment amount paid
+   */
+  amountPaid: (session) => {
+    let amountPaid = 0;
+    if (session.display_items) {
+      amountPaid = session.display_items[0].amount / 100;
+    } else {
+      amountPaid = session.amount_total / 100;
+    }
+    return amountPaid;
+  }
+
+  /**
    * Online payment success
    */
   paymentSuccess: async (req, res) => {
@@ -172,7 +185,7 @@ module.exports = {
                 if (session && booking.paymentReference !== session.payment_intent) {
                   sails.log.debug(`Online payment - flagging booking ${booking.id} as paid etc ${JSON.stringify(session)}`);
                   // Update the booking
-                  const amountPaid = session.display_items[0].amount / 100;
+                  const amountPaid = sails.controllers.payment.amountPaid(session);
                   Booking.update(booking.id, {
                     paymentReference: session.payment_intent,
                     paid: true,
@@ -237,7 +250,7 @@ module.exports = {
             } else {
               const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
               if (session) {
-                const amountPaid = session.display_items[0].amount / 100;
+                const amountPaid = sails.controllers.payment.amountPaid(session);
                 sails.log.debug(`Fetching event for cancelled booking using id ${booking.event.id}`);
                 Event.findOne(booking.event.id)
                   .populate('organiser')
