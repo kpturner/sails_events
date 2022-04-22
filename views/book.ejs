@@ -125,7 +125,7 @@
         <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(mode!='delete' && (booking.$invalid || !detailsComplete())) || (!eventBookings && !userBookings && paid) || bookingForm.loading">
         -->
         <div ng-hide="mode=='display'">
-          <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addGuest()" ng-show="(openForBookings && bookingForm.places<placesMax && mode!='delete')">
+          <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="addGuest()" ng-show="(openForBookings && bookingForm.places<placesMax && mode!='delete')" ng-disabled="(!user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid)">
             <span>Add guest</span>
           </button>
 
