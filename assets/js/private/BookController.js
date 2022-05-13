@@ -787,7 +787,21 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				})
 					.then(function onSuccess(sailsResponse) {
 						//console.log(sailsResponse)
-						$scope.booking = sailsResponse.data;
+            $scope.booking = sailsResponse.data;
+            // Decide now if we are going to continue on to online payment.
+            // This will only be the case if:
+            // a) We have a paymentSessionId AND
+            // b) it is a new booking (no booking.id) OR it is a booking update
+            //    with a balance
+            let onlinePayment = false;
+            if ($scope.booking.paymentSessionId) {
+              if (SAILS_LOCALS.booking.id) {
+                // Only if we have a balance to pay
+                onlinePayment = ($scope.booking.cost > $scope.booking.amountPaid);
+              } else {
+                onlinePayment = true;
+              }
+            }
 						if ($scope.event.regInterest) {
 							if (SAILS_LOCALS.booking.id) {
 								// An update rather than a new booking
@@ -823,12 +837,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						}
 						// For my bookings or ordinary bookings we will issue a confirmation dialog,
 						// otherwise we will return to where we came from
-						if ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id || $scope.selectedUserId) {
+						if (!onlinePayment && ($scope.eventBookings || $scope.userBookngs || SAILS_LOCALS.booking.id || $scope.selectedUserId)) {
 							$scope.finish();
 						}
 						else {
 							// Now decide if we are taking online bookings or not
-							if ($scope.booking.paymentSessionId) {
+							if (onlinePayment) {
 								var opts = {
 									template: "/templates/checkoutConfirmation.html",
 									className: 'ngdialog-theme-default',
@@ -850,9 +864,13 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 											});
 									}, function (reason) {
 										// They bottled it
-										$scope.mode = "delete";
-										SAILS_LOCALS.booking.id = $scope.booking.id;
-										$scope.proceed();
+                    if (!$scope.booking.amountPaid) {
+                      $scope.mode = "delete";
+										  SAILS_LOCALS.booking.id = $scope.booking.id;
+										  $scope.proceed();
+                    } else {
+                      $scope.bookingForm.loading = false;
+                    }
 									});
 							} else {
 								$scope.event.paymentDetails = $scope.event.paymentDetails ?

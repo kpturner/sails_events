@@ -73,24 +73,40 @@ module.exports = {
             // For full details see https://stripe.com/docs/api/checkout/sessions/create
             try {
               sails.log.debug(`Getting Stripe session for booking ref ${booking.ref}`);
-              session = await stripe.checkout.sessions.create({
-                payment_method_types: ['card'],
-                locale: 'en',
-                line_items: [
-                  {
-                    name: booking.event.name,
-                    description: booking.event.blurb || ".",
-                    quantity: booking.places,
-                    currency: 'gbp',
-                    amount: booking.event.price * 100,
-                  }
-                ],
-                customer_email: booking.user.email,
-                client_reference_id: booking.ref,
-                // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-                success_url: `${domainURL}paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
-              });
+              // The amount to pay (for a new booking) will be the event price multiplied
+              // by the number of places
+              let name = booking.event.name;
+              let quantity = booking.places;
+              if (booking.amountPaid) {
+                // This means they have added one or places to the original booking
+                // so we need to calculate the quantity and amount for this payment
+                const balance = booking.cost - booking.amountPaid;
+                quantity = balance / booking.event.price;
+                name = name + ' (BALANCE)'
+              }
+              if (quantity > 0) {
+                session = await stripe.checkout.sessions.create({
+                  payment_method_types: ['card'],
+                  locale: 'en',
+                  line_items: [
+                    {
+                      name,
+                      description: booking.event.blurb || ".",
+                      quantity,
+                      currency: 'gbp',
+                      amount: booking.event.price * 100,
+                    }
+                  ],
+                  customer_email: booking.user.email,
+                  client_reference_id: booking.ref,
+                  // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+                  success_url: `${domainURL}paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
+                  cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
+                });
+              } else {
+                sails.log.debug(`Not got Stripe session for booking ref ${booking.ref}. We are not processing refunds this way.`);
+                return resolve(null);
+              }
             } catch (err) {
               sails.log.error(`Error occurred getting Stripe session for booking ref ${booking.ref}`);
               sails.log.error(err);
@@ -145,7 +161,7 @@ module.exports = {
     let amountPaid = 0;
     try {
       if (session.display_items) {
-        amountPaid = session.display_items[0].amount / 100;
+        amountPaid = (session.display_items[0].amount / 100) * session.display_items[0].quantity;
       } else {
         amountPaid = session.amount_total / 100;
       }
@@ -190,11 +206,12 @@ module.exports = {
                   sails.log.debug(`Online payment - flagging booking ${booking.id} as paid etc ${JSON.stringify(session)}`);
                   // Update the booking
                   const amountPaid = sails.controllers.payment.amountPaid(session);
+                  booking.amountPaid += amountPaid;
                   Booking.update(booking.id, {
                     paymentReference: session.payment_intent,
                     paid: true,
                     mop: 'Online',
-                    amountPaid: amountPaid
+                    amountPaid: booking.amountPaid
                   }).exec((err) => {
                     if (err) {
                       sails.log.error(`Online payment - to find booking to update for id ${booking.id}`);
@@ -248,48 +265,53 @@ module.exports = {
           sails.log.error(`Unable to update booking for payment reference ${sessionId}`);
         } else {
           const booking = bookings[0];
-          Booking.destroy({ id: booking.id }).exec(async (err) => {
-            if (err) {
-              sails.log.error(`Unable to destroy booking for payment reference ${sessionId}`);
-            } else {
-              const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
-              if (session) {
-                const amountPaid = sails.controllers.payment.amountPaid(session);
-                sails.log.debug(`Fetching event for cancelled booking using id ${booking.event.id}`);
-                Event.findOne(booking.event.id)
-                  .populate('organiser')
-                  .populate('organiser2')
-                  .exec(async (err, event) => {
-                    if (err) {
-                      sails.log.error(`Error occurred fetching event`);
-                      sails.log.error(err);
-                    } else {
-                      Email.send(
-                        "onlinePaymentCancelled",
-                        {
-                          recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-                          senderName: sails.config.events.title,
-                          booking,
-                          event: booking.event,
-                          amountPaid
-                        },
-                        {
-                          from: booking.event.name + ' <' + sails.config.events.email + '>',
-                          to: booking.user.email,
-                          bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
-                          subject: 'Event booking payment cancelled'
-                        },
-                        function (err) {
-                          Utility.emailError(err);
-                        }
-                      );
-                    }
-                  });
+          // If we have had no payments at all, cancel the booking
+          if (booking.amountPaid <= 0) {
+            Booking.destroy({ id: booking.id }).exec(async (err) => {
+              if (err) {
+                sails.log.error(`Unable to destroy booking for payment reference ${sessionId}`);
               } else {
-                sails.log.error('No checkout session found!');
+                const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, bookings[0].event.id);
+                if (session) {
+                  const amountPaid = sails.controllers.payment.amountPaid(session);
+                  sails.log.debug(`Fetching event for cancelled booking using id ${booking.event.id}`);
+                  Event.findOne(booking.event.id)
+                    .populate('organiser')
+                    .populate('organiser2')
+                    .exec(async (err, event) => {
+                      if (err) {
+                        sails.log.error(`Error occurred fetching event`);
+                        sails.log.error(err);
+                      } else {
+                        Email.send(
+                          "onlinePaymentCancelled",
+                          {
+                            recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                            senderName: sails.config.events.title,
+                            booking,
+                            event: booking.event,
+                            amountPaid
+                          },
+                          {
+                            from: booking.event.name + ' <' + sails.config.events.email + '>',
+                            to: booking.user.email,
+                            bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                            subject: 'Event booking payment cancelled'
+                          },
+                          function (err) {
+                            Utility.emailError(err);
+                          }
+                        );
+                      }
+                    });
+                } else {
+                  sails.log.error('No checkout session found!');
+                }
               }
-            }
-          });
+            });
+          } else {
+            // Thge booking remains partially paid
+          }
         }
       });
     res.view('dashboard', {

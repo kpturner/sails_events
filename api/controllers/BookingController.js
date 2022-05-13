@@ -698,6 +698,9 @@ module.exports = {
                                                 else {
                                                     if (!booking.paid && booking.amountPaid && booking.cost == booking.amountPaid) {
                                                         booking.paid = true;
+                                                    } else {
+                                                      balance = booking.cost - booking.amountPaid;
+                                                      booking.paid = false;
                                                     }
                                                 }
                                             }
@@ -926,12 +929,31 @@ module.exports = {
                                                 })
                                             }
                                             else {
-                                                // Finalise booking
-                                                finalise();
+                                                // If we have a balance and we are using online payments, we need another payment session
+                                                if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig && balance) {
+                                                  sails.controllers.payment.getNewCheckoutSession(booking.id)
+                                                      .then((sessionId) => {
+                                                        if (sessionId) {
+                                                          const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
+                                                              .find(config => config.code === event.onlinePaymentConfig);
+                                                          Booking.update(booking.id, { paymentSessionId: sessionId }).exec(() => {
+                                                              booking.stripePublishableKey = paymentConfig.publishableKey;
+                                                              booking.paymentSessionId = sessionId;
+                                                              // Finalise booking
+                                                              finalise();
+                                                          });
+                                                        } else {
+                                                          finalise();
+                                                        }
+                                                      })
+                                                      .catch((err) => {
+                                                          return res.genericErrorResponse("455", "Booking failed. Unable to create a payment session")
+                                                      })
+                                              } else {
+                                                  // Finalise booking
+                                                  finalise();
+                                              }
                                             }
-
-
-
                                         })
                                     }
 
