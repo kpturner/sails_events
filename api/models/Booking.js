@@ -103,8 +103,13 @@ module.exports = {
       type: 'string'
     },
 
-    // Online payment reference
+    // Online payment reference(s)
     paymentReference: {
+      type: 'string'
+    },
+
+    // Online refund reference(s)
+    refundReference: {
       type: 'string'
     }
 

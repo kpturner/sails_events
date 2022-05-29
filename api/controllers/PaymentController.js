@@ -140,6 +140,188 @@ module.exports = {
   },
 
   /**
+   * Process refund
+   * Accepts a booking and a refund object
+   */
+  processRefund: async (booking, refund) => {
+    return new Promise((resolve, reject) => {
+      try {
+        // Now we can modify the booking to reflect the refund
+        if (refund.status === 'succeeded') {
+          const refundMap = booking.refundReference ? JSON.parse(booking.refundReference) : {};
+          refundMap[refund.id] = refund;
+          const refundReference = JSON.stringify(refundMap);
+          const amountPaid = booking.amountPaid - (refund.amount / 100);
+          paid = (amountPaid <= 0);
+          Booking.update(booking.id, {
+            refundReference,
+            paid,
+            amountPaid
+          }).exec((err) => {
+            if (err) {
+              sails.log.error(`Online refund - failed to find booking to update for id ${booking.id}`);
+              return reject(err);
+            }
+            sails.log.debug(`Successfully updated refund details on booking ${booking.id} amount ${refundAmount}. Sending confirmation email.`)
+            return resolve()
+          });
+        } else {
+          return reject(`Online refund attempt failed!: ${JSON.stringify(refund)}`);
+        }
+      } catch (err) {
+        return reject(err);
+      }
+      return reject();
+    });
+  },
+
+  /**
+   * Issue refund
+   * Returns a refund object
+   * {
+      "id": "re_3L4kDr2eZvKYlo2C03T947RR",
+      "object": "refund",
+      "amount": 100,
+      "balance_transaction": null,
+      "charge": "ch_3L4kDr2eZvKYlo2C0DkJtSQQ",
+      "created": 1653823431,
+      "currency": "usd",
+      "metadata": {},
+      "payment_intent": null,
+      "reason": null,
+      "receipt_number": null,
+      "source_transfer_reversal": null,
+      "status": "succeeded",
+      "transfer_reversal": null
+    }
+   */
+    issueRefund: async (booking, amount) => {
+    try {
+      if (booking.paymentReference) {
+        const eventId = booking.event.id;
+        if (!eventId) {
+          throw new Error('Booking object for a refund must be fully resolved. The booking does not contain the event object');
+        }
+        sails.log.debug(`Getting Stripe for event id ${booking.event}`);
+        const stripe = await sails.controllers.payment.getStripe(eventId);
+        sails.log.debug(`Issuing refund(s) for booking ${booking.id} for £${amount}`);
+
+        // Build a map of our payment references (intents)
+        let paymentMap;
+        if (typeof booking.paymentReference  === 'string') {
+          paymentMap = { paymentReference: booking.paymentReference };
+        } else {
+          paymentMap = booking.paymentReference ? JSON.parse(booking.paymentReference) : {};
+        }
+
+        // Traverse our payment references until we exhaust the amount we need to refund
+        const refundMap = {};
+        const amountLeft = amount;
+        const keys = Object.keys(paymentMap);
+        keys.every((paymentReference) => {
+          if (amountLeft <= 0) {
+            return false;
+          }
+          if (paymentMap[paymentReference] >= amountLeft) {
+            // This payment reference can fully cover the refund
+            refundMap[paymentReference] = amountLeft;
+            // Reduce theh payment reference accordingly
+            paymentMap[paymentReference] = paymentMap[paymentReference] - amountLeft;
+            amountLeft = 0;
+          } else {
+            // This payment reference can partially cover the refund
+            refundMap[paymentReference] = paymentMap[paymentReference];
+            amountLeft -= paymentMap[paymentReference];
+            // Exhausted the payment so delete the pyment reference
+            delete paymentMap[paymentReference];
+          }
+        });
+        // If we have any left unrefundable we have a problem!
+        if (amountLeft) {
+          sails.log.error(`Cannot issue refund for booking ${booking.id}, amount: ${amount} as the booking payment references do not cover the refund amount`);
+          return null;
+        }
+
+        // Traverse the refund map and issue the refunds
+        const ok = true;
+        for (const refundReference of Object.keys(refundMap)) {
+          if (refundMap[refundReference]) {
+            try {
+              const refund = await stripe.refunds.create({
+                payment_intent: refundReference,
+                amount: refundMap[refundReference] * 100
+              });
+              await sails.controllers.payment.processRefund(booking, refund);
+            } catch (err) {
+              console.error(err);
+              ok = false;
+            }
+          }
+        }
+
+        // Update the payment reference map on the booking
+        const paymentReference = JSON.stringify(paymentMap);
+
+        if (ok) {
+          Booking.update(booking.id, {
+            paymentReference: paymentReference
+          }).exec((err) => {
+            if (err) {
+              sails.log.error(`Online refund - failed to find booking to update for id ${booking.id}`);
+            }
+            sails.log.debug(`Successfully updated refund details on booking ${booking.id}. Sending confirmation email.`)
+            Email.send(
+              "onlineRefundSuccess",
+              {
+                recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                senderName: sails.config.events.title,
+                amountRefunded: (refundAmount / 100),
+                booking,
+                event: booking.event
+              },
+              {
+                from: booking.event.name + ' <' + sails.config.events.email + '>',
+                to: booking.user.email,
+                bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                subject: 'Event booking refund processed'
+              },
+              function (err) {
+                Utility.emailError(err);
+              }
+            );
+          });
+        } else {
+          // Email refund failure
+          sails.log.error(`Online refund attempt failed!: ${JSON.stringify(refund)}. Sending failure email.`)
+            Email.send(
+              "onlineRefundFailure",
+              {
+                recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                senderName: sails.config.events.title,
+                refundObject: refund
+              },
+              {
+                from: booking.event.name + ' <' + sails.config.events.email + '>',
+                to: booking.user.email,
+                bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                subject: 'Event booking refund failed!'
+              },
+              function (err) {
+                Utility.emailError(err);
+              }
+            );
+        }
+
+      } else {
+        sails.log.error(`Cannot issue refund for booking ${booking.id}, amount: ${amount} as the booking has no initial payment reference`);
+      }
+    } catch (err) {
+      sails.log.error(err);
+    }
+    return null;
+  },
+
+  /**
    * Create checkout session
    */
   createCheckoutSession: async (req, res) => {
@@ -202,19 +384,22 @@ module.exports = {
                 } else {
                   sails.log.error(`Failed to fetch session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
                 }
-                if (session && booking.paymentReference !== session.payment_intent) {
+                const paymentMap = booking.paymentReference ? JSON.parse(booking.paymentReference) : {};
+                if (session && !paymentMap[session.payment_intent]) {
                   sails.log.debug(`Online payment - flagging booking ${booking.id} as paid etc ${JSON.stringify(session)}`);
                   // Update the booking
                   const amountPaid = sails.controllers.payment.amountPaid(session);
                   booking.amountPaid += amountPaid;
+                  paymentMap[session.payment_intent] = amountPaid;
+                  paymentReference = JSON.stringify(paymentMap);
                   Booking.update(booking.id, {
-                    paymentReference: session.payment_intent,
+                    paymentReference,
                     paid: true,
                     mop: 'Online',
                     amountPaid: booking.amountPaid
                   }).exec((err) => {
                     if (err) {
-                      sails.log.error(`Online payment - to find booking to update for id ${booking.id}`);
+                      sails.log.error(`Online payment - failed to find booking to update for id ${booking.id}`);
                       sails.log.error(err);
                       return res.negotiate(err);
                     }

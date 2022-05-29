@@ -649,8 +649,9 @@ module.exports = {
 
                                     // Private function to process booking
                                     var processBooking = function () {
-                                        var booking = {};
-                                        var balance;
+                                        let booking = {};
+                                        let balance;
+                                        let refund;
                                         if (existingBooking) {
                                             _.extend(booking, existingBooking);
                                         }
@@ -692,6 +693,7 @@ module.exports = {
                                                 // Existing booking - has the amount owed changed for a paid booking?
                                                 if (booking.paid && existingBooking.places != booking.places) {
                                                     balance = (booking.places - existingBooking.places) * event.price;
+                                                    refund = (balance <= 0) ? (balance * -1) : 0;
                                                     balance = (balance <= 0) ? null : balance;
                                                     booking.paid = false;
                                                 }
@@ -713,7 +715,7 @@ module.exports = {
                                             booking.ref = bookingRef;
 
 
-                                        Booking.create(booking, function (err, booking) {
+                                        Booking.create(booking, async function (err, booking) {
                                             if (err) {
                                                 sails.log.error(err);
                                                 return res.negotiate(err);
@@ -837,6 +839,10 @@ module.exports = {
                                                         // Is there a balance to pay?
                                                         if (balance) {
                                                             updated += " and there is a balance to pay of £" + balance;
+                                                        } else {
+                                                          if (refund) {
+                                                            updated += " and there is a refund dur of £" + refund;
+                                                          }
                                                         }
                                                     }
 
@@ -904,23 +910,23 @@ module.exports = {
                                                     Booking.update(booking.id, { ref: bookingRef }).exec(function () {
                                                         booking.ref = bookingRef;
 
-                                                        // If we are using online payments, add a checkout session if to the booking
+                                                        // If we are using online payments, add a checkout session id to the booking
                                                         // But only if this is a registered user booking themselves in.
-                                                        if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig && !booking.paid) {
-                                                            sails.controllers.payment.getNewCheckoutSession(booking.id)
-                                                                .then((sessionId) => {
-                                                                    const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
-                                                                        .find(config => config.code === event.onlinePaymentConfig);
-                                                                    Booking.update(booking.id, { paymentSessionId: sessionId }).exec(() => {
-                                                                        booking.stripePublishableKey = paymentConfig.publishableKey;
-                                                                        booking.paymentSessionId = sessionId;
-                                                                        // Finalise booking
-                                                                        finalise();
-                                                                    });
-                                                                })
-                                                                .catch((err) => {
-                                                                    return res.genericErrorResponse("455", "Booking failed. Unable to create a payment session")
-                                                                })
+                                                        if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig && !bookingPaid) {
+                                                          sails.controllers.payment.getNewCheckoutSession(booking.id)
+                                                            .then((sessionId) => {
+                                                                const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
+                                                                    .find(config => config.code === event.onlinePaymentConfig);
+                                                                Booking.update(booking.id, { paymentSessionId: sessionId }).exec(() => {
+                                                                    booking.stripePublishableKey = paymentConfig.publishableKey;
+                                                                    booking.paymentSessionId = sessionId;
+                                                                    // Finalise booking
+                                                                    finalise();
+                                                                });
+                                                            })
+                                                            .catch((err) => {
+                                                                return res.genericErrorResponse("455", "Booking failed. Unable to create a payment session")
+                                                            })
                                                         } else {
                                                             // Finalise booking
                                                             finalise();
@@ -929,8 +935,10 @@ module.exports = {
                                                 })
                                             }
                                             else {
-                                                // If we have a balance and we are using online payments, we need another payment session
-                                                if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig && balance) {
+                                              // Are we using online payments?
+                                              if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig) {
+                                                // Do we have a balance?
+                                                if (balance) {
                                                   sails.controllers.payment.getNewCheckoutSession(booking.id)
                                                       .then((sessionId) => {
                                                         if (sessionId) {
@@ -949,9 +957,18 @@ module.exports = {
                                                       .catch((err) => {
                                                           return res.genericErrorResponse("455", "Booking failed. Unable to create a payment session")
                                                       })
+                                                } else {
+                                                  // Or a refund?
+                                                  if (refund && booking.paymentReference) {
+                                                    await sails.controllers.payment.issueRefund(booking, refund);
+                                                    finalise();
+                                                  } else {
+                                                    finalise();
+                                                  }
+                                                }
                                               } else {
-                                                  // Finalise booking
-                                                  finalise();
+                                                // Finalise booking
+                                                finalise();
                                               }
                                             }
                                         })
@@ -1822,7 +1839,7 @@ module.exports = {
                 }
 
                 //User.findOne(booking.event.organiser).exec(function(err, organiser){
-                User.find(where).exec(function (err, organisers) {
+                User.find(where).exec(async function (err, organisers) {
                     if (!organisers) {
                         organisers = []
                     }
@@ -1865,6 +1882,16 @@ module.exports = {
                         // Not supported
                     }
                     else if (action == "delete") {
+
+                        // Issue refund if online payments used
+                        if (booking.paymentReference) {
+                          try {
+                            await sails.controllers.payment.issueRefund(booking, booking.amountPaid);
+                          } catch (err) {
+                            console.error(err);
+                            // We will cancel the booking anyway
+                          }
+                        }
 
                         // Carry on and delete it
                         Booking.destroy(bookingId).exec(function (err) {
