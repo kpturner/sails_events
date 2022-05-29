@@ -15,6 +15,9 @@ module.exports = {
   getStripe: async (eventArg) => {
 
     const getStripeObject = (event) => {
+      if (!event.onlinePaymentPlatform) {
+        throw new Error(`Unable to find payment config. No payment platform on event.`);
+      }
       sails.log.debug(`Looking for online payment details for ${event.onlinePaymentPlatform} config ${event.onlinePaymentConfig}`);
       const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
         .find(config => config.code === event.onlinePaymentConfig);
@@ -27,16 +30,26 @@ module.exports = {
     }
 
     return new Promise((resolve, reject) => {
-      if (eventArg.id) {
-        // Already a populated event object
-        return resolve(getStripeObject(eventArg));
-      } else {
-        Event.findOne(eventArg).exec(function (err, event) {
-          if (err) {
-            return reject(err);
-          }
-          return resolve(getStripeObject(event));
-        });
+      try {
+        if (eventArg.id) {
+          // Already a populated event object
+          return resolve(getStripeObject(eventArg));
+        } else {
+          Event.findOne(eventArg).exec(function (err, event) {
+            if (err) {
+              return reject(err);
+            }
+            try {
+              const stripe = getStripeObject(event);
+              return resolve(stripe);
+            } catch(err) {
+              return reject(err);
+            }
+          });
+        }
+      }
+      catch (err) {
+        return reject(err);
       }
     });
   },
@@ -126,10 +139,10 @@ module.exports = {
   /**
    * Get payment checkout session
    */
-  getCheckoutSession: async (sessionId, eventId) => {
+  getCheckoutSession: async (sessionId, event) => {
     try {
-      sails.log.debug(`Getting Stripe for event id ${eventId}`);
-      const stripe = await sails.controllers.payment.getStripe(eventId);
+      sails.log.debug(`Getting Stripe for event id ${event.id ? event.id : event}`);
+      const stripe = await sails.controllers.payment.getStripe(event);
       sails.log.debug(`Getting checkout session details for session id ${sessionId}`);
       return await stripe.checkout.sessions.retrieve(sessionId);
     } catch (err) {
@@ -167,6 +180,25 @@ module.exports = {
             return resolve()
           });
         } else {
+          // Send email to organiser
+          const event = booking.event;
+          Email.send(
+            "onlineRefundDiagnostic",
+            {
+              senderName: sails.config.events.title,
+              refundAmount: (refund.amount / 100),
+              bookingObject: JSON.stringify(booking),
+              refundObject: JSON.stringify(refund)
+            },
+            {
+              from: booking.event.name + ' <' + sails.config.events.email + '>',
+              to: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+              subject: 'Event booking refund failed!'
+            },
+            function (err) {
+              Utility.emailError(err);
+            }
+          );
           return reject(`Online refund attempt failed!: ${JSON.stringify(refund)}`);
         }
       } catch (err) {
@@ -202,7 +234,7 @@ module.exports = {
         if (!eventId) {
           throw new Error('Booking object for a refund must be fully resolved. The booking does not contain the event object');
         }
-        sails.log.debug(`Getting Stripe for event id ${booking.event}`);
+        sails.log.debug(`Getting Stripe for event id ${booking.event.id ? booking.event.id : booking.event}`);
         const stripe = await sails.controllers.payment.getStripe(eventId);
         sails.log.debug(`Issuing refund(s) for booking ${booking.id} for £${amount}`);
 
