@@ -149,20 +149,21 @@ module.exports = {
         // Now we can modify the booking to reflect the refund
         if (refund.status === 'succeeded') {
           const refundMap = booking.refundReference ? JSON.parse(booking.refundReference) : {};
-          refundMap[refund.id] = refund;
+          refundMap[refund.id] = refund.amount / 100;
           const refundReference = JSON.stringify(refundMap);
           const amountPaid = booking.amountPaid - (refund.amount / 100);
-          paid = (amountPaid <= 0);
+          paid = false;
           Booking.update(booking.id, {
             refundReference,
             paid,
             amountPaid
           }).exec((err) => {
             if (err) {
-              sails.log.error(`Online refund - failed to find booking to update for id ${booking.id}`);
+              sails.log.error(`Online refund - failed to update booking to update for id ${booking.id}`);
+              sails.log.error(err);
               return reject(err);
             }
-            sails.log.debug(`Successfully updated refund details on booking ${booking.id} amount ${refundAmount}. Sending confirmation email.`)
+            sails.log.debug(`Successfully updated refund details on booking ${booking.id} amount ${refund.amount / 100}. Sending confirmation email.`)
             return resolve()
           });
         } else {
@@ -171,7 +172,6 @@ module.exports = {
       } catch (err) {
         return reject(err);
       }
-      return reject();
     });
   },
 
@@ -208,15 +208,17 @@ module.exports = {
 
         // Build a map of our payment references (intents)
         let paymentMap;
-        if (typeof booking.paymentReference  === 'string') {
-          paymentMap = { paymentReference: booking.paymentReference };
-        } else {
+        try {
           paymentMap = booking.paymentReference ? JSON.parse(booking.paymentReference) : {};
+        } catch (err) {
+          // Cannot process refund
+          sails.log.error(`Cannot issue refund for booking ${booking.id}, amount: ${amount} as the booking payment reference ${booking.paymentReference} is in the wrong format`);
+          return null;
         }
 
         // Traverse our payment references until we exhaust the amount we need to refund
         const refundMap = {};
-        const amountLeft = amount;
+        let amountLeft = amount;
         const keys = Object.keys(paymentMap);
         keys.every((paymentReference) => {
           if (amountLeft <= 0) {
@@ -243,7 +245,7 @@ module.exports = {
         }
 
         // Traverse the refund map and issue the refunds
-        const ok = true;
+        let ok = true;
         for (const refundReference of Object.keys(refundMap)) {
           if (refundMap[refundReference]) {
             try {
@@ -253,7 +255,7 @@ module.exports = {
               });
               await sails.controllers.payment.processRefund(booking, refund);
             } catch (err) {
-              console.error(err);
+              sails.log.error(err);
               ok = false;
             }
           }
@@ -261,44 +263,47 @@ module.exports = {
 
         // Update the payment reference map on the booking
         const paymentReference = JSON.stringify(paymentMap);
-
+        const event = booking.event;
         if (ok) {
-          Booking.update(booking.id, {
-            paymentReference: paymentReference
-          }).exec((err) => {
-            if (err) {
-              sails.log.error(`Online refund - failed to find booking to update for id ${booking.id}`);
-            }
-            sails.log.debug(`Successfully updated refund details on booking ${booking.id}. Sending confirmation email.`)
-            Email.send(
-              "onlineRefundSuccess",
-              {
-                recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-                senderName: sails.config.events.title,
-                amountRefunded: (refundAmount / 100),
-                booking,
-                event: booking.event
-              },
-              {
-                from: booking.event.name + ' <' + sails.config.events.email + '>',
-                to: booking.user.email,
-                bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
-                subject: 'Event booking refund processed'
-              },
-              function (err) {
-                Utility.emailError(err);
+          try {
+            Booking.update(booking.id, {
+              paymentReference: paymentReference
+            }).exec((err) => {
+              if (err) {
+                sails.log.error(`Online refund - failed to find booking to update for id ${booking.id}`);
               }
-            );
-          });
+              Email.send(
+                "onlineRefundSuccess",
+                {
+                  recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                  senderName: sails.config.events.title,
+                  amountRefunded: amount,
+                  booking,
+                  event: booking.event
+                },
+                {
+                  from: booking.event.name + ' <' + sails.config.events.email + '>',
+                  to: booking.user.email,
+                  bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                  subject: 'Event booking refund processed'
+                },
+                function (err) {
+                  Utility.emailError(err);
+                }
+              );
+            });
+          } catch (err) {
+            Utility.emailError(err);
+          }
         } else {
           // Email refund failure
-          sails.log.error(`Online refund attempt failed!: ${JSON.stringify(refund)}. Sending failure email.`)
+          sails.log.error(`Online refund attempt failed!. Sending failure email.`)
             Email.send(
               "onlineRefundFailure",
               {
                 recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
                 senderName: sails.config.events.title,
-                refundObject: refund
+                refundAmount: amount
               },
               {
                 from: booking.event.name + ' <' + sails.config.events.email + '>',

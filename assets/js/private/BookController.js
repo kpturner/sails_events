@@ -693,7 +693,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 			// If we are cancelling a paid up booking, seek confirmation
       // (a payment reference means we have online payments and cab refund)
-			if ($scope.bookingForm.paid && !paymentReference) {
+			if ($scope.bookingForm.paid && !$scope.paymentReference) {
 				var opts = {
 					template: "/templates/bookingCancellationConfirmation.html",
 					className: 'ngdialog-theme-default',
