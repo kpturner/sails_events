@@ -151,7 +151,7 @@ module.exports = {
 									cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
 								});
 							} else {
-								sails.log.debug(`Not got Stripe session for booking ref ${booking.ref}. We are not processing refunds this way.`);
+								sails.log.debug(`Not got Stripe session for booking ref ${booking.ref}. The booking is in credit.`);
 								return resolve(null);
 							}
 						} catch (err) {

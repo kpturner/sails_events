@@ -680,6 +680,10 @@ module.exports = {
                                             booking.paid = req.param("paid");
                                             booking.mop = req.param("mop");
                                             booking.tableNo = req.param("tableNo");
+                                            balance = booking.cost - booking.amountPaid;
+                                            if (balance < 0) {
+                                              refund = (balance * -1);
+                                            }
                                         }
                                         else {
                                             if (!existingBooking) {
