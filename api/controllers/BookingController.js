@@ -691,19 +691,22 @@ module.exports = {
                                             }
                                             else {
                                                 // Existing booking - has the amount owed changed for a paid booking?
-                                                if (booking.paid && existingBooking.places != booking.places) {
+                                                if (existingBooking.places != booking.places) {
                                                     balance = (booking.places - existingBooking.places) * event.price;
                                                     refund = (balance <= 0) ? (balance * -1) : 0;
-                                                    balance = (balance <= 0) ? null : balance;
-                                                    booking.paid = false;
                                                 }
                                                 else {
                                                     if (!booking.paid && booking.amountPaid && booking.cost == booking.amountPaid) {
                                                         booking.paid = true;
                                                     } else {
                                                       balance = booking.cost - booking.amountPaid;
-                                                      booking.paid = false;
+                                                      if (balance < 0) {
+                                                        refund = (balance * -1);
+                                                      }
                                                     }
+                                                }
+                                                if (balance > 0) {
+                                                  booking.paid = false;
                                                 }
                                             }
                                         }
@@ -837,11 +840,11 @@ module.exports = {
                                                     }
                                                     else {
                                                         // Is there a balance to pay?
-                                                        if (balance) {
+                                                        if (balance > 0) {
                                                             updated += " and there is a balance to pay of £" + balance;
                                                         } else {
                                                           if (refund) {
-                                                            updated += " and there is a refund dur of £" + refund;
+                                                            updated += " and there is a refund due of £" + refund;
                                                           }
                                                         }
                                                     }
@@ -938,7 +941,7 @@ module.exports = {
                                               // Are we using online payments?
                                               if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig) {
                                                 // Do we have a balance?
-                                                if (balance) {
+                                                if (balance > 0) {
                                                   sails.controllers.payment.getNewCheckoutSession(booking.id)
                                                       .then((sessionId) => {
                                                         if (sessionId) {
