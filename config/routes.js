@@ -83,8 +83,6 @@ module.exports.routes = {
   'post /addpd/:eventid': 'BookingController.addPD',
 
   // Online payments
-  'post /create-checkout-session': 'PaymentController.createCheckoutSession',
-  'get /checkout-session': 'PaymentController.getCheckoutSession',
   'get /paymentsuccess': 'PaymentController.paymentSuccess',
   'get /paymentcancelled': 'PaymentController.paymentCancelled',
 

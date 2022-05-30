@@ -12,6 +12,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	$scope.event = SAILS_LOCALS.event;
 	$scope.mode = SAILS_LOCALS.mode;
 	$scope.selectedUserId = SAILS_LOCALS.selectedUserId; // Only populated when the administrator is making a booking on behalf of another user
+  $scope.paymentReference = SAILS_LOCALS.booking?.paymentReference;
 
 	// Lodge required
 	$scope.lodgeMandatory = SAILS_LOCALS.lodgeMandatory;
@@ -691,7 +692,8 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 			}
 
 			// If we are cancelling a paid up booking, seek confirmation
-			if ($scope.bookingForm.paid) {
+      // (a payment reference means we have online payments and cab refund)
+			if ($scope.bookingForm.paid && !$scope.paymentReference) {
 				var opts = {
 					template: "/templates/bookingCancellationConfirmation.html",
 					className: 'ngdialog-theme-default',
