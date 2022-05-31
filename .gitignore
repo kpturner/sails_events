@@ -129,4 +129,3 @@ heapdump/*
 !heapdump/.gitkeep
 
 *.pem
-.sailsrc
