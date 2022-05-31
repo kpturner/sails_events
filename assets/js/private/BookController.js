@@ -196,6 +196,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	// Open for bookings?
 	$scope.openForBookings = true;
+  $scope.refundAllowed = !!$scope.paymentReference;
 	var currentHH = SAILS_LOCALS.nowHH;
 	var currentMM = SAILS_LOCALS.nowMM;
 	var currentSS = SAILS_LOCALS.nowSS;
@@ -206,7 +207,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	var openingTime = (hh * 3600) + (mm * 60) + ss;
 	var nowTime = (currentHH * 3600) + (currentSS * 60) + currentSS;
 	var pastTheClosingDate = ($scope.event.UTCClosingDate && $scope.event.UTCClosingDate < SAILS_LOCALS.now);
-	var notYetReachedOpeningDate = ($scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate > SAILS_LOCALS.now);
+	$scope.notYetReachedOpeningDate = ($scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate > SAILS_LOCALS.now);
 	var isOpeningDate = ($scope.event.UTCOpeningDate && $scope.event.UTCOpeningDate === SAILS_LOCALS.now);
 	var userBookingHimselfIn = (!$scope.eventBookings && !$scope.userBookings);
   var canAmend = SAILS_LOCALS.isAdmin;
@@ -215,8 +216,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     if (!canAmend && SAILS_LOCALS.event.organiser2 && SAILS_LOCALS.event.organiser2.username === SAILS_LOCALS.user.username);
   }
 	if (!canAmend && pastTheClosingDate ||
-		(userBookingHimselfIn && (notYetReachedOpeningDate || (isOpeningDate && $scope.event.openingTime && openingTime > nowTime)))) {
+		(userBookingHimselfIn && ($scope.notYetReachedOpeningDate || (isOpeningDate && $scope.event.openingTime && openingTime > nowTime)))) {
 		$scope.openForBookings = false;
+    $scope.refundAllowed = false;
 	}
 
 	// Warn if not open for bookings
@@ -224,7 +226,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
 	// Check whether or not the booking has been paid for
 	$scope.chkPaid = function () {
-		if ($scope.openForBookings && !$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode != 'delete') {
+		if ($scope.openForBookings && !$scope.refundAllowed && !$scope.user.isAdmin && !$scope.user.isOrganiser && !$scope.eventBookings && !$scope.userBookings && $scope.paid && $scope.mode != 'delete') {
 			var opts = {
 				template: "/templates/paidWarning.html",
 				className: 'ngdialog-theme-default',
