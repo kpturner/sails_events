@@ -14,6 +14,10 @@
 	}
 }
 
+.font-size-10 {
+  font-size: 10pt;
+}
+
 .loading-spinner {
   position: fixed;
   bottom: 50%;
@@ -42,10 +46,10 @@
   float: left;
   height: 50px;
   padding: 15px 0px 15px 15px;
-  font-size: 18px; 
-  line-height: 20px; 
+  font-size: 18px;
+  line-height: 20px;
 }
- 
+
 
 .event-logo {
     float:left;
@@ -53,11 +57,11 @@
     margin-right:6px;
     height:52px;
     width: 12%;
-    
+
 }
 
 .event-name {
-    float:left; 
+    float:left;
 }
 
 .event-name-100 {
@@ -79,7 +83,7 @@
     margin-right:5px;
     height:52px;
     width: 12%;
-    
+
 }
 
 
@@ -88,11 +92,11 @@
     font-family: inherit;
     font-weight: 500;
     line-height: 1.1;
-    color: inherit;    
+    color: inherit;
 }
 
 .user-name {
-    float:left; 
+    float:left;
 }
 
 .user-name-100 {
@@ -102,7 +106,7 @@
 .user-name-65 {
     width: 65%
 }
- 
+
 
 .user-picture-right {
     float:right;
@@ -111,7 +115,7 @@
     margin-right:5px;
     height:52px;
     width: 25%;
-    
+
 }
 
 
@@ -126,7 +130,7 @@
     font-family: inherit;
     font-weight: 500;
     line-height: 1.1;
-    color: inherit;    
+    color: inherit;
 }
 
 .a-unstyled {  text-decoration: none}
@@ -145,12 +149,12 @@
     text-align: center;
 	/* line-height: 300%; */
 }
-	
-.omb_login .omb_socialButtons a {	
+
+.omb_login .omb_socialButtons a {
 	opacity:0.9;
 }
 .omb_login .omb_socialButtons a:hover {
-    opacity:1;    	
+    opacity:1;
 }
 
 
@@ -168,35 +172,35 @@
 	margin-bottom: 0px !important;
 }
 .omb_login .omb_loginOr .omb_spanOr {
-	background-color: #eee;	
-}			
+	background-color: #eee;
+}
 .omb_login .omb_loginOr .omb_spanSocial {
 	display: block;
 	position: absolute;
 	left: 47%;
 	top: -0.7em;
-	margin-left: -4.5em;	
+	margin-left: -4.5em;
 	width: 11em;
 	text-align: center;
-}	
+}
 .omb_login .omb_loginOr .omb_spanManual {
 	display: block;
 	position: absolute;
 	left: 47%;
 	top: -0.7em;
-	margin-left: -4.5em;	
+	margin-left: -4.5em;
 	width: 10em;
 	text-align: center;
-}	
+}
 .omb_login .omb_loginForm .input-group.i {
 	width: 2em;
 }
 
 
-	
+
 @media (min-width: 768px) {
     .omb_login .omb_forgotPwd .omb-stuck .omb-guide {
         text-align: right;
 		margin-top:10px;
- 	}		
+ 	}
 }
