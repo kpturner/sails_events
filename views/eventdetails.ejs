@@ -133,6 +133,17 @@
               </label>
             </div>
 
+            <!-- S H O W  A P O L O G Y  B U T T O N ? -->
+
+            <div class="ontrol-group form-group col-sm-6"
+              ng-class="{'has-error':eventdetails.showapologybutton.$invalid &&
+                                    eventdetails.showapologybutton.$dirty}">
+              <label>
+                <input type="checkbox" class="bigcheckbox" name="showapologybutton" ng-model="eventForm.showApologyButton" />
+                &nbsp;&nbsp;&nbsp;Show 'Send Apology' button?
+              </label>
+            </div>
+
           </div>
 
           <div class="row">
@@ -549,16 +560,6 @@
                 </label>
               </div>
 
-              <!-- S H O W  A P O L O G Y  B U T T O N ? -->
-
-              <div class="control-group form-group col-md-10"
-                ng-class="{'has-error':eventdetails.showapologybutton.$invalid &&
-                                      eventdetails.showapologybutton.$dirty}">
-                <label>
-                  <input type="checkbox" class="bigcheckbox" name="showapologybutton" ng-model="eventForm.showApologyButton" />
-                  &nbsp;&nbsp;&nbsp;Show 'Send Apology' button?
-                </label>
-              </div>
           </div>
 
         </div>
