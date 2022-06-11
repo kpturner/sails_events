@@ -141,7 +141,7 @@ module.exports = {
 											description: booking.event.blurb || ".",
 											quantity,
 											currency: 'gbp',
-											amount: booking.event.price * 100,
+											amount: parseInt(booking.event.price * 100),
 										}
 									],
 									customer_email: booking.user.email,
@@ -367,7 +367,7 @@ module.exports = {
                 try {
                   refund = await stripe.refunds.create({
                     payment_intent: refundReference,
-                    amount: refundMap[refundReference] * 100
+                    amount: parseInt(refundMap[refundReference] * 100)
                   });
                   amountToBeRefunded -= refundMap[refundReference];
                 } catch (err) {
