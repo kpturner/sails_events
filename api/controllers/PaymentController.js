@@ -141,7 +141,7 @@ module.exports = {
 											description: booking.event.blurb || ".",
 											quantity,
 											currency: 'gbp',
-											amount: parseInt(booking.event.price * 100),
+											amount: Math.round(booking.event.price * 100),
 										}
 									],
 									customer_email: booking.user.email,
@@ -367,7 +367,7 @@ module.exports = {
                 try {
                   refund = await stripe.refunds.create({
                     payment_intent: refundReference,
-                    amount: parseInt(refundMap[refundReference] * 100)
+                    amount: Math.round(refundMap[refundReference] * 100)
                   });
                   amountToBeRefunded -= refundMap[refundReference];
                 } catch (err) {
@@ -491,6 +491,7 @@ module.exports = {
 					return res.negotiate(err);
 				} else {
 					const booking = bookings[0];
+          sails.log.debug(`Successfully found booking ref ${booking.ref} for session id ${req.query.session_id}`);
 					Event.findOne(booking.event.id)
 						.populate('organiser')
 						.populate('organiser2')
@@ -501,6 +502,7 @@ module.exports = {
 								return res.negotiate(err);
 							}
 							else {
+                sails.log.debug(`Successfully found event "${event.name}" (id: ${event.id}) for ${booking.ref} for session id ${req.query.session_id}`);
 								const session = await sails.controllers.payment.getCheckoutSession(req.query.session_id, booking.event.id);
 								if (session) {
 									sails.log.debug(`Successfully fetched checkout session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id} paymentReference: ${booking.paymentReference})`);
