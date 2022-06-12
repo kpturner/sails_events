@@ -967,7 +967,11 @@ module.exports = {
                                                 } else {
                                                   // Or a refund?
                                                   if (refund && booking.paymentReference) {
-                                                    await sails.controllers.payment.issueRefund(booking, refund);
+                                                    try {
+                                                      await sails.controllers.payment.issueRefund(booking, refund);
+                                                    } catch (err) {
+                                                      sails.log.error('Error occurred processing refund', err);
+                                                    }
                                                     finalise();
                                                   } else {
                                                     finalise();

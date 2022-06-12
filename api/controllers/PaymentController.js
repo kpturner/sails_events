@@ -119,16 +119,27 @@ module.exports = {
 						// [customer_email] - lets you prefill the email input in the form
 						// For full details see https://stripe.com/docs/api/checkout/sessions/create
 						try {
-							sails.log.debug(`Getting Stripe session for booking ref ${booking.ref}`);
+							sails.log.debug(`Getting Stripe session for booking ref ${booking.ref} - places ${booking.place} `);
 							// The amount to pay (for a new booking) will be the event price multiplied
 							// by the number of places
 							let name = booking.event.name;
 							let quantity = booking.places;
+              let amount = Math.round(booking.event.price * 100);
 							if (booking.amountPaid) {
-								// This means they have added one or places to the original booking
-								// so we need to calculate the quantity and amount for this payment
+								// This means that by hook or by crook the booking has acquired a different cost.
+								// Normally if this is just as a result of adding guests the value to collect will
+                // just be the event cost multiplied by the extra guests.  However, if the balance is
+                // is as a result of the event changing price we have to be a bit circumspect and just use the
+                // quantity as 1 and the balance.
 								const balance = booking.cost - booking.amountPaid;
 								quantity = balance / booking.event.price;
+                if (!Number.isInteger(quantity)) {
+                  quantity = 1;
+                  amount = Math.round(balance * 100);
+                  sails.log.debug(`Sticking with an integer amount of ${amount} and a quantity of 1 because the balance divided by ${booking.event.price} is not an integer.`);
+                } else {
+                  sails.log.debug(`Quantity calculated as ${quantity} with an integer amount of ${amount}.`);
+                }
 								name = name + ' (BALANCE)'
 							}
 							if (quantity > 0) {
@@ -141,7 +152,7 @@ module.exports = {
 											description: booking.event.blurb || ".",
 											quantity,
 											currency: 'gbp',
-											amount: Math.round(booking.event.price * 100),
+											amount
 										}
 									],
 									customer_email: booking.user.email,
@@ -328,6 +339,7 @@ module.exports = {
 
 		try {
 			if (booking.paymentReference) {
+        sails.log.debug(`=======Issuing Refund for booking ref ${booking.ref} for £${amount}=======`)
 				const event = await sails.controllers.payment.resolveEvent(booking.event);
         booking.user = await sails.controllers.payment.resolveBookingUser(booking.user);
 				sails.log.debug(`Getting Stripe for event id ${event.id}`);
@@ -480,7 +492,7 @@ module.exports = {
 	 * Online payment success
 	 */
 	paymentSuccess: async (req, res) => {
-		sails.log.debug(`Successful payment ${req.query.session_id}`);
+		sails.log.debug(`=======Successful payment ${req.query.session_id}=======`);
 		Booking.find({ paymentSessionId: req.query.session_id })
 			.populate('event')
 			.populate('user')
@@ -510,47 +522,51 @@ module.exports = {
 									sails.log.error(`Failed to fetch session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
 								}
 								const paymentMap = booking.paymentReference ? JSON.parse(booking.paymentReference) : {};
-								if (session && !paymentMap[session.payment_intent]) {
-									sails.log.debug(`Online payment - flagging booking ${booking.id} as paid etc ${JSON.stringify(session)}`);
-									// Update the booking
-									const amountPaid = sails.controllers.payment.amountPaid(session);
-									booking.amountPaid += amountPaid;
-									paymentMap[session.payment_intent] = amountPaid;
-									paymentReference = JSON.stringify(paymentMap);
-									Booking.update(booking.id, {
-										paymentReference,
-										paid: true,
-										mop: 'Online',
-										amountPaid: booking.amountPaid
-									}).exec((err) => {
-										if (err) {
-											sails.log.error(`Online payment - failed to find booking to update for id ${booking.id}`);
-											sails.log.error(err);
-											return res.negotiate(err);
-										}
-										sails.log.debug(`Successfully updated payment details on booking ${booking.id}. Sending confirmation email.`)
-										Email.send(
-											"onlinePaymentSuccess",
-											{
-												recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-												senderName: sails.config.events.title,
-												amountPaid,
-												booking,
-												event
-											},
-											{
-												from: event.name + ' <' + sails.config.events.email + '>',
-												to: booking.user.email,
-												bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
-												subject: 'Event booking payment processed'
-											},
-											function (err) {
-												Utility.emailError(err);
-											}
-										);
+                if (session) {
+                  if (!paymentMap[session.payment_intent]) {
+                    sails.log.debug(`Online payment - flagging booking ${booking.id} as paid etc ${JSON.stringify(session)}`);
+                    // Update the booking
+                    const amountPaid = sails.controllers.payment.amountPaid(session);
+                    booking.amountPaid += amountPaid;
+                    paymentMap[session.payment_intent] = amountPaid;
+                    paymentReference = JSON.stringify(paymentMap);
+                    Booking.update(booking.id, {
+                      paymentReference,
+                      paid: true,
+                      mop: 'Online',
+                      amountPaid: booking.amountPaid
+                    }).exec((err) => {
+                      if (err) {
+                        sails.log.error(`Online payment - failed to find booking to update for id ${booking.id}`);
+                        sails.log.error(err);
+                        return res.negotiate(err);
+                      }
+                      sails.log.debug(`Successfully updated payment details on booking ${booking.id}. Sending confirmation email.`)
+                      Email.send(
+                        "onlinePaymentSuccess",
+                        {
+                          recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                          senderName: sails.config.events.title,
+                          amountPaid,
+                          booking,
+                          event
+                        },
+                        {
+                          from: event.name + ' <' + sails.config.events.email + '>',
+                          to: booking.user.email,
+                          bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+                          subject: 'Event booking payment processed'
+                        },
+                        function (err) {
+                          Utility.emailError(err);
+                        }
+                      );
 
-									});
-								}
+                    });
+                  } else {
+                    sails.log.warn(`Online payment for booking ${booking.id} reference ${session.payment_intent} already processed!`);
+                  }
+                }
 							}
 						});
 				}
@@ -565,7 +581,7 @@ module.exports = {
 	 * Online payment cancelled
 	 */
 	paymentCancelled: async (req, res) => {
-		sails.log.debug('Payment cancelled');
+		sails.log.debug('=======Payment cancelled=======');
 		const sessionId = req.query.session_id;
 		Booking.find({ paymentSessionId: sessionId })
 			.populate('user')
