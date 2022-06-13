@@ -695,7 +695,8 @@ module.exports = {
                       }
                       else {
                         // Existing booking - has the amount owed changed for a paid booking?
-                        if (existingBooking.places != booking.places) {
+                        if (booking.paid && existingBooking.places != booking.places) {
+                          // Could be a refund or more to pay
                           balance = (booking.places - existingBooking.places) * event.price;
                           refund = (balance <= 0) ? (balance * -1) : 0;
                         }
