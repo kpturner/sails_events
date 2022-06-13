@@ -119,7 +119,7 @@ module.exports = {
 						// [customer_email] - lets you prefill the email input in the form
 						// For full details see https://stripe.com/docs/api/checkout/sessions/create
 						try {
-							sails.log.debug(`Getting Stripe session for booking ref ${booking.ref} - places ${booking.place} `);
+							sails.log.debug(`Getting Stripe session for booking ref ${booking.ref} - places ${booking.places} `);
 							// The amount to pay (for a new booking) will be the event price multiplied
 							// by the number of places
 							let name = booking.event.name;
@@ -143,7 +143,7 @@ module.exports = {
 								name = name + ' (BALANCE)'
 							}
 							if (quantity > 0) {
-								session = await stripe.checkout.sessions.create({
+                const payload = {
 									payment_method_types: ['card'],
 									locale: 'en',
 									line_items: [
@@ -160,7 +160,9 @@ module.exports = {
 									// ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
 									success_url: `${domainURL}paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
 									cancel_url: `${domainURL}paymentcancelled?session_id={CHECKOUT_SESSION_ID}`
-								});
+								};
+                sails.log.debug(`Payload for session creation: ${JSON.stringify(payload)}`);
+								session = await stripe.checkout.sessions.create(payload);
 							} else {
 								sails.log.debug(`Not got Stripe session for booking ref ${booking.ref}. The booking is in credit.`);
 								return resolve(null);
