@@ -485,22 +485,50 @@ module.exports = {
 		} catch (err) {
 			sails.log.error(`Unable to determine amount paid from session ${session}`);
 		}
-		return amountPaid;
+    return Number(amountPaid.toFixed(2));
 	},
+
+  /**
+	 * Online payment issue
+	 */
+	handlePaymentIssue: async (booking, event, msg) => {
+    if (booking && event) {
+      sails.log.error(`Online payment attempt failed!. Sending failure email.`);
+      Email.send(
+        "onlinePaymentFailure",
+        {
+          recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+          senderName: sails.config.events.title,
+          msg
+        },
+        {
+          from: event.name + ' <' + sails.config.events.email + '>',
+          to: booking.user.email,
+          bcc: sails.controllers.booking.bookingBCC(booking, [event.organiser, event.organiser2, sails.config.events.developer]),
+          subject: 'An unexpected error occurred processing online payment'
+        },
+        function (err) {
+          Utility.emailError(err);
+        }
+      );
+    }
+  },
 
 	/**
 	 * Online payment success
 	 */
 	paymentSuccess: async (req, res) => {
 		sails.log.debug(`=======Successful payment ${req.query.session_id}=======`);
-		Booking.find({ paymentSessionId: req.query.session_id })
+    try {
+      Booking.find({ paymentSessionId: req.query.session_id })
 			.populate('event')
 			.populate('user')
 			.exec(async (err, bookings) => {
 				if (err || !bookings || bookings.length === 0) {
-					sails.log.error(`Online payment - failed to retrieve booking for ${req.query.session_id}`);
+          const msg = `Online payment - failed to retrieve booking for ${req.query.session_id}`;
+					sails.log.error(msg);
 					sails.log.error(err);
-					return res.negotiate(err);
+					sails.controllers.payment.handlePaymentIssue(null, null, msg);
 				} else {
 					const booking = bookings[0];
           sails.log.debug(`Successfully found booking ref ${booking.ref} for session id ${req.query.session_id}`);
@@ -509,9 +537,10 @@ module.exports = {
 						.populate('organiser2')
 						.exec(async (err, event) => {
 							if (err) {
-								sails.log.error(`Online payment - failed to retrieve event for booking ${booking.event.id}`);
+                const msg = `Online payment - failed to retrieve event for booking ${booking.event.id}`;
+								sails.log.error(msg);
 								sails.log.error(err);
-								return res.negotiate(err);
+								sails.controllers.payment.handlePaymentIssue(booking, null, msg);
 							}
 							else {
                 sails.log.debug(`Successfully found event "${event.name}" (id: ${event.id}) for ${booking.ref} for session id ${req.query.session_id}`);
@@ -519,7 +548,9 @@ module.exports = {
 								if (session) {
 									sails.log.debug(`Successfully fetched checkout session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id} paymentReference: ${booking.paymentReference})`);
 								} else {
-									sails.log.error(`Failed to fetch session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`);
+                  const msg = `Failed to fetch session for ${req.query.session_id} (booking: ${booking.id} event: ${booking.event.id})`;
+									sails.log.error(msg);
+                  sails.controllers.payment.handlePaymentIssue(booking, event, msg);
 								}
 								const paymentMap = booking.paymentReference ? JSON.parse(booking.paymentReference) : {};
                 if (session) {
@@ -537,11 +568,12 @@ module.exports = {
                       amountPaid: booking.amountPaid
                     }).exec((err) => {
                       if (err) {
-                        sails.log.error(`Online payment - failed to find booking to update for id ${booking.id}`);
+                        const msg = `Online payment - failed to find booking to update for id ${booking.id}`;
+                        sails.log.error(msg);
                         sails.log.error(err);
-                        return res.negotiate(err);
+                        sails.controllers.payment.handlePaymentIssue(booking, event, msg);
                       }
-                      sails.log.debug(`Successfully updated payment details on booking ${booking.id}. Sending confirmation email.`)
+                      sails.log.debug(`Successfully updated payment details on booking ${booking.id}. Sending confirmation email.`);
                       Email.send(
                         "onlinePaymentSuccess",
                         {
@@ -571,10 +603,11 @@ module.exports = {
 						});
 				}
 			});
-		res.view('dashboard', {
-			appUpdateRequested: false,
-			mimicUserRequested: false
-		});
+    } catch (err) {
+      sails.log.error('Unexpected error occurred processing payment');
+      sails.log.error(err);
+    }
+    return sails.controllers.booking.myBookings(req, res);
 	},
 
 	/**
@@ -636,14 +669,11 @@ module.exports = {
 							}
 						});
 					} else {
-						// Thge booking remains partially paid
+						// The booking remains partially paid
 					}
 				}
 			});
-		res.view('dashboard', {
-			appUpdateRequested: false,
-			mimicUserRequested: false
-		});
+      return sails.controllers.booking.myBookings(req, res);
 	}
 
 };

@@ -105,12 +105,12 @@ module.exports = {
 
     // Online payment reference(s)
     paymentReference: {
-      type: 'string'
+      type: 'text'
     },
 
     // Online refund reference(s)
     refundReference: {
-      type: 'string'
+      type: 'text'
     }
 
   }
