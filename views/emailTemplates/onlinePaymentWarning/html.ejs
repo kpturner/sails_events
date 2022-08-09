@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<p><i>Do not reply to this email. The recipient is not a human!</i></p>
+
+<p>Dear <%=recipientName%>,</p>
+
+<p>This is a courtesy email to let your know that your online payment for this event is incomplete.</p>
+<p>Please go to "My Bookings", select this booking and click "Update Booking" to go through the checkout process again.</p>
+<p>If you think you have been sent this email in error, please contact the organiser.</p>
+
+<p>
+	Booking ref: <b><%=details.ref%></b>
+	<br>Event: <%=event.name%>
+	<br>On: <%=eventDate%> at <%=event.time%>
+	<br>At: <%-event.venue%>
+	<br>Organiser: <%=event.organiser.name%> (<%=event.organiser.email%>) <%=(event.organiser.phone||"")%>
+	<br>Info: <%-event.blurb%>
+	<br>Menu: <%-event.menu%>
+	<br>Dress code: <%-event.dressCode%>
+	<br>Balance due: £<%=(details.amountPaid?details.cost-details.amountPaid:details.cost)%>
+	<br>
+</p>
+
+<p>Yours S&F,<br/><%=senderName%></p>
+
+<p><i>Do not reply to this email. The recipient is not a human!</i></p>

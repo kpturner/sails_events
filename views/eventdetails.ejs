@@ -522,6 +522,15 @@
               </div>
 
               <div class="control-group form-group col-md-10"
+                ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
+                                      eventdetails.latePaymentChecking.$dirty}" ng-show="eventForm.onlinePayments">
+                <label>
+                  <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" />
+                  &nbsp;&nbsp;&nbsp;Send reminders for incomplete payments?
+                </label>
+              </div>
+
+              <div class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.paymentdetails.$invalid &&
                                       eventdetails.paymentdetails.$dirty}" ng-hide="eventForm.free || eventForm.onlinePayments">
                 <label>Payment details</label>

@@ -5,6 +5,9 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var moment = require('moment');
+const Utility = require('../services/Utility');
+
 module.exports = {
 
   /**
@@ -2005,6 +2008,60 @@ module.exports = {
   },
 
   /**
+   * Handle incomplete online payments
+   */
+  handleIncompleteOnlinePayments: function (event, bookings) {
+    bookings.forEach(function (booking) {
+
+      // How late in days?
+      const late = moment().diff(moment(booking.bookingDate), 'days');
+      const daysSinceReminded = moment().diff(moment(booking.lastPaymentReminder), 'days');
+      let formattedDate = event.date.toString();
+      formattedDate = formattedDate.substr(0, formattedDate.indexOf("00:00:00"));
+
+      if (late >= 1 && (!daysSinceReminded || daysSinceReminded >= 1)) {
+
+        // Send email reminder
+        const latePaymentReminder = {
+          recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+          senderName: sails.config.events.title,
+          eventDate: formattedDate,
+          event: event,
+          details: booking
+        };
+        const to = booking.user.email.toLowerCase();
+        const cc = [(event.organiser.email.toLowerCase() || ""), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
+        const recipients = {
+          //to: booking.user.email,
+          to: to,
+          cc: cc,
+          bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
+          subject: event.name + " - Incomplete payment reminder"
+        };
+        Email.send(
+          "onlinePaymentWarning",
+          latePaymentReminder,
+          recipients,
+          function (err) {
+            if (err) {
+              sails.log.error("Error occurred sending late payment reminder email to " + to);
+              sails.log.error(recipients);
+              // sails.log.error(latePaymentReminder);
+              sails.log.error(err);
+            }
+          }
+        );
+        sails.log.debug("Success: Incomplete payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "));
+        booking.remindersSent += 1;
+        Booking.update(booking.id, {
+          lastPaymentReminder: Utility.today(),
+          remindersSent: booking.remindersSent
+        }).exec(function (err, booking) { });
+      }
+    });
+  },
+
+  /**
    * Process late payers
    */
   processLatePayers: function () {
@@ -2063,7 +2120,10 @@ module.exports = {
         or: [{ regInterest: false }, { regInterest: null }],
         latePaymentChecking: true,
         closingDate: { '>=': today },
-        grace: { '>': 0 },
+        or: [
+          { grace: { '>': 0 } },
+          { onlinePayments: true }
+        ],
         price: { '>': 0 }
       },
       sort: {
@@ -2090,150 +2150,155 @@ module.exports = {
             .populate('user')
             .then(function (bookings) {
 
-              var remindersSent = false;
-              // Get bookings that will be late in 48 hours
-              if (event.grace > 2) {
-                var warnings = sails.controllers.booking.filterLate(bookings, (event.grace - 2));
-                if (warnings.length > 0) {
-                  var nw = [];
-                  warnings.forEach(function (booking, b) {
-                    var reminderDeadline = Utility.today();
-                    reminderDeadline.setDate(reminderDeadline.getDate() - 2);
-                    if (booking.lastPaymentReminder) {
-                      reminderDeadline.setDate(booking.lastPaymentReminder.getDate() + (sails.config.events.latePaymentReminderInterval - 2));
-                    }
-                    if (reminderDeadline <= today) {
-                      nw.push(booking)
-                    }
-                  })
-                  if (nw.length > 0) {
-                    // Send a list to the organiser warning of bookings that will get late payment reminders within
-                    // 48 hours
-                    var to = [event.organiser.email.toLowerCase(), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
-                    ////if (sails.config.events.reminderTestMode) {
-                    ////	to="";
-                    ////}
-                    remindersSent = true;
-                    const latePaymentWarning = {
-                      recipientName: Utility.recipient(event.organiser.salutation, event.organiser.firstName, event.organiser.surname),
-                      senderName: sails.config.events.title,
-                      reminderTestMode: sails.config.events.reminderTestMode,
-                      eventDate: formattedDate,
-                      event: event,
-                      bookings: nw
-                    };
-                    const recipients = {
-                      //to: booking.user.email,
-                      to: to,
-                      bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
-                      subject: event.name + " - Late payment reminder warning"
-                    };
-                    Email.send(
-                      "latePaymentWarning",
-                      latePaymentWarning,
-                      recipients,
-                      function (err) {
-                        if (err) {
-                          sails.log.error("Error occurred sending late payment warning email to " + to);
-                          sails.log.error(recipients);
-                          // sails.log.error(latePaymentWarning);
-                          sails.log.error(err);
-                        }
-                        emailLate();
+              // Treat incomplete online payments separately
+              if (event.onlinePayments) {
+                sails.controllers.booking.handleIncompleteOnlinePayments(event, bookings);
+              } else {
+                var remindersSent = false;
+                // Get bookings that will be late in 48 hours
+                if (event.grace > 2) {
+                  var warnings = sails.controllers.booking.filterLate(bookings, (event.grace - 2));
+                  if (warnings.length > 0) {
+                    var nw = [];
+                    warnings.forEach(function (booking, b) {
+                      var reminderDeadline = Utility.today();
+                      reminderDeadline.setDate(reminderDeadline.getDate() - 2);
+                      if (booking.lastPaymentReminder) {
+                        reminderDeadline.setDate(booking.lastPaymentReminder.getDate() + (sails.config.events.latePaymentReminderInterval - 2));
                       }
-                    )
+                      if (reminderDeadline <= today) {
+                        nw.push(booking)
+                      }
+                    })
+                    if (nw.length > 0) {
+                      // Send a list to the organiser warning of bookings that will get late payment reminders within
+                      // 48 hours
+                      var to = [event.organiser.email.toLowerCase(), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
+                      ////if (sails.config.events.reminderTestMode) {
+                      ////	to="";
+                      ////}
+                      remindersSent = true;
+                      const latePaymentWarning = {
+                        recipientName: Utility.recipient(event.organiser.salutation, event.organiser.firstName, event.organiser.surname),
+                        senderName: sails.config.events.title,
+                        reminderTestMode: sails.config.events.reminderTestMode,
+                        eventDate: formattedDate,
+                        event: event,
+                        bookings: nw
+                      };
+                      const recipients = {
+                        //to: booking.user.email,
+                        to: to,
+                        bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
+                        subject: event.name + " - Late payment reminder warning"
+                      };
+                      Email.send(
+                        "latePaymentWarning",
+                        latePaymentWarning,
+                        recipients,
+                        function (err) {
+                          if (err) {
+                            sails.log.error("Error occurred sending late payment warning email to " + to);
+                            sails.log.error(recipients);
+                            // sails.log.error(latePaymentWarning);
+                            sails.log.error(err);
+                          }
+                          emailLate();
+                        }
+                      )
+                    }
                   }
                 }
-              }
 
-              // If we haven't emailed the late guys then do it now
-              if (!remindersSent) {
-                emailLate();
-              }
+                // If we haven't emailed the late guys then do it now
+                if (!remindersSent) {
+                  emailLate();
+                }
 
-              // Hoisted function to process emails for late payers
-              function emailLate() {
-                // Filter bookings so we only have late payers
-                //Utility.diagnosticEmail(bookings.slice(),"Bookings pre-filter");
-                bookings = sails.controllers.booking.filterLate(bookings, event.grace);
+                // Hoisted function to process emails for late payers
+                function emailLate() {
+                  // Filter bookings so we only have late payers
+                  //Utility.diagnosticEmail(bookings.slice(),"Bookings pre-filter");
+                  bookings = sails.controllers.booking.filterLate(bookings, event.grace);
 
-                // Process late payers using async so that the emails do not go simultaneously
-                async.each(bookings, function (booking, next) {
-                  // Only email a reminder if a week has passed since last reminder
-                  var reminderDeadline = Utility.today();
-                  if (booking.lastPaymentReminder) {
-                    reminderDeadline.setDate(booking.lastPaymentReminder.getDate() + sails.config.events.latePaymentReminderInterval);
-                  }
-                  //sails.log.debug(booking.user.name+" reminder deadline "+reminderDeadline);
-                  if (reminderDeadline <= today) {
-                    if (sails.config.events.reminderTestMode) {
-                      sails.log.debug("Reminder test mode: " + Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname));
-                      next();
+                  // Process late payers using async so that the emails do not go simultaneously
+                  async.each(bookings, function (booking, next) {
+                    // Only email a reminder if a week has passed since last reminder
+                    var reminderDeadline = Utility.today();
+                    if (booking.lastPaymentReminder) {
+                      reminderDeadline.setDate(booking.lastPaymentReminder.getDate() + sails.config.events.latePaymentReminderInterval);
                     }
-                    sails.log.debug("Issuing late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "));
-                    // Update the booking so we don't spam them
-                    var to = booking.user.email.toLowerCase();
-                    var cc = [(event.organiser.email.toLowerCase() || ""), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
-                    // Update the booking whether we are in test mode or not
-                    var howMany = (!booking.remindersSent) ? 1 : booking.remindersSent + 1;
-                    Booking.update(booking.id, {
-                      lastPaymentReminder: today,
-                      remindersSent: howMany
-                    }).exec(function (err, booking) { });
-
-                    // In test mode, make sure only the developer gets an email
-                    ///if (sails.config.events.reminderTestMode) {
-                    ///    to="";
-                    ///}
-
-                    var dl = new Date(booking.bookingDate);
-                    dl.setDate(dl.getDate() + event.grace);
-                    dl = dl.toString();
-                    var deadline = dl.substr(0, dl.indexOf(":") - 2);
-
-                    // Send email reminder
-                    const latePaymentReminder = {
-                      recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
-                      senderName: sails.config.events.title,
-                      eventDate: formattedDate,
-                      event: event,
-                      deadline: deadline,
-                      details: booking
-                    };
-                    const recipients = {
-                      //to: booking.user.email,
-                      to: to,
-                      cc: cc,
-                      bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
-                      subject: event.name + " - Late payment reminder"
-                    };
-                    Email.send(
-                      "latePaymentReminder",
-                      latePaymentReminder,
-                      recipients,
-                      function (err) {
-                        if (err) {
-                          sails.log.error("Error occurred sending late payment reminder email to " + to);
-                          sails.log.error(recipients);
-                          // sails.log.error(latePaymentReminder);
-                          sails.log.error(err);
-                        }
-                        next(); // Next booking
+                    //sails.log.debug(booking.user.name+" reminder deadline "+reminderDeadline);
+                    if (reminderDeadline <= today) {
+                      if (sails.config.events.reminderTestMode) {
+                        sails.log.debug("Reminder test mode: " + Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname));
+                        next();
                       }
-                    );
-                    sails.log.debug("Success: Late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "));
-                  }
-                  else {
-                    next(); // Next booking
-                  }
-                }, function (err) {
-                  // All bookings done
-                  if (err) {
-                    sails.log.error(err);
-                  }
-                  //Utility.diagnosticEmail("Late payers processed","Late payment daemon");
-                })
+                      sails.log.debug("Issuing late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "));
+                      // Update the booking so we don't spam them
+                      var to = booking.user.email.toLowerCase();
+                      var cc = [(event.organiser.email.toLowerCase() || ""), (event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "")];
+                      // Update the booking whether we are in test mode or not
+                      var howMany = (!booking.remindersSent) ? 1 : booking.remindersSent + 1;
+                      Booking.update(booking.id, {
+                        lastPaymentReminder: today,
+                        remindersSent: howMany
+                      }).exec(function (err, booking) { });
 
+                      // In test mode, make sure only the developer gets an email
+                      ///if (sails.config.events.reminderTestMode) {
+                      ///    to="";
+                      ///}
+
+                      var dl = new Date(booking.bookingDate);
+                      dl.setDate(dl.getDate() + event.grace);
+                      dl = dl.toString();
+                      var deadline = dl.substr(0, dl.indexOf(":") - 2);
+
+                      // Send email reminder
+                      const latePaymentReminder = {
+                        recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
+                        senderName: sails.config.events.title,
+                        eventDate: formattedDate,
+                        event: event,
+                        deadline: deadline,
+                        details: booking
+                      };
+                      const recipients = {
+                        //to: booking.user.email,
+                        to: to,
+                        cc: cc,
+                        bcc: (sails.config.events.emailDeveloperOnLatePayment && sails.config.events.developer && sails.config.events.developer != event.organiser.email) ? sails.config.events.developer : "",
+                        subject: event.name + " - Late payment reminder"
+                      };
+                      Email.send(
+                        "latePaymentReminder",
+                        latePaymentReminder,
+                        recipients,
+                        function (err) {
+                          if (err) {
+                            sails.log.error("Error occurred sending late payment reminder email to " + to);
+                            sails.log.error(recipients);
+                            // sails.log.error(latePaymentReminder);
+                            sails.log.error(err);
+                          }
+                        }
+                      );
+                      sails.log.debug("Success: Late payment reminder for " + event.name + " for " + booking.user.name + ((sails.config.events.reminderTestMode) ? " in test mode" : " "));
+                      next(); // Next booking
+                    }
+                    else {
+                      next(); // Next booking
+                    }
+                  }, function (err) {
+                    // All bookings done
+                    if (err) {
+                      sails.log.error(err);
+                    }
+                    //Utility.diagnosticEmail("Late payers processed","Late payment daemon");
+                  })
+
+                }
               }
 
             })

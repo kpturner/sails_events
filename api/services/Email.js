@@ -58,9 +58,9 @@ module.exports = {
             });
         }
 
-        let to = format(opts.to || []);
-        let cc = format(opts.cc || []);
-        let bcc = format(opts.bcc || []);
+        let to = format(opts.to || []).filter(address => (address.email.length >= 1));
+        let cc = format(opts.cc || []).filter(address => (address.email.length >= 1));
+        let bcc = format(opts.bcc || []).filter(address => (address.email.length >= 1));
 
         sendSmtpEmail = Object.assign(sendSmtpEmail, {
             sender,
