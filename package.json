@@ -63,7 +63,7 @@
     "stripe": "^8.14.0",
     "twit": "^2.2.5",
     "uuid": "^3.2.1",
-    "validator": "^3.41.2",
+    "validator": "^13.7.0",
     "winston": "^1.0.1"
   },
   "scripts": {
