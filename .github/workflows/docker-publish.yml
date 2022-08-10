@@ -41,7 +41,7 @@ jobs:
 
       - name: Creat config file for from secret
         run: |
-          echo ${{ secrets.PGL_CONFIG }} >> ./config/secrets
+          echo "${{ secrets.PGL_CONFIG }}" >> ./config/secrets
 
       - name: Build and push with "latest"
         uses: ./.github/workflows/composites/docker-build-push-version
