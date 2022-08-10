@@ -29,7 +29,7 @@ while [[ "$#" -gt 0 ]]; do
         -p|--port) port="$2"; shift ;;
         -f|--file) file="$2"; shift ;;
         -a|--action) action="$2"; shift ;;
-        -i|--install install=1;;
+        -i|--install) install=1;;
         -u|--update) update=1;;
         *)
         echo "Unknown parameter passed: $1";
