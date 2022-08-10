@@ -46,7 +46,7 @@ jobs:
       - name: Build and push with "latest"
         uses: ./.github/workflows/composites/docker-build-push-version
         with:
-          version: latest
+          version: pgl-latest
           username-github: ${{ github.actor }}
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
