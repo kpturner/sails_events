@@ -39,7 +39,7 @@ jobs:
       #    assets: 'pgl'
       #    ecr-uri:  ${{ secrets.ECR_URI }}
 
-      - name: Creat config file for from secret
+      - name: Create config file for from secret
         run: |
           echo "${{ secrets.PGL_CONFIG }}" >> ./config/secrets
 

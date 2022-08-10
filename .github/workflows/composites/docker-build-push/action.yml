@@ -53,6 +53,6 @@ runs:
         build-args: |
           "assets=${{ inputs.assets }}"
         push: true
-        tags: ${{ inputs.registry }}/${{ inputs.repo }}/{{ inputs.config }}:${{ inputs.tag }}
+        tags: ${{ inputs.registry }}/${{ inputs.repo }}/{{ inputs.assets }}:${{ inputs.tag }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
