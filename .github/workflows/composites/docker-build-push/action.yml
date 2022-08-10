@@ -50,7 +50,7 @@ runs:
         file: ${{ inputs.dockerfile }}
         secret-files: |
           "localconfig=${{ inputs.config }}"
-        build-arg: |
+        build-args: |
           "assets=${{ inputs.assets }}"
         push: true
         tags: ${{ inputs.registry }}/${{ inputs.repo }}/{{ inputs.config }}:${{ inputs.tag }}

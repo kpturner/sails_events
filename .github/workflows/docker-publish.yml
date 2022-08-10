@@ -48,4 +48,4 @@ jobs:
           repo: 'kpturner/sails_events'
           config: 'local.pgl'
           assets: 'pgl'
-          ecr-uri:  ${{ secrets.ECR_URI }}
+          ecr-uri:  'ghcr.io'
