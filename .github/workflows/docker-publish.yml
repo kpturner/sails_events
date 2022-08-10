@@ -39,6 +39,10 @@ jobs:
       #    assets: 'pgl'
       #    ecr-uri:  ${{ secrets.ECR_URI }}
 
+      - name: Creat config file for from secret
+        run: |
+          echo ${{ secrets.PGL_CONFIG }} >> ./config/secrets
+
       - name: Build and push with "latest"
         uses: ./.github/workflows/composites/docker-build-push-version
         with:
@@ -46,6 +50,6 @@ jobs:
           username-github: ${{ github.actor }}
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
-          config: 'local.pgl'
+          config: './config/secrets'
           assets: 'pgl'
           ecr-uri:  'ghcr.io'

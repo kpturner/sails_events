@@ -51,10 +51,10 @@ module.exports.connections = {
   // This is the default MySQL database
   localhostMysqlServer: {
     adapter: 'sails-mysql',
-    host: 'localhost',
-    user: '',
-    password: '',
-    database: 'squareevents'
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || '',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_DATABASE || 'squareevents'
   },
 
   // This is the MySql server when deployted to Heroku
