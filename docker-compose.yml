@@ -5,7 +5,7 @@ services:
   events-redis:
     container_name: events-redis
     image: redislabs/redismod:latest
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./volume/redis/redis_data:/data
       - ./volume/redis/redis.conf:/usr/local/etc/redis/redis.conf
@@ -14,10 +14,10 @@ services:
     logging:
       driver: "json-file"
 
-  events:
-    container_name: events
-    image: sails-events
-    restart: always
+  sails_events:
+    container_name: sails_events
+    image: ghcr.io/kpturner/sails_events:${INSTANCE}-latest
+    restart: unless-stopped
     volumes:
       - ./volume/logs:/usr/src/app/logs
     extra_hosts:
