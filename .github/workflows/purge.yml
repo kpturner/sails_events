@@ -1,0 +1,48 @@
+# This workflow prunes old workflow runs for an entire repository.
+
+name: Workflow run purge
+
+on:
+  schedule:
+  - cron: '0 0 * * *'  # GMT
+  workflow_dispatch:
+    inputs:
+      ageInDays:
+        description: 'Runs of this age in days (and older) will be deleted'
+        required: false 
+        default: 30
+      additional_workflows:
+        description: 'Space delimited list of workflow files to add to the default'
+        required: false
+      deleteAll:
+        description: 'CAUTION: Delete all workflows! (any non-blank value)'
+        required: false
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+
+      - name: Check out the private purge action
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: fotechgroup/action-purge
+          path: ./action-purge
+
+      - name: Run purge
+        uses: ./action-purge
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ageInDays: ${{ inputs.ageInDays }}
+          additional_workflows: ${{ inputs.additional_workflows }}
+          deleteAll: ${{ inputs.deleteAll }}
+
+      - name: Fool post runner into working
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: fotechgroup/action-purge
+          path: ./action-purge
+  

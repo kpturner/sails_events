@@ -1,0 +1,38 @@
+name: Build and push image versions
+
+inputs:
+  version:
+    description: Version to tag
+    required: true
+  username-github:
+    description: User name
+    required: true
+  password-github:
+    description: Password
+    required: true
+  repo:
+    description: Repo
+    required: true
+  config:
+    description: Instance config (copied to local.js)
+    required: true
+  assets:
+    description: Instance assets folder
+    required: true
+  ecr-uri:
+    description: ECS docker image registry
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Build and push image to GitHub
+      id: build-and-push-panoptes-ui-github
+      uses: ./.github/workflows/composites/docker-build-push
+      with:
+        username: ${{ inputs.username-github }}
+        password: ${{ inputs.password-github }}
+        dockerfile: Dockerfile
+        repo: ${{ inputs.repo }}
+        config: ${{ inputs.config }}
+        assets: ${{ inputs.assets }}
+        tag: ${{ inputs.version }}

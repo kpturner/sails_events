@@ -8,7 +8,8 @@ function usage {
     echo "Usage: ./docker.sh"
     echo "--install            | -i   [Install docker]"
     echo "--project            | -o   [sails-events(default)]"
-    echo "--config             | -c   [blank for default or pgl,csl,hamtun,mtsfc,pgsl]"
+    echo "--config             | -c   [blank for default or local.pgl,local.csl,local.hamtun,local.mtsfc,local.pgsl]"
+    echo "--assets             | -s   [blank for default or pgl,csl,hamtun,mtsfc,pgsl]"
     echo "--port               | -p   [1337(default)]"
     echo "--file               | -f   [docker-compose.yml(default)]"
     echo "--action             | -a   ['up'(default), 'down']"
@@ -21,6 +22,7 @@ action="up -d"
 update=""
 port=1337
 config="js"
+assets=''
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -29,6 +31,7 @@ while [[ "$#" -gt 0 ]]; do
         -p|--port) port="$2"; shift ;;
         -f|--file) file="$2"; shift ;;
         -a|--action) action="$2"; shift ;;
+        -s|--assets) action="$2"; shift ;;
         -i|--install) install=1;;
         -u|--update) update=1;;
         *)
@@ -52,7 +55,7 @@ if [[ $config == '' ]]; then
     config=js
 fi
 
-if [[ $config != "pgl" && $config != "pgsl" && $config != "mtsfc" && $config != "csl" && $config != "hamtun" && $config != "js" ]]; then
+if [[ $config != "local.pgl" && $config != "local.pgsl" && $config != "local.mtsfc" && $config != "local.csl" && $config != "local.hamtun" && $config != "local.js" ]]; then
     usage;
     exit 1;
 fi
@@ -78,5 +81,5 @@ if [[ $install ]]; then
 fi
 
 # Run docker-compose
-docker build --secret id=localconfig,src=./config/local.$config -t $project  .
+docker build --build-arg assets=$assets --secret id=localconfig,src=./config/$config -t $project  .
 EVENTS_PORT=$port docker-compose  -p $project -f $file $action
