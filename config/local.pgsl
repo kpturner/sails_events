@@ -9,7 +9,7 @@ module.exports = {
   // Event management details
   events: {
       socialMedia: false,
-      skin:      "skins/pgslskin.css", 
+      skin:      "skins/pgslskin.css",
       maintenance: false,
       admins: ['kevin@kpturner.co.uk'],
       developer: 'kevin@kpturner.co.uk',
@@ -24,16 +24,16 @@ module.exports = {
       lodgeYearLabel: 'PGSL year',
       lodgeYearDownloadLabel: 'PGSLyear',
       lodgeDefault: 'PGSL',
-      lodgeNoDefault: 9263,  
-      quickStart: "/doc/pgsl/quick_start.pdf", 
-      usersCanViewBookings: true, 
-      help: "jon.masters@yougo.world", 
+      lodgeNoDefault: 9263,
+      quickStart: "/doc/pgsl/quick_start.pdf",
+      usersCanViewBookings: true,
+      help: "jon.masters@yougo.world",
       // Methods of payment
       mops: ['Cheque', 'BACS', 'Non-paying Guest', 'Cash', 'Online'],
       smtpApi: "nodemailer",
       DKIM: null,
   },
-  
+
   passport: {
     local: {
         strategy: require('passport-local').Strategy
@@ -45,12 +45,12 @@ module.exports = {
     },
 
     twitter: null,
-    
+
     facebook: null,
-    
+
     google: null,
   },
-   
+
   mutex: {
     adapter: 'lockfile'
   },
@@ -80,35 +80,36 @@ module.exports = {
   //   key: require('fs').readFileSync(__dirname + '/ssl/my_apps_ssl.key'),
   //   cert: require('fs').readFileSync(__dirname + '/ssl/my_apps_ssl.crt')
   // },
-  
-  
-  // The example below uses a self-signed certificate (.pfx) converted to a key.pem and 
+
+
+  // The example below uses a self-signed certificate (.pfx) converted to a key.pem and
   // cert.pem file using openssl as follows (assumes mytest.pfx)
   // (info source is https://wiki.cac.washington.edu/display/infra/Extracting+Certificate+and+Private+Key+Files+from+a+.pfx+File):
   // "openssl pkcs12 -in mytest.pfx -nocerts -out key.pem -nodes"
   // "openssl pkcs12 -in mytest.pfx -nokeys -out cert.pem"
   // also did this but didn't use the resulting file
   // "openssl rsa -in key.pem -out server.key"
-  //ssl: {     
+  //ssl: {
   //   key: require('fs').readFileSync(__dirname + '/ssl/key.pem'),
   //   cert: require('fs').readFileSync(__dirname + '/ssl/cert.pem')
   //},
-  
+
   // IMPORTANT: Uncomment and correct the next line
   proxyHost: 'http://9263dining.org.uk/',
-  port: 1337,
+  port: process.env.EVENTS_PORT || 1337,
   connections: {
     localhostMysqlServer: {
       adapter: 'sails-mysql',
-      host: 'localhost',
+      host: process.env.DB_HOST || 'localhost',
       user: '9263dini_sailsdb',
       password: 'Squ@reEvents9263',
       database: '9263dini_sailsdb'
     }
-  },  
-    
+  },
+
   session: {
        secret: 'b6d843339ae032a03af593ca4a98298p',
+       host: process.env.REDIS_HOST || 'localhost',
   },
 
   // Email configuration
@@ -131,13 +132,13 @@ module.exports = {
       }
 	  },
     from:  process.env.SMTP_SENDER || 'PGSL 9263 Events <noreply@squareevents.org>', // sender address
-    testMode:  false 
+    testMode:  false
   },
-  
+
   log: {
     //level: 'silly'
   },
-  
+
   /***************************************************************************
    * The `port` setting determines which TCP port your app will be           *
    * deployed on.                                                            *
@@ -175,5 +176,5 @@ module.exports = {
    ***************************************************************************/
 
    // environment: process.env.NODE_ENV || 'development'
-  
+
 };

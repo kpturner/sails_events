@@ -77,7 +77,7 @@ module.exports.events = {
 	email: "noreply@squareevents.org",
 
 	// Logo
-	logo: "/images/provincial/crest.png",
+	logo: "/images/pgl/crest.png",
 
 	// Logo link
 	logoLink: "http://www.hiowmasons.org/",
@@ -160,7 +160,7 @@ module.exports.events = {
       keySelector: "default",
       privateKey: "default.squareevents.org.pem"
 	},
-	
+
 	onlinePaymentPlatforms: [
 	]
 

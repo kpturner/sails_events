@@ -1,16 +1,25 @@
-FROM node:carbon
+# syntax = docker/dockerfile:1.2
+
+FROM node:10
+
+ARG assets=pgl
+
 WORKDIR /usr/src/app
-
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-RUN npm install
 
 # Bundle app source
 COPY . .
 
+ENV NODE_ENV=production
+ENV EVENTS_PORT=1337
+
+RUN npm install
+RUN npm build
+
+RUN --mount=type=secret,id=localconfig \
+  cp /run/secrets/localconfig ./config/local.js
+
+COPY ./assets/images/$assets/favicon.ico ./assets/
+
 EXPOSE 1337
 
-CMD [ "npm", "start" ]
+CMD [ "node", "app.js", "--prod"]

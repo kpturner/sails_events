@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+
+  events-redis:
+    container_name: events-redis
+    image: redislabs/redismod:latest
+    restart: always
+    volumes:
+      - ./volume/redis/redis_data:/data
+      - ./volume/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - container=docker
+    logging:
+      driver: "json-file"
+
+  events:
+    container_name: events
+    image: sails-events
+    restart: always
+    volumes:
+      - ./volume/logs:/usr/src/app/logs
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - container=docker
+      - REDIS_HOST=events-redis
+      - DB_HOST=host.docker.internal
+      - BLUEBIRD_W_FORGOTTEN_RETURN=0
+    ports:
+      - "${EVENTS_PORT}:1337"
