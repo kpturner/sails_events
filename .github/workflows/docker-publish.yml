@@ -19,6 +19,16 @@ jobs:
 
     steps:
 
+      - name: Create config file for from secret
+        run: |
+          echo "${{ secrets.PGL_CONFIG }}" >> secrets
+          echo "here is a list"
+          ls .
+          echo "here are the contents"
+          cat secrets
+          cat secrets | sed 's/./& /g'
+          echo "Did you see shit?"
+
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
@@ -39,16 +49,6 @@ jobs:
       #    assets: 'pgl'
       #    ecr-uri:  ${{ secrets.ECR_URI }}
 
-      - name: Create config file for from secret
-        run: |
-          echo "${{ secrets.PGL_CONFIG }}" >> ./config/secrets
-          echo "here is a list"
-          ls ./config
-          echo "here are the contents"
-          cat ./config/secrets
-          cat ./config/secrets | sed 's/./& /g'
-          echo "Did you see shit?"
-
       - name: Build and push with "latest"
         uses: ./.github/workflows/composites/docker-build-push-version
         with:
@@ -56,6 +56,6 @@ jobs:
           username-github: ${{ github.actor }}
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
-          config: './config/secrets'
+          config: 'secrets'
           assets: 'pgl'
-          ecr-uri:  'ghcr.io'
+          ecr-uri: 'ghcr.io'
