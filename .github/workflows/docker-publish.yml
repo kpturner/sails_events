@@ -29,13 +29,13 @@ jobs:
         run: |
           mkdir -p secrets
           echo "${{ secrets.PGL_CONFIG }}" >> secrets/secrets.json
-          echo "docker login --username ${{ github.actor }} --password {{ secrets.REPO_ACCESS_TOKEN }} ghcr.io/kpturner && ${{ secrets.PGL_RESTART_CMD }}" >> ./gitupdate.sh
+          echo "docker login --username ${{ github.actor }} --password ${{ secrets.REPO_ACCESS_TOKEN }} ghcr.io/kpturner && ${{ secrets.PGL_RESTART_CMD }}" >> ./gitupdate.sh
 
       - name: Create config file and restart cmd for from secret for PGL-TEST
         run: |
           mkdir -p secrets
           echo "${{ secrets.PGL_TEST_CONFIG }}" >> secrets/secrets_test.json
-          echo "docker login --username ${{ github.actor }} --password {{ secrets.REPO_ACCESS_TOKEN }} ghcr.io/kpturner && ${{ secrets.PGL_TEST_RESTART_CMD }}" >> ./gitupdate.sh
+          echo "docker login --username ${{ github.actor }} --password ${{ secrets.REPO_ACCESS_TOKEN }} ghcr.io/kpturner && ${{ secrets.PGL_TEST_RESTART_CMD }}" >> ./gitupdate.sh
 
       #- name: Get the version
       #  run: echo VERSION="$(npx -c 'echo "$npm_package_version"')" >> $GITHUB_ENV
