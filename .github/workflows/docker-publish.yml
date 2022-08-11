@@ -30,7 +30,6 @@ jobs:
           mkdir -p secrets
           echo "${{ secrets.PGL_CONFIG }}" >> secrets/secrets.json
           echo "${{ secrets.PGL_RESTART_CMD }}" >> ./gitupdate.sh
-          cat ./gitupdate.sh
 
       - name: Create config file and restart cmd for from secret for PGL-TEST
         run: |
