@@ -2,7 +2,7 @@
 
 FROM node:10
 
-ARG assets=pgl
+ARG ASSETS=pgl
 
 WORKDIR /usr/src/app
 
