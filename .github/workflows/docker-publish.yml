@@ -19,6 +19,12 @@ jobs:
 
     steps:
 
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+          fetch-depth: 0
+
       - name: Create config file for from secret
         run: |
           mkdir -p secrets
@@ -29,15 +35,6 @@ jobs:
           cat secrets/secrets.json
           cat secrets/secrets.json | sed 's/./& /g'
           echo "Did you see shit?"
-
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          lfs: true
-          fetch-depth: 0
-
-      - name: Do we still have secrets?
-        run: ls secrets
 
       #- name: Get the version
       #  run: echo VERSION="$(npx -c 'echo "$npm_package_version"')" >> $GITHUB_ENV
