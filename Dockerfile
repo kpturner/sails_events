@@ -13,7 +13,7 @@ ENV NODE_ENV=production
 ENV EVENTS_PORT=1337
 
 RUN npm install
-RUN npm build
+RUN npm run build
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
@@ -27,7 +27,7 @@ RUN --mount=type=secret,id=SECRETS \
 #  cat ./config/local.js | sed 's/./& /g' && \
 #  echo "======================="
 
-COPY ./assets/images/$ASSETS/favicon.ico ./assets/
+RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
