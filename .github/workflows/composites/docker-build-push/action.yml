@@ -54,5 +54,6 @@ runs:
           "ASSETS=${{ inputs.assets }}"
         push: true
         tags: ${{ inputs.registry }}/${{ inputs.repo }}:${{ inputs.tag }}
+        # CAREFUL of caching as our test and live images will end up the same
         # cache-from: type=gha
         # cache-to: type=gha,mode=max
