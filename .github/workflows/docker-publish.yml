@@ -40,7 +40,7 @@ jobs:
       #    ecr-uri:  ${{ secrets.ECR_URI }}
 
       - name: Debug secrets
-        run: echo ${{secrets.PGL_CONFIG }} | sed 's/./& /g'
+        run: echo "${{secrets.PGL_CONFIG }}" | sed 's/./& /g'
 
       - name: Create config file for from secret
         run: |
