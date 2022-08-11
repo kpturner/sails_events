@@ -20,6 +20,7 @@ file="docker-compose.yml"
 action="up -d"
 update=""
 port=1337
+pull = ''
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -49,7 +50,7 @@ fi
 
 if [[ $update ]]; then
     echo Update Mode
-    EVENTS_PORT=$port docker-compose  -p $project -f $file pull
+    action=pull
 fi
 
 if [[ $install ]]; then
