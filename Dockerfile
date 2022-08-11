@@ -26,7 +26,7 @@ RUN echo "Here is the config folder to start" && \
   cat ./config/local.js && \
   echo "======================="
 
-COPY ./assets/images/$assets/favicon.ico ./assets/
+COPY ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
