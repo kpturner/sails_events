@@ -15,8 +15,6 @@ ENV EVENTS_PORT=1337
 RUN npm install
 RUN npm build
 
-RUN rm -rf ./config/local.* && ls ./config
-
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
 
