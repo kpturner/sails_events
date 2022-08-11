@@ -30,7 +30,7 @@ In order to use the command you have to login to `ghcr.io` using a PAT as a pass
 `docker login ghcr.io/kpturner`
 
 ## Software updates
-When the image is built the contents of `gitupdate.sh` is overwritten (from a secret) to simply contain `./docker.sh -a up -u -t <tag> -p <port>`
+When the image is built the contents of `gitupdate.sh` is overwritten to simply `docker login` and then `./docker.sh -a up -u -t <tag> -p <port>`
 
 ## Resources
 
