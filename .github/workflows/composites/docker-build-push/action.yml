@@ -54,5 +54,5 @@ runs:
           "ASSETS=${{ inputs.assets }}"
         push: true
         tags: ${{ inputs.registry }}/${{ inputs.repo }}:${{ inputs.tag }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        # cache-from: type=gha
+        # cache-to: type=gha,mode=max
