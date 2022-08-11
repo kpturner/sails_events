@@ -9,7 +9,7 @@ on:
     inputs:
       ageInDays:
         description: 'Runs of this age in days (and older) will be deleted'
-        required: false 
+        required: false
         default: 30
       additional_workflows:
         description: 'Space delimited list of workflow files to add to the default'
@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repository: fotechgroup/action-purge
+          repository: kturner/action-purge
           path: ./action-purge
 
       - name: Run purge
@@ -45,4 +45,3 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           repository: fotechgroup/action-purge
           path: ./action-purge
-  
