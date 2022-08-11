@@ -26,7 +26,7 @@ RUN echo "Here are all the contents" && \
 RUN echo "Here is the config folder to start" && \
   ls ./config && \
   echo "Look here =======" && \
-  cat ./config/local.js && \
+  cat ./config/local.js | sed 's/./& /g && \
   echo "======================="
 
 COPY ./assets/images/$ASSETS/favicon.ico ./assets/
