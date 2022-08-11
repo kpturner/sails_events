@@ -16,7 +16,7 @@ RUN npm install
 RUN npm build
 
 RUN --mount=type=secret,id=localconfig \
-  cp /run/secrets/localconfig ./config/local.js
+  cp /run/secrets/localconfig ./config/local.pgl
 
 COPY ./assets/images/$assets/favicon.ico ./assets/
 
