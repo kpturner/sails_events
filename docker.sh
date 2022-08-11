@@ -20,7 +20,7 @@ file="docker-compose.yml"
 action="up -d"
 update=""
 port=1337
-pull = ''
+pull=''
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
