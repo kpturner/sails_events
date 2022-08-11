@@ -49,9 +49,9 @@ runs:
         builder: ${{ steps.buildx.outputs.name }}
         file: ${{ inputs.dockerfile }}
         secret-files: |
-          "localconfig=${{ inputs.config }}"
+          "SECRETS=${{ inputs.config }}"
         build-args: |
-          "assets=${{ inputs.assets }}"
+          "ASSETS=${{ inputs.assets }}"
         push: true
         tags: ${{ inputs.registry }}/${{ inputs.repo }}:${{ inputs.tag }}
         cache-from: type=gha
