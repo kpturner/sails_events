@@ -20,6 +20,9 @@ RUN rm -rf ./config/local.* && ls ./config
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
 
+RUN echo "Here are all the contents" && \
+  ls
+
 RUN echo "Here is the config folder to start" && \
   ls ./config && \
   echo "Look here =======" && \
