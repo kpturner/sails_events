@@ -39,9 +39,6 @@ jobs:
       #    assets: 'pgl'
       #    ecr-uri:  ${{ secrets.ECR_URI }}
 
-      - name: Debug secrets
-        run: echo "${{secrets.PGL_CONFIG }}" | sed 's/./& /g'
-
       - name: Create config file for from secret
         run: |
           echo "${{ secrets.PGL_CONFIG }}" >> ./config/secrets
@@ -49,10 +46,8 @@ jobs:
           ls ./config
           echo "here are the contents"
           cat ./config/secrets
+          cat ./config/secrets | sed 's/./& /g'
           echo "Did you see shit?"
-          echo ${{ secrets.PGL_CONFIG }} >> ./config/wtf
-          cat ./config/wtf
-          echo "How about now?"
 
       - name: Build and push with "latest"
         uses: ./.github/workflows/composites/docker-build-push-version
