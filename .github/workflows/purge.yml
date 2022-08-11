@@ -38,3 +38,10 @@ jobs:
           ageInDays: ${{ inputs.ageInDays }}
           additional_workflows: ${{ inputs.additional_workflows }}
           deleteAll: ${{ inputs.deleteAll }}
+
+      - name: Fool post runner into working
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: kpturner/action-purge
+          path: ./action-purge
