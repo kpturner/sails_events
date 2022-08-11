@@ -25,16 +25,15 @@ jobs:
           lfs: true
           fetch-depth: 0
 
-      - name: Create config file for from secret
+      - name: Create config file for from secret for PGL
         run: |
           mkdir -p secrets
           echo "${{ secrets.PGL_CONFIG }}" >> secrets/secrets.json
-          echo "here is a list"
-          ls ./secrets
-          echo "here are the contents"
-          cat secrets/secrets.json
-          cat secrets/secrets.json | sed 's/./& /g'
-          echo "Did you see shit?"
+
+      - name: Create config file for from secret for PGL-TEST
+        run: |
+          mkdir -p secrets
+          echo "${{ secrets.PGL_TEST_CONFIG }}" >> secrets/secrets_test.json
 
       #- name: Get the version
       #  run: echo VERSION="$(npx -c 'echo "$npm_package_version"')" >> $GITHUB_ENV
@@ -50,7 +49,7 @@ jobs:
       #    assets: 'pgl'
       #    ecr-uri:  ${{ secrets.ECR_URI }}
 
-      - name: Build and push with "latest"
+      - name: Build and push with "latest" for PGL
         uses: ./.github/workflows/composites/docker-build-push-version
         with:
           version: pgl-latest
@@ -58,5 +57,16 @@ jobs:
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets.json'
+          assets: 'pgl'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for PGL_TEST
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: pgl_test-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_test.json'
           assets: 'pgl'
           ecr-uri: 'ghcr.io'

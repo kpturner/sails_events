@@ -50,7 +50,7 @@ fi
 
 if [[ $update ]]; then
     echo Update Mode
-    action=pull
+    EVENTS_PORT=$port INSTANCE=$instance docker-compose  -p $project -f $file pull
 fi
 
 if [[ $install ]]; then
@@ -69,4 +69,5 @@ if [[ $install ]]; then
 fi
 
 # Run docker-compose
+echo "Running docker-compose"
 EVENTS_PORT=$port INSTANCE=$instance docker-compose  -p $project -f $file $action
