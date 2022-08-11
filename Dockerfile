@@ -9,7 +9,6 @@ WORKDIR /usr/src/app
 # Bundle app source
 COPY . .
 
-ENV NODE_ENV=production
 ENV EVENTS_PORT=1337
 
 RUN npm install
