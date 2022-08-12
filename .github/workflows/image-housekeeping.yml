@@ -1,0 +1,20 @@
+name: Delete old container images
+
+on:
+  schedule:
+    - cron: '0 0 0 * *'  # the first day of the month
+  workflow-dispatch:
+
+jobs:
+  clean-ghcr:
+    name: Delete old unused container images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old images
+        uses: snok/container-retention-policy@v1
+        with:
+          image-names: sails-events*
+          cut-off: One hour ago UTC
+          keep-at-least: 1
+          account-type: personal
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
