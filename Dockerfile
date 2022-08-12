@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.2
 
-FROM node:10
+FROM node:16
 
 ARG ASSETS=pgl
 
