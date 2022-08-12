@@ -16,7 +16,7 @@ module.exports.events = {
 	// Default skin
 	skin:	"skins/defaultskin.css",
 
-  allowAppUpdate: (!process.env.ALLOW_APP_UPDATE || (process.env.ALLOW_APP_UPDATE && process.env.ALLOW_APP_UPDATE === '1')) ? true : false,
+  allowAppUpdate: ((typeof process.env.ALLOW_APP_UPDATE === 'undefined') || (process.env.ALLOW_APP_UPDATE && process.env.ALLOW_APP_UPDATE === '1')) ? true : false,
 
 	// Enter an email address if you want developer(s) to get bcc's on everything
   developer: process.env.DEVELOPER || "kevin@kpturner.co.uk",
