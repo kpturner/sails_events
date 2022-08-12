@@ -2,7 +2,7 @@ name: Delete old container images
 
 on:
   schedule:
-    - cron: "30 0 * * *" # 30 minutes past midnight
+    - cron: '0 0 * * *' # Midnight
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Delete old images
         uses: snok/container-retention-policy@v1
         with:
-          image-names: '*'
+          image-names: 'sails_events'
           cut-off: One minute ago UTC
           keep-at-least: 0
           account-type: personal

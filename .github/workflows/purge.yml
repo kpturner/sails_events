@@ -4,7 +4,7 @@ name: Workflow run purge
 
 on:
   schedule:
-  - cron: '0 0 * * *'  # GMT
+    - cron: '0 0 * * *'  # GMT
   workflow_dispatch:
     inputs:
       ageInDays:
