@@ -136,6 +136,7 @@ var AuthController = {
 
         req.session.eventBookings = false;
         res.view('dashboard', {
+            allowAppUpdate: sails.config.events.allowAppUpdate,
             appUpdateRequested: false,
             mimicUserRequested: false
         });

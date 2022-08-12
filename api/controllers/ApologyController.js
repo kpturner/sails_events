@@ -157,6 +157,7 @@ module.exports = {
 				}
 				else {
 					res.view('dashboard',{
+            allowAppUpdate: sails.config.events.allowAppUpdate,
 						appUpdateRequested: false,
 						mimicUserRequested: false
 					});

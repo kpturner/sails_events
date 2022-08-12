@@ -34,66 +34,66 @@ module.exports = {
 		res.view('users',{
 		  criteria: criteria,
 		  errors: req.flash('error')
-		});  
-	}, 
-	
-	
+		});
+	},
+
+
 	/**
 	 * Get organisers in name order
-	 */	
+	 */
 	organisers:function(req, res) {
-		
-			 
+
+
 		User.find({where:{isOrganiser:true},sort:{name:1}}).exec(function(err,organisers){
-			 
+
 			if (err) {
 				sails.log.verbose('Error occurred trying to retrieve organisers.');
 				return res.negotiate(err);
-		  	}	
-		
+		  	}
+
 		  	// If session refers to a user who no longer exists, still allow logout.
 		  	if (!organisers) {
 		    	return res.json({});
 		  	}
-			  
-			return res.json(organisers);  
-			
-		})		
-		
+
+			return res.json(organisers);
+
+		})
+
 	},
-	
+
 	/**
 	 * Get dcs in name order
-	 */	
+	 */
 	dcs:function(req, res) {
-		
-			 
+
+
 		User.find({where:{isDC:true},sort:{name:1}}).exec(function(err,dcs){
-			 
+
 			if (err) {
 				sails.log.verbose('Error occurred trying to retrieve dcs.');
 				return res.negotiate(err);
-		  	}	
-		
+		  	}
+
 		  	// If session refers to a user who no longer exists, still allow logout.
 		  	if (!dcs) {
 		    	return res.json({});
 		  	}
-			  
-			return res.json(dcs);  
-			
-		})		
-		
+
+			return res.json(dcs);
+
+		})
+
 	},
-	
+
 	/**
 	 * Get all users for editing
-     * 
+     *
 	 * @param {Object} req
 	 * @param {Object} res
 	 */
 	allUsers: function (req, res) {
-		
+
 		var criteria=req.param('criteria');
 		if (criteria) {
 			try {
@@ -107,7 +107,7 @@ module.exports = {
 			criteria={}
 		}
 		req.session.userCriteria=JSON.stringify(criteria);
-		req.session.bookingCriteria="{}";	
+		req.session.bookingCriteria="{}";
 
 		// Special case for no data
 		if (req.param("nodata")=="1") {
@@ -132,26 +132,26 @@ module.exports = {
 					{salutation: {contains: filter}},
 					{name: {contains: filter}},
 					{surname: {contains: filter}},
-					{name: {contains: filter}},	
+					{name: {contains: filter}},
 					{firstName: {contains: filter}},
 				 	{rank: {contains: filter}},
 					{email: {contains: filter}},
 					{dietary: {contains: filter}},
 					{lodge: {contains: filter}},
-					{lodgeNo: {contains: filter}}, 
+					{lodgeNo: {contains: filter}},
 					{lodgeYear: {contains: filter}},
-					{category: {contains: filter}},  
-					{area: {contains: filter}}, 
-					{centre: {contains: filter}}, 
+					{category: {contains: filter}},
+					{area: {contains: filter}},
+					{centre: {contains: filter}},
 				]
 			}
-			
+
 			// Special value for partially complete registrations
 			if (filter.toLowerCase()=="partial") {
 				where.or.push({salutation:null})
 			}
 		}
-										
+
 		User.find({
 						where: where,
 						sort: {
@@ -159,21 +159,21 @@ module.exports = {
 								firstName:'asc'
 						}
 					}
-			) 
+			)
 			.paginate(pag)
 			.exec(
 			function(err, users){
 				if (err) {
 					sails.log.error(err);
 					return res.negotiate(err);
-			  	}	
-			
+			  	}
+
 			  	// If session refers to a user who no longer exists, still allow logout.
 			  	if (!users) {
 			    	return res.json({});
 			  	}
-				  
-				// If we are looking for duplicates then we have more to do  
+
+				// If we are looking for duplicates then we have more to do
 				switch (filter) {
 					case "duplicates":
 						var dups=[];
@@ -193,7 +193,7 @@ module.exports = {
 								next();
 							})
 						},function(err){
-							// All done - now strip out duplicate duplicates 
+							// All done - now strip out duplicate duplicates
 							var duplicates=[];
 							_.forEach(dups,function(dp,d){
 								var dup=false;
@@ -207,9 +207,9 @@ module.exports = {
 								if (!dup) {
 									dp.surname=dp.surname+" ("+dp.authProvider+")";
 									duplicates.push(dp);
-								}							
+								}
 							})
-							return res.json(duplicates); 
+							return res.json(duplicates);
 						})
 						break;
 					case "facebook":
@@ -219,7 +219,7 @@ module.exports = {
 								fb.push(user)
 							}
 						})
-						return res.json(fb);  
+						return res.json(fb);
 						break;
 					case "twitter":
 						var fb=[];
@@ -228,7 +228,7 @@ module.exports = {
 								fb.push(user)
 							}
 						})
-						return res.json(fb);  
+						return res.json(fb);
 						break;
 					case "google":
 						var fb=[];
@@ -237,33 +237,33 @@ module.exports = {
 								fb.push(user)
 							}
 						})
-						return res.json(fb);  
+						return res.json(fb);
 						break;
-					default: 
+					default:
 						return res.json(users);
-						break;  
+						break;
 				}
 
-				
+
 			}
 		)
-			
+
 	},
-		
+
 	/**
 	 * Prepare user for copy/edit/delete
-	 */	
+	 */
 	prepareUser: function(req, res) {
-		
+
 		var action=req.param("action");
 		var userId=req.param("userid");
-		var mode=action.substr(0,1).toUpperCase()+action.substr(1);		
-		
+		var mode=action.substr(0,1).toUpperCase()+action.substr(1);
+
 		// If we have an user id, retrieve it
 		if (userId) {
 			User.findOne(userId).exec(function(err, user){
 				if (err) {
-					return res.negotiate(err);	
+					return res.negotiate(err);
 				}
 				// Send the details
 				return res.view("userdetails",{
@@ -274,9 +274,9 @@ module.exports = {
 					lodgeMandatory: sails.config.events.lodgeMandatory,
 					form:'userdetails',
 					userDetails:user
-				})	
-			})	
-		} 
+				})
+			})
+		}
 		else {
 			return res.view("userdetails",{
 				mode:mode,
@@ -286,30 +286,30 @@ module.exports = {
 				lodgeMandatory: sails.config.events.lodgeMandatory,
 				form:'userdetails',
 				userDetails:{}
-			})	
-		}	
+			})
+		}
 	},
-	
+
 	/**
 	 * Update user (copy/edit/delete)
-	 */	
+	 */
 	updateUser: function(req, res) {
-		
+
 		var action=req.param("action");
 		var user=req.param("data");
 		var userId=user.id;
-		
+
 		if (!user.isVO) {
 			user.voLodge="";
 			user.voLodgeNo="";
 			user.voCentre="";
 			user.voArea="";
-		} 
+		}
 
 		// Decide what to do based on the action
 		if (action=="edit") {
 
-			// Get the avatar (if applicable) then update			
+			// Get the avatar (if applicable) then update
 			Utility.getAvatar(user,function(err,avatar){
 				user.gravatarUrl=avatar;
 				User.update(userId,user).exec(function(err,user){
@@ -330,10 +330,10 @@ module.exports = {
 						return res.negotiate(err)
 					}
 					sails.controllers.order.updateOtherOrders(userId,req.param("orders"));
-					  
-					return res.ok();	
+
+					return res.ok();
 				})
-			}) 
+			})
 		}
 		else if (action=="delete") {
 			// Make sure there are no bookings!
@@ -353,11 +353,11 @@ module.exports = {
 						}
 						Order.destroy({user:userId}).exec(function(err){});
 						Passport.destroy({user:userId}).exec(function(err){
-							return res.ok();	
-						})						
+							return res.ok();
+						})
 					})
-				})				
-				
+				})
+
 			})
 		}
 		else if (action=="copy" || action=="create") {
@@ -380,11 +380,11 @@ module.exports = {
 					return res.negotiate(err)
 				}
 				sails.controllers.order.updateOtherOrders(user[0].id,req.param("orders"));
-				return res.ok();	
+				return res.ok();
 			})
 		}
-		
-		
+
+
 	},
 
 	/**
@@ -394,14 +394,15 @@ module.exports = {
 	 * @param {Object} res
 	 */
 	mimicUserRequested: function(req, res) {
-		res.view('dashboard',{		
-			appUpdateRequested: false,	
+		res.view('dashboard',{
+      allowAppUpdate: sails.config.events.allowAppUpdate,
+			appUpdateRequested: false,
 			mimicUserRequested: true
-		});  		
-	}, 
-	
+		});
+	},
+
 	/**
-	 * Mimic a user  
+	 * Mimic a user
 	 *
 	 * @param {Object} req
 	 * @param {Object} res
@@ -428,8 +429,8 @@ module.exports = {
 				req.session.passport=passport;
 				return res.ok();
 			})
-			
-		}) 
-	}, 
+
+		})
+	},
 
 };

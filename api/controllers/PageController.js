@@ -1,6 +1,6 @@
 /**
  * PageController
- * 
+ *
  *
  * @description :: Server-side logic for managing pages
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
@@ -8,17 +8,17 @@
 
 module.exports = {
 	validateRequest: function (req, res) {
-  
+
     //console.log(req.user);
     //console.log(res.locals.user);
     //console.log(req.session.authenticated)
-               
+
     // If not logged in, show the public view.
     if (!req.session.authenticated) {
       return res.redirect("/homepage");
     }
-      
-    
+
+
     // Otherwise, look up the logged-in user and show the logged-in view,
     // bootstrapping basic user data in the HTML sent from the server
     User.findOne(res.locals.user.id, function (err, user){
@@ -52,15 +52,16 @@ module.exports = {
            centres: Utility.centres(),
            signup: true,
            lodgeMandatory: sails.config.events.lodgeMandatory,
-         }); 
+         });
   		}
-      
+
       // Default home location
-      return res.view('dashboard',{			
+      return res.view('dashboard',{
+        allowAppUpdate: sails.config.events.allowAppUpdate,
         appUpdateRequested: false,
         mimicUserRequested:false
-      });  	
-      
+      });
+
     });
   },
 };
