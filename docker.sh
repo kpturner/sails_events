@@ -7,7 +7,7 @@ set -e
 function usage {
     echo "Usage: ./docker.sh"
     echo "--install            | -i   [Install docker]"
-    echo "--project            | -o   [sails-events(default)]"
+    echo "--name               | -n   [sails-events(default)]"
     echo "--instance           | -t   [pgl,csl,hamtun,mtsfc,pgsl]"
     echo "--port               | -p   [1337(default)]"
     echo "--file               | -f   [docker-compose.yml(default)]"
@@ -15,7 +15,7 @@ function usage {
     echo "--update             | -u   [Fetch updated docker images]"
 }
 
-project="sails-events"
+name="sails-events"
 file="docker-compose.yml"
 action="up -d"
 update=""
@@ -24,9 +24,10 @@ pull=''
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -o|--project) project="$2"; shift ;;
+        -n|--name) name="$2"; shift ;;
         -p|--port) port="$2"; shift ;;
         -f|--file) file="$2"; shift ;;
+        -n|--name) name="$2"; shift ;;
         -a|--action) action="$2"; shift ;;
         -t|--instance) instance="$2"; shift ;;
         -i|--install) install=1;;
@@ -50,7 +51,7 @@ fi
 
 if [[ $update ]]; then
     echo Update Mode
-    EVENTS_PORT=$port INSTANCE=$instance docker-compose  -p $project -f $file pull
+    EVENTS_PORT=$port INSTANCE=$instance docker-compose  -p $name -f $file pull
 fi
 
 if [[ $install ]]; then
@@ -70,4 +71,4 @@ fi
 
 # Run docker-compose
 echo "Running docker-compose"
-EVENTS_PORT=$port INSTANCE=$instance docker-compose  -p $project -f $file $action
+EVENTS_PORT=$port EVENTS_NAME=$name INSTANCE=$instance docker-compose  -p $name -f $file $action

@@ -10,8 +10,8 @@ on:
         default: pgl
         type: choice
         options:
-        - pgl,1337
-        - pgl_test,1338
+        - sails-events,pgl,1337
+        - sails-events-test,pgl-test,1338
       runner:
         description: Runner label
         required: true
@@ -52,4 +52,4 @@ jobs:
         run: |
           # Split the comma separate string into an array
           IFS=\, read -a fields <<<"${{ github.event.inputs.tag }}"
-          ./docker.sh -u -a up -t ${fields[0]} -p ${fields[1]}
+          ./docker.sh -u -a up -n ${fields[0]} -t ${fields[1]} -p ${fields[2]}

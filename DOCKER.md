@@ -15,7 +15,7 @@ What was the `config/local.js` for each instance is now stored in a [GitHub Acti
 `./docker.sh -a up -u -t pgl -p 1337`
 
 #### Test
-`./docker.sh -a up -u -t pgl_test -p 1338`
+`./docker.sh -a up -u -n sails-events-test -t pgl_test -p 1338`
 
 
 ## Other details
@@ -24,13 +24,14 @@ The `-t` option indicates the tag of the docker image. So you can see the images
 
 The `-u` switch updates the local image from the repository. Obviously it can be left off if need be.
 
-To stop the container run `./docker.sh -a down -t <tag>`
+To stop the container run `./docker.sh -a down -n <sails-events or sails-events-test>`
 
 In order to use the command you have to login to `ghcr.io` using a PAT as a password - so you need permission to the `kpturner` repositories:
 `docker login ghcr.io/kpturner`
 
 ## Software updates
-SSH to the host and run `./docker.sh -a up -u -t <tag> -p <port>`
+Run the `deploy` workflow in GitHub or
+SSH to the host and run `./docker.sh -a up -u -n <sails-events or sails-events-test> -t <tag> -p <port>`
 
 ## Resources
 
