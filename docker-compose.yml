@@ -13,6 +13,8 @@ services:
       - container=docker
     logging:
       driver: "json-file"
+    expose:
+      - 6379
 
   sails-events:
     container_name: ${EVENTS_NAME}
