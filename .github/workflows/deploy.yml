@@ -36,6 +36,7 @@ jobs:
 
   deploy:
     name: Deploy Square Events
+    needs: setup
     strategy:
       matrix:
         runner: ${{fromJson(needs.setup.outputs.matrix)}}
