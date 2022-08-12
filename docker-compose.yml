@@ -15,7 +15,7 @@ services:
       driver: "json-file"
 
   sails-events:
-    container_name: sails-events
+    container_name: ${EVENTS_NAME}
     image: ghcr.io/kpturner/sails_events:${INSTANCE}-latest
     restart: unless-stopped
     volumes:
