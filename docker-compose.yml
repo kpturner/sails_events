@@ -14,8 +14,8 @@ services:
     logging:
       driver: "json-file"
 
-  sails_events:
-    container_name: sails_events
+  sails-events:
+    container_name: sails-events
     image: ghcr.io/kpturner/sails_events:${INSTANCE}-latest
     restart: unless-stopped
     volumes:
