@@ -347,6 +347,7 @@ module.exports = {
          *
          */
         memoryLeakCheck: function(){
+            /*
             if (sails.config.heapdumpInterval) {
                 // Clear out heapdumps first
                 var heapdump    = require("heapdump");
@@ -363,6 +364,7 @@ module.exports = {
                     });
                 },sails.config.heapdumpInterval)
             }
+            */
         },
 
         /**
