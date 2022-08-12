@@ -14,7 +14,7 @@ jobs:
         uses: snok/container-retention-policy@v1
         with:
           image-names: sails-events*
-          cut-off: One hour ago UTC
+          cut-off: One minute ago UTC
           keep-at-least: 0
           account-type: personal
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
