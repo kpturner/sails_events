@@ -1,0 +1,54 @@
+name: Deploy Square Events
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The tag,port of the Docker image
+        required: true
+        default: pgl
+        type: choice
+        options:
+        - pgl,1337
+        - pgl_test,1338
+      runner:
+        description: Runner label
+        required: true
+        default: hampshirefreemasonry
+        type: choice
+        options:
+        - hampshirefreemasonry
+jobs:
+
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setrunner.outputs.result }}
+    steps:
+      - name: Setup the runner matrix
+        id: setrunner
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const result = [[ '${{ github.event.inputs.runner }}' ]];
+            return result;
+
+  deploy:
+    name: Deploy Square Events
+    strategy:
+      matrix:
+        runner: ${{fromJson(needs.setup.outputs.matrix)}}
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Deploy
+        shell: bash
+        run: |
+          # Split the comma separate string into an array
+          IFS=\, read -a fields <<<"${{ github.event.inputs.tag }}"
+          ./docker.sh -u -a up -t ${fields[0]} -p ${fields[1]}

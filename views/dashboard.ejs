@@ -32,6 +32,7 @@
       _csrf: '<%= _csrf %>',
       user: <%- JSON.stringify(res.locals.user) %>,
       usersCanViewBookings: <%- sails.config.events.usersCanViewBookings %>,
+      allowAppUpdate: <%- allowAppUpdate || true %>,
       appUpdateRequested: <%- appUpdateRequested || false %>,
       mimicUserRequested: <%- mimicUserRequested || false %>
     };
@@ -51,7 +52,7 @@
             </div>
             <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="filterEvents()" ng-disabled="filterForm.loading">
                 <span class="fa fa-filter"></span><span ng-show="!filterForm.loading"> Filter events</span>
-                <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
+                <span class="fa-pulse fa fa-spinner" ="filterForm.loading" ></span>
                 <span ng-show="filterForm.loading">Filtering...</span>
             </button>
             <button ng-show="user.isAdmin" class="btn btn-primary btn-lg btn-block" type="button"  ng-click="downloadLog()">
@@ -64,7 +65,7 @@
 
       <div class="container">
         <span class="fa fa-spinner fa-pulse fa-3x fa-fw loading-spinner" ng-show="loadingMimicUsers"></span>
-        <div ng-show="events.length>0">
+        <div ng-show="events.length>0">ng-show
           <h4 class="hidden-md hidden-lg">Tap an event name to book in</h4>
           <!-- <h4 class="hidden-xs hidden-sm">Click an event to book in</h4> -->
         </div>

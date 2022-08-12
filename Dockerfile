@@ -10,6 +10,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 ENV EVENTS_PORT=1337
+ENV ALLOW_APP_UPDATE="0"
 
 RUN npm install
 RUN npm run build

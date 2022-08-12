@@ -15,6 +15,7 @@ module.exports = {
 	 */
 	updateAppConfirmation: function(req, res) {
 		res.view('dashboard',{
+      allowAppUpdate: sails.config.events.allowAppUpdate,
 			appUpdateRequested: true,
 			mimicUserRequested: false
 		});
