@@ -21,6 +21,7 @@ action="up -d"
 update=""
 port=1337
 pull=''
+instance=pgl
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
