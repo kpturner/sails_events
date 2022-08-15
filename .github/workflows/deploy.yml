@@ -12,6 +12,9 @@ on:
         options:
         - sails-events,pgl,1337
         - sails-events-test,pgl-test,1338
+        - sails-events,csl,1330
+        - sails-events,mtsfc,1340
+        - sails-events,hamtun,7083
       runner:
         description: Runner label
         required: true
@@ -19,6 +22,7 @@ on:
         type: choice
         options:
         - hampshirefreemasonry
+        - kpturner
 jobs:
 
   setup:

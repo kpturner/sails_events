@@ -33,9 +33,20 @@ jobs:
 
       - name: Create config file and restart cmd from secret for PGL_TEST
         run: |
-          mkdir -p secrets
           echo "${{ secrets.PGL_TEST_CONFIG }}" > secrets/secrets_test.json
           echo "echo \"gitupdate.sh cannot be done in the container. Login to the host and run './docker.sh -a up -u -t pgl_test -p 1338'\"" > ./gitupdate.sh
+
+      - name: Create config file and restart cmd from secret for CSL
+        run: |
+          echo "${{ secrets.CSL_CONFIG }}" > secrets/secrets_csl.json
+
+      - name: Create config file and restart cmd from secret for MTSFC
+        run: |
+          echo "${{ secrets.MTSFC_CONFIG }}" > secrets/secrets_mtsfc.json
+
+      - name: Create config file and restart cmd from secret for Hamtun
+        run: |
+          echo "${{ secrets.HAMTUN_CONFIG }}" > secrets/secrets_hamtun.json
 
       #- name: Get the version
       #  run: echo VERSION="$(npx -c 'echo "$npm_package_version"')" >> $GITHUB_ENV
@@ -71,4 +82,37 @@ jobs:
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets_test.json'
           assets: 'pgl'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for CSL
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: csl-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_csl.json'
+          assets: 'csl'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for MTSFC
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: mtsfc-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_mtsfc.json'
+          assets: 'csl'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for Hamtun
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: mtsfc-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_hamtun.json'
+          assets: 'hamtun'
           ecr-uri: 'ghcr.io'
