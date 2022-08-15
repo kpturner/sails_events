@@ -3,7 +3,7 @@ version: "3"
 services:
 
   events-redis:
-    container_name: events-redis
+    container_name: ${EVENTS_NAME}-redis
     image: redislabs/redismod:latest
     restart: unless-stopped
     volumes:
