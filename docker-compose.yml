@@ -21,7 +21,7 @@ services:
     image: ghcr.io/kpturner/sails_events:${INSTANCE}-latest
     restart: unless-stopped
     volumes:
-      - ./volume/logs:/usr/src/app/logs/${EVENTS_NAME}
+      - ./volume/${EVENTS_NAME}/logs:/usr/src/app/logs
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
