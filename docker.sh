@@ -52,6 +52,7 @@ fi
 
 if [[ $update ]]; then
     echo Update Mode
+    EVENTS_PORT=$port EVENTS_NAME=$name INSTANCE=$instance docker-compose  -p $name -f $file down --remove-orphans
     EVENTS_PORT=$port EVENTS_NAME=$name INSTANCE=$instance docker-compose  -p $name -f $file pull
 fi
 
