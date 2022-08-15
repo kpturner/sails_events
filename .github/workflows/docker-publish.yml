@@ -109,7 +109,7 @@ jobs:
       - name: Build and push with "latest" for Hamtun
         uses: ./.github/workflows/composites/docker-build-push-version
         with:
-          version: mtsfc-latest
+          version: hamtun-latest
           username-github: ${{ github.actor }}
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
