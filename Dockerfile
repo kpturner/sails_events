@@ -10,6 +10,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 ENV EVENTS_PORT=1337
+ENV LOGLEVEL="debug"
 ENV ALLOW_APP_UPDATE="0"
 
 RUN npm install --legacy-peer-deps
@@ -31,5 +32,4 @@ RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
-CMD [ "node", "app.js"]
-# CMD [ "node", "app.js", "--prod"]
+CMD [ "node", "app.js", "--prod"]
