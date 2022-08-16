@@ -103,7 +103,7 @@ jobs:
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets_mtsfc.json'
-          assets: 'csl'
+          assets: 'mtsfc'
           ecr-uri: 'ghcr.io'
 
       - name: Build and push with "latest" for Hamtun
