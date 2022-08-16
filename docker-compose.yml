@@ -7,8 +7,8 @@ services:
     image: redislabs/redismod:latest
     restart: unless-stopped
     volumes:
-      - ./volume/redis/redis_data:/data
-      - ./volume/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./volume/${EVENTS_NAME}/redis/redis_data:/data
+      - ./volume/${EVENTS_NAME}/redis/redis.conf:/usr/local/etc/redis/redis.conf
     environment:
       - container=docker
     logging:
