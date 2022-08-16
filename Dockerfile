@@ -31,4 +31,5 @@ RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
-CMD [ "node", "app.js", "--prod"]
+CMD [ "node", "app.js"]
+# CMD [ "node", "app.js", "--prod"]
