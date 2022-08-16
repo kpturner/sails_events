@@ -1,4 +1,4 @@
-name: Publish docker images - HAmtun
+name: Publish docker images - Hamtun
 
 on:
 
@@ -27,6 +27,7 @@ jobs:
 
       - name: Create config file and restart cmd from secret for Hamtun
         run: |
+          mkdir -p secrets
           echo "${{ secrets.HAMTUN_CONFIG }}" > secrets/secrets_hamtun.json
 
       - name: Build and push with "latest" for Hamtun
