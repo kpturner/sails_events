@@ -9,8 +9,8 @@ WORKDIR /usr/src/app
 # Bundle app source
 COPY . .
 
-ENV EVENTS_PORT=1337
-ENV LOGLEVEL="debug"
+# ENV EVENTS_PORT=1337
+ENV EVENTS_PORT=1338
 ENV ALLOW_APP_UPDATE="0"
 
 RUN npm install --legacy-peer-deps
