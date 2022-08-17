@@ -279,7 +279,12 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 	// Check if open for bookings
 	if (!SAILS_LOCALS.booking.id) {
 		$scope.chkOpenForBookings();
-	}
+	} else {
+    // We should also check and allow bypass code for existing bookings if there is a code available
+    if ($scope.event.bypassCode) {
+      $scope.chkOpenForBookings();
+    }
+  }
 
 	// Salutations
 	$scope.salutations = SAILS_LOCALS.salutations;
