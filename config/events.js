@@ -107,7 +107,7 @@ module.exports.events = {
 	userCategories: [],
 
 	// Methods of payment
-	mops: ['Cheque', 'BACS', 'Cash', 'Online'],
+	mops: ['Cheque', 'BACS', 'Cash', 'Online', 'Guest'],
 
 	// Salutations
 	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr', 'Mrs', 'Ms', 'Miss'],
