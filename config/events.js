@@ -125,7 +125,7 @@ module.exports.events = {
 	lodgeYearLabel: null,
 
 	// Lodge year download label (or null to use default)
-	lodgeYearDoanloadLabel: null,
+	lodgeYearDownloadLabel: null,
 
 	// Permanent diner?
 	permanentDiningList: false,
