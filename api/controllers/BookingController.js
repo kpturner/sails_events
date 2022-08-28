@@ -482,6 +482,7 @@ module.exports = {
         regInterest: event.regInterest,
         orderLabel: orderLabel,
         lodgeYearLabel: sails.config.events.lodgeYearLabel || (orderLabel + " year"),
+        eventOnlinePayments: event.onlinePayments,
         eventFree: event.free,
         eventName: event.name,
         eventDate: formattedDate,
