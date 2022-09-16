@@ -2361,7 +2361,7 @@ module.exports = {
       }
       var row = {};
       // Is there a balance due?
-      booking.balance = booking.cost - booking.amountPaid;
+      booking.balance = Math.round((booking.cost - booking.amountPaid) * 100) / 100;
       var amountPaid;
       // Divide amount paid between places UNLESS there is a balance
       // due - in which case that is nonsensical
