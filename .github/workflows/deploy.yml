@@ -10,19 +10,12 @@ on:
         default: pgl
         type: choice
         options:
-        - sails-events,pgl,1337
-        - sails-events-test,pgl-test,1338
-        - sails-events-csl,csl,1330
-        - sails-events-mtsfc,mtsfc,1340
-        - sails-events-hamtun,hamtun,7083
-      runner:
-        description: Runner label
-        required: true
-        default: hampshirefreemasonry
-        type: choice
-        options:
-        - hampshirefreemasonry
-        - kpturner
+        - sails-events,pgl,1337,hampshirefreemasonry
+        - sails-events-test,pgl-test,1338,hampshirefreemasonry
+        - sails-events-csl,csl,1330,kpturner
+        - sails-events-mtsfc,mtsfc,1340,kpturner
+        - sails-events-hamtun,hamtun,7083,kpturner
+
 jobs:
 
   setup:
@@ -35,7 +28,8 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            const result = [[ '${{ github.event.inputs.runner }}' ]];
+            const splits = '${{ github.event.inputs.tag }}'.split(',');
+            const result = [[ splits[3] ]];
             return result;
 
   deploy:
