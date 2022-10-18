@@ -124,7 +124,9 @@ module.exports = {
 							// by the number of places
 							let name = booking.event.name;
 							let quantity = booking.places;
-              let amount = Math.round(booking.event.price * 100);
+              // booking.cost is the total for all the places on the booking but we
+              // need to give Stripe the amount PER PLACE in integers
+              let amount = Math.round((booking.cost / booking.places) * 100);
 							if (booking.amountPaid) {
 								// This means that by hook or by crook the booking has acquired a different cost.
 								// Normally if this is just as a result of adding guests the value to collect will
@@ -237,13 +239,13 @@ module.exports = {
 				if (refund.status === 'succeeded') {
 					const refundMap = booking.refundReference ? JSON.parse(booking.refundReference) : {};
 					refundMap[refund.id] = refund.amount / 100;
-					const refundReference = JSON.stringify(refundMap);
-					const amountPaid = booking.amountPaid - (refund.amount / 100);
-					paid = booking.cost <= amountPaid;
+					booking.refundReference = JSON.stringify(refundMap);
+					booking.amountPaid = parseFloat((booking.amountPaid - (refund.amount / 100)).toFixed(2));
+					booking.paid = booking.cost <= booking.amountPaid;
 					Booking.update(booking.id, {
-						refundReference,
-						paid,
-						amountPaid
+						refundReference: booking.refundReference,
+						paid: booking.paid,
+						amountPaid: booking.amountPaid
 					}).exec((err) => {
 						if (err) {
 							sails.log.error(`Online refund - failed to update booking to update for id ${booking.id}`);
@@ -270,24 +272,39 @@ module.exports = {
     const refundMap = {};
     let amountLeft = refundAmount;
     const keys = Object.keys(paymentMap);
+    // First of all look for an exact match for the amount we want to refund
     keys.every((paymentReference) => {
-
-      if (paymentMap[paymentReference] >= amountLeft) {
-        // This payment reference can fully cover the refund
+      if (paymentMap[paymentReference] === amountLeft) {
         refundMap[paymentReference] = amountLeft;
-        // Reduce theh payment reference accordingly
-        paymentMap[paymentReference] = paymentMap[paymentReference] - amountLeft;
+        paymentMap[paymentReference] = 0;
         amountLeft = 0;
-      } else {
-        // Can this payment reference can partially cover the refund?
-        if (paymentMap[paymentReference] > 0) {
-          refundMap[paymentReference] = paymentMap[paymentReference];
-          amountLeft -= paymentMap[paymentReference];
-          paymentMap[paymentReference] = 0;
-        }
+        return false;
       }
-      return (amountLeft > 0);
+      return true;
     });
+
+    if (amountLeft !== 0) {
+      keys.every((paymentReference) => {
+
+        if (paymentMap[paymentReference] >= amountLeft) {
+          // This payment reference can fully cover the refund
+          refundMap[paymentReference] = amountLeft;
+          // Reduce the payment reference accordingly
+          paymentMap[paymentReference] = parseFloat((paymentMap[paymentReference] - amountLeft).toFixed(2));
+          amountLeft = 0;
+        } else {
+          // Can this payment reference can partially cover the refund?
+          if (paymentMap[paymentReference] > 0) {
+            refundMap[paymentReference] = paymentMap[paymentReference];
+            amountLeft -= paymentMap[paymentReference];
+            amountLeft = parseFloat(amountLeft.toFixed(2));
+            paymentMap[paymentReference] = 0;
+          }
+        }
+        return (amountLeft > 0);
+      });
+    }
+
     // If we have any left unrefundable we have a problem!
     if (amountLeft) {
       sails.log.error(`Cannot issue refund for booking ${booking.id}, amount: ${refundAmount} as the booking payment references do not cover the refund amount`);
@@ -339,6 +356,10 @@ module.exports = {
 	 */
 	issueRefund: async (booking, amount) => {
 
+    if (!amount) {
+      sails.log.debug('WTF');
+    }
+
 		try {
 			if (booking.paymentReference) {
         sails.log.debug(`=======Issuing Refund for booking ref ${booking.ref} for £${amount}=======`)
@@ -384,6 +405,7 @@ module.exports = {
                     amount: Math.round(refundMap[refundReference] * 100)
                   });
                   amountToBeRefunded -= refundMap[refundReference];
+                  amountToBeRefunded = parseFloat(amountToBeRefunded.toFixed(2));
                 } catch (err) {
                   sails.log.error(err);
                   // If this is because the payment reference we tried has already been refunded, see if we can use a different one

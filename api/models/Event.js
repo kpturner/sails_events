@@ -213,6 +213,10 @@ module.exports = {
 
     onlinePaymentConfig: {
       type: 'string'
+    },
+
+    recoverOnlinePaymentFee: {
+      type: 'boolean'
     }
 
   },

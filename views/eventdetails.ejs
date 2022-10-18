@@ -271,7 +271,7 @@
 
             <!-- D A T E -->
 
-            <div class="control-group form-group col-md-10 col-md-6"
+            <div class="control-group form-group col-md-6"
               ng-class="{'has-error':eventdetails.date.$invalid &&
                                     eventdetails.date.$dirty}">
               <label>* Date</label>
@@ -289,7 +289,7 @@
 
             <!-- T I M E -->
 
-            <div class="control-group form-group col-md-10 col-md-6"
+            <div class="control-group form-group col-md-6"
               ng-class="{'has-error':eventdetails.time.$invalid &&
                                     eventdetails.time.$dirty}">
                 <label>* Time</label>
@@ -300,17 +300,70 @@
             </div>
 
 
-            <!-- P R I C E -->
+          <!-- P R I C E -->
+          <div class="control-group form-group col-md-8"
+            ng-class="{'has-error':eventdetails.price.$invalid &&
+                                  eventdetails.price.$dirty}" ng-hide="eventForm.free">
+              <label><span ng-hide="eventForm.free">* </span>Price</label>
+              <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price"
+                ng-change="calculatePrice()"
+                ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-required="!eventForm.free"/>
+              <span class="help-block has-error" ng-if="eventdetails.price.$dirty">
+                <span ng-show="eventdetails.price.$error.required">Price is required.</span>
+                <span ng-show="eventdetails.price.$error.pattern">Price contains an invalid value.</span>
+              </span>
+            </div>
+
+            <!-- Online? -->
+            <div class="control-group form-group col-sm-12" ng-hide="eventForm.free || eventForm.regInterest || paymentPlatformsAvailable.length <= 0"
+              ng-class="{'has-error':eventdetails.onlinepayments.$invalid &&
+                                    eventdetails.onlinepayments.$dirty}">
+              <label>
+                <input type="checkbox" class="bigcheckbox" name="onlinepayments" ng-change="calculatePrice()" ng-model="eventForm.onlinePayments"/>
+                &nbsp;&nbsp;&nbsp;Online payment platform?
+              </label>
+            </div>
+
+            <!-- Platform -->
+            <div class="control-group form-group col-md-10" ng-show="eventForm.onlinePayments">
+              <label>Platform</label>
+              <select class="form-control" name="onlinepaymentplatform" ng-options="platform.code as platform.desc for platform in paymentPlatformsAvailable"
+                  ng-model="eventForm.onlinePaymentPlatform" ng-change="calculatePrice()">
+                  <option value="">-- choose payment platform --</option>
+              </select>
+            </div>
+
+            <!-- Platform config -->
+            <div class="control-group form-group col-md-10" ng-show="eventForm.onlinePayments">
+              <label>Platform account</label>
+              <select class="form-control" name="onlinepaymentconfig" ng-options="config.code as config.desc for config in paymentPlatforms[eventForm.onlinePaymentPlatform]"
+                  ng-model="eventForm.onlinePaymentConfig" ng-change="calculatePrice()">
+                  <option value="">-- choose payment account --</option>
+              </select>
+            </div>
+
+            <div class="control-group form-group col-md-10"
+              ng-class="{'has-error':eventdetails.recoverOnlinePaymentFee.$invalid &&
+                eventdetails.recoverOnlinePaymentFee.$dirty}" ng-show="eventForm.onlinePayments">
+              <label>
+                <input type="checkbox" class="bigcheckbox" name="recoverOnlinePaymentFee" ng-change="calculatePrice()" ng-model="eventForm.recoverOnlinePaymentFee" />
+                &nbsp;&nbsp;&nbsp;Recover payment fee from customer?
+              </label>
+            </div>
 
             <div class="control-group form-group col-md-8"
-              ng-class="{'has-error':eventdetails.price.$invalid &&
-                                    eventdetails.price.$dirty}" ng-hide="eventForm.free">
-                <label><span ng-hide="eventForm.free">* </span>Price</label>
-                <input type="number" class="form-control" placeholder="e.g. 20.00" name="price" ng-model="eventForm.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" ng-required="!eventForm.free"/>
-                <span class="help-block has-error" ng-if="eventdetails.price.$dirty">
-                  <span ng-show="eventdetails.price.$error.required">Price is required.</span>
-                  <span ng-show="eventdetails.price.$error.pattern">Price contains an invalid value.</span>
-                </span>
+              ng-show="!eventForm.free && eventForm.onlinePayments && eventForm.recoverOnlinePaymentFee">
+                <label>Price including fee recovery</label>
+                <input type="number" ng-disabled="true" class="form-control" ng-change="calculatePrice()" name="actualPrice" ng-model="eventForm.actualPrice"/>
+            </div>
+
+            <div class="control-group form-group col-md-10"
+              ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
+                eventdetails.latePaymentChecking.$dirty}" ng-show="eventForm.onlinePayments">
+              <label>
+                <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" />
+                &nbsp;&nbsp;&nbsp;Send reminders for incomplete payments?
+              </label>
             </div>
 
             <!-- M I N I M U M   B O O K I N G   P L A C E S -->
@@ -492,43 +545,6 @@
 
 
             <!-- P A Y M E N T   D E T A I L S -->
-
-              <!-- Online? -->
-              <div class="control-group form-group col-sm-6" ng-hide="eventForm.free || eventForm.regInterest || paymentPlatformsAvailable.length <= 0"
-                ng-class="{'has-error':eventdetails.onlinepayments.$invalid &&
-                                      eventdetails.onlinepayments.$dirty}">
-                <label>
-                  <input type="checkbox" class="bigcheckbox" name="onlinepayments" ng-model="eventForm.onlinePayments"/>
-                  &nbsp;&nbsp;&nbsp;Online payment platform?
-                </label>
-              </div>
-
-              <!-- Platform -->
-              <div class="control-group form-group col-md-10" ng-show="eventForm.onlinePayments">
-                <label>Platform</label>
-                <select class="form-control" name="onlinepaymentplatform" ng-options="platform.code as platform.desc for platform in paymentPlatformsAvailable"
-                    ng-model="eventForm.onlinePaymentPlatform">
-                    <option value="">-- choose payment platform --</option>
-                </select>
-              </div>
-
-              <!-- Platform config -->
-              <div class="control-group form-group col-md-10" ng-show="eventForm.onlinePayments">
-                <label>Platform account</label>
-                <select class="form-control" name="onlinepaymentconfig" ng-options="config.code as config.desc for config in paymentPlatforms[eventForm.onlinePaymentPlatform]"
-                    ng-model="eventForm.onlinePaymentConfig">
-                    <option value="">-- choose payment account --</option>
-                </select>
-              </div>
-
-              <div class="control-group form-group col-md-10"
-                ng-class="{'has-error':eventdetails.latePaymentChecking.$invalid &&
-                                      eventdetails.latePaymentChecking.$dirty}" ng-show="eventForm.onlinePayments">
-                <label>
-                  <input type="checkbox" class="bigcheckbox" name="latePaymentChecking" ng-model="eventForm.latePaymentChecking" />
-                  &nbsp;&nbsp;&nbsp;Send reminders for incomplete payments?
-                </label>
-              </div>
 
               <div class="control-group form-group col-md-10"
                 ng-class="{'has-error':eventdetails.paymentdetails.$invalid &&

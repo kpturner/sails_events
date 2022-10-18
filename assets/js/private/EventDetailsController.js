@@ -17,6 +17,10 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 	$scope.orders=$.extend([],SAILS_LOCALS.orders);
 	$scope.eventForm=$.extend({},SAILS_LOCALS.event);
 
+  if ($scope.mode === 'create') {
+    $scope.eventForm.recoverOnlinePaymentFee = true;
+  }
+
 	if (SAILS_LOCALS.mode=="create") {
 		$scope.eventForm.logo=SAILS_LOCALS.logo;
 	}
@@ -121,6 +125,22 @@ angular.module('EventsModule').controller('EventDetailsController', ['$scope', '
 		$scope.closingDateOpened = true;
 	};
 
+
+  /**
+   *
+   * Calculate price when recovering fee
+   */
+  $scope.calculatePrice = function() {
+    $scope.eventForm.actualPrice = 0;
+    if ($scope.paymentPlatforms && $scope.eventForm.onlinePaymentConfig) {
+      const config = $scope.paymentPlatforms[$scope.eventForm.onlinePaymentPlatform].find(plat => plat.code === $scope.eventForm.onlinePaymentConfig);
+      if (config && $scope.eventForm.recoverOnlinePaymentFee) {
+        $scope.eventForm.actualPrice = parseFloat((($scope.eventForm.price + config.fixedFee) / (1 - config.fee)).toFixed(2));
+      }
+    }
+  }
+
+  $scope.calculatePrice();
 
 	/**
 	 * Test if the details are complete on the event

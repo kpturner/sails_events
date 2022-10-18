@@ -55,6 +55,7 @@
       selectedUserId: <%- JSON.stringify(res.locals.selectedUserId) %>,
       potentialDuplicates: <%- JSON.stringify(res.locals.potentialDuplicates)%>,
       orders: <%- JSON.stringify(sails.config.events.orders) %>,
+      onlinePaymentPlatforms: <%- JSON.stringify(res.locals.onlinePaymentPlatforms) %>,
     };
 
     </script>
@@ -79,7 +80,8 @@
         <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
         <h4>{{event.venue}}<h4>
 
-        <h5 ng-hide="event.free">Price per place: £{{event.price.toFixed(2)}}</h5>
+        <h5 ng-hide="event.free">Price per place: £{{event.price}}</h5>
+        <h5 ng-show="event.onlinePaymentConfig && event.recoverOnlinePaymentFee">A small fee will be added to cover charges of {{fee}}% plus a one-off charge of £{{fixedFee}}</h5>
         <div ng-hide="event.regInterest">
         <h5 ng-show="existingBooking">Places remaining: {{event.capacity}} (excl. this booking)</h5>
         <h5 ng-hide="existingBooking">Places remaining: {{event.capacity}}</h5>

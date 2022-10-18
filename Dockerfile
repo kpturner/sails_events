@@ -15,6 +15,9 @@ ENV ALLOW_APP_UPDATE="0"
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
+RUN apt-get update
+RUN apt-get install default-mysql-client -y
+
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
 

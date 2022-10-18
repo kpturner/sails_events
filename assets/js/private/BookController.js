@@ -45,6 +45,34 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 	}
 
+  $scope.setFees = function() {
+    $scope.fee = 0;
+    $scope.fixedfee = 0;
+    if (SAILS_LOCALS.onlinePaymentPlatforms && $scope.event.onlinePaymentConfig) {
+      const config = SAILS_LOCALS.onlinePaymentPlatforms[$scope.event.onlinePaymentPlatform].find(plat => plat.code === $scope.event.onlinePaymentConfig);
+      if (config && $scope.event.recoverOnlinePaymentFee) {
+        $scope.fixedFee = config.fixedFee.toFixed(2);
+        $scope.fee = (config.fee * 100).toFixed(2);
+      }
+    }
+  }
+
+  $scope.setFees();
+
+  $scope.calculateBookingCost = function() {
+    let cost = $scope.bookingForm.cost;
+    if (SAILS_LOCALS.onlinePaymentPlatforms && $scope.event.onlinePaymentConfig) {
+      const config = SAILS_LOCALS.onlinePaymentPlatforms[$scope.event.onlinePaymentPlatform].find(plat => plat.code === $scope.event.onlinePaymentConfig);
+      if (config && $scope.event.recoverOnlinePaymentFee) {
+        cost = parseFloat(((($scope.event.price * $scope.bookingForm.places) + config.fixedFee) / (1 - config.fee)).toFixed(2));
+        // Now we need to cater for rounding errors unfortunately
+        const unitPrice = parseFloat((cost /$scope.bookingForm.places).toFixed(2));
+        cost = unitPrice * $scope.bookingForm.places;
+      }
+    }
+    return cost;
+  }
+
 	// addGuest - a button to simply increment the number of places
 	$scope.addGuest = function () {
 		$scope.bookingForm.places += 1;
@@ -348,7 +376,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// If the booking has an amount paid and a balance due
 		// then the minimum cannot reduce the cost below that amount.
 		// The organiser needs to intervene for refunds etc
-		$scope.balance = $scope.bookingForm.amountPaid ? ($scope.bookingForm.cost - $scope.bookingForm.amountPaid) : null;
+		$scope.balance = $scope.bookingForm.amountPaid ? ($scope.calculateBookingCost() - $scope.bookingForm.amountPaid) : null;
+    if ($scope.balance) {
+      $scope.balance = $scope.balance.toFixed(2);
+    }
 		if ($scope.balance > 0 && !$scope.user.isAdmin && !$scope.user.isOrganiser) {
 			$scope.placesMin = (Math.round($scope.bookingForm.amountPaid / $scope.event.price)) || 1;
 			if ($scope.placesMin > $scope.bookingForm.places) {

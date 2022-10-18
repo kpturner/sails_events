@@ -155,13 +155,13 @@ module.exports = {
                 b.event = eventId;
                 b.dietary = user.dietary;
                 b.places = 1;
-                b.cost = event.price;
                 b.amountPaid = 0;
                 b.paid = false;
                 b.mop = null;
                 b.info = null;
                 b.bookingDate = new Date();
                 b.createdBy = req.user.id;
+                b.cost = Utility.calculateTotalBookingCost(event, b.places);
                 Event.incrementLastBookingRef(eventId, function (err, updatedEvent) {
                   if (!err) {
                     b.ref = updatedEvent.code + updatedEvent.lastBookingRef.toString()
@@ -278,6 +278,7 @@ module.exports = {
           res.locals.centres = Utility.centres();
           res.locals.potentialDuplicates = potentialDuplicates;
           res.locals.lodgeMandatory = sails.config.events.lodgeMandatory;
+          res.locals.onlinePaymentPlatforms = Utility.getOnlinePaymentPlatforms();
 
           // Get the data for the event and the user and then navigate to the booking view
           if (req.wantsJSON)
@@ -676,7 +677,7 @@ module.exports = {
                     else {
                       booking.places = 1
                     }
-                    booking.cost = booking.places * event.price;
+                    booking.cost = Utility.calculateTotalBookingCost(event, booking.places);
                     booking.dietary = user.dietary;
 
                     if (req.session.eventBookings || req.session.userBookings) {
@@ -686,10 +687,9 @@ module.exports = {
                       booking.tableNo = req.param("tableNo");
                       balance = booking.cost - booking.amountPaid;
                       if (balance < 0) {
-                        refund = (balance * -1);
+                        refund = parseFlat((balance * -1).toFixed(2));
                       }
-                    }
-                    else {
+                    } else {
                       if (!existingBooking) {
                         // New booking
                         booking.amountPaid = 0;
@@ -700,9 +700,11 @@ module.exports = {
                       else {
                         // Existing booking - has the amount owed changed for a paid booking?
                         if (booking.paid && existingBooking.places != booking.places) {
+                          // What was the previous booking cost
+                          const prevBookingCost = Utility.calculateTotalBookingCost(event, existingBooking.places);
+                          balance = (booking.cost - prevBookingCost).toFixed(2);
                           // Could be a refund or more to pay
-                          balance = (booking.places - existingBooking.places) * event.price;
-                          refund = (balance <= 0) ? (balance * -1) : 0;
+                          refund = parseFloat(((balance <= 0) ? (balance * -1) : 0).toFixed(2));
                         }
                         else {
                           if (!booking.paid && booking.amountPaid && booking.cost == booking.amountPaid) {
@@ -710,7 +712,7 @@ module.exports = {
                           } else {
                             balance = booking.cost - booking.amountPaid;
                             if (balance < 0) {
-                              refund = (balance * -1);
+                              refund = parseFloat((balance * -1).toFixed(2));
                             }
                           }
                         }
