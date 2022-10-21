@@ -97,8 +97,8 @@
         <h3 ng-hide="eventBookings || !existingBooking || myBookings || mode=='delete'"><span ng-show="userBookings">THIS PERSON HAS </span><span ng-hide="userBookings">YOU HAVE </span><span ng-hide="event.regInterest">ALREADY BOOKED IN {{paidMsg}}</span>
             <span ng-show="event.regInterest">ALREADY REGISTERED INTEREST {{paidMsg}}</span></h3>
         <h3 ng-show="myBookings && paid">THIS BOOKING IS ALREADY PAID FOR</h3>
-        <h3 ng-show="balance>0">A BALANCE OF £{{balance}} IS DUE</h3>
-        <h3 ng-show="balance<0">A CREDIT OF £{{balance*-1}} IS DUE</h3>
+        <h3 ng-show="balance>0">A BALANCE OF £{{balance.toFixed(2)}} IS DUE</h3>
+        <h3 ng-show="balance<0">A CREDIT OF £{{(balance*-1).toFixed(2)}} IS DUE</h3>
 
         <h4 ng-show="!eventBookings && !userBookings && !openForBookings && notYetReachedOpeningDate">NOT OPEN FOR <span ng-hide="event.regInterest">BOOKINGS</span><span ng-show="event.regInterest">REGISTRATION</span> UNTIL {{ event.openingDate | date : 'EEE, MMM dd, yyyy'}} at {{ event.openingTime || '00:00:00' }}</h4>
         <h4 ng-show="openForBookings && !user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid && !event.onlinePayments && mode!='delete'"><i>Contact the organiser to change the number of places booked</i></h4>
