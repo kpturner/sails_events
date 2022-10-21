@@ -687,7 +687,7 @@ module.exports = {
                       booking.tableNo = req.param("tableNo");
                       balance = booking.cost - booking.amountPaid;
                       if (balance < 0) {
-                        refund = parseFlat((balance * -1).toFixed(2));
+                        refund = parseFloat((balance * -1).toFixed(2));
                       }
                     } else {
                       if (!existingBooking) {
