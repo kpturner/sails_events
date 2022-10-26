@@ -150,6 +150,17 @@ module.exports = {
 			if (filter.toLowerCase()=="partial") {
 				where.or.push({salutation:null})
 			}
+
+      // Other special values
+      if (filter.toLowerCase() == "admin") {
+        where.or.push({ isAdmin: true });
+      }
+      if (filter.toLowerCase() == "organiser") {
+        where.or.push({ isOrganiser: true });
+      }
+      if (filter.toLowerCase() == "dc") {
+        where.or.push({ isDC: true });
+      }
 		}
 
 		User.find({
