@@ -354,7 +354,7 @@ module.exports = {
 					latePaymentChecking: true,
 					organiser: organiser
 				},
-				onlinePaymentPlatforms
+				onlinePaymentPlatforms: Utility.getOnlinePaymentPlatforms()
 			})
 		}
 	},
