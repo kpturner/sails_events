@@ -45,8 +45,9 @@ var AuthController = {
 
         // Get a list of available providers for use in your templates.
         Object.keys(strategies).forEach(function (key) {
+          if (strategies[key]) {
             if (key === 'local' || key === 'rememberme') {
-                return;
+              return;
             }
 
             if (strategies[key]) {
@@ -58,6 +59,7 @@ var AuthController = {
                     slug: key
                 };
             }
+          }
         });
 
         // Clear the user out of the session also
