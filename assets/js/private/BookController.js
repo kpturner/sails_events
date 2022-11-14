@@ -845,9 +845,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
             //    with a balance
             let onlinePayment = false;
             if ($scope.booking.paymentSessionId) {
-              if (SAILS_LOCALS.booking.id) {
+              if (SAILS_LOCALS.booking.id && $scope.myBookings) {
                 // Only if we have a balance to pay
-                onlinePayment = ($scope.booking.cost > $scope.booking.amountPaid);
+                onlinePayment = !$scope.bookingForm.paid && ($scope.booking.cost > $scope.booking.amountPaid);
               } else {
                 onlinePayment = true;
               }
