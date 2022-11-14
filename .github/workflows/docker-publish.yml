@@ -51,6 +51,7 @@ jobs:
       - name: Create config file and restart cmd from secret for PGSL
         run: |
           echo "${{ secrets.PGSL_CONFIG }}" > secrets/secrets_pgsl.json
+          echo "echo \"gitupdate.sh cannot be done in the container. Login to the host and run './docker.sh -a up -u -t pgl -p 1337'\"" > ./gitupdate.sh
 
       #- name: Get the version
       #  run: echo VERSION="$(npx -c 'echo "$npm_package_version"')" >> $GITHUB_ENV

@@ -15,7 +15,7 @@ on:
         - sails-events-csl,csl,1330,kpturner
         - sails-events-mtsfc,mtsfc,1340,kpturner
         - sails-events-hamtun,hamtun,7083,kpturner
-        - sails-events-pgsl,9263dining,1337,9263dining
+        - sails-events-pgsl,pgsl,1337,9263dining
 
 jobs:
 
@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Setup the runner matrix
         id: setrunner
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           script: |
             const splits = '${{ github.event.inputs.tag }}'.split(',');
