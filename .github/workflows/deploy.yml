@@ -20,6 +20,7 @@ on:
 jobs:
 
   setup:
+    name: Setup parameters
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.setrunner.outputs.result }}

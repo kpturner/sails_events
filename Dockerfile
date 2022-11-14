@@ -36,4 +36,4 @@ RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
-CMD [ "node", "app.js", ${OPTS}]
+CMD node app.js ${OPTS}
