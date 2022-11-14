@@ -249,15 +249,6 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     $scope.refundAllowed = false;
 	}
 
-  $scope.disableUpdateButton =
-    $scope.bookingForm.loading ||
-    ($scope.myBookings && ($scope.paid && !$scope.refundAllowed) && $scope.mode==='delete') ||
-    (!$scope.openForBookings &&
-      $scope.mode!=='delete' &&
-      !($scope.myBookings && ($scope.balance && $scope.event.onlinePaymentConfig)) // Online balance exists so allow button
-    ) ||
-    ($scope.event.capacity<=0 && $scope.mode!=='delete');
-
 	// Warn if not open for bookings
 	$scope.bookingForm.bypassCode = "";
 
@@ -385,7 +376,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// If the booking has an amount paid and a balance due
 		// then the minimum cannot reduce the cost below that amount.
 		// The organiser needs to intervene for refunds etc
-		$scope.balance = $scope.bookingForm.amountPaid ? ($scope.calculateBookingCost() - $scope.bookingForm.amountPaid) : null;
+    if ($scope.bookingForm.amountPaid || $scope.event.onlinePaymentConfig) {
+      $scope.balance = $scope.calculateBookingCost() - $scope.bookingForm.amountPaid;
+    }
     if ($scope.balance) {
       $scope.balance = $scope.balance.toFixed(2);
     }
@@ -433,6 +426,14 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		}
 	}
 
+  $scope.disableUpdateButton =
+    $scope.bookingForm.loading ||
+    ($scope.myBookings && ($scope.paid && !$scope.refundAllowed) && $scope.mode==='delete') ||
+    (!$scope.openForBookings &&
+      $scope.mode!=='delete' &&
+      !($scope.myBookings && ($scope.balance && $scope.event.onlinePaymentConfig)) // Online balance exists so allow button
+    ) ||
+    ($scope.event.capacity<=0 && $scope.mode!=='delete');
 
 	// Warn if there are potential duplicates
 	if (SAILS_LOCALS.potentialDuplicates && SAILS_LOCALS.potentialDuplicates.length > 0) {
