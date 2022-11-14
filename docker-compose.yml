@@ -26,3 +26,4 @@ services:
       - BLUEBIRD_W_FORGOTTEN_RETURN=0
     ports:
       - "${EVENTS_PORT}:1337"
+    network_mode: bridge
