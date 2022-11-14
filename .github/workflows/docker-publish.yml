@@ -131,5 +131,5 @@ jobs:
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets_pgsl.json'
           assets: 'pgsl'
-          opts: '' # Run in dev mode - otherwise remove this parameter
+          opts: ' ' # Run in dev mode - otherwise remove this parameter
           ecr-uri: 'ghcr.io'
