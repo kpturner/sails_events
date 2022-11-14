@@ -132,7 +132,7 @@
             <span>Add guest</span>
           </button>
 
-          <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="bookingForm.loading || (myBookings && balance && event.onlinePaymentConfig) || (myBookings && (paid && !refundAllowed) && mode==='delete') || (!openForBookings && mode!=='delete') || (event.capacity<=0 && mode!=='delete')">
+          <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="disableUpdateButton">
             <span ng-show="!bookingForm.loading && mode=='delete' && !event.regInterest">Cancel booking</span>
             <span ng-show="!bookingForm.loading && mode=='delete' && event.regInterest">Cancel interest</span>
             <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete' && !event.regInterest">Book now</span>
