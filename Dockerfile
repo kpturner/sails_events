@@ -10,6 +10,7 @@ WORKDIR /usr/src/app
 # Bundle app source
 COPY . .
 
+ENV OPTS=$OPTS
 ENV EVENTS_PORT=1337
 ENV ALLOW_APP_UPDATE="0"
 
@@ -31,10 +32,10 @@ RUN --mount=type=secret,id=SECRETS \
 #  cat ./config/local.js | sed 's/./& /g' && \
 #  echo "======================="
 
-RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
-
-RUN echo 'Node options are "$OPTS"'
+RUN echo Assets folder is $ASSETS \
+  echo Node options are $OPTS \
+  cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
-CMD [ "node", "app.js", "$OPTS"]
+CMD [ "node", "app.js", $OPTS]
