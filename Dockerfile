@@ -33,6 +33,8 @@ RUN --mount=type=secret,id=SECRETS \
 
 RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
+RUN echo 'Node options are "$OPTS"'
+
 EXPOSE 1337
 
 CMD [ "node", "app.js", "$OPTS"]

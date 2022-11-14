@@ -55,8 +55,8 @@ runs:
         secret-files: |
           "SECRETS=${{ inputs.config }}"
         build-args: |
-          "ASSETS=${{ inputs.assets }}"
-          "OPTS=${{ inputs.opts }}"
+          ASSETS=${{ inputs.assets }}
+          OPTS=${{ inputs.opts }}
         push: true
         tags: ${{ inputs.registry }}/${{ inputs.repo }}:${{ inputs.tag }}
         # CAREFUL of caching as our test and live images will end up the same
