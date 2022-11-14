@@ -32,9 +32,7 @@ RUN --mount=type=secret,id=SECRETS \
 #  cat ./config/local.js | sed 's/./& /g' && \
 #  echo "======================="
 
-RUN echo Assets folder is $ASSETS \
-  echo Node options are $OPTS \
-  cp ./assets/images/$ASSETS/favicon.ico ./assets/
+RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
