@@ -23,6 +23,9 @@ module.exports.bootstrap = function (cb) {
 
     //Utility.diagnosticEmail("Provincial events app started OK","Developers Paranoia!");
 
+    sails.log.debug(`MySql host: ${sails.config.connections.localhostMysqlServer.host}`);
+    sails.log.debug(`MySql database: ${sails.config.connections.localhostMysqlServer.database}`);
+
     // Build indexes asyncronously if need before
     if (sails.config.models.migrate == "alter") {
       // Asynchronously build any indexes required for this environment
