@@ -19,6 +19,10 @@ inputs:
   assets:
     description: Instance assets folder
     required: true
+  opts:
+    description: Run time options
+    default: --prod
+    required: false
   ecr-uri:
     description: ECS docker image registry
 
@@ -35,4 +39,5 @@ runs:
         repo: ${{ inputs.repo }}
         config: ${{ inputs.config }}
         assets: ${{ inputs.assets }}
+        opts: ${{ inputs.opts }}
         tag: ${{ inputs.version }}

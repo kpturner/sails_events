@@ -3,6 +3,7 @@
 FROM node:16
 
 ARG ASSETS=pgl
+ARG OPTS=--prod
 
 WORKDIR /usr/src/app
 
@@ -34,4 +35,4 @@ RUN cp ./assets/images/$ASSETS/favicon.ico ./assets/
 
 EXPOSE 1337
 
-CMD [ "node", "app.js", "--prod"]
+CMD [ "node", "app.js", $OPTS]
