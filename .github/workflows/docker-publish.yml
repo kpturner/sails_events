@@ -121,13 +121,13 @@ jobs:
           assets: 'hamtun'
           ecr-uri: 'ghcr.io'
 
-      - name: Build and push with "latest" for Hamtun
+      - name: Build and push with "latest" for PGSL
         uses: ./.github/workflows/composites/docker-build-push-version
         with:
           version: pgsl-latest
           username-github: ${{ github.actor }}
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
-          config: 'secrets/secrets_hamtun.json'
+          config: 'secrets/secrets_pgsl.json'
           assets: 'pgsl'
           ecr-uri: 'ghcr.io'
