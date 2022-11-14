@@ -252,9 +252,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
   $scope.disableUpdateButton =
     $scope.bookingForm.loading ||
     ($scope.myBookings && ($scope.paid && !$scope.refundAllowed) && $scope.mode==='delete') ||
-    (!$scope.openForBookings && (
-      $scope.mode!=='delete') &&
-      !($scope.myBookings && !($scope.balance && $scope.event.onlinePaymentConfig)) // Online balance exists so allow button
+    (!$scope.openForBookings &&
+      $scope.mode!=='delete' &&
+      !($scope.myBookings && ($scope.balance && $scope.event.onlinePaymentConfig)) // Online balance exists so allow button
     ) ||
     ($scope.event.capacity<=0 && $scope.mode!=='delete');
 
