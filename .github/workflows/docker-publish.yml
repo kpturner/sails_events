@@ -62,7 +62,6 @@ jobs:
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets_pgsl.json'
           assets: 'pgsl'
-          opts: '--dev'
           ecr-uri: 'ghcr.io'
 
       #- name: Get the version
