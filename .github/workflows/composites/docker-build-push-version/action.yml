@@ -42,6 +42,7 @@ runs:
         dockerfile: Dockerfile
         repo: ${{ inputs.repo }}
         config: ${{ inputs.config }}
+        dkim_private_key: ${{ inputs.dkim_private_key }}
         assets: ${{ inputs.assets }}
         opts: ${{ inputs.opts }}
         tag: ${{ inputs.version }}
