@@ -53,7 +53,7 @@ runs:
     - name: Handle DKIM private key
       shell: bash
       run: |
-        if [ ${{ inputs.dkim_private_key == 'NOTREQUIRED' }} ]; then
+        if [ '${{ inputs.dkim_private_key }}' == 'NOTREQUIRED' ]; then
           echo Setting up dummy DKIM private key
           mkdir -p secrets
           echo not_required > secrets/not_required.pem
