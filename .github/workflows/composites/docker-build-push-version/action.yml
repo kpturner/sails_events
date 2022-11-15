@@ -16,6 +16,10 @@ inputs:
   config:
     description: Instance config (copied to local.js)
     required: true
+  dkim_private_key:
+    description: Private key (.pem) for DKIM
+    required: false
+    default: 'not-required'
   assets:
     description: Instance assets folder
     required: true

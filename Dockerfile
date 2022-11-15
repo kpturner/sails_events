@@ -23,6 +23,9 @@ RUN apt-get install default-mysql-client -y
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
 
+RUN --mount=type=secret,id=DKIM_PRIVATE_KEY \
+  cp /run/secrets/DKIM_PRIVATE_KEY ./dkim_private_key.pem
+
 #RUN echo "Here are all the contents" && \
 #  ls
 

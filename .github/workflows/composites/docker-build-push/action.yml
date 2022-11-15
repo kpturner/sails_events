@@ -13,6 +13,10 @@ inputs:
   config:
     description: Instance config (copied to local.js)
     required: true
+  dkim_private_key:
+    description: Private key (.pem) for DKIM
+    required: false
+    default: 'not-required'
   assets:
     description: Instance assets folder
     required: true
@@ -54,6 +58,7 @@ runs:
         file: ${{ inputs.dockerfile }}
         secret-files: |
           "SECRETS=${{ inputs.config }}"
+          "DKIM_PRIVATE_KEY=${{ inputs.dkim_private_key }}"
         build-args: |
           ASSETS=${{ inputs.assets }}
           OPTS=${{ inputs.opts }}

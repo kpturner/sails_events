@@ -48,9 +48,10 @@ jobs:
         run: |
           echo "${{ secrets.HAMTUN_CONFIG }}" > secrets/secrets_hamtun.json
 
-      - name: Create config file and restart cmd from secret for PGSL
+      - name: Create secrets and restart cmd from secret for PGSL
         run: |
           echo "${{ secrets.PGSL_CONFIG }}" > secrets/secrets_pgsl.json
+          echo "${{ secrets.PGSL_DKIM_PRIVATE_KEY" > secrets/dkim_private_key.pem
           echo "echo \"gitupdate.sh cannot be done in the container. Login to the host and run './docker.sh -a up -u -t pgl -p 1337'\"" > ./gitupdate.sh
 
       - name: Build and push with "latest" for Provincial Grand Stewards Lodge
@@ -61,6 +62,7 @@ jobs:
           password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets_pgsl.json'
+          dkim_private_key: 'secrets/dkim_private_key.pem'
           assets: 'pgsl'
           ecr-uri: 'ghcr.io'
 
