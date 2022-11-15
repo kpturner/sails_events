@@ -16,7 +16,6 @@ inputs:
   dkim_private_key:
     description: Private key (.pem) for DKIM
     required: false
-    default: 'not-required'
   assets:
     description: Instance assets folder
     required: true
@@ -50,6 +49,15 @@ runs:
       id: buildx
       uses: docker/setup-buildx-action@v2
 
+    - name: Handle DKIM private key
+      shell: bash
+      run: |
+        if [ ${{ inputs.dkim_private_key == '' }} ]; then
+          echo DPK=not_required >> $GITHUB_ENV
+        else
+          echo DPK=${{ inputs.dkim_private_key }} >> $GITHUB_ENV
+        fi
+
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
@@ -58,7 +66,7 @@ runs:
         file: ${{ inputs.dockerfile }}
         secret-files: |
           "SECRETS=${{ inputs.config }}"
-          "DKIM_PRIVATE_KEY=${{ inputs.dkim_private_key }}"
+          "DKIM_PRIVATE_KEY=${{ env.DPK }}"
         build-args: |
           ASSETS=${{ inputs.assets }}
           OPTS=${{ inputs.opts }}
