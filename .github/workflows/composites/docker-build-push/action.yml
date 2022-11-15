@@ -16,6 +16,7 @@ inputs:
   dkim_private_key:
     description: Private key (.pem) for DKIM
     required: false
+    default: 'NOTREQUIRED'
   assets:
     description: Instance assets folder
     required: true
@@ -52,9 +53,13 @@ runs:
     - name: Handle DKIM private key
       shell: bash
       run: |
-        if [ ${{ inputs.dkim_private_key == '' }} ]; then
-          echo DPK=not_required >> $GITHUB_ENV
+        if [ ${{ inputs.dkim_private_key == 'NOTREQUIRED' }} ]; then
+          echo Setting up dummy DKIM private key
+          mkdir -p secrets
+          echo not_required > secrets/not_required.pem
+          echo DPK=secrets/not_required.pem >> $GITHUB_ENV
         else
+          echo Suing real DKIM private key
           echo DPK=${{ inputs.dkim_private_key }} >> $GITHUB_ENV
         fi
 
