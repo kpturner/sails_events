@@ -157,12 +157,13 @@ module.exports.events = {
   },
 
   // DKIM details to help prevent our emails being flagged as spam
+  /*
   DKIM: {
     domainName: "squareevents.org",
     keySelector: "default",
     privateKey: "default.squareevents.org.pem"
   },
-
+  */
   onlinePaymentPlatforms: [
   ]
 
