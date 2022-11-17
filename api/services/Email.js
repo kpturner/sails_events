@@ -109,7 +109,7 @@ module.exports = {
     },
 
     nodemailer: function (template, data, opts, cb) {
-        // Check to see if we a reusing DKIM.  If not, we can just use sails-hook-email
+        // Check to see if we are using DKIM.  If not, we can just use sails-hook-email
         // functionality unaugmented
 
         // Use my localised email hook while waiting for a fix to sails-hook-email
