@@ -37,6 +37,21 @@ SSH to the host and run `./docker.sh -a up -u -n <sails-events or sails-events-t
 
 Although the docker container has its own version of `node` and `redis` it still depends on `mysql` and its `database` being provided externally (usually through `Plesk`) as well as the email service provider.
 
+In some cases the application may not be able to access the MySql database. These are the things to check:
+
+The MySql config is bound to all the interfaces:
+
+`bind-address            = *`
+
+Check the subnet of the docker container:
+
+`docker network inspect sailseventspgsl_default`
+
+Sort out the firewall
+
+`ufw allow from 192.168.0.0/16` or whatever subnet you find for the container.
+
+`ufw reload`
 
 ## Services
 
