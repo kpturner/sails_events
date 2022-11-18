@@ -23,7 +23,7 @@ module.exports = function serverError (data, options) {
   res.status(500);
 
   // Log error to console
-  if (data !== undefined && data.indexOf('_csrf is not defined') < 0) {
+  if (data && data.indexOf && data.indexOf('_csrf is not defined') < 0) {
     sails.log.error('Sending 500 ("Server Error") response: \n',data);
   }
   else sails.log.error('Sending empty 500 ("Server Error") response');
