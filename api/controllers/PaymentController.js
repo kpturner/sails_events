@@ -603,7 +603,7 @@ module.exports = {
                         {
                           recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
                           senderName: sails.config.events.title,
-                          amountPaid,
+                          amountPaid: amountPaid.toFixed(2),
                           booking,
                           event
                         },
