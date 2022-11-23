@@ -54,3 +54,4 @@ jobs:
           IFS=\, read -a fields <<<"${{ github.event.inputs.tag }}"
           docker login ghcr.io/kpturner -u ${{ github.actor }} -p ${{ secrets.REPO_ACCESS_TOKEN }}
           ./docker.sh -u -a up -n ${fields[0]} -t ${fields[1]} -p ${fields[2]}
+          ./docker-cleanup.sh
