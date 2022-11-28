@@ -796,8 +796,8 @@ module.exports = {
       amount = parseFloat(((amount + config.fixedFee) / (1 - config.fee)).toFixed(2));
     }
     // Now we need to cater for rounding errors unfortunately
-    const unitPrice = parseFloat((amount / places).toFixed(2));
-    return unitPrice * places;
+    const unitPrice = amount / places;
+    return parseFloat((unitPrice * places).toFixed(2));
   },
 
   /**

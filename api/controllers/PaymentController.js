@@ -125,8 +125,9 @@ module.exports = {
 							let name = booking.event.name;
 							let quantity = booking.places;
               // booking.cost is the total for all the places on the booking but we
-              // need to give Stripe the amount PER PLACE in integers
-              let amount = Math.round((booking.cost / booking.places) * 100);
+              // need to give Stripe the amount PER PLACE in integers. We will use Math.ceil to round UP to the nearest penny
+              // otherwise we risk losing on the fee
+              let amount = Math.ceil((booking.cost / booking.places) * 100);
 							if (booking.amountPaid) {
 								// This means that by hook or by crook the booking has acquired a different cost.
 								// Normally if this is just as a result of adding guests the value to collect will
