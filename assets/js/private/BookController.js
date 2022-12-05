@@ -793,11 +793,43 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 				}
 			}
 
+      /**
+       * Private function to optionally verify that the user is happy to have
+       * the original booking refunded then re-charged for the new booking as a whole
+       */
+      const postBooking = function (route) {
+        $scope.bypassCheckoutPrompt = false;
+        let changingPaidOnlineBooking = false;
+        if ($scope.event.recoverOnlinePaymentFee && SAILS_LOCALS.booking.id && SAILS_LOCALS.booking.paymentSessionId && SAILS_LOCALS.booking.amountPaid && SAILS_LOCALS.booking.places !== $scope.bookingForm.places) {
+          // It is an existing booking that has received online payment and now the number of places has changed
+          changingPaidOnlineBooking = true;
+        }
+        if (changingPaidOnlineBooking) {
+          const opts={
+						template:"/templates/bookingChangeRefundNotice.html",
+						className: 'ngdialog-theme-default',
+						scope: $scope
+					};
+					// Pop the dialog
+					ngDialog.openConfirm(opts)
+					.then(function (value) {
+						// Continue with booking
+            $scope.bookingForm.paid = false;
+            $scope.bypassCheckoutPrompt = true;
+						postBookingConfirmed(route);
+					}, function (reason) {
+						// They changedtheir mind
+						$scope.bookingForm.loading = false;
+					});
+        } else {
+          postBookingConfirmed(route);
+        }
+      }
 
 			/**
 			 * Private function to make the booking
 			 */
-			var postBooking = function (route) {
+			const postBookingConfirmed = function (route) {
 				$http.post(route, {
 					_csrf: SAILS_LOCALS._csrf,
 					eventid: $scope.event.id,
@@ -893,35 +925,43 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 						else {
 							// Now decide if we are taking online bookings or not
 							if (onlinePayment) {
-								var opts = {
-									template: "/templates/checkoutConfirmation.html",
-									className: 'ngdialog-theme-default',
-									scope: $scope,
-								};
-								// Pop the dialog
-								ngDialog.openConfirm(opts)
-									.then(function (value) {
-										// Continue to checkout
-										var stripe = Stripe($scope.booking.stripePublishableKey);
-										stripe
-											.redirectToCheckout({
-												sessionId: $scope.booking.paymentSessionId
-											})
-											.then(function (result) {
-												if (result.error) {
-													toastr.error(result.error.message, 'Error');
-												}
-											});
-									}, function (reason) {
-										// They bottled it
-                    if (!$scope.booking.amountPaid) {
-                      $scope.mode = "delete";
-										  SAILS_LOCALS.booking.id = $scope.booking.id;
-										  $scope.proceed();
-                    } else {
-                      $scope.bookingForm.loading = false;
-                    }
-									});
+                const checkout = () => {
+                  const stripe = Stripe($scope.booking.stripePublishableKey);
+                  stripe
+                    .redirectToCheckout({
+                      sessionId: $scope.booking.paymentSessionId
+                    })
+                    .then(function (result) {
+                      if (result.error) {
+                        toastr.error(result.error.message, 'Error');
+                      }
+                    });
+                }
+                if ($scope.bypassCheckoutPrompt) {
+                  // Continue to checkout
+                  checkout();
+                } else {
+                  var opts = {
+                    template: "/templates/checkoutConfirmation.html",
+                    className: 'ngdialog-theme-default',
+                    scope: $scope,
+                  };
+                  // Pop the dialog
+                  ngDialog.openConfirm(opts)
+                    .then(function (value) {
+                      // Continue to checkout
+                      checkout();
+                    }, function (reason) {
+                      // They bottled it
+                      if (!$scope.booking.amountPaid) {
+                        $scope.mode = "delete";
+                        SAILS_LOCALS.booking.id = $scope.booking.id;
+                        $scope.proceed();
+                      } else {
+                        $scope.bookingForm.loading = false;
+                      }
+                    });
+                }
 							} else {
 								$scope.event.paymentDetails = $scope.event.paymentDetails ?
 																$scope.event.paymentDetails.replace(new RegExp('<%BOOKINGREF%>', 'g'), '*BOOKING REFERENCE WILL BE ON YOUR CONFIRMATION EMAIL*') :

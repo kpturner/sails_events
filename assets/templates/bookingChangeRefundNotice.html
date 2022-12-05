@@ -1,0 +1,12 @@
+<div class="ngdialog-message">
+    <h3>CHECKOUT</h3>
+    <p>This event uses an online payment platform. You have already paid for your booking and are now making changes to it.
+    <p>In order to keep the online payment fee you will incur to a minimum, we will refund all payments made so far (£{{bookingForm.amountPaid}}), and then recharge for balance.</p>
+    <p>Click 'Continue' to proceed as described or 'Cancel'.
+    </p>
+
+</div>
+<div class="ngdialog-buttons">
+    <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Continue</button>
+</div>

@@ -790,6 +790,9 @@ module.exports = {
   },
 
   calculateTotalBookingCost: function(event, places) {
+    if (!places) {
+      return 0;
+    }
     let amount = places * event.price;
     if (event.onlinePayments && event.recoverOnlinePaymentFee) {
       const config = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform].find(plat => plat.code === event.onlinePaymentConfig);

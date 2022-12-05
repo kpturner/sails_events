@@ -653,7 +653,7 @@ module.exports = {
                 if (event.capacity >= req.param("places")) {
 
                   // Private function to process booking
-                  var processBooking = function () {
+                  var processBooking = async function () {
                     let booking = {};
                     let balance;
                     let refund;
@@ -677,6 +677,17 @@ module.exports = {
                     else {
                       booking.places = 1
                     }
+
+                    // If we are changing the cost of a booking that has online payments where the fee is recovered automatically
+                    // then refund all payments so far and change from scratch (otherwise the fee gets messy)
+                    if (event.recoverOnlinePaymentFee && existingBooking && existingBooking.paymentSessionId && existingBooking.amountPaid && booking.places !== existingBooking.places) {
+                      // It is an existing booking that has received online payment and now the number of places has changed
+                      await sails.controllers.payment.issueRefund(existingBooking, existingBooking.amountPaid);
+                      // Fool later calcs by zeroising the existing booking places
+                      existingBooking.places = 0;
+                      booking.amountPaid = 0;
+                    }
+
                     booking.cost = Utility.calculateTotalBookingCost(event, booking.places);
                     booking.dietary = user.dietary;
 
