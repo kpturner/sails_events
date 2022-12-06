@@ -65,8 +65,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
       const config = SAILS_LOCALS.onlinePaymentPlatforms[$scope.event.onlinePaymentPlatform].find(plat => plat.code === $scope.event.onlinePaymentConfig);
       if (config && $scope.event.recoverOnlinePaymentFee) {
         cost = parseFloat(((($scope.event.price * $scope.bookingForm.places) + config.fixedFee) / (1 - config.fee)).toFixed(2));
-        // Now we need to cater for rounding errors unfortunately
-        const unitPrice = parseFloat((cost /$scope.bookingForm.places).toFixed(2));
+        // Now we need to cater for rounding errors unfortunately. It means a possible
+        // slight overcharge on the unit price is possible.
+        let unitPrice = Math.ceil((cost / $scope.bookingForm.places) * 100) / 100;
+        unitPrice = parseFloat(unitPrice.toFixed(2));
         cost = unitPrice * $scope.bookingForm.places;
       }
     }
