@@ -25,6 +25,10 @@ jobs:
           lfs: true
           fetch-depth: 0
 
+      - name: Build
+        run: |
+          npm run build
+
       - name: Create config file and restart cmd from secret for PGL
         run: |
           mkdir -p secrets
