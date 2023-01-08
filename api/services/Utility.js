@@ -27,8 +27,31 @@ var googlePeople = new google.people_v1.People();
 var Gravatar = require('machinepack-gravatar');
 var moment = require('moment-timezone');
 var redisClient;
+var crypto = require('crypto');
 
 module.exports = {
+
+  /**
+ *
+ * Geberate random 8 character password
+ */
+  randomPassword: function () {
+    let newPassword = '';
+    while (newPassword.length < 8) {
+      var tempPassword = crypto.randomBytes(32).toString('base64');
+      // We only want the first 8 letters of the alphabet (ignoring ambiguous letters)
+      for (var i = 0; i < 31; i++) {
+        if (('abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ').indexOf(tempPassword.substr(i, 1)) >= 0) {
+          newPassword += tempPassword.substr(i, 1);
+          if (newPassword.length == 8) {
+            i = 31; //exits loop
+          }
+        }
+      }
+    }
+    return newPassword;
+  },
+
 
   /**
    * Return todays date at 00:00:00 (catering for DST which is not in use on some centos/plesk servers)
@@ -770,7 +793,7 @@ module.exports = {
 
   },
 
-  getOnlinePaymentPlatforms: function() {
+  getOnlinePaymentPlatforms: function () {
     const onlinePaymentPlatforms = _.cloneDeep(sails.config.events.onlinePaymentPlatforms);
     // Remove secrets before sending it to the client
     for (const platform in onlinePaymentPlatforms) {
@@ -789,7 +812,7 @@ module.exports = {
     return onlinePaymentPlatforms
   },
 
-  calculateTotalBookingCost: function(event, places) {
+  calculateTotalBookingCost: function (event, places) {
     if (!places) {
       return 0;
     }

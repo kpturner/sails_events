@@ -106,6 +106,7 @@ module.exports.routes = {
   'get /dcs': 'UserController.dcs',
   'get /mimicuserrequested': 'UserController.mimicUserRequested',
   'post /mimicuser': 'UserController.mimicUser',
+  'post /convertaccount': 'UserController.convertAccount',
 
   // Other orders
   'get /otherorders/:userid': 'OrderController.otherOrders',
