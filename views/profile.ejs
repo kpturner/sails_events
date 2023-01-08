@@ -123,6 +123,11 @@
           <span class="fa-pulse fa fa-spinner" ng-show="profileForm.loading" ></span>
           <span ng-show="profileForm.loading">Saving your details...</span>
         </button>
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="convertAccount()" ng-hide="user.authProvider=='local'">
+          <span ng-show="!profileForm.loading">Convert to password account</span>
+          <span class="fa-pulse fa fa-spinner" ng-show="profileForm.loading" ></span>
+          <span ng-show="profileForm.loading">Changing account type...</span>
+        </button>
 
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />
       </form>

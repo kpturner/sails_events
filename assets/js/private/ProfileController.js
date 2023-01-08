@@ -71,6 +71,25 @@ angular.module('EventsModule').controller('ProfileController', ['$scope', '$http
 		}
 	}
 
+  $scope.convertAccount = function() {
+    $scope.profileForm.loading=true;
+    $http.post("/convertaccount", {
+      _csrf: SAILS_LOCALS._csrf,
+      id: SAILS_LOCALS.user.id
+    })
+      .success(function (data, status) {
+        window.location = '/';
+      }).catch(function onError(sailsResponse){
+
+				// Handle known error type(s).
+				toastr.error(sailsResponse.data, 'Error');
+
+			})
+			.finally(function eitherWay(){
+				$scope.profileForm.loading = false;
+			});
+  }
+
 	// Get users other orders (if any)
 	$http.get("/otherorders/"+SAILS_LOCALS.user.id).success(function(data, status) {
 		if (typeof data == 'object') {
