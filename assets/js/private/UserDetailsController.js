@@ -96,7 +96,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
         // Continue
         $http.post("/convertaccount", {
           _csrf: SAILS_LOCALS._csrf,
-          id: SAILS_LOCALS.user.id
+          id: SAILS_LOCALS.userDetails.id
         })
           .success(function (data, status) {
             window.location = '/';
