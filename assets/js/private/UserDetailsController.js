@@ -99,7 +99,7 @@ angular.module('EventsModule').controller('UserDetailsController', ['$scope', '$
           id: SAILS_LOCALS.userDetails.id
         })
           .success(function (data, status) {
-            window.location = '/';
+            window.location = '/users';
           }).catch(function onError(sailsResponse) {
 
             // Handle known error type(s).
