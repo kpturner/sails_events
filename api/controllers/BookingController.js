@@ -680,6 +680,8 @@ module.exports = {
 
                     // If we are changing the cost of a booking that has online payments where the fee is recovered automatically
                     // then refund all payments so far and change from scratch (otherwise the fee gets messy)
+                    //** EDIT:  DISABLE THIS FOR THE TIME BEING.  A BUG EXISTS WHERE THE REFUND GOES THROUGH BUT SOMETIOMES ONLY THE ADDITION GUEST IS THEN CHARGED FOR */
+                    /*
                     if (event.recoverOnlinePaymentFee && existingBooking && existingBooking.paymentSessionId && existingBooking.amountPaid && booking.places !== existingBooking.places) {
                       // It is an existing booking that has received online payment and now the number of places has changed
                       await sails.controllers.payment.issueRefund(existingBooking, existingBooking.amountPaid);
@@ -687,6 +689,7 @@ module.exports = {
                       existingBooking.places = 0;
                       booking.amountPaid = 0;
                     }
+                    */
 
                     booking.cost = Utility.calculateTotalBookingCost(event, booking.places);
                     booking.dietary = user.dietary;
