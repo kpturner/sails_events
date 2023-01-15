@@ -380,6 +380,10 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 		// The organiser needs to intervene for refunds etc
     if ($scope.bookingForm.amountPaid || $scope.event.onlinePaymentConfig) {
       $scope.balance = $scope.calculateBookingCost() - $scope.bookingForm.amountPaid;
+      if ($scope.balance <= 0.1 && $scope.bookingForm.paid) {
+        // Don't bother - its probably rounding
+        $scope.balance = 0;
+      }
     }
     if ($scope.balance) {
       $scope.balance = $scope.balance.toFixed(2);
