@@ -729,6 +729,7 @@ module.exports = {
                             if (event.onlinePayments && event.recoverOnlinePaymentFee) {
                               if (balance >= -0.1 && balance <= 0.1) {
                                 balance = 0;
+                                booking.paid = true;
                               }
                             }
                             if (balance < 0) {
