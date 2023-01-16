@@ -725,6 +725,12 @@ module.exports = {
                             booking.paid = true;
                           } else {
                             balance = booking.cost - booking.amountPaid;
+                            // If we are autocalculating online bookings and we arrive at a total between -0.1 and 0.1 then just ignore it
+                            if (event.onlinePayments && event.recoverOnlinePaymentFee) {
+                              if (balance >= -0.1 && balance <= 0.1) {
+                                balance = 0;
+                              }
+                            }
                             if (balance < 0) {
                               refund = parseFloat((balance * -1).toFixed(2));
                             }
