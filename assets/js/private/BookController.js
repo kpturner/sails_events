@@ -61,6 +61,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
 
     $scope.calculateBookingCost = function () {
         let cost = $scope.bookingForm.cost;
+        /*
+         * Make no indication of cost plus fees in the UI
+         *
         if (SAILS_LOCALS.onlinePaymentPlatforms && $scope.event.onlinePaymentConfig) {
             const config = SAILS_LOCALS.onlinePaymentPlatforms[$scope.event.onlinePaymentPlatform].find(plat => plat.code === $scope.event.onlinePaymentConfig);
             if (config && $scope.event.recoverOnlinePaymentFee) {
@@ -72,6 +75,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
                 cost = unitPrice * $scope.bookingForm.places;
             }
         }
+        */
         return cost;
     }
 
@@ -808,7 +812,9 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
                 let changingPaidOnlineBooking = false;
                 if ($scope.event.recoverOnlinePaymentFee && SAILS_LOCALS.booking.id && SAILS_LOCALS.booking.paymentSessionId && SAILS_LOCALS.booking.amountPaid && SAILS_LOCALS.booking.places !== $scope.bookingForm.places) {
                     // It is an existing booking that has received online payment and now the number of places has changed
-                    changingPaidOnlineBooking = true;
+                    // EDIT: WE HAS DISABLED THIS DUE TO THE FACT THAT SOMETIMES A REFUND WENT THROUGH
+                    // FOLLOWED BY A PAYMENT FOR ONLY THE ADDITION RATHER THAN THE WHOLE AMOUNT
+                    // changingPaidOnlineBooking = true;
                 }
                 if (changingPaidOnlineBooking) {
                     const opts = {
