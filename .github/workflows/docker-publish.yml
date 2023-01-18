@@ -54,6 +54,17 @@ jobs:
           echo "${{ secrets.PGSL_DKIM_PRIVATE_KEY }}" > secrets/dkim_private_key.pem
           echo "echo \"gitupdate.sh cannot be done in the container. Login to the host and run './docker.sh -a up -u -t pgl -p 1337'\"" > ./gitupdate.sh
 
+      - name: Build and push with "latest" for Hamtun
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: hamtun-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_hamtun.json'
+          assets: 'hamtun'
+          ecr-uri: 'ghcr.io'
+
       - name: Build and push with "latest" for Provincial Grand Stewards Lodge
         uses: ./.github/workflows/composites/docker-build-push-version
         with:
@@ -122,15 +133,4 @@ jobs:
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets_mtsfc.json'
           assets: 'mtsfc'
-          ecr-uri: 'ghcr.io'
-
-      - name: Build and push with "latest" for Hamtun
-        uses: ./.github/workflows/composites/docker-build-push-version
-        with:
-          version: hamtun-latest
-          username-github: ${{ github.actor }}
-          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repo: 'kpturner/sails_events'
-          config: 'secrets/secrets_hamtun.json'
-          assets: 'hamtun'
           ecr-uri: 'ghcr.io'
