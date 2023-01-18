@@ -678,31 +678,35 @@ module.exports = {
                       booking.places = 1
                     }
 
-                    // If we are changing the cost of a booking that has online payments where the fee is recovered automatically
-                    // then refund all payments so far and change from scratch (otherwise the fee gets messy)
-                    //** EDIT:  DISABLE THIS FOR THE TIME BEING.  A BUG EXISTS WHERE THE REFUND GOES THROUGH BUT SOMETIOMES ONLY THE ADDITION GUEST IS THEN CHARGED FOR */
-                    /*
-                    if (event.recoverOnlinePaymentFee && existingBooking && existingBooking.paymentSessionId && existingBooking.amountPaid && booking.places !== existingBooking.places) {
-                      // It is an existing booking that has received online payment and now the number of places has changed
-                      await sails.controllers.payment.issueRefund(existingBooking, existingBooking.amountPaid);
-                      // Fool later calcs by zeroising the existing booking places
-                      existingBooking.places = 0;
-                      booking.amountPaid = 0;
+                    if (existingBooking) {
+                      let places = booking.places - existingBooking.places;
+                      let refundDue = false;
+                      if (places < 0) {
+                        places = places * -1;
+                        refundDue = true;
+                      }
+                      const newCost = Utility.calculateTotalBookingCost(event, places);
+                      if (refundDue) {
+                        booking.cost -= newCost;
+                      } else {
+                        booking.cost += newCost;
+                      }
+                    } else {
+                      booking.cost = Utility.calculateTotalBookingCost(event, booking.places);
                     }
-                    */
 
-                    booking.cost = Utility.calculateTotalBookingCost(event, booking.places);
                     booking.dietary = user.dietary;
+
+                    balance = booking.cost - booking.amountPaid;
+                    if (balance < 0) {
+                      refund = parseFloat((balance * -1).toFixed(2));
+                    }
 
                     if (req.session.eventBookings || req.session.userBookings) {
                       booking.amountPaid = req.param("amountPaid");
                       booking.paid = req.param("paid");
                       booking.mop = req.param("mop");
                       booking.tableNo = req.param("tableNo");
-                      balance = booking.cost - booking.amountPaid;
-                      if (balance < 0) {
-                        refund = parseFloat((balance * -1).toFixed(2));
-                      }
                     } else {
                       if (!existingBooking) {
                         // New booking
@@ -712,29 +716,11 @@ module.exports = {
                         booking.tableNo = null;
                       }
                       else {
-                        // Existing booking - has the amount owed changed for a paid booking?
-                        if (booking.paid && existingBooking.places != booking.places) {
-                          // What was the previous booking cost
-                          const prevBookingCost = Utility.calculateTotalBookingCost(event, existingBooking.places);
-                          balance = (booking.cost - prevBookingCost).toFixed(2);
-                          // Could be a refund or more to pay
-                          refund = parseFloat(((balance <= 0) ? (balance * -1) : 0).toFixed(2));
-                        }
-                        else {
-                          if (!booking.paid && booking.amountPaid && booking.cost == booking.amountPaid) {
-                            booking.paid = true;
-                          } else {
-                            balance = booking.cost - booking.amountPaid;
-                            // If we are autocalculating online bookings and we arrive at a total between -0.1 and 0.1 then just ignore it
-                            if (event.onlinePayments && event.recoverOnlinePaymentFee) {
-                              if (balance >= -0.1 && balance <= 0.1) {
-                                balance = 0;
-                                booking.paid = true;
-                              }
-                            }
-                            if (balance < 0) {
-                              refund = parseFloat((balance * -1).toFixed(2));
-                            }
+
+                        // If we are autocalculating online bookings and we arrive at a total between -0.1 and 0.1 then just ignore it
+                        if (event.onlinePayments && event.recoverOnlinePaymentFee) {
+                          if (balance >= -0.1 && balance <= 0.1) {
+                            balance = 0;
                           }
                         }
                         if (balance > 0) {
@@ -949,7 +935,7 @@ module.exports = {
 
                             // If we are using online payments, add a checkout session id to the booking
                             // But only if this is a registered user booking themselves in.
-                            if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig && !booking.paid) {
+                            if (user.authProvider !== 'dummy' && !event.free && !event.regInterest && event.onlinePayments && event.onlinePaymentConfig && !booking.paid) {
                               sails.controllers.payment.getNewCheckoutSession(booking.id)
                                 .then((sessionId) => {
                                   const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
@@ -973,7 +959,7 @@ module.exports = {
                       }
                       else {
                         // Are we using online payments?
-                        if (user.authProvider !== 'dummy' && event.onlinePayments && event.onlinePaymentConfig) {
+                        if (user.authProvider !== 'dummy' && !event.free && !event.regInterest && event.onlinePayments && event.onlinePaymentConfig) {
                           // Do we have a balance?
                           if (balance > 0) {
                             sails.controllers.payment.getNewCheckoutSession(booking.id)
