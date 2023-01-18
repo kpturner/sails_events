@@ -605,6 +605,7 @@ module.exports = {
                           recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
                           senderName: sails.config.events.title,
                           amountPaid: amountPaid.toFixed(2),
+                          additionalInfo: event.recoverOnlinePaymentFee ? 'NOTE: This payment includes a NON-REFUNDABLE online payment fee.' : '',
                           booking,
                           event
                         },

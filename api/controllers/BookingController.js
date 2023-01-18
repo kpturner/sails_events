@@ -488,6 +488,7 @@ module.exports = {
         eventName: event.name,
         eventDate: formattedDate,
         eventTime: event.time,
+        recoverOnlinePaymentFee: event.recoverOnlinePaymentFee,
         eventAdditionalInfo: event.additionalInfo,
         eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
         eventOrganiser: event.organiser.name,
@@ -680,16 +681,20 @@ module.exports = {
 
                     if (existingBooking) {
                       let places = booking.places - existingBooking.places;
-                      let refundDue = false;
                       if (places < 0) {
-                        places = places * -1;
-                        refundDue = true;
-                      }
-                      const newCost = Utility.calculateTotalBookingCost(event, places);
-                      if (refundDue) {
-                        booking.cost -= newCost;
+                        // Looks like a refund is due.  What did we charge per place
+                        // on the original booking? We need to use that to get the correct refund amount
+                        let originalCostPerBooking = existingBooking.cost / existingBooking.places;
+                        if (event.recoverOnlinePaymentFee) {
+                          // At this juncture it is important to note that Stripe does *not* refund the original
+                          // fee.  Costs are incurred taking the payment and refunding it, so the fee remains.
+                          // We can therefore only refund the actual cost of the booking when auto-calculating
+                          // fees
+                          originalCostPerBooking = event.price;
+                        }
+                        booking.cost += (originalCostPerBooking * places);
                       } else {
-                        booking.cost += newCost;
+                        booking.cost += Utility.calculateTotalBookingCost(event, places);
                       }
                     } else {
                       booking.cost = Utility.calculateTotalBookingCost(event, booking.places);
@@ -1913,7 +1918,15 @@ module.exports = {
             // Issue refund if online payments used
             if (booking.paymentReference) {
               try {
-                await sails.controllers.payment.issueRefund(booking, booking.amountPaid);
+                let refund = booking.amountPaid;
+                if (booking.event.recoverOnlinePaymentFee) {
+                  // At this juncture it is important to note that Stripe does *not* refund the original
+                  // fee.  Costs are incurred taking the payment and refunding it, so the fee remains.
+                  // We can therefore only refund the actual cost of the booking when auto-calculating
+                  // fees
+                  refund = booking.event.price * booking.places;
+                }
+                await sails.controllers.payment.issueRefund(booking, refund);
               } catch (err) {
                 console.error(err);
                 // We will cancel the booking anyway
