@@ -292,7 +292,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
           $http.post("/verifybypasscode", {
             _csrf: SAILS_LOCALS._csrf,
             id: $scope.event.id,
-            bypassCode: $scope.bookingForm.bypassCode
+            bypassCode: $scope.bookingForm.bypassCode.trim()
           })
             .success(function (data, status) {
               $scope.openForBookings = true;
