@@ -10,7 +10,7 @@ on:
 
   workflow_dispatch:
     inputs:
-      tag:
+      instance:
         description: Instance
         required: true
         default: all
