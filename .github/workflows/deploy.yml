@@ -7,7 +7,6 @@ on:
       tag:
         description: The tag,port of the Docker image
         required: true
-        default: pgl
         type: choice
         options:
         - sails-events,pgl,1337,hampshirefreemasonry
