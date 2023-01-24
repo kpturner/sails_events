@@ -376,6 +376,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
     $scope.bookingForm.tableNo = SAILS_LOCALS.booking.tableNo;
     $scope.bookingForm.amountPaid = SAILS_LOCALS.booking.amountPaid;
     $scope.bookingForm.dietary = SAILS_LOCALS.booking.dietary;
+    $scope.bookingForm.carReg = SAILS_LOCALS.booking.carReg;
     $scope.bookingForm.info = SAILS_LOCALS.booking.info;
     $scope.bookingForm.places = SAILS_LOCALS.booking.places;
     $scope.bookingForm.remindersSent = SAILS_LOCALS.booking.remindersSent;
@@ -866,6 +867,7 @@ angular.module('EventsModule').controller('BookController', ['$scope', '$http', 
           area: $scope.bookingForm.area,
           rank: $scope.bookingForm.rank,
           dietary: $scope.bookingForm.dietary,
+          carReg: $scope.bookingForm.carReg,
           email: $scope.bookingForm.email,
           address1: $scope.bookingForm.address1,
           address2: $scope.bookingForm.address2,

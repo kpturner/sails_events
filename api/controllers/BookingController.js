@@ -525,6 +525,7 @@ module.exports = {
         dietary: user.dietary || "",
         bookingRef: bookingRef,
         info: (booking.info || "n/a").replace(/[\n\r]/g, '<br>'),
+        carReg: booking.carReg,
         places: booking.places,
         paid: booking.paid,
         linkedBookings: linkedBookings,
@@ -678,7 +679,7 @@ module.exports = {
                     else {
                       booking.places = 1
                     }
-
+                    booking.carReg = req.param("carReg")
                     if (existingBooking) {
                       let places = booking.places - existingBooking.places;
                       if (places < 0) {
@@ -2403,6 +2404,9 @@ module.exports = {
       row.surname = booking.user.surname || "";
       row.firstName = booking.user.firstName || "";
       row.displayName = booking.user.salutation + " " + booking.user.name;
+      if (booking.carReg) {
+        row.carReg = booking.carReg;
+      }
       if (sails.config.events.userCategories.length > 0) {
         row.category = booking.user.category || "";
       }
@@ -2533,6 +2537,9 @@ module.exports = {
         row.surname = addition.surname || "";
         row.firstName = addition.firstName || "";
         row.displayName = row.salutation + " " + row.firstName + " " + row.surname;
+        if (booking.carReg) {
+          row.carReg = addition.carReg;
+        }
         row.rank = addition.rank || "";
         row[label] = addition.lodge || "";
         row[labelNo] = addition.lodgeNo || "";

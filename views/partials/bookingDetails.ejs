@@ -313,6 +313,18 @@ and/or maxlength) -->
   </select>
 </div>
 
+<!-- C A R  R E G -->
+
+<div class="control-group form-group col-xs-10" ng-class="{'has-error':<%-model%>.carreg.$invalid &&
+  <%-model%>.carreg.$dirty}"
+ng-show="event.regReqd">
+<label>Car registration</label>
+<input type="text" class="form-control" name="carreg" ng-model="<%-model%>Form.carReg"
+ng-maxlength="50">
+<span class="help-block has-error" ng-if="<%-model%>.carreg.$dirty">
+<span ng-show="<%-model%>.crreg.$error.maxlength">Car registration cannot be more than 50 characters.</span>
+</span>
+</div>
 
 <!-- D I E T A R Y -->
 
@@ -519,6 +531,13 @@ and/or maxlength) -->
       <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
       <input type="text" class="form-control" placeholder="e.g. PPDGDC or Past Provincial Deputy Grand Director of Ceremonies"
         name="rank_{{place}}" ng-model="linked<%-model%>s[place].rank">
+
+    </div>
+
+    <!-- C A R  R E G -->
+    <div class="control-group form-group col-xs-10" ng-show="event.regReqd">
+      <label>Car registration</label>
+      <input type="text" class="form-control" name="carreg_{{place}}" ng-model="linked<%-model%>s[place].carReg">
 
     </div>
 

@@ -66,6 +66,11 @@ var LinkedBooking = {
       type: 'string'
     },
 
+    // The user's dietary requirements
+    carReg: {
+      type: 'string'
+    },
+
     // Menu choice
     menuChoice: {
       type: 'integer'

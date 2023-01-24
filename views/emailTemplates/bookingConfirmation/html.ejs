@@ -48,6 +48,9 @@
         <br>
     <% } %>
     <br>Contact no: <%=phone%>
+  <% if (carReg) {%>
+    <br>Car registration: <%=carReg%>
+  <% } %>
 	<br><%=orderLabel%>: <%=lodge%>
 	<br><%=orderLabel%> no: <%=lodgeNo%>
 	<% if (sails.config.events.lodgeYear) {%>
@@ -94,6 +97,9 @@
 		<br>&nbsp;&nbsp;Centre: <%=linkedBooking.centre%>
 		<br>&nbsp;&nbsp;Area: <%=linkedBooking.area%>
 		<br>&nbsp;&nbsp;Rank: <%=linkedBooking.rank%>
+    <% if  (linkedBooking.carReg) {%>
+      <br>&nbsp;&nbsp;Car registration: <%=linkedBooking.carReg%>
+    <% } %>
 		<br>&nbsp;&nbsp;Dietary reqs: <%=linkedBooking.dietary%>
 		<br>&nbsp;&nbsp;Menu choice: <%=linkedBooking.menuChoice%>
       <% }) %>

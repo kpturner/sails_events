@@ -111,6 +111,15 @@
               </label>
             </div>
 
+            <!-- C A R  R E G  R E Q D ? -->
+            <div class="control-group form-group col-sm-6"
+            ng-class="{'has-error':eventdetails.regreqd.$invalid &&
+                                  eventdetails.regreqd.$dirty}">
+            <label>
+              <input type="checkbox" class="bigcheckbox" name="regreqd" ng-model="eventForm.regReqd"/>
+              &nbsp;&nbsp;&nbsp;Car reg details reqd?
+            </label>
+          </div>
 
             <!-- F R E E  E V E N T ? -->
             <div class="control-group form-group col-sm-6"

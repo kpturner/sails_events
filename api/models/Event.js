@@ -138,6 +138,11 @@ module.exports = {
       type: 'boolean',
     },
 
+    // Car reg details are required
+    regReqd: {
+      type: 'boolean',
+    },
+
     // Area details are required
     areaReqd: {
       type: 'boolean',
