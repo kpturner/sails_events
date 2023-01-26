@@ -36,6 +36,7 @@ RUN --mount=type=secret,id=DKIM_PRIVATE_KEY \
 #  echo "======================="
 
 RUN cp ./assets/images/${ASSETS}/favicon.ico ./assets/
+RUN rm -rf ./.tmp
 
 EXPOSE 1337
 
