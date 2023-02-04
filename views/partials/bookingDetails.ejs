@@ -318,7 +318,7 @@ and/or maxlength) -->
 <div class="control-group form-group col-xs-10" ng-class="{'has-error':<%-model%>.carreg.$invalid &&
   <%-model%>.carreg.$dirty}"
 ng-show="event.regReqd">
-<label>Car registration</label>
+<label>Car registration(s)</label>
 <input type="text" class="form-control" name="carreg" ng-model="<%-model%>Form.carReg"
 ng-maxlength="50">
 <span class="help-block has-error" ng-if="<%-model%>.carreg.$dirty">
@@ -536,7 +536,7 @@ ng-maxlength="50">
 
     <!-- C A R  R E G -->
     <div class="control-group form-group col-xs-10" ng-show="event.regReqd">
-      <label>Car registration</label>
+      <label>Car registration(s)</label>
       <input type="text" class="form-control" name="carreg_{{place}}" ng-model="linked<%-model%>s[place].carReg">
 
     </div>
