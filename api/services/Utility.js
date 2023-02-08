@@ -823,13 +823,15 @@ module.exports = {
     const platform = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform];
     if (platform) {
       const config = platform.find(plat => plat.code === event.onlinePaymentConfig);
-      amount = parseFloat(((amount + config.fixedFee) / (1 - config.fee)).toFixed(2));
-      // Now we need to cater for rounding errors unfortunately
-      const unitPrice = amount / places;
-      let cost = parseFloat((unitPrice * places).toFixed(2));
-      // Now replicate what we will do on checkout and round up to the nearest penny
-      let amountInt = Math.ceil((cost / places) * 100);
-      return (amountInt / 100) * places;
+      if (config) {
+        amount = parseFloat(((amount + config.fixedFee) / (1 - config.fee)).toFixed(2));
+        // Now we need to cater for rounding errors unfortunately
+        const unitPrice = amount / places;
+        let cost = parseFloat((unitPrice * places).toFixed(2));
+        // Now replicate what we will do on checkout and round up to the nearest penny
+        let amountInt = Math.ceil((cost / places) * 100);
+        return (amountInt / 100) * places;
+      }
     }
     return amount;
   },
