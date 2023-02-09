@@ -164,7 +164,13 @@ module.exports.events = {
     privateKey: "default.squareevents.org.pem"
   },
   */
-  onlinePaymentPlatforms: [
-  ]
+  onlinePaymentPlatforms: {
+    stripe: {
+      apiVersion: '2020-08-27',
+      fee: 0.014,
+      fixedFee: 0.20,
+      instances: []
+    }
+  }
 
 };

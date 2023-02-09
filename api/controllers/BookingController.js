@@ -944,8 +944,7 @@ module.exports = {
                             if (user.authProvider !== 'dummy' && !event.free && !event.regInterest && event.onlinePayments && event.onlinePaymentConfig && !booking.paid) {
                               sails.controllers.payment.getNewCheckoutSession(booking.id)
                                 .then((sessionId) => {
-                                  const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
-                                    .find(config => config.code === event.onlinePaymentConfig);
+                                  const paymentConfig = sails.controllers.payment.getConfig(event);
                                   Booking.update(booking.id, { paymentSessionId: sessionId }).exec(() => {
                                     booking.stripePublishableKey = paymentConfig.publishableKey;
                                     booking.paymentSessionId = sessionId;
@@ -971,8 +970,7 @@ module.exports = {
                             sails.controllers.payment.getNewCheckoutSession(booking.id)
                               .then((sessionId) => {
                                 if (sessionId) {
-                                  const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
-                                    .find(config => config.code === event.onlinePaymentConfig);
+                                  const paymentConfig = sails.controllers.payment.getConfig(event);
                                   Booking.update(booking.id, { paymentSessionId: sessionId }).exec(() => {
                                     booking.stripePublishableKey = paymentConfig.publishableKey;
                                     booking.paymentSessionId = sessionId;

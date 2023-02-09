@@ -9,6 +9,24 @@ const stripe = require("stripe");
 
 module.exports = {
 
+  /**
+   * Get configuration details
+   */
+  getConfig: (event) => {
+    let result;
+    const config = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform];
+    if (config) {
+      result = config.instances.find(config => config.code === event.onlinePaymentConfig);
+      if (result) {
+        result = Object.assign(result, {
+          apiVersion: config.apiVersion,
+          fee: config.fee,
+          fixedFee: config.fixedFee,
+        });
+      }
+    }
+    return result;
+  },
 	/**
 	 * Get initialised stripe object
 	 */
@@ -19,8 +37,7 @@ module.exports = {
 				throw new Error(`Unable to find payment config. No payment platform on event.`);
 			}
 			sails.log.debug(`Looking for online payment details for ${event.onlinePaymentPlatform} config ${event.onlinePaymentConfig}`);
-			const paymentConfig = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform]
-				.find(config => config.code === event.onlinePaymentConfig);
+      const paymentConfig = sails.controllers.payment.getConfig(event);
 			if (!paymentConfig) {
 				throw new Error(`Unable to find payment config for ${event.onlinePaymentConfig}`);
 			}

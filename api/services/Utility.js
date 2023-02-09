@@ -796,20 +796,26 @@ module.exports = {
   getOnlinePaymentPlatforms: function () {
     const onlinePaymentPlatforms = _.cloneDeep(sails.config.events.onlinePaymentPlatforms);
     // Remove secrets before sending it to the client
+    let result = {};
     for (const platform in onlinePaymentPlatforms) {
       if (onlinePaymentPlatforms.hasOwnProperty(platform)) {
-        onlinePaymentPlatforms[platform].forEach(platformConfig => {
+        result[platform] = [];
+        onlinePaymentPlatforms[platform].instances.forEach(platformConfig => {
+          const config = {};
           for (const prop in platformConfig) {
             if (platformConfig.hasOwnProperty(prop)) {
-              if (['code', 'desc', 'fee', 'fixedFee'].indexOf(prop) < 0) {
-                delete platformConfig[prop];
+              if (['code', 'desc'].indexOf(prop) >= 0) {
+                config[prop] = platformConfig[prop];
               }
             }
           }
-        })
+          config.fee = onlinePaymentPlatforms[platform].fee;
+          config.fixedFee = onlinePaymentPlatforms[platform].fixedFee;
+          result[platform].push(config);
+        });
       }
     }
-    return onlinePaymentPlatforms
+    return result;
   },
 
   calculateTotalBookingCost: function (event, places) {
@@ -820,18 +826,15 @@ module.exports = {
     if (!event.recoverOnlinePaymentFee) {
       return amount;
     }
-    const platform = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform];
-    if (platform) {
-      const config = platform.find(plat => plat.code === event.onlinePaymentConfig);
-      if (config) {
-        amount = parseFloat(((amount + config.fixedFee) / (1 - config.fee)).toFixed(2));
-        // Now we need to cater for rounding errors unfortunately
-        const unitPrice = amount / places;
-        let cost = parseFloat((unitPrice * places).toFixed(2));
-        // Now replicate what we will do on checkout and round up to the nearest penny
-        let amountInt = Math.ceil((cost / places) * 100);
-        return (amountInt / 100) * places;
-      }
+    const config = sails.controllers.payment.getConfig(event);
+    if (config) {
+      amount = parseFloat(((amount + config.fixedFee) / (1 - config.fee)).toFixed(2));
+      // Now we need to cater for rounding errors unfortunately
+      const unitPrice = amount / places;
+      let cost = parseFloat((unitPrice * places).toFixed(2));
+      // Now replicate what we will do on checkout and round up to the nearest penny
+      let amountInt = Math.ceil((cost / places) * 100);
+      return (amountInt / 100) * places;
     }
     return amount;
   },
