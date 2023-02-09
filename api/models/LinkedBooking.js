@@ -66,7 +66,7 @@ var LinkedBooking = {
       type: 'string'
     },
 
-    // The user's dietary requirements
+    // Car Reg
     carReg: {
       type: 'string'
     },
