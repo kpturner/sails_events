@@ -6,6 +6,7 @@
  */
 
 const stripe = require("stripe");
+const moment = require('moment');
 
 module.exports = {
 
@@ -16,15 +17,38 @@ module.exports = {
     let result;
     const config = sails.config.events.onlinePaymentPlatforms[event.onlinePaymentPlatform];
     if (config) {
+      const feeConfig = sails.controllers.payment.getFee(config);
       result = config.instances.find(config => config.code === event.onlinePaymentConfig);
       if (result) {
         result = Object.assign(result, {
           apiVersion: config.apiVersion,
-          fee: config.fee,
-          fixedFee: config.fixedFee,
+          fee: feeConfig.fee,
+          fixedFee: feeConfig.fixedFee,
         });
       }
     }
+    return result;
+  },
+  /**
+   * Get fee(s)
+   */
+  getFee: (config) => {
+    let result;
+    config.fee.sort((a, b) => {
+      if (a.effective < b.effective) {
+        return -1;
+      }
+      if (a.effective > b.effective) {
+        return 1;
+      }
+      return 0;
+    });
+    config.fee.forEach((fee) => {
+      const effectiveDate = moment(fee.effective, 'YYYYMMDD');
+      if (moment().diff(effectiveDate, 'days') >= 0) {
+        result = fee;
+      }
+    });
     return result;
   },
 	/**

@@ -809,8 +809,9 @@ module.exports = {
               }
             }
           }
-          config.fee = onlinePaymentPlatforms[platform].fee;
-          config.fixedFee = onlinePaymentPlatforms[platform].fixedFee;
+          const feeConfig = sails.controllers.payment.getFee(onlinePaymentPlatforms[platform]);
+          config.fee = feeConfig.fee;
+          config.fixedFee = feeConfig.fixedFee;
           result[platform].push(config);
         });
       }

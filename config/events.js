@@ -167,8 +167,18 @@ module.exports.events = {
   onlinePaymentPlatforms: {
     stripe: {
       apiVersion: '2020-08-27',
-      fee: 0.014,
-      fixedFee: 0.20,
+      fee: [
+        {
+          effective: '20200101',
+          fee: 0.014,
+          fixedFee: 0.20
+        },
+        {
+          effective: '20230410',
+          fee: 0.015,
+          fixedFee: 0.20
+        }
+      ],
       instances: []
     }
   }
