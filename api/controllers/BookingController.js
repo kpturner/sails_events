@@ -88,7 +88,7 @@ module.exports = {
     req.session.eventBookings = true;
     req.session.userBookings = false;
     res.locals.selectedUser = {};
-    Event.findOne(req.param("eventid")).populate("organiser").populate("organiser2").exec(function (err, event) {
+    Event.findOne(req.param("eventid")).populate("organiser").populate("organiser2").populate("dc").exec(function (err, event) {
       res.locals.event = Utility.sanitiseEventDates(event);
       res.view('bookings', {
         criteria: sails.controllers.booking.criteria(req),
