@@ -68,7 +68,7 @@
         </div>
 
 
-        <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->
+        <div class="row" disable-contents="mode=='delete' || !user.isAdmin">  <!-- disable-contents is a custom directive I have added to EventsModule -->
 
            <!-- A D M I N ? -->
 
