@@ -2399,24 +2399,24 @@ module.exports = {
       row.count = null;
       row.tableNo = booking.tableNo || "";
       row.ref = booking.ref || "";
-      row.surname = booking.user.surname || "";
-      row.firstName = booking.user.firstName || "";
-      row.displayName = booking.user.salutation + " " + booking.user.name;
+      row.surname = booking.user?.surname || "";
+      row.firstName = booking.user?.firstName || "";
+      row.displayName = booking.user?.salutation + " " + booking.user?.name;
       if (booking.carReg) {
         row.carReg = booking.carReg;
       }
       if (sails.config.events.userCategories.length > 0) {
-        row.category = booking.user.category || "";
+        row.category = booking.user?.category || "";
       }
       if (addressReqd) {
-        row.address1 = booking.user.address1 || "";
-        row.address2 = booking.user.address2 || "";
-        row.address3 = booking.user.address3 || "";
-        row.address4 = booking.user.address4 || "";
-        row.postcode = booking.user.postcode || "";
+        row.address1 = booking.user?.address1 || "";
+        row.address2 = booking.user?.address2 || "";
+        row.address3 = booking.user?.address3 || "";
+        row.address4 = booking.user?.address4 || "";
+        row.postcode = booking.user?.postcode || "";
       }
-      row.email = booking.user.email || "";
-      row.phone = (booking.user.phone) ? "Tel: " + booking.user.phone : ""; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
+      row.email = booking.user?.email || "";
+      row.phone = (booking.user?.phone) ? "Tel: " + booking.user?.phone : ""; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
       row.dietary = booking.dietary || "";
       row.menuChoice = booking.menuChoice || "";
       row.info = booking.info || "";
@@ -2427,11 +2427,11 @@ module.exports = {
       row.balance = booking.balance || "";
       row.mop = mop;
       row.creationDate = booking.bookingDate;
-      if (voReqd && booking.user.isVO) {
-        row.voLodge = booking.user.voLodge;
-        row.voLodgeNo = booking.user.voLodgeNo;
-        row.voAvcCentre = booking.user.voCentre;
-        row.voAvcAcArea = booking.user.voArea;
+      if (voReqd && booking.user?.isVO) {
+        row.voLodge = booking.user?.voLodge;
+        row.voLodgeNo = booking.user?.voLodgeNo;
+        row.voAvcCentre = booking.user?.voCentre;
+        row.voAvcAcArea = booking.user?.voArea;
       }
       else {
         row.voLodge = "";
@@ -2445,16 +2445,16 @@ module.exports = {
       // Craft or other order?
       if (!booking.event.order || booking.event.order == "C") {
         // Craft
-        row.salutation = booking.user.salutation || "";
-        row.rank = booking.user.rank || "";
-        row[label] = booking.user.lodge || "";
-        row[labelNo] = booking.user.lodgeNo || "";
+        row.salutation = booking.user?.salutation || "";
+        row.rank = booking.user?.rank || "";
+        row[label] = booking.user?.lodge || "";
+        row[labelNo] = booking.user?.lodgeNo || "";
         if (sails.config.events.lodgeYear) {
           var ly = sails.config.events.lodgeYearDownloadLabel || "lodgeYear";
-          row[ly] = booking.user.lodgeYear || "";
+          row[ly] = booking.user?.lodgeYear || "";
         }
-        row.centre = booking.user.centre || "";
-        row.area = booking.user.area || "";
+        row.centre = booking.user?.centre || "";
+        row.area = booking.user?.area || "";
         pushRow(booking, amountPaid, mop, row);
         // Next booking
         next();
