@@ -140,15 +140,15 @@
 
 
       <div class="container">
-        <div ng-show="bookings.length>0 && !viewOnly && !myBookings">
-          <h4 class="hidden-xs hidden-sm">
+        <div ng-show="bookings.length>0 && !viewOnly">
+          <h4 class="hidden-xs hidden-sm" ng-hide="myBookings">
             <a href="mailto:?Subject={{event.name}}: {{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}&bcc={{allAddresses}}"
                 target="_top">
                   <span class="fa fa-envelope"></span> Email all below
             </a>
           </h4>
-          <h4 class="hidden-md hidden-lg">Tap to edit</h4>
-          <h4 class="hidden-xs hidden-sm">Click to edit</h4>
+          <h4 class="hidden-md hidden-lg">Tap booking to edit</h4>
+          <h4 class="hidden-xs hidden-sm">Click booking to edit</h4>
         </div>
         <div ng-show="bookings.length==0">
           <h4 ng-hide="event.regInterest">There are no bookings to show you!</h4>
