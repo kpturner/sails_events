@@ -2402,8 +2402,8 @@ module.exports = {
       row.surname = booking.user?.surname || "";
       row.firstName = booking.user?.firstName || "";
       row.displayName = booking.user?.salutation + " " + booking.user?.name;
-      if (booking.carReg) {
-        row.carReg = booking.carReg;
+      if (booking.event.regReqd) {
+        row.carReg = booking.carReg || "";
       }
       if (sails.config.events.userCategories.length > 0) {
         row.category = booking.user?.category || "";
@@ -2535,8 +2535,8 @@ module.exports = {
         row.surname = addition.surname || "";
         row.firstName = addition.firstName || "";
         row.displayName = row.salutation + " " + row.firstName + " " + row.surname;
-        if (booking.carReg) {
-          row.carReg = addition.carReg;
+        if (booking.event.regReqd) {
+          row.carReg = addition.carReg || "";
         }
         row.rank = addition.rank || "";
         row[label] = addition.lodge || "";

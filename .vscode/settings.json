@@ -1,4 +1,5 @@
 // Place your settings in this file to overwrite the default settings
 {
-    "eslint.enable": false
+    "eslint.enable": false,
+    "i18next.i18nPaths": "/Users/kpturner/github/sails_events/config/locales"
 }
