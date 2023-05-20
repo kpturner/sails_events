@@ -67,11 +67,16 @@
                 <% if (Object.keys(providers).length) {%>
                   <% Object.keys(providers).forEach(function (key) { %>
                     <div class="col-xs-4 col-sm-2">
-                      <a href="/auth/<%= providers[key].slug %>" class="btn btn-lg btn-block <%= providers[key].klass %>">
-                      <i class="fa <%= providers[key].icon %> visible-xs visible-sm"></i>
-                      <span class="hidden-xs hidden-sm"><%= providers[key].name %></span>
-                      <span class="visible-xs visible-sm font-size-10"><%= providers[key].name %></span>
-                      </a>
+                        <a ng-if="'<%= key %>' == 'twitter'" ng-click="twitterNotice()" class="btn btn-lg btn-block <%= providers[key].klass %>">
+                            <i class="fa <%= providers[key].icon %> visible-xs visible-sm"></i>
+                            <span class="hidden-xs hidden-sm"><%= providers[key].name %></span>
+                            <span class="visible-xs visible-sm font-size-10"><%= providers[key].name %></span>
+                        </a>
+                        <a ng-if="'<%= key %>' != 'twitter'" href="/auth/<%= providers[key].slug %>" class="btn btn-lg btn-block <%= providers[key].klass %>">
+                            <i class="fa <%= providers[key].icon %> visible-xs visible-sm"></i>
+                            <span class="hidden-xs hidden-sm"><%= providers[key].name %></span>
+                            <span class="visible-xs visible-sm font-size-10"><%= providers[key].name %></span>
+                        </a>
                     </div>
                   <% }) %>
                 <% } %>

@@ -75,5 +75,18 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
     });
   };
 
+  $scope.twitterNotice= function(){
+
+    var opts={
+        template:"/templates/twitterNotice.html",
+        className: 'ngdialog-theme-default',
+        scope: $scope
+    };
+    // Pop the dialog
+    ngDialog.openConfirm(opts)
+       
+  };
+
+
 
 }]);
