@@ -1287,12 +1287,12 @@ module.exports = {
                         // Check the main bookee first
                         linkedBookings.forEach(function (ob, m) {
                             if (ob.surname.toLowerCase() != "*placeholder*") {
-                                if (booking.user) {
+                                if (booking.user?.surname && booking.user?.firstName) {
                                     if (
                                         ob.surname && ob.firstName && booking.user.surname.toLowerCase() == ob.surname.toLowerCase()
                                         && booking.user.firstName.toLowerCase() == ob.firstName.toLowerCase()
                                     ) {
-                                        if (!booking.user.lodge || (booking.user.lodge && ob.lodge && booking.user.lodge.toLowerCase() == ob.lodge.toLowerCase()))
+                                        if (!booking.user?.lodge || (booking.user?.lodge && ob.lodge && booking.user.lodge.toLowerCase() == ob.lodge.toLowerCase()))
                                             duplicates.push(ob)
                                     }
                                 }
