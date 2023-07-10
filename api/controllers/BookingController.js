@@ -986,7 +986,7 @@ module.exports = {
                                                             })
                                                     } else {
                                                         // Or a refund?
-                                                        if (refund && booking.paymentReference) {
+                                                        if (refund && booking.paymentReference && moment().diff(moment(event.date), 'days') < 0) {
                                                             try {
                                                                 await sails.controllers.payment.issueRefund(booking, refund);
                                                             } catch (err) {
@@ -1914,8 +1914,8 @@ module.exports = {
                     }
                     else if (action == "delete") {
 
-                        // Issue refund if online payments used
-                        if (booking.paymentReference) {
+                        // Issue refund if online payments used and not closed
+                        if (booking.paymentReference && moment().diff(moment(booking.event.date), 'days') < 0) {
                             try {
                                 let refund = booking.amountPaid;
                                 if (booking.event.recoverOnlinePaymentFee) {
