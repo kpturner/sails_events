@@ -29,13 +29,9 @@ module.exports = {
     },
 
     sendinblue: function (template, data, opts, cb) {
-        const SibApiV3Sdk = require('sib-api-v3-sdk');
-        const defaultClient = SibApiV3Sdk.ApiClient.instance;
-
-        // Configure API key authorization: api-key
-        defaultClient.authentications['api-key'].apiKey = sails.config.events.sendinblue.apiKey;
-
-        const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+        const SibApiV3Sdk = require('@sendinblue/client');
+        const defaultClient = new SibApiV3Sdk.TransactionalEmailsApi();
+        defaultClient.setApiKey(SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey, sails.config.events.sendinblue.apiKey);
 
         let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
 
@@ -81,7 +77,7 @@ module.exports = {
             sendSmtpEmail.bcc = bcc;
         }
 
-        apiInstance.sendTransacEmail(sendSmtpEmail).then(function (data) {
+        defaultClient.sendTransacEmail(sendSmtpEmail).then(function (data) {
             sails.log.info('API called successfully. Returned data: ' + data);
             cb(null, data);
         }, function (error) {
@@ -181,11 +177,11 @@ module.exports = {
                     try {
                         const email = emailQueue.shift();
                         if (email.api === 'mailgun') {
-                          Email.mailgun(email.template, email.data, email.opts, email.cb);
+                            Email.mailgun(email.template, email.data, email.opts, email.cb);
                         } else {
-                          if (email.api === 'sendinblue') {
-                            Email.sendinblue(email.template, email.data, email.opts, email.cb);
-                          }
+                            if (email.api === 'sendinblue') {
+                                Email.sendinblue(email.template, email.data, email.opts, email.cb);
+                            }
                         }
                     } catch (err) {
                         sails.log.error(`Email error: ${err}`);
