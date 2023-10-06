@@ -32,6 +32,7 @@
       _csrf: '<%= _csrf %>',
       user: <%- JSON.stringify(res.locals.user) %>,
       usersCanViewBookings: <%- sails.config.events.usersCanViewBookings %>,
+      allowAppUpdate: <%- allowAppUpdate || false %>,
       appUpdateRequested: <%- appUpdateRequested || false %>,
       mimicUserRequested: <%- mimicUserRequested || false %>
     };

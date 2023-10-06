@@ -1,0 +1,165 @@
+name: Publish docker images
+
+on:
+
+  # Run if a PR is closed (and has been merged) or on workflow_dispatch
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+  workflow_dispatch:
+    inputs:
+      instance:
+        description: Instance
+        required: true
+        default: all
+        type: choice
+        options:
+        - all
+        - pgl
+        - pgl-test
+        - csl
+        - mtsfc
+        - hamtun
+        - pgsl
+
+jobs:
+
+  build-and-push:
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    name: Build and push docker image
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Create secrets folder
+        run: |
+          mkdir -p secrets
+
+      - name: Create config file and restart cmd from secret for PGL
+        if: ${{ github.event.inputs.instance == 'pgl' || github.event.inputs.instance == 'all' }}
+        run: |
+          echo "${{ secrets.PGL_CONFIG }}" > secrets/secrets.json
+          echo "echo \"gitupdate.sh cannot be done in the container. Login to the host and run './docker.sh -a up -u -t pgl -p 1337'\"" > ./gitupdate.sh
+
+      - name: Create config file and restart cmd from secret for PGL_TEST
+        if: ${{ github.event.inputs.instance == 'pgl-test' || github.event.inputs.instance == 'all' }}
+        run: |
+          echo "${{ secrets.PGL_TEST_CONFIG }}" > secrets/secrets_test.json
+          echo "echo \"gitupdate.sh cannot be done in the container. Login to the host and run './docker.sh -a up -u -t pgl_test -p 1338'\"" > ./gitupdate.sh
+
+      - name: Create config file and restart cmd from secret for CSL
+        if: ${{ github.event.inputs.instance == 'csl' || github.event.inputs.instance == 'all' }}
+        run: |
+          echo "${{ secrets.CSL_CONFIG }}" > secrets/secrets_csl.json
+
+      - name: Create config file and restart cmd from secret for MTSFC
+        if: ${{ github.event.inputs.instance == 'mtsfc' || github.event.inputs.instance == 'all' }}
+        run: |
+          echo "${{ secrets.MTSFC_CONFIG }}" > secrets/secrets_mtsfc.json
+
+      - name: Create config file and restart cmd from secret for Hamtun
+        if: ${{ github.event.inputs.instance == 'hamtun' || github.event.inputs.instance == 'all' }}
+        run: |
+          echo "${{ secrets.HAMTUN_CONFIG }}" > secrets/secrets_hamtun.json
+
+      - name: Create secrets and restart cmd from secret for PGSL
+        if: ${{ github.event.inputs.instance == 'pgsl' || github.event.inputs.instance == 'all' }}
+        run: |
+          echo "${{ secrets.PGSL_CONFIG }}" > secrets/secrets_pgsl.json
+          echo "${{ secrets.PGSL_DKIM_PRIVATE_KEY }}" > secrets/dkim_private_key.pem
+          echo "echo \"gitupdate.sh cannot be done in the container. Login to the host and run './docker.sh -a up -u -t pgl -p 1337'\"" > ./gitupdate.sh
+
+      - name: Build and push with "latest" for Hamtun
+        if: ${{ github.event.inputs.instance == 'hamtun' || github.event.inputs.instance == 'all' }}
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: hamtun-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_hamtun.json'
+          assets: 'hamtun'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for Provincial Grand Stewards Lodge
+        if: ${{ github.event.inputs.instance == 'pgsl' || github.event.inputs.instance == 'all' }}
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: pgsl-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_pgsl.json'
+          dkim_private_key: 'secrets/dkim_private_key.pem'
+          assets: 'pgsl'
+          ecr-uri: 'ghcr.io'
+
+      #- name: Get the version
+      #  run: echo VERSION="$(npx -c 'echo "$npm_package_version"')" >> $GITHUB_ENV
+
+      #- name: Build and push with version number
+      #  uses: ./.github/workflows/composites/docker-build-push-version
+      #  with:
+      #    version: v${{ env.VERSION }}
+      #    username-github: ${{ github.actor }}
+      #    password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+      #    repo: 'sails_events'
+      #    config: 'local.pgl'
+      #    assets: 'pgl'
+      #    ecr-uri:  ${{ secrets.ECR_URI }}
+
+      - name: Build and push with "latest" for PGL
+        if: ${{ github.event.inputs.instance == 'pgl' || github.event.inputs.instance == 'all' }}
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: pgl-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets.json'
+          assets: 'pgl'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for PGL_TEST
+        if: ${{ github.event.inputs.instance == 'pgl-test' || github.event.inputs.instance == 'all' }}
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: pgl-test-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_test.json'
+          assets: 'pgl'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for CSL
+        if: ${{ github.event.inputs.instance == 'csl' || github.event.inputs.instance == 'all' }}
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: csl-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_csl.json'
+          assets: 'csl'
+          ecr-uri: 'ghcr.io'
+
+      - name: Build and push with "latest" for MTSFC
+        if: ${{ github.event.inputs.instance == 'mtsfc' || github.event.inputs.instance == 'all' }}
+        uses: ./.github/workflows/composites/docker-build-push-version
+        with:
+          version: mtsfc-latest
+          username-github: ${{ github.actor }}
+          password-github: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repo: 'kpturner/sails_events'
+          config: 'secrets/secrets_mtsfc.json'
+          assets: 'mtsfc'
+          ecr-uri: 'ghcr.io'

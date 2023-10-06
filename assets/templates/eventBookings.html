@@ -35,7 +35,10 @@
     <div ng-show="mother.viewOnly" class="photo-description" style="height:{{mother.bookingCardHeight}}">
         <div>
             <div class="user-name {{card.user.nameClass}}">
-                <h5>{{card.user.surname}}, {{card.user.firstName}} ({{card.user.salutation}})</h5>
+                <h5>
+                  <span>{{card.user.surname}}, {{card.user.firstName}} ({{card.user.salutation}})</span>
+                  <span ng-show="card.additions && card.additions.length > 0">(+ {{card.additions.length}})</span>
+                </h5>
             </div>
         </div>
     </div>

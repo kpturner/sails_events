@@ -14,15 +14,15 @@ var _ = require('lodash');
  * Email Hook
  *
  * This is a modified version of https://github.com/balderdashy/sails-hook-email
- * created by Kevin Turner to be used while waiting for a suitable fix to cater for 
+ * created by Kevin Turner to be used while waiting for a suitable fix to cater for
  * https://github.com/balderdashy/sails-hook-email/issues/24
- *  
+ *
  * NOTE: If and when we can remove this, we can also remove the following modules from node_modules
  * and package.json as they will be auto-included by sails-hook-email anyway:
  * async
  * nodemailer-html-to-text
  * lodash
- * 
+ *
  *
  * @param  {App} sails
  * @return {Object}
@@ -86,7 +86,7 @@ module.exports = function EventEmail(sails) {
     /**
      * @param  {Function} cb
      */
-    initialize: function (cb) { 
+    initialize: function (cb) {
       self = this;
       // Optimization for later on: precompile all the templates here and
       // build up a directory of named functions.
@@ -142,7 +142,7 @@ module.exports = function EventEmail(sails) {
 
     /**
      * Send an email.
-     * @param  {Sting}    template (a named template to render)
+     * @param  {String}   template (a named template to render)
      * @param  {Object}   data (data to pass into the template)
      * @param  {Object}   options (email options including to, from, etc)
      * @param  {Function} cb
@@ -210,7 +210,7 @@ module.exports = function EventEmail(sails) {
             cb(null, results.sendEmail);
           });
     },
-    
+
     /**
      * Transporter.
      * @return {Object}
@@ -218,7 +218,7 @@ module.exports = function EventEmail(sails) {
 
     transporter: function () {
       return transport;
-    } 
+    }
 
   };
 };

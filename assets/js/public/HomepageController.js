@@ -12,7 +12,7 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
   // Check that cookies are allowed
   $scope.checkCookie=function(){
     var cookieEnabled=(navigator.cookieEnabled)? true : false;
-    if (typeof navigator.cookieEnabled=="undefined" && !cookieEnabled){ 
+    if (typeof navigator.cookieEnabled=="undefined" && !cookieEnabled){
       document.cookie="testcookie";
       cookieEnabled=(document.cookie.indexOf("testcookie")!=-1)? true : false;
     }
@@ -29,24 +29,24 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
     // Pop the dialog
     ngDialog.openConfirm(opts)
       .then(function (value) {
-       }, 
+       },
        function (reason) {
-       });	
+       });
   }
 
 
 // within a window load,dom ready or something like that place your:
   $scope.checkCookie();
-  
+
 	$scope.submitLoginForm = function (){
-    /******NOT CURRENTLY USED ****/ 
+    /******NOT CURRENTLY USED ****/
     // Set the loading state (i.e. show loading spinner)
     $scope.loginForm.loading = true;
 
     // Submit request to Sails.
     $http.post('/auth/local', {
       _csrf: SAILS_LOCALS._csrf,
-      identifier: $scope.loginForm.identifier,
+      identifier: $scope.loginForm.identifier.trim(),
       password: $scope.loginForm.password
     })
     .then(function onSuccess (){
@@ -57,7 +57,7 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
 
       // Handle known error type(s).
       // Invalid username / password combination.
-      if (sailsResponse.status === 400 || 404) {        
+      if (sailsResponse.status === 400 || 404) {
         toastr.error('Invalid email/user name/password combination.', 'Error', {
           closeButton: true
         });
@@ -74,6 +74,19 @@ angular.module('EventsModule').controller('HomepageController', ['$scope', '$htt
       $scope.loginForm.loading = false;
     });
   };
+
+  $scope.twitterNotice= function(){
+
+    var opts={
+        template:"/templates/twitterNotice.html",
+        className: 'ngdialog-theme-default',
+        scope: $scope
+    };
+    // Pop the dialog
+    ngDialog.openConfirm(opts)
+       
+  };
+
 
 
 }]);

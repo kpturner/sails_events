@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "@sendinblue/client": "^3.3.1",
     "angular": "^1.7.9",
     "angular-cookie-law": "^0.2.4",
     "angular-ui-bootstrap": "^0.13.0",
@@ -32,7 +33,6 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt-sails-linker": "~0.9.5",
     "grunt-sync": "~0.8.0",
-    "heapdump": "^0.3.7",
     "include-all": "~0.1.3",
     "json2csv": "^2.8.2",
     "lockfile": "^1.0.3",
@@ -51,7 +51,7 @@
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-remember-me": "0.0.1",
-    "passport-twitter": "^1.0.3",
+    "passport-twitter": "^1.0.4",
     "rc": "~0.5.0",
     "redis": "^2.6.1",
     "sails": "~0.12.7",
@@ -86,8 +86,9 @@
     "@types/express": "^4.16.0",
     "@types/jquery": "^3.3.22",
     "@types/node": "^10.12.2",
-    "tslint": "^5.11.0",
+    "@types/bluebird": "3.5.34",
+    "tslint": "^5.20.1",
     "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.1.6"
+    "typescript": "3.9.2"
   }
 }

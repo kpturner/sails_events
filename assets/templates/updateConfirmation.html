@@ -1,8 +1,14 @@
 <div class="ngdialog-message">
-    <h3>CONFIRMATION</h3>
-    <p>You are requesting to install the latest update. Please be advised that when you take this option, the application will go offline for all users for approx 1-2 minutes.</p>
-    <p>If the application is likely to be in use, please cancel and do it at a quiet(er) time.</p>
+    <div ng-show="allowAppUpdate">
+      <h3>CONFIRMATION</h3>
+      <p>You are requesting to install the latest update. Please be advised that when you take this option, the application will go offline for all users for approx 1-2 minutes.</p>
+      <p>If the application is likely to be in use, please cancel and do it at a quiet(er) time.</p>
+    </div>
+    <div ng-show="!allowAppUpdate">
+      <h3>STOP!!</h3>
+      <p>This app is deployed by Docker. You can only update it by running the "deploy" workflow in GitHub or by SSH to the server and running the ./docker.sh script as per the DOCKER.md readme in the repo.</p>
+    </div>
 </div><div class="ngdialog-buttons">
     <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click="closeThisDialog()">Cancel</button>
-    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="confirm()">Update</button>
+    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-show="allowAppUpdate" ng-click="confirm()">Update</button>
 </div>

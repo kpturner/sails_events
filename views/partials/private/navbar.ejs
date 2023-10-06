@@ -26,38 +26,38 @@
   <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
     <div class="nav navbar-nav navbar-right navbar-form btn-toolbar">
       <!-- navbar-right pulls this element right -->
-      
+
           <!-- Only show this button if the user is an admin or organiser -->
           <button type="button" class="btn btn-success" onclick="window.location='/events'" ng-show="user.isAdmin || user.isOrganiser || user.isDC" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Events</span>
           </button>
-          
+
           <!-- Only show this button if the user isAdmin, and then only on desktops -->
           <button type="button" class="btn btn-success" onclick="window.location='/users'" ng-show="user.isAdmin || user.isOrganiser" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Users</span>
           </button>
-          
+
           <button type="button" class="btn btn-success" onclick="window.location='/mybookings'" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>My Bookings</span>
-          </button>   
-      
+          </button>
+
           <button type="button" class="btn btn-success" onclick="window.location='/profile'" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Profile</span>
-          </button>     
+          </button>
 
           <button type="button" class="btn btn-success" onclick="window.location='/updateappconfirmation'" ng-show="user.isAdmin" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Update</span>
-          </button>  
+          </button>
 
           <button type="button" class="btn btn-success" onclick="window.location='/mimicuserrequested'" ng-show="user.isAdmin" ng-class="{'nav-btn-space':!navCollapsed}">
             <span>Mimic</span>
-          </button>         
-             
+          </button>
+
           <button type="button" class="btn btn-success" onclick="window.location='/logout'">
             <span>Sign out</span>
           </button>
-                
-    </div>     
-    
+
+    </div>
+
   </div>
 </nav>

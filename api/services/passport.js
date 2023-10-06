@@ -410,6 +410,7 @@ passport.loadStrategies = function () {
                 ));
 
             } else {
+              if (strategies[key]) {
                 var protocol = strategies[key].protocol
                     , callback = strategies[key].callback;
 
@@ -440,6 +441,7 @@ passport.loadStrategies = function () {
                 _.extend(options, strategies[key].options);
 
                 self.use(new Strategy(options, self.protocols[protocol]));
+              }
             }
         }
     });

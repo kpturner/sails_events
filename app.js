@@ -41,9 +41,11 @@ process.on('uncaughtException', function (err) {
         if (sails && Utility) {
             sails.log.error('uncaughtException:', err.message);
             sails.log.error(err.stack);
-            Utility.diagnosticEmail(msg, 'Application crash', function () {
-                process.exit(1);
-            });
+            if (msg.indexOf('Redis connection to events-redis:6379 failed') < 0) {
+                Utility.diagnosticEmail(msg, 'Application crash', function () {
+                    process.exit(1);
+                });
+            }
             setTimeout(function () { process.exit(1); }, 5000);
         }
         else {

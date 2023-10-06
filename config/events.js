@@ -10,158 +10,177 @@
 
 module.exports.events = {
 
-	// Allow login via social media?
-	socialMedia: true,
+  // Allow login via social media?
+  socialMedia: true,
 
-	// Default skin
-	skin:	"skins/defaultskin.css",
+  // Default skin
+  skin: "skins/defaultskin.css",
 
-	// Enter an email address if you want developer(s) to get bcc's on everything
-    developer: process.env.DEVELOPER || "kevin@kpturner.co.uk",
+  allowAppUpdate: ((typeof process.env.ALLOW_APP_UPDATE === 'undefined') || (process.env.ALLOW_APP_UPDATE && process.env.ALLOW_APP_UPDATE === '1')) ? true : false,
 
-	// Email developer when a download is activated
-	emailDeveloperOnDownload: false,
+  // Enter an email address if you want developer(s) to get bcc's on everything
+  developer: process.env.DEVELOPER || "kevin@kpturner.co.uk",
 
-	// Email developer when a booking is made/changed
-	emailDeveloperOnBooking: false,
+  // Email developer when a download is activated
+  emailDeveloperOnDownload: false,
 
-	// Verify email address on booking
-	verifyEmailAddressOnBooking: true,
+  // Email developer when a booking is made/changed
+  emailDeveloperOnBooking: false,
 
-	// Email developer on password reset
-	emailDeveloperOnPasswordReset: false,
+  // Verify email address on booking
+  verifyEmailAddressOnBooking: true,
 
-	// Email developer on profile change
-	emailDeveloperOnProfile: false,
+  // Email developer on password reset
+  emailDeveloperOnPasswordReset: false,
 
-	// Email developer on late payment
-	emailDeveloperOnLatePayment: false,
+  // Email developer on profile change
+  emailDeveloperOnProfile: false,
 
-	// Email developer on signup
-    emailDeveloperOnSignup: false,
+  // Email developer on late payment
+  emailDeveloperOnLatePayment: false,
 
-    smtpApi: "sendinblue",
+  // Email developer on signup
+  emailDeveloperOnSignup: false,
 
-    mailgun: {
-        apiKey: '',
-        domain: 'mg.squareevents.org',
-        host: 'api.eu.mailgun.net'
-    },
+  smtpApi: "sendinblue",
 
-    sendinblue: {
-        apiKey: ''
-    },
+  mailgun: {
+    apiKey: '',
+    domain: 'mg.squareevents.org',
+    host: 'api.eu.mailgun.net'
+  },
 
-	// Hide closed events on dashboard
-	hideClosedEvents: true,
+  sendinblue: {
+    apiKey: ''
+  },
 
-	// Maintenance mode?
-	maintenance: false,
+  // Hide closed events on dashboard
+  hideClosedEvents: true,
 
-	// Timezone
-	timezone: "Europe/London",
+  // Maintenance mode?
+  maintenance: false,
 
-	// Expire session after this many milliseconds
-	sessionExpiry:  30 * 60 * 1000,
+  // Timezone
+  timezone: "Europe/London",
 
-	// Admins can be a single string or an array, each representing a user name or email address
-	admins: ['kturner','kevin@kpturner.co.uk'],
+  // Expire session after this many milliseconds
+  sessionExpiry: 30 * 60 * 1000,
 
-	// Browser tab title
-	title: "Provincial Events",
+  // Admins can be a single string or an array, each representing a user name or email address
+  admins: ['kturner', 'kevin@kpturner.co.uk'],
 
-	// Homepage heading
-	heading: "Provincial Events",
+  // Browser tab title
+  title: "Provincial Events",
 
-	// Email address
-	email: "noreply@squareevents.org",
+  // Homepage heading
+  heading: "Provincial Events",
 
-	// Logo
-	logo: "/images/provincial/crest.png",
+  // Email address
+  email: "noreply@squareevents.org",
 
-	// Logo link
-	logoLink: "http://www.hiowmasons.org/",
+  // Logo
+  logo: "/images/pgl/crest.png",
 
-	// Quick start guide
-	quickStart: "/doc/quick_start.pdf",
+  // Logo link
+  logoLink: "http://www.hiowmasons.org/",
 
-	// Logo tip
-	logoTip: "Provincial website",
+  // Quick start guide
+  quickStart: "/doc/quick_start.pdf",
 
-	// Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
-	multipleBookings: false,
+  // Logo tip
+  logoTip: "Provincial website",
 
-	// Booking card height (defaults to 255px) when viewing bookings on an event
-	//bookingCardHeight: "255px",
+  // Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
+  multipleBookings: false,
 
-	// Users can view bookings for an events
-	usersCanViewBookings: true,
+  // Booking card height (defaults to 255px) when viewing bookings on an event
+  //bookingCardHeight: "255px",
 
-    // Orders supported by this instance (e.g. {"code":"C","desc":"Craft"},{"code":"RA","desc":"Royal Arch"} )
-	// Craft is the default and if no others are added then "Order" is not something that will be prompted for anywhere
-	orders: [{"code":"C","desc":"Craft"}],
+  // Users can view bookings for an events
+  usersCanViewBookings: true,
 
-	// User categories
-	userCategories: [],
+  // Orders supported by this instance (e.g. {"code":"C","desc":"Craft"},{"code":"RA","desc":"Royal Arch"} )
+  // Craft is the default and if no others are added then "Order" is not something that will be prompted for anywhere
+  orders: [{ "code": "C", "desc": "Craft" }],
 
-	// Methods of payment
-	mops: ['Cheque', 'BACS', 'Cash', 'Online'],
+  // User categories
+  userCategories: [],
 
-	// Salutations
-	salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr', 'Mrs', 'Ms', 'Miss'],
+  // Methods of payment
+  mops: ['Cheque', 'BACS', 'Cash', 'Online', 'Guest'],
 
-	// Areas
-	areas: ['North Central', 'North East', 'Solent', 'South Central', 'South East', 'South West'],
+  // Salutations
+  salutations: ['Bro.', 'W.Bro', 'R.W.Bro', 'V.W.Bro', 'M.W.Bro', 'Mr', 'Mrs', 'Ms', 'Miss'],
 
-	// Lodge is mandatory
-	lodgeMandatory: true,
+  // Areas
+  areas: ['North Central', 'North East', 'Solent', 'South Central', 'South East', 'South West'],
 
-	// Show lodge year in profile
-	lodgeYear: false,
+  // Lodge is mandatory
+  lodgeMandatory: true,
 
-	// Lodge year label (or null to use default)
-	lodgeYearLabel: null,
+  // Show lodge year in profile
+  lodgeYear: false,
 
-	// Lodge year download label (or null to use default)
-	lodgeYearDoanloadLabel: null,
+  // Lodge year label (or null to use default)
+  lodgeYearLabel: null,
 
-	// Permanent diner?
-	permanentDiningList: false,
+  // Lodge year download label (or null to use default)
+  lodgeYearDownloadLabel: null,
 
-	// Domain (for signup email confirmations)
-	domain: "http://squareevents.org",
+  // Permanent diner?
+  permanentDiningList: false,
 
-    // Late payment interval
-    latePaymentDaemon: (process.env.LATEPAYMENTDAEMON=="0")?false:true,
+  // Domain (for signup email confirmations)
+  domain: "http://squareevents.org",
 
-    // Reminder test mode
-    reminderTestMode: (process.env.REMINDERTESTMODE=='1')?true:false,
+  // Late payment interval
+  latePaymentDaemon: (process.env.LATEPAYMENTDAEMON == "0") ? false : true,
 
-	// Late payment interval
-	latePaymentInterval: process.env.LATEPAYMENTINTERVAL || 86400000,
+  // Reminder test mode
+  reminderTestMode: (process.env.REMINDERTESTMODE == '1') ? true : false,
 
-	// Late payment reminder interval (days)
-	latePaymentReminderInterval: 7,
+  // Late payment interval
+  latePaymentInterval: process.env.LATEPAYMENTINTERVAL || 86400000,
 
-	// Additional info field label
-	//additionalInfoLabel: "Sit me with"
+  // Late payment reminder interval (days)
+  latePaymentReminderInterval: 7,
 
-	// Domains requiring SPAM warning
-	spamDomains: {
-		"gmail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
-		"googlemail.com":{video:"http://screencast.com/t/goyOqiGM",additionalinfo:"In addition, ensure that /%sender%/ is in your list of contacts."},
-		"hotmail.com":{additionalinfo:"Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address."},
-		"hotmail.co.uk":{additionalinfo:"Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address."},
-	},
+  // Additional info field label
+  //additionalInfoLabel: "Sit me with"
 
-	// DKIM details to help prevent our emails being flagged as spam
-    DKIM: {
-      domainName: "squareevents.org",
-      keySelector: "default",
-      privateKey: "default.squareevents.org.pem"
-	},
-	
-	onlinePaymentPlatforms: [
-	]
+  // Domains requiring SPAM warning
+  spamDomains: {
+    "gmail.com": { video: "http://screencast.com/t/goyOqiGM", additionalinfo: "In addition, ensure that /%sender%/ is in your list of contacts." },
+    "googlemail.com": { video: "http://screencast.com/t/goyOqiGM", additionalinfo: "In addition, ensure that /%sender%/ is in your list of contacts." },
+    "hotmail.com": { additionalinfo: "Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address." },
+    "hotmail.co.uk": { additionalinfo: "Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address." },
+  },
+
+  // DKIM details to help prevent our emails being flagged as spam
+  /*
+  DKIM: {
+    domainName: "squareevents.org",
+    keySelector: "default",
+    privateKey: "default.squareevents.org.pem"
+  },
+  */
+  onlinePaymentPlatforms: {
+    stripe: {
+      apiVersion: '2020-08-27',
+      fee: [
+        {
+          effective: '20200101',
+          fee: 0.014,
+          fixedFee: 0.20
+        },
+        {
+          effective: '20230410',
+          fee: 0.015,
+          fixedFee: 0.20
+        }
+      ],
+      instances: []
+    }
+  }
 
 };

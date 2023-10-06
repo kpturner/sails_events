@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-	
+
 	/**
 	 * Update application confirmation
 	 *
@@ -14,13 +14,14 @@ module.exports = {
 	 * @param {Object} res
 	 */
 	updateAppConfirmation: function(req, res) {
-		res.view('dashboard',{			
+		res.view('dashboard',{
+      allowAppUpdate: sails.config.events.allowAppUpdate,
 			appUpdateRequested: true,
 			mimicUserRequested: false
-		});  		
-	}, 
-	
-	/** 
+		});
+	},
+
+	/**
 	 * Update application
 	 *
 	 * @param {Object} req
@@ -33,7 +34,7 @@ module.exports = {
 			cmd=require("path").join(process.cwd(),"gitupdate.bat");
 		}
 		require("child_process").exec(
-			cmd,			
+			cmd,
 			//{
 			//	cwd:process.cwd(),
 			//	uid:process.getuid(),
@@ -50,11 +51,11 @@ module.exports = {
 				if (stderr) {
 					sails.log.error(stderr)
 				}
-				// Let forever.js restart us
+				// Let forever.js or docker restart us
 				process.nextTick(function(){process.exit(0);});
 			}
-		);				
-	}, 
-	
+		);
+	},
+
 };
 

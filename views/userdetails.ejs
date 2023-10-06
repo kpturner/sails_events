@@ -68,7 +68,7 @@
         </div>
 
 
-        <div class="row" disable-contents="mode=='delete'">  <!-- disable-contents is a custom directive I have added to EventsModule -->
+        <div class="row" disable-contents="mode=='delete' || !user.isAdmin">  <!-- disable-contents is a custom directive I have added to EventsModule -->
 
            <!-- A D M I N ? -->
 
@@ -124,6 +124,11 @@
           <span class="fa-pulse fa fa-spinner" ng-show="userdetailsForm.loading" ></span>
           <span ng-show="userdetailsForm.loading && mode!='delete'">Saving user details...</span>
           <span ng-show="userdetailsForm.loading && mode=='delete'">Deleting user...</span>
+        </button>
+        <button class="btn btn-primary btn-lg btn-block" type="button" ng-click="convertAccount()" ng-hide="userdetailsForm.authProvider=='local' || !user.isAdmin">
+          <span ng-show="!userdetailsForm.loading">Convert to password account</span>
+          <span class="fa-pulse fa fa-spinner" ng-show="userdetailsForm.loading" ></span>
+          <span ng-show="userdetailsForm.loading">Changing account type...</span>
         </button>
 
         <input type="hidden" name="_csrf" value="<%= _csrf %>" />

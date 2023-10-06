@@ -69,9 +69,13 @@ process.on('uncaughtException', function (err: Error): void {
         if (sails && Utility) {
             sails.log.error('uncaughtException:', err.message);
             sails.log.error(err.stack);
-            Utility.diagnosticEmail(msg, 'Application crash', function (): void {
-                process.exit(1);   // Forever should restart us;
-            });
+            // We don't need an email of docker is just shutting down. The port will defo be
+            // 6379 in docker
+            if (msg.indexOf('Redis connection to events-redis:6379 failed') < 0) {
+                Utility.diagnosticEmail(msg, 'Application crash', function () {
+                    process.exit(1);
+                });
+            }
             // Make sure we exit if the email sending fails
             setTimeout(function (): void { process.exit(1); }, 5000);
         } else {

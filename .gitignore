@@ -39,7 +39,6 @@
 #
 ################################################
 
-config/local.js
 assets/favicon.ico
 
 
@@ -117,9 +116,9 @@ npm-debug.log
 nbproject
 .idea
 .node_history
-/config/locals.js
-/config/local.js
-
+config/locals.js
+config/local.*
+volume/
 
 /logs/*.log
 /ssl

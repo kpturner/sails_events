@@ -34,30 +34,31 @@ module.exports = {
 
   models: {
       connection: process.env.DB_CONNECTION || 'localhostMysqlServer',
-      migrate: 'safe'  
+      migrate: 'safe'
   },
- 
+
   /**
    * NOTE: Use redis by default in production for future clustering and scaling
    */
   session: {
-    adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'redis', 
+    secret: process.env.SESS_SECRET || '',
+    adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'redis',
     host: process.env.REDIS_HOST || 'localhost',
     port: process.env.REDIS_PORT || 6379,
     ttl: 24*60*60,
     db: process.env.REDIS_DB || 0,
     pass: process.env.REDIS_PASS || "",
-    prefix: 'sess:', 
+    prefix: 'sess:',
   },
-   
+
   // This is needed to ensure that passport authentication works properly on
   // Heroku, otherwise we end up with a redirect_uri of localhost:random port
-  proxyHost: process.env.PROXYHOST || null, 
-  proxyPort: process.env.PROXYPORT || null, 
+  proxyHost: process.env.PROXYHOST || null,
+  proxyPort: process.env.PROXYPORT || null,
 
   // Switch CSRF on for production
   csrf: true,
-  
+
   // Increase hook timeout
   hookTimeout: 90000, // 90 seconds
 
@@ -76,7 +77,7 @@ module.exports = {
      custom: (process.env.LOGTOCONSOLE)?null:customLogger,
      level: process.env.LOGLEVEL || "error"
   },
-  
+
   blueprints: {
     actions: false,
     rest: true,

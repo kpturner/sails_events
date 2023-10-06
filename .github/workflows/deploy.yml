@@ -1,0 +1,56 @@
+name: Deploy Square Events
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The tag,port of the Docker image
+        required: true
+        type: choice
+        options:
+        - sails-events,pgl,1337,hampshirefreemasonry
+        - sails-events-test,pgl-test,1338,hampshirefreemasonry
+        - sails-events-csl,csl,1330,kpturner
+        - sails-events-mtsfc,mtsfc,1340,kpturner
+        - sails-events-hamtun,hamtun,7083,kpturner
+        - sails-events-pgsl,pgsl,1337,9263dining
+
+jobs:
+
+  setup:
+    name: Setup parameters
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.setrunner.outputs.result }}
+    steps:
+      - name: Setup the runner matrix
+        id: setrunner
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const splits = '${{ github.event.inputs.tag }}'.split(',');
+            const result = [[ splits[3] ]];
+            return result;
+
+  deploy:
+    name: Deploy Square Events
+    needs: setup
+    strategy:
+      matrix:
+        runner: ${{fromJson(needs.setup.outputs.matrix)}}
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        shell: bash
+        run: |
+          # Split the comma separate string into an array
+          IFS=\, read -a fields <<<"${{ github.event.inputs.tag }}"
+          docker login ghcr.io/kpturner -u ${{ github.actor }} -p ${{ secrets.REPO_ACCESS_TOKEN }}
+          ./docker.sh -u -a up -n ${fields[0]} -t ${fields[1]} -p ${fields[2]}
+          ./docker-cleanup.sh

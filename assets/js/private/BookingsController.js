@@ -40,11 +40,11 @@ angular.module('EventsModule').controller('BookingsController', ['scroller','$sc
 			$scope.filterForm.criteria.page=1;
 		}
 
-		// If not view only then make it so anyway if the user is not an admin or the organiser
+		// If not view only then make it so anyway if the user is not an admin or the organiser or the DC
 		if (!$scope.viewOnly && $scope.eventBookings) {
 			$scope.viewOnly=!$scope.user.isAdmin;
 			if ($scope.viewOnly) {
-				if (($scope.event.organiser && $scope.user.email==$scope.event.organiser.email) || ($scope.event.organiser2 && $scope.user.email==$scope.event.organiser2.email)) {
+				if (($scope.event.dc && $scope.user.email==$scope.event.dc.email) || ($scope.event.organiser && $scope.user.email==$scope.event.organiser.email) || ($scope.event.organiser2 && $scope.user.email==$scope.event.organiser2.email)) {
 					$scope.viewOnly=false
 				}
 			}

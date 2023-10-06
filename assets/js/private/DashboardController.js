@@ -1,6 +1,6 @@
 angular.module('EventsModule').controller('DashboardController', ['$scope', '$http', '$location', 'toastr', 'ngDialog', function($scope, $http, $location, toastr, ngDialog) {
-	
-		// Initialise "user" in the scope with the data set in the view script 
+
+		// Initialise "user" in the scope with the data set in the view script
 		$scope.user=SAILS_LOCALS.user;
 		$scope.userBookings=false;
 		$scope.selectedUser={};
@@ -21,6 +21,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 
 		// Has an applicationm update been requested?
 		if (SAILS_LOCALS.appUpdateRequested) {
+      $scope.allowAppUpdate = SAILS_LOCALS.allowAppUpdate;
 			var opts={
 				template:"/templates/updateConfirmation.html",
 				className: 'ngdialog-theme-default',
@@ -35,8 +36,8 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 					});
 					window.location = '/';
 				}, function (reason) {
-					// They bottled it					
-				});	
+					// They bottled it
+				});
 		}
 
 		// Are we attempting to mimic a user?
@@ -67,23 +68,23 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 									window.location="/";
 								})
 								.catch(function(sailsResponse){
-									toastr.error(sailsResponse.data, 'Error');									
+									toastr.error(sailsResponse.data, 'Error');
 								})
-							}, 
+							},
 							function (reason) {
-								
-							});						
+
+							});
 					}
 					else {
-						toastr.error(origResponse.data, 'Error');  
+						toastr.error(origResponse.data, 'Error');
 					}
 				})
 				.catch(function onError(sailsResponse){
-		
+
 					// Handle known error type(s).
 					toastr.error(sailsResponse.data, 'Error');
 					$scope.bookingForm.transferring=false;
-		
+
 				})
 				.finally(function eitherWay(){
 					// Nothing to do
@@ -106,7 +107,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
                             return event.name.toLowerCase().indexOf($scope.filterForm.filter.toLowerCase()) >= 0;
                         })
                     }
-                    $scope.events = data;	
+                    $scope.events = data;
                     // Traverse the events and calculate an appropriate width
                         // for each event name
                         angular.forEach($scope.events,function(event){
@@ -119,7 +120,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
                                 else {
                                     event.nameClass="event-name-80";
                                 }
-                            }   
+                            }
                             else {
                                 if (event.logo) {
                                     event.nameClass="event-name-80";
@@ -129,8 +130,8 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
                             event.eventNameStyle=null;
                             if (event.eventNameSize) {
                                 event.eventNameStyle="font-size:"+event.eventNameSize;
-                            } 		
-                        })				
+                            }
+                        })
                 }
                 else {
                     window.location = '/';
@@ -142,24 +143,24 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
                 // or server returns response with an error status.
                 $scope.filterForm.loading = false;
                 window.location = '/';
-            }); 
+            });
         };
 
 		$scope.getEvents();
-		
+
 		/**
 		 * Download log
 		 */
 		$scope.downloadLog=function(){
-			window.location="log";			
-		}		
+			window.location="log";
+		}
 
 		/**
 		 * Delete log
 		 */
 		$scope.deleteLog=function(){
 			$http.post('/log/delete', {
-				_csrf: SAILS_LOCALS._csrf		 
+				_csrf: SAILS_LOCALS._csrf
 			}).success(function(data, status) {
 				// Good!
 			}).
@@ -167,7 +168,7 @@ angular.module('EventsModule').controller('DashboardController', ['$scope', '$ht
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
 				window.location = '/';
-			});			
-		}		
-								
+			});
+		}
+
 }]);

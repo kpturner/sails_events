@@ -55,6 +55,7 @@
       selectedUserId: <%- JSON.stringify(res.locals.selectedUserId) %>,
       potentialDuplicates: <%- JSON.stringify(res.locals.potentialDuplicates)%>,
       orders: <%- JSON.stringify(sails.config.events.orders) %>,
+      onlinePaymentPlatforms: <%- JSON.stringify(res.locals.onlinePaymentPlatforms) %>,
     };
 
     </script>
@@ -79,7 +80,8 @@
         <h4>{{ event.date | date : 'EEE, MMM dd, yyyy'}} at {{event.time}}</h4>
         <h4>{{event.venue}}<h4>
 
-        <h5 ng-hide="event.free">Price per place: £{{event.price.toFixed(2)}}</h5>
+        <h5 ng-hide="event.free">Price per place: £{{event.price}}</h5>
+        <h5 ng-show="event.onlinePaymentConfig && event.recoverOnlinePaymentFee">A small fee will be added to cover charges of {{fee}}% plus a one-off charge of £{{fixedFee}}</h5>
         <div ng-hide="event.regInterest">
         <h5 ng-show="existingBooking">Places remaining: {{event.capacity}} (excl. this booking)</h5>
         <h5 ng-hide="existingBooking">Places remaining: {{event.capacity}}</h5>
@@ -95,15 +97,15 @@
         <h3 ng-hide="eventBookings || !existingBooking || myBookings || mode=='delete'"><span ng-show="userBookings">THIS PERSON HAS </span><span ng-hide="userBookings">YOU HAVE </span><span ng-hide="event.regInterest">ALREADY BOOKED IN {{paidMsg}}</span>
             <span ng-show="event.regInterest">ALREADY REGISTERED INTEREST {{paidMsg}}</span></h3>
         <h3 ng-show="myBookings && paid">THIS BOOKING IS ALREADY PAID FOR</h3>
-        <h3 ng-show="balance>0">A BALANCE OF £{{balance}} IS DUE</h3>
-        <h3 ng-show="balance<0">A CREDIT OF £{{balance*-1}} IS DUE</h3>
+        <h3 ng-show="balance>0">A BALANCE OF £{{(balance*1).toFixed(2)}} IS DUE</h3>
+        <h3 ng-show="balance<0">A CREDIT OF £{{(balance*-1).toFixed(2)}} IS DUE</h3>
 
         <h4 ng-show="!eventBookings && !userBookings && !openForBookings && notYetReachedOpeningDate">NOT OPEN FOR <span ng-hide="event.regInterest">BOOKINGS</span><span ng-show="event.regInterest">REGISTRATION</span> UNTIL {{ event.openingDate | date : 'EEE, MMM dd, yyyy'}} at {{ event.openingTime || '00:00:00' }}</h4>
-        <h4 ng-show="openForBookings && !user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid && mode!='delete'"><i>Contact the organiser to change the reduce of places booked</i></h4>
+        <h4 ng-show="openForBookings && !user.isAdmin && !user.isOrganiser && !eventBookings && !userBookings && paid && !event.onlinePayments && mode!='delete'"><i>Contact the organiser to change the number of places booked</i></h4>
         <h4 ng-show="!eventBookings && !userBookings && (paid && !refundAllowed) && mode=='delete'"><i>You have already paid. Please contact the organiser to cancel this booking</i></h4>
         <h4 ng-show="(eventBookings || userBookings) && !paid && bookingForm.remindersSent && bookingForm.remindersSent>0"><b>PAYMENT REMINDERS SENT: {{bookingForm.remindersSent}}</b></h4>
         <h4 ng-show="(eventBookings || userBookings) && !paid && bookingForm.lastPaymentReminder"><b>LAST PAYMENT REMINDER: {{ bookingForm.lastPaymentReminder | date : 'EEE, MMM dd, yyyy'}}</b></h4>
-        <h4 ng-show="(eventBookings || userBookings) && !paid && nextPaymentReminder"><b>NEXT PAYMENT REMINDER: {{ nextPaymentReminder | date : 'EEE, MMM dd, yyyy'}}</b></h4>
+        <h4 ng-show="(eventBookings || userBookings) && !paid && !event.onlinePayments && nextPaymentReminder"><b>NEXT PAYMENT REMINDER: {{ nextPaymentReminder | date : 'EEE, MMM dd, yyyy'}}</b></h4>
         <h5 ng-show="existingBooking && !paid">Payment deadline: <b>{{ deadline }}</b></h5>
         <h5 ng-show="event.additionalInfo">
             <a href="{{event.additionalInfo}}" target="_blank">
@@ -130,7 +132,7 @@
             <span>Add guest</span>
           </button>
 
-          <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="bookingForm.loading || (myBookings && (paid && !refundAllowed) && mode==='delete') || (!openForBookings && mode!=='delete') || event.capacity<=0">
+          <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="disableUpdateButton()">
             <span ng-show="!bookingForm.loading && mode=='delete' && !event.regInterest">Cancel booking</span>
             <span ng-show="!bookingForm.loading && mode=='delete' && event.regInterest">Cancel interest</span>
             <span ng-show="!bookingForm.loading && !existingBooking && mode!='delete' && !event.regInterest">Book now</span>

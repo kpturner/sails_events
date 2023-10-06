@@ -83,6 +83,11 @@ module.exports = {
       type: 'date',
     },
 
+    // The user's dietary requirements
+    carReg: {
+      type: 'string'
+    },
+
     // Reminders sent (total)
     remindersSent: {
       type: 'integer'

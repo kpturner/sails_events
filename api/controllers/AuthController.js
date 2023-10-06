@@ -45,8 +45,9 @@ var AuthController = {
 
         // Get a list of available providers for use in your templates.
         Object.keys(strategies).forEach(function (key) {
+          if (strategies[key]) {
             if (key === 'local' || key === 'rememberme') {
-                return;
+              return;
             }
 
             if (strategies[key]) {
@@ -58,6 +59,7 @@ var AuthController = {
                     slug: key
                 };
             }
+          }
         });
 
         // Clear the user out of the session also
@@ -136,6 +138,7 @@ var AuthController = {
 
         req.session.eventBookings = false;
         res.view('dashboard', {
+            allowAppUpdate: sails.config.events.allowAppUpdate,
             appUpdateRequested: false,
             mimicUserRequested: false
         });
@@ -342,7 +345,6 @@ var AuthController = {
                     Passport.findOne({ user: req.user.id }, function (err, passport) {
                         if (err) { return res.negotiate(err); }
                         if (!passport) { return res.negotiate(err); }
-                        var validator = require('validator');
                         var crypto = require('crypto');
                         var token = crypto.randomBytes(48).toString('base64');
 
@@ -468,8 +470,6 @@ var AuthController = {
       */
     passwordReset: function (req, res) {
 
-        var crypto = require('crypto');
-
         User.findOne({ email: req.param("email") }).exec(function (err, user) {
 
             var sendEmail = function (user, resetInstructions, newPassword) {
@@ -510,19 +510,8 @@ var AuthController = {
                         }
                         else {
                             // Create new password
-                            while (newPassword.length < 8) {
-                                var tempPassword = crypto.randomBytes(32).toString('base64');
-                                // We only want the first 8 letters of the alphabet (ignoring ambiguous letters)
-                                for (var i = 0; i < 31; i++) {
-                                    if (('abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ').indexOf(tempPassword.substr(i, 1)) >= 0) {
-                                        newPassword += tempPassword.substr(i, 1);
-                                        if (newPassword.length == 8) {
-                                            i = 31; //exits loop
-                                        }
-                                    }
-                                }
-                            }
-                            //var token = crypto.randomBytes(48).toString('base64');
+                            newPassword = Utility.randomPassword();
+
                             Passport.update(passport.id, {
                                 password: newPassword
                             }).exec(function (err, passport) {

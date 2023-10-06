@@ -1,0 +1,81 @@
+name: Build and push a docker image
+
+inputs:
+  username:
+    description: User name
+    required: true
+  password:
+    description: Password
+    required: true
+  repo:
+    description: Repo
+    required: true
+  config:
+    description: Instance config (copied to local.js)
+    required: true
+  dkim_private_key:
+    description: Private key (.pem) for DKIM
+    required: false
+  assets:
+    description: Instance assets folder
+    required: true
+  opts:
+    description: Run time options
+    default: --prod
+    required: false
+  tag:
+    description: Tag
+    required: true
+  registry:
+    description: Docker registry
+    required: false
+    default: ghcr.io
+  dockerfile:
+    description: Docker file
+    required: false
+    default: Dockerfile
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ inputs.registry }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Handle DKIM private key
+      shell: bash
+      run: |
+        if [ '${{ inputs.dkim_private_key }}' == '' ]; then
+          echo Setting up dummy DKIM private key
+          mkdir -p secrets
+          echo not_required > secrets/not_required.pem
+          echo DPK=secrets/not_required.pem >> $GITHUB_ENV
+        else
+          echo Using real DKIM private key
+          echo DPK=${{ inputs.dkim_private_key }} >> $GITHUB_ENV
+        fi
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        builder: ${{ steps.buildx.outputs.name }}
+        file: ${{ inputs.dockerfile }}
+        secret-files: |
+          "SECRETS=${{ inputs.config }}"
+          "DKIM_PRIVATE_KEY=${{ env.DPK }}"
+        build-args: |
+          ASSETS=${{ inputs.assets }}
+          OPTS=${{ inputs.opts }}
+        push: true
+        tags: ${{ inputs.registry }}/${{ inputs.repo }}:${{ inputs.tag }}
+        # CAREFUL of caching as our test and live images will end up the same
+        # cache-from: type=gha
+        # cache-to: type=gha,mode=max

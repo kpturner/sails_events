@@ -7,7 +7,6 @@
         "sourceMap": true,
         "mapRoot": "./",
         "rootDir": "./",
-        "watch": false,
         "alwaysStrict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,

@@ -157,6 +157,7 @@ module.exports = {
 				}
 				else {
 					res.view('dashboard',{
+            allowAppUpdate: sails.config.events.allowAppUpdate,
 						appUpdateRequested: false,
 						mimicUserRequested: false
 					});
@@ -272,7 +273,7 @@ module.exports = {
 
 		// Create basic options
 		var options={};
-		options.filename=prefix+'_' + ((new Date().getTime().toString())) + '.csv';
+		options.filename=prefix.replace(RegExp('/', 'g'), '')+'_' + ((new Date().getTime().toString())) + '.csv';
 		//options.nested=true;
 
 		// Build a custom JSON for the CSV

@@ -1,0 +1,31 @@
+name: 'Fotech check file changes'
+description: 'Check for file changes between SHA commits'
+inputs:
+  files:
+    description: 'List of files (or directories) to check'
+    required: false
+
+outputs:
+  changed:
+    description: '"true" if changes else "false"'
+    value: ${{ steps.changed-files.outputs.changed }}
+
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        bash $GITHUB_ACTION_PATH/sourcefiles.sh
+      id: source-input-files
+      shell: bash
+      env:
+        INPUT_FILES: ${{ inputs.files }}
+    - name: Check for file changes
+      id: changed-files
+      shell: bash
+      run: |
+        bash $GITHUB_ACTION_PATH/entrypoint.sh
+      env:
+        GITHUB_SERVER_URL: ${{ github.server_url }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_BASE_REF: ${{ github.base_ref }}
+        INPUT_FILES: ${{ steps.source-input-files.outputs.files }}

@@ -7,6 +7,7 @@
 
 const async = require("async");
 const _ = require('lodash');
+const Utility = require("../services/Utility");
 
 module.exports = {
 
@@ -325,21 +326,6 @@ module.exports = {
 		var action = req.param("action");
 		var eventId = req.param("eventid");
 		var mode = action.substr(0, 1).toUpperCase() + action.substr(1);
-		const onlinePaymentPlatforms = _.cloneDeep(sails.config.events.onlinePaymentPlatforms);
-		// Remove secrets before sending it to the client
-		for (const platform in onlinePaymentPlatforms) {
-			if (onlinePaymentPlatforms.hasOwnProperty(platform)) {
-				onlinePaymentPlatforms[platform].forEach(platformConfig => {
-					for (const prop in platformConfig) {
-						if (platformConfig.hasOwnProperty(prop)) {
-							if (prop !== 'code' && prop !== 'desc') {
-								delete platformConfig[prop];
-							}
-						}
-					}
-				})
-			}
-		}
 		// If we have an event id, retrieve it
 		if (eventId) {
 			Event.findOne(eventId).exec(function (err, event) {
@@ -350,7 +336,7 @@ module.exports = {
 				return res.view("eventdetails", {
 					mode: mode,
 					event: event,
-					onlinePaymentPlatforms
+					onlinePaymentPlatforms: Utility.getOnlinePaymentPlatforms()
 				})
 			})
 		}
@@ -368,7 +354,7 @@ module.exports = {
 					latePaymentChecking: true,
 					organiser: organiser
 				},
-				onlinePaymentPlatforms
+				onlinePaymentPlatforms: Utility.getOnlinePaymentPlatforms()
 			})
 		}
 	},

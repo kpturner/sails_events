@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+
+  events-redis:
+    container_name: ${EVENTS_NAME}-redis
+    image: redislabs/redismod:latest
+    restart: unless-stopped
+    environment:
+      - container=docker
+    logging:
+      driver: "json-file"
+    expose:
+      - 6379
+
+  sails-events:
+    container_name: ${EVENTS_NAME}
+    image: ghcr.io/kpturner/sails_events:${INSTANCE}-latest
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - container=docker
+      - REDIS_HOST=events-redis
+      - DB_HOST=host.docker.internal
+      - BLUEBIRD_W_FORGOTTEN_RETURN=0
+    ports:
+      - "${EVENTS_PORT}:1337"
