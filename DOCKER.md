@@ -41,11 +41,12 @@ In some cases the application may not be able to access the MySql database. Thes
 
 The MySql config is bound to all the interfaces:
 
-`bind-address            = *`
+`bind-address            = *` in `/etc/mysql/my.cnf`
 
 Check the subnet of the docker container:
 
-`docker network inspect sailseventspgsl_default`
+`docker network ls`
+`docker network inspect <name>_default`
 
 Sort out the firewall
 
