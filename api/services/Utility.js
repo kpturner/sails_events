@@ -752,7 +752,7 @@ module.exports = {
     if (err) {
       var errStr;
       if (typeof err == "string") errStr = err;
-      else errStr = JSON.stringify(err);
+      else errStr = err.message || err.toString();
       sails.log.error("Emailing error: " + err);
       // Try to inform the developer
       if (sails.config.events.developer) {
