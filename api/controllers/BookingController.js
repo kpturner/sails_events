@@ -578,6 +578,7 @@ module.exports = {
         dietary: user.dietary || "",
         bookingRef: bookingRef,
         info: (booking.info || "n/a").replace(/[\n\r]/g, "<br>"),
+        attendingOnly: booking.attendingOnly,
         carReg: booking.carReg,
         places: booking.places,
         paid: booking.paid,
@@ -727,6 +728,7 @@ module.exports = {
                     }
                     booking.user = user.id;
                     booking.event = eventId;
+                    booking.attendingOnly = req.param("attendingOnly");
                     booking.menuChoice = req.param("menuChoice") || 1;
                     if (
                       booking.menuChoice > event.menusOnOffer ||
@@ -741,37 +743,43 @@ module.exports = {
                       booking.places = 1;
                     }
                     booking.carReg = req.param("carReg");
-                    if (existingBooking) {
-                      let places = booking.places - existingBooking.places;
-                      if (places < 0) {
-                        // Looks like a refund is due.  What did we charge per place
-                        // on the original booking? We need to use that to get the correct refund amount
-                        let originalCostPerBooking =
-                          existingBooking.cost / existingBooking.places;
-                        if (event.recoverOnlinePaymentFee) {
-                          // At this juncture it is important to note that Stripe does *not* refund the original
-                          // fee.  Costs are incurred taking the payment and refunding it, so the fee remains.
-                          // We can therefore only refund the actual cost of the booking when auto-calculating
-                          // fees
-                          originalCostPerBooking = event.price;
+                    if (booking.attendingOnly) {
+                      booking.cost = 0;
+                    } else {
+                      if (existingBooking) {
+                        let places = booking.places - existingBooking.places;
+                        if (places < 0) {
+                          // Looks like a refund is due.  What did we charge per place
+                          // on the original booking? We need to use that to get the correct refund amount
+                          let originalCostPerBooking =
+                            existingBooking.cost / existingBooking.places;
+                          if (event.recoverOnlinePaymentFee) {
+                            // At this juncture it is important to note that Stripe does *not* refund the original
+                            // fee.  Costs are incurred taking the payment and refunding it, so the fee remains.
+                            // We can therefore only refund the actual cost of the booking when auto-calculating
+                            // fees
+                            originalCostPerBooking = event.price;
+                          }
+                          booking.cost += originalCostPerBooking * places;
+                        } else {
+                          booking.cost += Utility.calculateTotalBookingCost(
+                            event,
+                            places
+                          );
                         }
-                        booking.cost += originalCostPerBooking * places;
                       } else {
-                        booking.cost += Utility.calculateTotalBookingCost(
+                        booking.cost = Utility.calculateTotalBookingCost(
                           event,
-                          places
+                          booking.places
                         );
                       }
-                    } else {
-                      booking.cost = Utility.calculateTotalBookingCost(
-                        event,
-                        booking.places
-                      );
                     }
 
                     booking.dietary = user.dietary;
 
-                    balance = booking.cost - booking.amountPaid;
+                    balance = booking.attendingOnly
+                      ? 0
+                      : booking.cost - booking.amountPaid;
                     if (balance < 0) {
                       refund = parseFloat((balance * -1).toFixed(2));
                     }
@@ -1053,7 +1061,8 @@ module.exports = {
                                 !event.regInterest &&
                                 event.onlinePayments &&
                                 event.onlinePaymentConfig &&
-                                !booking.paid
+                                !booking.paid &&
+                                !booking.attendingOnly
                               ) {
                                 sails.controllers.payment
                                   .getNewCheckoutSession(booking.id)

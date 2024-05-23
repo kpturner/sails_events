@@ -217,11 +217,31 @@
                 <input
                   type="checkbox"
                   class="bigcheckbox"
-                  name="voreginterest"
+                  name="reginterest"
                   ng-model="eventForm.regInterest"
                   ng-change="if eventForm.regInterest eventForm.onlinePayments=false"
                 />
                 &nbsp;&nbsp;&nbsp;Register interest?
+              </label>
+            </div>
+
+            <!-- A L L O W  A T T E N D I N G  O N L Y -->
+            <div
+              class="control-group form-group col-sm-6"
+              ng-class="{
+                'has-error':
+                  eventdetails.allowAttendingOnly.$invalid &&
+                  eventdetails.allowAttendingOnly.$dirty
+              }"
+            >
+              <label>
+                <input
+                  type="checkbox"
+                  class="bigcheckbox"
+                  name="allowattendingonly"
+                  ng-model="eventForm.allowAttendingOnly"
+                />
+                &nbsp;&nbsp;&nbsp;Allow non-dining bookings?
               </label>
             </div>
 

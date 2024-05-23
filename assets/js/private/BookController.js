@@ -295,6 +295,7 @@ angular.module("EventsModule").controller("BookController", [
     // Check whether or not the booking has been paid for
     $scope.chkPaid = function () {
       if (
+        !$scope.bookingForm.attendingOnly &&
         $scope.openForBookings &&
         !$scope.refundAllowed &&
         !$scope.user.isAdmin &&
@@ -392,7 +393,7 @@ angular.module("EventsModule").controller("BookController", [
     $scope.bookingForm.dressCode = $scope.event.dressCode;
 
     // Payment reminder info
-    if (!$scope.bookingForm.paid) {
+    if (!$scope.bookingForm.paid && !$scope.bookingForm.attendingOnly) {
       // When is the next reminder due?
       if (
         SAILS_LOCALS.booking.remindersSent &&
@@ -427,6 +428,7 @@ angular.module("EventsModule").controller("BookController", [
       $scope.paid = SAILS_LOCALS.booking.paid;
       if ($scope.paid) $scope.paidMsg = " AND PAID";
       $scope.bookingForm.ref = SAILS_LOCALS.booking.ref;
+      $scope.bookingForm.attendingOnly = SAILS_LOCALS.booking.attendingOnly;
       $scope.bookingForm.menuChoice = SAILS_LOCALS.booking.menuChoice;
       $scope.bookingForm.cost = SAILS_LOCALS.booking.cost;
       $scope.bookingForm.paid = SAILS_LOCALS.booking.paid;
@@ -444,30 +446,32 @@ angular.module("EventsModule").controller("BookController", [
       // then the minimum cannot reduce the cost below that amount.
       // The organiser needs to intervene for refunds etc
       $scope.balance = 0;
-      if ($scope.bookingForm.amountPaid || $scope.event.onlinePaymentConfig) {
-        $scope.balance =
-          $scope.calculateBookingCost() - $scope.bookingForm.amountPaid;
-        if (
-          $scope.balance <= 0.1 &&
-          $scope.balance >= -0.1 &&
-          $scope.bookingForm.paid
-        ) {
-          // Don't bother - its probably rounding
-          $scope.balance = 0;
+      if (!$scope.bookingForm.attendingOnly) {
+        if ($scope.bookingForm.amountPaid || $scope.event.onlinePaymentConfig) {
+          $scope.balance =
+            $scope.calculateBookingCost() - $scope.bookingForm.amountPaid;
+          if (
+            $scope.balance <= 0.1 &&
+            $scope.balance >= -0.1 &&
+            $scope.bookingForm.paid
+          ) {
+            // Don't bother - its probably rounding
+            $scope.balance = 0;
+          }
         }
-      }
-      if ($scope.balance !== 0) {
-        $scope.balance = $scope.balance.toFixed(2);
-      }
-      if (
-        $scope.balance > 0 &&
-        !$scope.user.isAdmin &&
-        !$scope.user.isOrganiser
-      ) {
-        $scope.placesMin =
-          Math.round($scope.bookingForm.amountPaid / $scope.event.price) || 1;
-        if ($scope.placesMin > $scope.bookingForm.places) {
-          $scope.placesMin = $scope.bookingForm.places;
+        if ($scope.balance !== 0) {
+          $scope.balance = $scope.balance.toFixed(2);
+        }
+        if (
+          $scope.balance > 0 &&
+          !$scope.user.isAdmin &&
+          !$scope.user.isOrganiser
+        ) {
+          $scope.placesMin =
+            Math.round($scope.bookingForm.amountPaid / $scope.event.price) || 1;
+          if ($scope.placesMin > $scope.bookingForm.places) {
+            $scope.placesMin = $scope.bookingForm.places;
+          }
         }
       }
 
@@ -513,6 +517,7 @@ angular.module("EventsModule").controller("BookController", [
     $scope.disableUpdateButton = () => {
       return (
         $scope.bookingForm.loading ||
+        !$scope.bookingForm.attendingOnly ||
         ($scope.myBookings &&
           $scope.paid &&
           !$scope.refundAllowed &&
@@ -607,7 +612,7 @@ angular.module("EventsModule").controller("BookController", [
         errors.push("Area");
         validations.push($scope.booking.area);
       }
-      if ($scope.event.menusOnOffer > 1) {
+      if ($scope.event.menusOnOffer > 1 && !$scope.bookingForm.attendingOnly) {
         if (!$scope.bookingForm.menuChoice) {
           complete = false;
           errors.push("Menu choice");
@@ -687,7 +692,10 @@ angular.module("EventsModule").controller("BookController", [
                       (index + 1).toString()
                   );
                 }
-                if ($scope.event.menusOnOffer > 1) {
+                if (
+                  $scope.event.menusOnOffer > 1 &&
+                  !$scope.bookingForm.attendingOnly
+                ) {
                   if (!this.menuChoice) {
                     complete = false;
                     errors.push(
@@ -986,6 +994,7 @@ angular.module("EventsModule").controller("BookController", [
             .post(route, {
               _csrf: SAILS_LOCALS._csrf,
               eventid: $scope.event.id,
+              attendingOnly: $scope.bookingForm.attendingOnly,
               salutation: $scope.bookingForm.salutation,
               name: $scope.bookingForm.name,
               surname: $scope.bookingForm.surname,
@@ -1086,7 +1095,7 @@ angular.module("EventsModule").controller("BookController", [
                 $scope.finish();
               } else {
                 // Now decide if we are taking online bookings or not
-                if (onlinePayment) {
+                if (onlinePayment && !$scope.bookingForm.attendingOnly) {
                   const checkout = () => {
                     const stripe = Stripe($scope.booking.stripePublishableKey);
                     stripe

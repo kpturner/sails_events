@@ -10,6 +10,9 @@
 <% if (!regInterest) {%>
 	<p>This is a courtesy email to confirm your booking<%-updated%>.</p>
 <% } %>
+<% if (attendingOnly) {%>
+	<p>NOT DINING</p>
+<% } %>
 <p>Details:</p>
 <p>
 	<% if (regInterest) {%>
@@ -26,7 +29,7 @@
     <% if (eventAdditionalInfo) {%>
 	<br>Additional info: <%-eventAdditionalInfo%>
     <% } %>
-	<% if  (!regInterest) {%>
+	<% if  (!regInterest && !attendingOnly) {%>
 	<br>Menu choice: <%=menuChoice%>
     <br>Menu: <%-eventMenu%>
 	<br>Dress code: <%-eventDressCode%>
@@ -65,7 +68,7 @@
     <br>Exec lodge area: <%=voArea%>
     <% } %>
 	<br>Rank: <%=rank%>
-	<% if  (!regInterest) {%>
+	<% if  (!regInterest && !attendingOnly) {%>
 	<br>Dietary reqs: <%=dietary%>
 	<% } %>
 	<br>Email address: <%=email%>
@@ -73,7 +76,7 @@
 	<br>Additional info: <%-info%>
 	<% } %>
 	<br>Places: <%=places%>
-	<% if  (!eventFree && !regInterest && !paid && !eventOnlinePayments && paymentDetails) {%>
+	<% if  (!eventFree && !regInterest && !attendingOnly && !paid && !eventOnlinePayments && paymentDetails) {%>
 	<br>Payment deadline: <%=deadline%>
 	<br>Amount to pay: £<%=total%>
 	<% } %>
@@ -100,12 +103,14 @@
     <% if  (linkedBooking.carReg) {%>
       <br>&nbsp;&nbsp;Car registration(s): <%=linkedBooking.carReg%>
     <% } %>
-		<br>&nbsp;&nbsp;Dietary reqs: <%=linkedBooking.dietary%>
+        <% if  (!attendingOnly) {%>
+                <br>&nbsp;&nbsp;Dietary reqs: <%=linkedBooking.dietary%>
 		<br>&nbsp;&nbsp;Menu choice: <%=linkedBooking.menuChoice%>
+        <% } %>
       <% }) %>
     <% } %>
 
-	<% if  (!eventFree && !regInterest && !paid && !eventOnlinePayments && paymentDetails) {%>
+	<% if  (!eventFree && !regInterest && !attendingOnly && !paid && !eventOnlinePayments && paymentDetails) {%>
 	<p> Payment details: <b><%-paymentDetails%></b>
 	<% } %>
 
