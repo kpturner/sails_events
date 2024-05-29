@@ -517,7 +517,6 @@ angular.module("EventsModule").controller("BookController", [
     $scope.disableUpdateButton = () => {
       return (
         $scope.bookingForm.loading ||
-        !$scope.bookingForm.attendingOnly ||
         ($scope.myBookings &&
           $scope.paid &&
           !$scope.refundAllowed &&

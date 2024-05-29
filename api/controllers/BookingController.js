@@ -1582,7 +1582,13 @@ module.exports = {
     }
 
     // If we are looking for late payments then pagination will defeat us!
-    if (filter == "late" || download || criteria.sortByName) {
+    if (
+      filter == "late" ||
+      download ||
+      criteria.sortByName ||
+      criteria.incNonDiners ||
+      criteria.nonDinersOnly
+    ) {
       pag.page = 1;
       pag.limit = 99999999;
     }
@@ -1696,7 +1702,13 @@ module.exports = {
     }
 
     // If we are looking for late payments then pagination will defeat us!
-    if (filter == "late" || download || criteria.sortByName) {
+    if (
+      filter == "late" ||
+      download ||
+      criteria.sortByName ||
+      criteria.incNonDiners ||
+      criteria.nonDinersOnly
+    ) {
       pag.page = 1;
       pag.limit = 99999999;
     }
@@ -1766,7 +1778,9 @@ module.exports = {
           if (bookings) {
             result.capacity = event.capacity;
             _.forEach(bookings, function (booking) {
-              result.capacity -= booking.places;
+              if (!booking.attendingOnly) {
+                result.capacity -= booking.places;
+              }
             });
           }
           // Send bookings to client
@@ -1821,6 +1835,19 @@ module.exports = {
             //
             // SECOND BIG HAIRY NOTE: It confuses me so lets not bother. Just show the bookings in the order we have them unless
             // requested
+
+            if (criteria.nonDinersOnly) {
+              bookings = _.filter(bookings, function (booking) {
+                return booking.attendingOnly;
+              });
+            } else {
+              if (!criteria.incNonDiners) {
+                bookings = _.filter(bookings, function (booking) {
+                  return !booking.attendingOnly;
+                });
+              }
+            }
+
             if (criteria.sortByName) {
               bookings.sort(
                 Utility.jsonSort("user.surname", false, function (a) {
@@ -2451,6 +2478,7 @@ module.exports = {
           Booking.find({
             where: {
               event: event.id,
+              attendingOnly: false,
               or: [{ paid: false }, { paid: null }],
             },
           })
@@ -2789,10 +2817,11 @@ module.exports = {
         }
         row.email = booking.user?.email || "";
         row.phone = booking.user?.phone ? "Tel: " + booking.user?.phone : ""; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
-        row.dietary = booking.dietary || "";
-        row.menuChoice = booking.menuChoice || "";
+        row.dietary = booking.attendingOnly ? "" : booking.dietary || "";
+        row.menuChoice = booking.attendingOnly ? "" : booking.menuChoice || "";
         row.info = booking.info || "";
         row.places = booking.places;
+        row.attendingOnly = booking.attendingOnly || "";
         row.paid = booking.paid || "";
         row.cost = booking.cost || "";
         row.amountPaid = amountPaid || "";
@@ -2918,8 +2947,9 @@ module.exports = {
         }
         row.centre = addition.centre || booking.user.centre || "";
         row.area = addition.area || booking.user.area || "";
-        row.dietary = addition.dietary || "";
-        row.menuChoice = addition.menuChoice || "";
+        row.dietary = booking.attendingOnly ? "" : addition.dietary || "";
+        row.menuChoice = booking.attendingOnly ? "" : addition.menuChoice || "";
+        row.attendingOnly = booking.attendingOnly || ""; // This is at the booking level - not individual level
         row.paid = booking.paid || "";
         row.amountPaid = amountPaid || "";
         row.balance = "";

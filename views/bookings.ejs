@@ -75,7 +75,7 @@
           <!-- F I L T E R -->
 
           <div class="control-group form-group"
-             ng-class="{'col-sm-8 col-xs-12':eventBookings,'col-xs-12':!eventBookings}">
+             ng-class="{'col-xs-12':eventBookings,'col-xs-12':!eventBookings}">
             <input type="text" class="form-control" placeholder="filter (hint: 'paid'/'unpaid'/'late')" name="filter" ng-model="filterForm.criteria.filter" ng-change="filterChanged()" />
           </div>
           <div ng-show="eventBookings" class="control-group form-group col-sm-4 col-xs-12">
@@ -84,10 +84,22 @@
               &nbsp;&nbsp;&nbsp;Sort by name?
             </label>
           </div>
+          <div ng-show="eventBookings && event.allowAttendingOnly" class="control-group form-group col-sm-4 col-xs-12">
+            <label>
+              <input type="checkbox" class="bigcheckbox" name="incNonDiners" ng-model="filterForm.criteria.incNonDiners" ng-change="filterChanged()" />
+              &nbsp;&nbsp;&nbsp;Include non-diners?
+            </label>
+          </div>
+          <div ng-show="eventBookings && event.allowAttendingOnly" class="control-group form-group col-sm-4 col-xs-12">
+            <label>
+              <input type="checkbox" class="bigcheckbox" name="nonDinersOnly" ng-model="filterForm.criteria.nonDinersOnly" ng-change="filterChanged()" />
+              &nbsp;&nbsp;&nbsp;Non-diners only?
+            </label>
+          </div>
 
         </div>
 
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(!filterform.filter.$dirty && !filterform.sortbyname.$dirty) || filterForm.loading">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="(!filterform.filter.$dirty && !filterform.sortbyname.$dirty && !filterform.incNonDiners.$dirty && !filterform.nonDinersOnly.$dirty) || filterForm.loading">
           <span class="fa fa-filter"></span> <span ng-show="!filterForm.loading"> Filter </span><span ng-hide="event.regInterest || filterForm.loading">bookings </span><span ng-show="event.regInterest && !filterForm.loading">interest </span>
           <span class="fa-pulse fa fa-spinner" ng-show="filterForm.loading" ></span>
           <span ng-show="filterForm.loading">Filtering...</span>
