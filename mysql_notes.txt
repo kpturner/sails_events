@@ -1,0 +1,14 @@
+I am documenting this in the hope that I will find it the next time this happens.
+
+Every time I migrate to a new VPS and start Square Events (or SquareAdmin) I find that I cannot log in - and there are few clues as to why. The app just returns to the homepage.
+
+It turns out that this is because the app cannot communicate with the MySQL database. Why?
+
+On the new VPS the config file is usually in cat  /etc/mysql/my.cnf
+
+There you can see that "bind-address = 127.0.0.1"
+
+It should be "bind-address = *"
+
+Modify this, save and restart MySql and all should be well  "systemctl  restart  mariadb"  (qassuming you are logged in as "root" otherwise use "sudo")
+
