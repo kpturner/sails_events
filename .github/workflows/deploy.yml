@@ -1,6 +1,5 @@
 name: Deploy Square Events
 
-
 on:
   workflow_dispatch:
     inputs:
@@ -9,15 +8,17 @@ on:
         required: true
         type: choice
         options:
-        - sails-events,pgl,1337,hampshirefreemasonry
-        - sails-events-test,pgl-test,1338,hampshirefreemasonry
-        - sails-events-csl,csl,1330,kpturner
-        - sails-events-mtsfc,mtsfc,1340,kpturner
-        - sails-events-hamtun,hamtun,7083,kpturner
-        - sails-events-pgsl,pgsl,1337,9263dining
+          - sails-events,pgl,1337,hampshirefreemasonry
+          - sails-events-test,pgl-test,1338,hampshirefreemasonry
+          - sails-events-csl,csl,1330,kpturner
+          - sails-events-mtsfc,mtsfc,1340,kpturner
+          - sails-events-hamtun,hamtun,7083,kpturner
+          - sails-events-csl_new,csl,1330,kpturner_new
+          - sails-events-mtsfc_new,mtsfc,1340,kpturner_new
+          - sails-events-hamtun_new,hamtun,7083,kpturner_new
+          - sails-events-pgsl,pgsl,1337,9263dining
 
 jobs:
-
   setup:
     name: Setup parameters
     runs-on: ubuntu-latest
@@ -42,7 +43,6 @@ jobs:
     runs-on: ${{ matrix.runner }}
 
     steps:
-
       - name: Checkout repo
         uses: actions/checkout@v3
 
