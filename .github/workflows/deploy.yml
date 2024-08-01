@@ -13,9 +13,6 @@ on:
           - sails-events-csl,csl,1330,kpturner
           - sails-events-mtsfc,mtsfc,1340,kpturner
           - sails-events-hamtun,hamtun,7083,kpturner
-          - sails-events-csl_new,csl,1330,kpturner_new
-          - sails-events-mtsfc_new,mtsfc,1340,kpturner_new
-          - sails-events-hamtun_new,hamtun,7083,kpturner_new
           - sails-events-pgsl,pgsl,1337,9263dining
 
 jobs:
