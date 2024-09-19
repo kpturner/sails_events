@@ -661,10 +661,10 @@ angular.module("EventsModule").controller("BookController", [
         //	errors.push("Email confirmation ()")
         //}
       }
-      if ($scope.bookingForm.paid && $scope.bookingForm.amountPaid == 0) {
+      if ($scope.bookingForm.paid && !$scope.bookingForm.amountPaid) {
         complete = false;
         errors.push(
-          "If you flag the booking as paid you must enter the amount paid also"
+          "If you flag the booking as fully paid you must enter the amount paid also"
         );
       }
       if ($scope.bookingForm.places > 1) {
