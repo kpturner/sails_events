@@ -661,6 +661,12 @@ angular.module("EventsModule").controller("BookController", [
         //	errors.push("Email confirmation ()")
         //}
       }
+      if ($scope.bookingForm.paid && $scope.bookingForm.amountPaid == 0) {
+        complete = false;
+        errors.push(
+          "If you flag the booking as paid you must enter the amount paid also"
+        );
+      }
       if ($scope.bookingForm.places > 1) {
         if (!$scope.linkedbookings || $scope.linkedbookings.length == 0) {
           complete = false;
