@@ -15,6 +15,12 @@ on:
           - sails-events-hamtun,hamtun,7083,kpturner
           - sails-events-pgsl,pgsl,1337,9263dining
 
+# make GHA actions use node16 which still works with bionic
+# See https://github.blog/changelog/2024-03-07-github-actions-all-actions-will-run-on-node20-instead-of-node16-by-default/
+# Unclear how long this will work though
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
 jobs:
   setup:
     name: Setup parameters
