@@ -7,14 +7,14 @@
 /* All Rights Reserved.                              */
 /***** END LICENCE BLOCK *****************************/
 
-/**      
+/**
  *   @class         service.Mutex
- *   @description   Renaissance Mutex Services  
- *                  {@link https://www.npmjs.com/package/mutex}  
+ *   @description   Renaissance Mutex Services
+ *                  {@link https://www.npmjs.com/package/mutex}
  *                  This will use redis by default but if sails.config.mutex.adapter (sic) is set to
- *                  "lockfile" then it will use lockfile instead     
- *   @author        Kevin Turner                                            
- *   @date          May 2016                                                         
+ *                  "lockfile" then it will use lockfile instead
+ *   @author        Kevin Turner
+ *   @date          May 2016
  */
 
 /********************************************************************/
@@ -26,97 +26,92 @@
 /*  =====  ====     ============      
 /********************************************************************/
 
-var Strategy=require("mutex");
-var uuid = require('uuid'); 
-var libredis    = require("redis");
-var lockfile    = require("lockfile");
+var Strategy = require('mutex');
+var uuid = require('uuid');
+var libredis = require('redis');
+var lockfile = require('lockfile');
 var mutex, redisClient;
 
 module.exports = {
+  /**
+   * @name         service.Mutex.initialise
+   * @method
+   * @description  Initialise config. Moves config file data to persisted DB if in development mode
+   * @param   {Object}    [strategy=redis] Optional. See {@link https://www.npmjs.com/package/mutex}
+   * @param   {Function}  callback
+   */
+  initialise: function (strategy, cb) {
+    var self = this;
 
-    /**
-     * @name         service.Mutex.initialise
-     * @method
-     * @description  Initialise config. Moves config file data to persisted DB if in development mode
-     * @param   {Object}    [strategy=redis] Optional. See {@link https://www.npmjs.com/package/mutex}
-     * @param   {Function}  callback
-     */
-    initialise: function (strategy,cb) {
-        var self = this;
-       
-        if (sails.config.mutex.adapter!="lockfile") {
-            // Redis being used
-            if (!self.mutex) {             
-                // Create a mutex strategy
-                if (!strategy) {
-                    strategy={
-                        name:               'redis',
-                        connectionString:   'redis://'+
-                                        (sails.config.mutex.pass?sails.config.mutex.pass+"@":"")+
-                                        sails.config.mutex.host+
-                                        ":"+
-                                        sails.config.mutex.port+
-                                        (sails.config.mutex.db?"/"+sails.config.mutex.db:""), 
-                        
-                    }
-                }                   
-
-                self.mutex=Strategy({
-                    id: uuid.v4(),
-                    strategy: strategy
-                });
-            }
+    if (sails.config.mutex.adapter != 'lockfile') {
+      // Redis being used
+      if (!self.mutex) {
+        // Create a mutex strategy
+        if (!strategy) {
+          strategy = {
+            name: 'redis',
+            connectionString:
+              'redis://' +
+              (sails.config.mutex.pass ? sails.config.mutex.pass + '@' : '') +
+              sails.config.mutex.host +
+              ':' +
+              sails.config.mutex.port +
+              (sails.config.mutex.db ? '/' + sails.config.mutex.db : '')
+          };
         }
 
-        // Callback?
-        if (cb) cb();
-    
-    },   
+        self.mutex = Strategy({
+          id: uuid.v4(),
+          strategy: strategy
+        });
+      }
+    }
 
-    /**
-     * @name         service.Mutex.lock
-     * @method
-     * @description  Attempt to obtain a mutex lock
-     * @param   {String}    lockName Name of the lock
-     * @param   {Object}    [options] Options. See {@link https://www.npmjs.com/package/mutex}
-     * Typically we will provide "duration" and "maxWait" in milliseconds                      
-     * @param   {Function}  callback
-     */
-    lock: function (lockName,opts,cb) {
-        
-        var self = this;
-        
-        // Set up defaults
-        var lOpts={
-            duration:   30000,
-            maxWait:    15000,
-        }
-        
-        if (opts) {
-            lOpts=_.extend(lOpts,opts)
-        }
+    // Callback?
+    if (cb) cb();
+  },
 
-        // Convert the options if we are going to use lockfile instead of redis
-        if (sails.config.mutex.adapter=="lockfile") {
-            lOpts.wait  =   lOpts.maxWait;
-            lOpts.stale =   lOpts.duration;  
+  /**
+   * @name         service.Mutex.lock
+   * @method
+   * @description  Attempt to obtain a mutex lock
+   * @param   {String}    lockName Name of the lock
+   * @param   {Object}    [options] Options. See {@link https://www.npmjs.com/package/mutex}
+   * Typically we will provide "duration" and "maxWait" in milliseconds
+   * @param   {Function}  callback
+   */
+  lock: function (lockName, opts, cb) {
+    var self = this;
 
-            // Try for a lock
-            var key="mutex_"+lockName+".lock";
-            lockfile.lock(key,lOpts,function(err){
-                if (err) {
-                    cb(err)
-                }
-                else {
-                    cb(null,{
-                        key: key,
-                        status: "LOCKED"
-                    })
-                }
-            })          
+    // Set up defaults
+    var lOpts = {
+      duration: 30000,
+      maxWait: 15000
+    };
+
+    if (opts) {
+      lOpts = _.extend(lOpts, opts);
+    }
+
+    // Convert the options if we are going to use lockfile instead of redis
+    if (sails.config.mutex.adapter == 'lockfile') {
+      lOpts.wait = lOpts.maxWait;
+      lOpts.stale = lOpts.duration;
+
+      // Try for a lock
+      var key = 'mutex_' + lockName + '.lock';
+      lockfile.lock(key, lOpts, function (err) {
+        if (err) {
+          cb(err);
+        } else {
+          cb(null, {
+            key: key,
+            status: 'LOCKED'
+          });
         }
-        else {
-            /** DOESN'T WORK ON CENTOS SERVER YET! 
+      });
+    } else {
+      /** DOESN'T WORK ON CENTOS SERVER YET! 
             sails.log.verbose("Trying to lock "+lockName);
             self.mutex.lock(sails.config.mutex.prefix+lockName,lOpts)
                 .then(lock => {
@@ -130,122 +125,110 @@ module.exports = {
                 })
             */
 
-            // Use home-made noddy version for now
-            lOpts.key=sails.config.mutex.prefix+lockName;
-            lOpts.waited=0;
-            lOpts.interval=100;
-            lOpts.cb=cb;
+      // Use home-made noddy version for now
+      lOpts.key = sails.config.mutex.prefix + lockName;
+      lOpts.waited = 0;
+      lOpts.interval = 100;
+      lOpts.cb = cb;
 
-            if (!redisClient) {
-                var opts={
-                    port:      sails.config.mutex.port,
-                    host:      sails.config.mutex.host,            
-                }            
-                if (sails.config.mutex.db) {
-                    opts.db=sails.config.mutex.db;
-                }
-                // Create a client
-                redisClient=libredis.createClient(opts); 
-                
-            }                
-
-            // Loop until the key does not exist or until we time out
-            self.wait=_.bind(function(){
-                var me=this;
-                redisClient.exists(me.key,function(err,reply){
-                    if (reply==1) {
-                        // It exists
-                        if (me.waited>=me.maxWait) {
-                            // Timed out
-                            var err=new Error("Timed out trying to obtain mutex lock for "+me.key)
-                            if (me.cb) {
-                                me.cb(err,null);
-                            }
-                        }
-                        else {
-                            me.waited+=me.interval;
-                            setTimeout(self.wait,100)
-                        }               
-                    }
-                    else {
-                        // OK, create the lock
-                        redisClient.set(me.key,"LOCKED",function(err,reply){
-                            if (err) {
-                                me.cb(err,null);
-                            }
-                            else {
-                                redisClient.expire(me.key,me.duration/1000)
-                                me.cb(null,{
-                                    key: me.key,
-                                    status: "LOCKED"
-                                })
-                            }
-                        }) 
-                    }
-                })
-            },lOpts);
-
-            // Kick off
-            // Authenticate if need be before calling function        
-            if (sails.config.mutex.pass && !redisClient._authenticated) {
-                redisClient.auth(sails.config.mutex.pass, function(){
-                    redisClient._authenticated=true;
-                    self.wait();
-                });
-            }
-            else {
-                self.wait();
-            }        
+      if (!redisClient) {
+        var opts = {
+          port: sails.config.mutex.port,
+          host: sails.config.mutex.host
+        };
+        if (sails.config.mutex.db) {
+          opts.db = sails.config.mutex.db;
         }
-    },
-     
-    /**
-     * @name         service.Mutex.unlock
-     * @method
-     * @description  Release a mutex lock
-     * @param   {Object}    lock Lock obtained by Mutex.lock                 
-     * @param   {Function}  callback
-     */
-    unlock: function (lock,cb) {
-        
-        var self = this;
-         /** DOESN'T WORK ON CENTOS SERVER YET! 
+        // Create a client
+        redisClient = libredis.createClient(opts);
+      }
+
+      // Loop until the key does not exist or until we time out
+      self.wait = _.bind(function () {
+        var me = this;
+        redisClient.exists(me.key, function (err, reply) {
+          if (reply == 1) {
+            // It exists
+            if (me.waited >= me.maxWait) {
+              // Timed out
+              var err = new Error('Timed out trying to obtain mutex lock for ' + me.key);
+              if (me.cb) {
+                me.cb(err, null);
+              }
+            } else {
+              me.waited += me.interval;
+              setTimeout(self.wait, 100);
+            }
+          } else {
+            // OK, create the lock
+            redisClient.set(me.key, 'LOCKED', function (err, reply) {
+              if (err) {
+                me.cb(err, null);
+              } else {
+                redisClient.expire(me.key, me.duration / 1000);
+                me.cb(null, {
+                  key: me.key,
+                  status: 'LOCKED'
+                });
+              }
+            });
+          }
+        });
+      }, lOpts);
+
+      // Kick off
+      // Authenticate if need be before calling function
+      if (sails.config.mutex.pass && !redisClient._authenticated) {
+        redisClient.auth(sails.config.mutex.pass, function () {
+          redisClient._authenticated = true;
+          self.wait();
+        });
+      } else {
+        self.wait();
+      }
+    }
+  },
+
+  /**
+   * @name         service.Mutex.unlock
+   * @method
+   * @description  Release a mutex lock
+   * @param   {Object}    lock Lock obtained by Mutex.lock
+   * @param   {Function}  callback
+   */
+  unlock: function (lock, cb) {
+    var self = this;
+    /** DOESN'T WORK ON CENTOS SERVER YET! 
         if (lock && self.mutex) {
             self.mutex.unlock(lock,cb)
         }   
-        */ 
+        */
 
-        if (sails.config.mutex.adapter=="lockfile") {
-            // Use lockfile
-            lockfile.unlock(lock.key,function(err){
-                if (err) {
-                    cb(err)
-                }
-                else {
-                    cb();
-                }
-            })
+    if (sails.config.mutex.adapter == 'lockfile') {
+      // Use lockfile
+      lockfile.unlock(lock.key, function (err) {
+        if (err) {
+          cb(err);
+        } else {
+          cb();
         }
-        else {
-            // Use home-made noddy version for now
-            redisClient.exists(lock.key,function(err,reply){
-                if (reply==1) {
-                    redisClient.del(lock.key,function(err,reply){
-                        if (err) {
-                            cb(err)
-                        }
-                        else {
-                            cb();
-                        }
-                    })
-                }
-                else {
-                    var err=new Error("No lock exists for "+lock.key);
-                    cb(err);
-                }
-            })
-        } 
-
-    }, 
-     
+      });
+    } else {
+      // Use home-made noddy version for now
+      redisClient.exists(lock.key, function (err, reply) {
+        if (reply == 1) {
+          redisClient.del(lock.key, function (err, reply) {
+            if (err) {
+              cb(err);
+            } else {
+              cb();
+            }
+          });
+        } else {
+          var err = new Error('No lock exists for ' + lock.key);
+          cb(err);
+        }
+      });
+    }
+  }
 };

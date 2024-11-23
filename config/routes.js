@@ -21,16 +21,15 @@
  */
 
 module.exports.routes = {
-
   /***************************************************************************
-  *                                                                          *
-  * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
-  * etc. depending on your default view engine) your home page.              *
-  *                                                                          *
-  * (Alternatively, remove this and add an `index.html` file in your         *
-  * `assets` directory)                                                      *
-  *                                                                          *
-  ***************************************************************************/
+   *                                                                          *
+   * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
+   * etc. depending on your default view engine) your home page.              *
+   *                                                                          *
+   * (Alternatively, remove this and add an `index.html` file in your         *
+   * `assets` directory)                                                      *
+   *                                                                          *
+   ***************************************************************************/
 
   //'/': {
   //  view: 'homepage'
@@ -60,14 +59,14 @@ module.exports.routes = {
   // Profiles
   'get /profile': 'AuthController.profile',
   'post /updateprofile': 'AuthController.updateProfile',
-  'get /reset': {view:'reset'},
+  'get /reset': { view: 'reset' },
   'post /auth/passwordreset': 'AuthController.passwordReset',
 
   // Bookings
-  'get /booking' : 'BookingController.prepareBooking',
+  'get /booking': 'BookingController.prepareBooking',
   'get /booking/:action': 'BookingController.prepareBooking',
   'get /mybookings': 'BookingController.myBookings',
-  'get /allmybookings/:criteria?': 'BookingController.allMyBookings',  // the ? in :criteria? means that the filter part or the URL is optional
+  'get /allmybookings/:criteria?': 'BookingController.allMyBookings', // the ? in :criteria? means that the filter part or the URL is optional
   'get /eventbookings': 'BookingController.eventBookings',
   'get /alleventbookings/:criteria?': 'BookingController.allEventBookings',
   'get /userbookings': 'BookingController.userBookings',
@@ -99,7 +98,7 @@ module.exports.routes = {
 
   // Users
   'get /users': 'UserController.users',
-  'get /allusers/:criteria?': 'UserController.allUsers',  // the ? in :criteria? means that the filter part or the URL is optional
+  'get /allusers/:criteria?': 'UserController.allUsers', // the ? in :criteria? means that the filter part or the URL is optional
   'get /usermaint/:action': 'UserController.prepareUser',
   'post /updateuser/:action': 'UserController.updateUser',
   'get /organisers': 'UserController.organisers',
@@ -114,18 +113,17 @@ module.exports.routes = {
   // Events
   'get /events': 'EventController.events',
   'get /openevents': 'EventController.openEvents',
-  'get /allevents/:criteria?': 'EventController.allEvents',  // the ? in :criteria? means that the filter part or the URL is optional
+  'get /allevents/:criteria?': 'EventController.allEvents', // the ? in :criteria? means that the filter part or the URL is optional
   'get /event/:action': 'EventController.prepareEvent',
-  'post /updateevent/:action': 'EventController.updateEvent',
+  'post /updateevent/:action': 'EventController.updateEvent'
 
   /***************************************************************************
-  *                                                                          *
-  * Custom routes here...                                                    *
-  *                                                                          *
-  * If a request to a URL doesn't match any of the custom routes above, it   *
-  * is matched against Sails route blueprints. See `config/blueprints.js`    *
-  * for configuration options and examples.                                  *
-  *                                                                          *
-  ***************************************************************************/
-
+   *                                                                          *
+   * Custom routes here...                                                    *
+   *                                                                          *
+   * If a request to a URL doesn't match any of the custom routes above, it   *
+   * is matched against Sails route blueprints. See `config/blueprints.js`    *
+   * for configuration options and examples.                                  *
+   *                                                                          *
+   ***************************************************************************/
 };

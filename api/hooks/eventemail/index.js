@@ -30,7 +30,6 @@ var _ = require('lodash');
  */
 
 module.exports = function EventEmail(sails) {
-
   var transport;
   var self;
 
@@ -47,8 +46,9 @@ module.exports = function EventEmail(sails) {
       if (err) return cb(err);
 
       try {
-        var compileFn = ejs.compile((source || "").toString(), {
-          cache: true, filename: view
+        var compileFn = ejs.compile((source || '').toString(), {
+          cache: true,
+          filename: view
         });
 
         cb(null, compileFn(data));
@@ -59,7 +59,6 @@ module.exports = function EventEmail(sails) {
   };
 
   return {
-
     /**
      * Default configuration
      * @type {Object}
@@ -79,9 +78,11 @@ module.exports = function EventEmail(sails) {
 
     configure: function () {
       // Ensure we have the full path, relative to app directory
-      sails.config[this.configKey].templateDir = path.resolve(sails.config.appPath, sails.config[this.configKey].templateDir);
+      sails.config[this.configKey].templateDir = path.resolve(
+        sails.config.appPath,
+        sails.config[this.configKey].templateDir
+      );
     },
-
 
     /**
      * @param  {Function} cb
@@ -94,7 +95,6 @@ module.exports = function EventEmail(sails) {
       if (sails.config[self.configKey].testMode) {
         transport = {
           sendMail: function (options, cb) {
-
             // Add sent timestamp
             options.sentAt = new Date();
 
@@ -103,19 +103,18 @@ module.exports = function EventEmail(sails) {
               if (!status) {
                 fs.mkdir(path.join(sails.config.appPath, '.tmp'), function (err) {
                   if (err) return cb(err);
-                  fs.appendFile(path.join(sails.config.appPath, '.tmp/email.txt'), JSON.stringify(options) + "\n", cb);
+                  fs.appendFile(path.join(sails.config.appPath, '.tmp/email.txt'), JSON.stringify(options) + '\n', cb);
                 });
                 return;
               }
 
               // Otherwise just write to the .tmp/email.txt file
-              fs.appendFile(path.join(sails.config.appPath, '.tmp/email.txt'), JSON.stringify(options) + "\n", cb);
+              fs.appendFile(path.join(sails.config.appPath, '.tmp/email.txt'), JSON.stringify(options) + '\n', cb);
             });
           }
         };
         return cb();
       } else {
-
         try {
           if (sails.config[self.configKey].transporter) {
             // If custom transporter is set, use that first
@@ -123,20 +122,20 @@ module.exports = function EventEmail(sails) {
           } else {
             // create reusable transport method (opens pool of SMTP connections)
             var smtpPool = require('nodemailer-smtp-pool');
-            transport = nodemailer.createTransport(smtpPool({
-              service: sails.config[self.configKey].service,
-              auth: sails.config[self.configKey].auth
-            }));
+            transport = nodemailer.createTransport(
+              smtpPool({
+                service: sails.config[self.configKey].service,
+                auth: sails.config[self.configKey].auth
+              })
+            );
           }
 
           // Auto generate text
           transport.use('compile', htmlToText());
           return cb();
-        }
-        catch (e) {
+        } catch (e) {
           return cb(e);
         }
-
       }
     },
 
@@ -149,7 +148,6 @@ module.exports = function EventEmail(sails) {
      */
 
     send: function (template, data, options, cb) {
-
       data = data || {};
       // Turn off layouts by default
       if (typeof data.layout === 'undefined') data.layout = false;
@@ -166,26 +164,28 @@ module.exports = function EventEmail(sails) {
       //sails.log.debug(templateDir);
       //sails.log.debug(templatePath);
 
-      async.auto({
+      async.auto(
+        {
+          // Grab the HTML version of the email template
+          compileHtmlTemplate: function (next) {
+            compileTemplate(templatePath + '/html', data, next);
+          },
 
-            // Grab the HTML version of the email template
-            compileHtmlTemplate: function (next) {
-              compileTemplate(templatePath + "/html", data, next);
-            },
+          // Grab the Text version of the email template
+          compileTextTemplate: function (next) {
+            compileTemplate(templatePath + '/text', data, function (err, html) {
+              // Don't exit out if there is an error, we can generate plaintext
+              // from the HTML version of the template.
+              if (err) return next();
+              next(null, html);
+            });
+          },
 
-            // Grab the Text version of the email template
-            compileTextTemplate: function (next) {
-              compileTemplate(templatePath + "/text", data, function (err, html) {
-                // Don't exit out if there is an error, we can generate plaintext
-                // from the HTML version of the template.
-                if (err) return next();
-                next(null, html);
-              });
-            },
-
-            // Send the email
-            sendEmail: ['compileHtmlTemplate', 'compileTextTemplate', function (next, results) {
-
+          // Send the email
+          sendEmail: [
+            'compileHtmlTemplate',
+            'compileTextTemplate',
+            function (next, results) {
               //sails.log.debug(results)
               defaultOptions.html = results.compileHtmlTemplate;
               if (results.compileTextTemplate) defaultOptions.text = results.compileTextTemplate;
@@ -200,15 +200,16 @@ module.exports = function EventEmail(sails) {
               mailOptions.to = sails.config[self.configKey].alwaysSendTo || mailOptions.to;
 
               transport.sendMail(mailOptions, next);
-            }]
+            }
+          ]
+        },
 
-          },
-
-          // ASYNC callback
-          function (err, results) {
-            if (err) return cb(err);
-            cb(null, results.sendEmail);
-          });
+        // ASYNC callback
+        function (err, results) {
+          if (err) return cb(err);
+          cb(null, results.sendEmail);
+        }
+      );
     },
 
     /**
@@ -219,6 +220,5 @@ module.exports = function EventEmail(sails) {
     transporter: function () {
       return transport;
     }
-
   };
 };

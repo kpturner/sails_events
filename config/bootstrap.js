@@ -10,12 +10,10 @@
  */
 
 module.exports.bootstrap = function (cb) {
-
   // Load the passport strategies
   sails.services.passport.loadStrategies();
 
   sails.on('lifted', function () {
-
     // Memory leak testing?
     if (sails.config.heapdumpInterval) {
       Utility.memoryLeakCheck();
@@ -27,22 +25,24 @@ module.exports.bootstrap = function (cb) {
     sails.log.debug(`MySql database: ${sails.config.connections.localhostMysqlServer.database}`);
 
     // Build indexes asyncronously if need before
-    if (sails.config.models.migrate == "alter") {
+    if (sails.config.models.migrate == 'alter') {
       // Asynchronously build any indexes required for this environment
       Utility.buildIndexes(sails.config.connections.localhostMysqlServer.database, function () {
-        sails.log.debug("indexes rebuilt")
-      })
+        sails.log.debug('indexes rebuilt');
+      });
     } else {
       // Build database (who cares if it already exists)
-      require("child_process").exec(
-        `mysql --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname }/../sql/db.sql`
+      require('child_process').exec(
+        `mysql --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname}/../sql/db.sql`
       );
       // Perform DB updates
-      require("child_process").exec(
-        `mysql --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname }/../sql/update.sql`,
+      require('child_process').exec(
+        `mysql --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname}/../sql/update.sql`,
         function (err, stdout, stderr) {
           if (err) {
-            sails.log.error('Error occurred updating database - but it probably is just adding a field that already exists!');
+            sails.log.error(
+              'Error occurred updating database - but it probably is just adding a field that already exists!'
+            );
             return;
           }
         }
@@ -58,52 +58,44 @@ module.exports.bootstrap = function (cb) {
     if (sails.config.events.latePaymentDaemon) {
       // Do this 30 minutes after start just in case we restart lots of times to fix things.
       // We don't want to SPAM organisers...except in development mode of course
-      var waitTime = (1000 * 60 * 30);
+      var waitTime = 1000 * 60 * 30;
       if (process.env.NODE_ENV == 'development') {
-        waitTime = 10000
+        waitTime = 10000;
       }
 
       setTimeout(function () {
         var childProcessDebug = require('child-process-debug'); // Allows the child process to start in debug in the master is in debug
-        var latePaymentDaemon = childProcessDebug.fork(__dirname + "/../api/processes/LatePaymentDaemon");
+        var latePaymentDaemon = childProcessDebug.fork(__dirname + '/../api/processes/LatePaymentDaemon');
 
         // Detect any messages
-        latePaymentDaemon.on("message", function (data) {
+        latePaymentDaemon.on('message', function (data) {
           // Email?
           if (data.email) {
             process.nextTick(function () {
-              Email.send(data.email.template,
-                data.email.data,
-                data.email.options,
-                function (err) {
-                  if (err) sails.log.error(err);
-                }
-              );
-            })
+              Email.send(data.email.template, data.email.data, data.email.options, function (err) {
+                if (err) sails.log.error(err);
+              });
+            });
           }
-        })
+        });
 
         // Detect it exiting
-        latePaymentDaemon.on("exit", function (code, signal) {
-          var msg = "Late payment daemon process exiting with code/signal " + code + "/" + signal;
-          Utility.diagnosticEmail(msg, "Late payment daemon");
+        latePaymentDaemon.on('exit', function (code, signal) {
+          var msg = 'Late payment daemon process exiting with code/signal ' + code + '/' + signal;
+          Utility.diagnosticEmail(msg, 'Late payment daemon');
           sails.log.debug(msg);
           latePaymentDaemon = null;
         });
-
-      }, waitTime)
-
+      }, waitTime);
     }
   });
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   // Make sure we have no locks lingering before doing so
-  if (sails.config.mutex.adapter != "lockfile") {
-    Utility.deleteRedisKeys([sails.config.mutex.prefix + "*"], cb);
-  }
-  else {
+  if (sails.config.mutex.adapter != 'lockfile') {
+    Utility.deleteRedisKeys([sails.config.mutex.prefix + '*'], cb);
+  } else {
     cb();
   }
-
 };

@@ -13,45 +13,43 @@
  */
 
 module.exports.session = {
-
   /***************************************************************************
-  *                                                                          *
-  * Session secret is automatically generated when your new app is created   *
-  * Replace at your own risk in production-- you will invalidate the cookies *
-  * of your users, forcing them to log in again.                             *
-  *                                                                          *
-  ***************************************************************************/
+   *                                                                          *
+   * Session secret is automatically generated when your new app is created   *
+   * Replace at your own risk in production-- you will invalidate the cookies *
+   * of your users, forcing them to log in again.                             *
+   *                                                                          *
+   ***************************************************************************/
   secret: '',
 
+  /***************************************************************************
+   *                                                                          *
+   * Set the session cookie expire time The maxAge is set by milliseconds,    *
+   * the example below is for 10 years. Session expiry is handled by          *
+   * sails.config.events.sessionExpiry                                        *
+   ***************************************************************************/
+
+  cookie: {
+    maxAge: 10 * 365 * 24 * 60 * 60 * 1000
+    //maxAge: 10 *1000
+  }
 
   /***************************************************************************
-  *                                                                          *
-  * Set the session cookie expire time The maxAge is set by milliseconds,    *
-  * the example below is for 10 years. Session expiry is handled by          *
-  * sails.config.events.sessionExpiry                                        *
-  ***************************************************************************/
-
-   cookie: {
-     maxAge: 10 * 365 * 24 * 60 * 60 * 1000
-     //maxAge: 10 *1000
-   },
-
-  /***************************************************************************
-  *                                                                          *
-  * In production, uncomment the following lines to set up a shared redis    *
-  * session store that can be shared across multiple Sails.js servers        *
-  ***************************************************************************/
+   *                                                                          *
+   * In production, uncomment the following lines to set up a shared redis    *
+   * session store that can be shared across multiple Sails.js servers        *
+   ***************************************************************************/
 
   // adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'memory',
 
   /***************************************************************************
-  *                                                                          *
-  * The following values are optional, if no options are set a redis         *
-  * instance running on localhost is expected. Read more about options at:   *
-  * https://github.com/visionmedia/connect-redis                             *
-  *                                                                          *
-  *                                                                          *
-  ***************************************************************************/
+   *                                                                          *
+   * The following values are optional, if no options are set a redis         *
+   * instance running on localhost is expected. Read more about options at:   *
+   * https://github.com/visionmedia/connect-redis                             *
+   *                                                                          *
+   *                                                                          *
+   ***************************************************************************/
 
   // host: process.env.REDIS_HOST || 'localhost',
   // port: process.env.REDIS_PORT || 6379,
@@ -60,13 +58,12 @@ module.exports.session = {
   // pass: process.env.REDIS_PASS || "",
   // prefix: 'sess:',
 
-
   /***************************************************************************
-  *                                                                          *
-  * Uncomment the following lines to use your Mongo adapter as a session     *
-  * store                                                                    *
-  *                                                                          *
-  ***************************************************************************/
+   *                                                                          *
+   * Uncomment the following lines to use your Mongo adapter as a session     *
+   * store                                                                    *
+   *                                                                          *
+   ***************************************************************************/
 
   // adapter: 'mongo',
   // host: 'localhost',
@@ -75,18 +72,17 @@ module.exports.session = {
   // collection: 'sessions',
 
   /***************************************************************************
-  *                                                                          *
-  * Optional Values:                                                         *
-  *                                                                          *
-  * # Note: url will override other connection settings url:                 *
-  * 'mongodb://user:pass@host:port/database/collection',                     *
-  *                                                                          *
-  ***************************************************************************/
+   *                                                                          *
+   * Optional Values:                                                         *
+   *                                                                          *
+   * # Note: url will override other connection settings url:                 *
+   * 'mongodb://user:pass@host:port/database/collection',                     *
+   *                                                                          *
+   ***************************************************************************/
 
   // username: '',
   // password: '',
   // auto_reconnect: false,
   // ssl: false,
   // stringify: true
-
 };

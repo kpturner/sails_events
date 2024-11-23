@@ -11,7 +11,6 @@
  */
 
 module.exports = {
-
   /***************************************************************************
    * Set the default database connection for models in the development       *
    * environment (see config/connections.js and config/models.js )           *
@@ -20,27 +19,24 @@ module.exports = {
   // models: {
   //   connection: 'someMongodbServer'
   // }
-  
+
   models: {
-      connection: process.env.DB_CONNECTION || 'localhostMysqlServer',  
-      migrate:  process.env.DB_MIGRATE || 'alter'            
+    connection: process.env.DB_CONNECTION || 'localhostMysqlServer',
+    migrate: process.env.DB_MIGRATE || 'alter'
   },
 
   session: {
-        adapter: 'memory'
+    adapter: 'memory'
   },
 
-   
   // This is needed to ensure that passport authentication works properly on
   // Heroku, otherwise we end up with a redirect_uri of localhost:random port
-  proxyHost: process.env.PROXYHOST || null, 
-  proxyPort: process.env.PROXYPORT || null, 
+  proxyHost: process.env.PROXYHOST || null,
+  proxyPort: process.env.PROXYPORT || null,
 
   // Increase hook timeout
-  hookTimeout: 90000, // 90 seconds 
-   
-  
+  hookTimeout: 90000, // 90 seconds
+
   // Switch CSRF on
-  csrf: true,
-  
+  csrf: true
 };

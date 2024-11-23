@@ -11,18 +11,16 @@
  */
 var winston = require('winston');
 
-
 var customLogger = new winston.Logger({
-    transports: [
-        new(winston.transports.File)({
-            level: 'debug',
-            filename: require("path").join(".","logs","events-service.log")
-        }),
-    ],
+  transports: [
+    new winston.transports.File({
+      level: 'debug',
+      filename: require('path').join('.', 'logs', 'events-service.log')
+    })
+  ]
 });
 
 module.exports = {
-
   /***************************************************************************
    * Set the default database connection for models in the production        *
    * environment (see config/connections.js and config/models.js )           *
@@ -33,8 +31,8 @@ module.exports = {
   // },
 
   models: {
-      connection: process.env.DB_CONNECTION || 'localhostMysqlServer',
-      migrate: 'safe'
+    connection: process.env.DB_CONNECTION || 'localhostMysqlServer',
+    migrate: 'safe'
   },
 
   /**
@@ -45,10 +43,10 @@ module.exports = {
     adapter: process.env.SESS_ADAPTOR || process.env.SESS_ADAPTER || 'redis',
     host: process.env.REDIS_HOST || 'localhost',
     port: process.env.REDIS_PORT || 6379,
-    ttl: 24*60*60,
+    ttl: 24 * 60 * 60,
     db: process.env.REDIS_DB || 0,
-    pass: process.env.REDIS_PASS || "",
-    prefix: 'sess:',
+    pass: process.env.REDIS_PASS || '',
+    prefix: 'sess:'
   },
 
   // This is needed to ensure that passport authentication works properly on
@@ -73,9 +71,9 @@ module.exports = {
    ***************************************************************************/
 
   log: {
-     colors: (process.env.LOGTOCONSOLE)?true:false,  // To get clean logs without prefixes or color codings
-     custom: (process.env.LOGTOCONSOLE)?null:customLogger,
-     level: process.env.LOGLEVEL || "error"
+    colors: process.env.LOGTOCONSOLE ? true : false, // To get clean logs without prefixes or color codings
+    custom: process.env.LOGTOCONSOLE ? null : customLogger,
+    level: process.env.LOGLEVEL || 'error'
   },
 
   blueprints: {
@@ -83,7 +81,6 @@ module.exports = {
     rest: true,
     shortcuts: false,
     index: false,
-    defaultLimit: 1000,
+    defaultLimit: 1000
   }
-
 };

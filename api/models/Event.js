@@ -12,243 +12,243 @@ module.exports = {
   attributes: {
     // Name
     name: {
-      type: "string",
-      required: true,
+      type: 'string',
+      required: true
     },
 
     // Organiser(s)
-    organiser: { model: "User", required: true },
-    organiser2: { model: "User" },
+    organiser: { model: 'User', required: true },
+    organiser2: { model: 'User' },
 
     // Director of Ceremonies
-    dc: { model: "User" },
+    dc: { model: 'User' },
 
     order: {
-      type: "string",
+      type: 'string'
     },
 
     // Code (for booking references)
     code: {
-      type: "string",
+      type: 'string',
       unique: true,
-      required: true,
+      required: true
     },
 
     logo: {
-      type: "string",
+      type: 'string'
     },
 
     logoRight: {
-      type: "string",
+      type: 'string'
     },
 
     additionalInfo: {
-      type: "string",
+      type: 'string'
     },
 
     // Where it is
     venue: {
-      type: "string",
-      required: true,
+      type: 'string',
+      required: true
     },
 
     // Description
     blurb: {
-      type: "text",
+      type: 'text'
     },
 
     menusOnOffer: {
-      type: "integer",
-      defaultsTo: 1,
+      type: 'integer',
+      defaultsTo: 1
     },
 
     // Menu
     menu: {
-      type: "text",
+      type: 'text'
     },
 
     menu2: {
-      type: "text",
+      type: 'text'
     },
 
     menu3: {
-      type: "text",
+      type: 'text'
     },
 
     menu4: {
-      type: "text",
+      type: 'text'
     },
 
     menu5: {
-      type: "text",
+      type: 'text'
     },
 
     menu6: {
-      type: "text",
+      type: 'text'
     },
 
     menu7: {
-      type: "text",
+      type: 'text'
     },
 
     menu8: {
-      type: "text",
+      type: 'text'
     },
 
     menu9: {
-      type: "text",
+      type: 'text'
     },
 
     menu10: {
-      type: "text",
+      type: 'text'
     },
 
     // Dress code
     dressCode: {
-      type: "string",
+      type: 'string'
     },
 
     // Number of people
     capacity: {
-      type: "integer",
-      required: true,
+      type: 'integer',
+      required: true
     },
 
     // Date of event
     date: {
-      type: "date",
-      required: true,
+      type: 'date',
+      required: true
     },
 
     // Time of arrival (seems to be a bug in sails-mysql with regard to using a type of "time" so switched to "string")
     //  https://github.com/balderdashy/sails-mysql/issues/241
     time: {
-      type: "string",
+      type: 'string'
     },
 
     // If entered, bookings may only be entered on or after this date
     openingDate: {
-      type: "date",
-      required: false,
+      type: 'date',
+      required: false
     },
 
     // Opening time for bookings (seems to be a bug in sails-mysql with regard to using a type of "time" so switched to "string")
     //  https://github.com/balderdashy/sails-mysql/issues/241
     openingTime: {
-      type: "string",
+      type: 'string'
     },
 
     // When do booking close
     closingDate: {
-      type: "date",
-      required: true,
+      type: 'date',
+      required: true
     },
 
     // Event is open or closed
     open: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // Hide event (even if open) until opening date
     hide: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // Address details are required
     addressReqd: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // Car reg details are required
     regReqd: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // Area details are required
     areaReqd: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // Free event?
     free: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // Registering interest only event?
     regInterest: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // Allow attendance only (not dining)
     allowAttendingOnly: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // VO (or AVC) details required?
     voReqd: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     price: {
-      type: "float",
-      size: 15.2, // Decimal
+      type: 'float',
+      size: 15.2 // Decimal
     },
 
     minBookingPlaces: {
-      type: "integer",
-      defaultsTo: 1,
+      type: 'integer',
+      defaultsTo: 1
     },
 
     maxBookingPlaces: {
-      type: "integer",
-      defaultsTo: 10,
+      type: 'integer',
+      defaultsTo: 10
     },
 
     paymentDetails: {
-      type: "text",
+      type: 'text'
     },
 
     // Number of days grace the booker has to make payment
     grace: {
-      type: "integer",
+      type: 'integer'
     },
 
     showApologyButton: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     bypassCode: {
-      type: "string",
+      type: 'string'
     },
 
     latePaymentChecking: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     eventNameSize: {
-      type: "string",
+      type: 'string'
     },
 
     lastBookingRef: {
-      type: "integer",
-      defaultsTo: 0,
+      type: 'integer',
+      defaultsTo: 0
     },
 
     onlinePayments: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     onlinePaymentPlatform: {
-      type: "string",
+      type: 'string'
     },
 
     onlinePaymentConfig: {
-      type: "string",
+      type: 'string'
     },
 
     recoverOnlinePaymentFee: {
-      type: "boolean",
-    },
+      type: 'boolean'
+    }
   },
 
   // Function to increment booking ref
@@ -261,15 +261,14 @@ module.exports = {
     // lock die naturally after 30 seconds if the server dies or something.
     var opts = {
       duration: 30000,
-      maxWait: 10000,
+      maxWait: 10000
     };
 
     // Just in case we need it, create an email subject string for any errors
-    var subject =
-      "Error trying to obtain a unique booking reference for event " + id;
+    var subject = 'Error trying to obtain a unique booking reference for event ' + id;
     // Increment the last booking ref - get lock (waiting 10 seconds at most)
     var ss = new Date().getTime();
-    var lockHandle = "EVENT_" + sails.config.port;
+    var lockHandle = 'EVENT_' + sails.config.port;
 
     var ss = new Date().getTime();
     Mutex.lock(lockHandle, opts, function (err, lock) {
@@ -282,46 +281,10 @@ module.exports = {
       }
 
       // Whether we have the lock or not, update the event
-      Event.query(
-        "Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = " +
-          id,
-        function (err) {
-          // Callback or not?
-          if (cb) {
-            if (err) {
-              // Release the lock
-              if (lock) {
-                Mutex.unlock(lock, function (err) {
-                  if (err) {
-                    sails.log.error(err);
-                  }
-                });
-              }
-              Utility.diagnosticEmail(err, subject);
-              return cb(err, null);
-            } else {
-              // Find the event so we can pass the updated version back
-              Event.findOne(id)
-                .then(function (event) {
-                  return cb(err, event);
-                })
-                .catch(function (err) {
-                  Utility.diagnosticEmail(err, subject);
-                  return cb(err, null);
-                })
-                .finally(function () {
-                  // Release the lock
-                  if (lock) {
-                    Mutex.unlock(lock, function (err) {
-                      if (err) {
-                        sails.log.error(err);
-                      }
-                    });
-                  }
-                });
-            }
-          } else {
-            // No callback
+      Event.query('Update `event` SET `lastBookingRef` = `lastBookingRef` + 1 where `id` = ' + id, function (err) {
+        // Callback or not?
+        if (cb) {
+          if (err) {
             // Release the lock
             if (lock) {
               Mutex.unlock(lock, function (err) {
@@ -330,13 +293,45 @@ module.exports = {
                 }
               });
             }
-            if (err) {
-              Utility.diagnosticEmail(err, subject);
-            }
-            return;
+            Utility.diagnosticEmail(err, subject);
+            return cb(err, null);
+          } else {
+            // Find the event so we can pass the updated version back
+            Event.findOne(id)
+              .then(function (event) {
+                return cb(err, event);
+              })
+              .catch(function (err) {
+                Utility.diagnosticEmail(err, subject);
+                return cb(err, null);
+              })
+              .finally(function () {
+                // Release the lock
+                if (lock) {
+                  Mutex.unlock(lock, function (err) {
+                    if (err) {
+                      sails.log.error(err);
+                    }
+                  });
+                }
+              });
           }
+        } else {
+          // No callback
+          // Release the lock
+          if (lock) {
+            Mutex.unlock(lock, function (err) {
+              if (err) {
+                sails.log.error(err);
+              }
+            });
+          }
+          if (err) {
+            Utility.diagnosticEmail(err, subject);
+          }
+          return;
         }
-      );
+      });
     });
-  },
+  }
 };

@@ -5,8 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-var moment = require("moment");
-const Utility = require("../services/Utility");
+var moment = require('moment');
+const Utility = require('../services/Utility');
 
 module.exports = {
   /**
@@ -14,8 +14,8 @@ module.exports = {
    */
   paymentDeadline: function (event, booking) {
     // Booking payment deadline
-    var df = require("dateformat");
-    var deadline = "N/A";
+    var df = require('dateformat');
+    var deadline = 'N/A';
     if (event.grace && event.grace > 0 && !booking.paid) {
       var dl = new Date(booking.bookingDate);
       var ed = new Date(event.date);
@@ -26,7 +26,7 @@ module.exports = {
       }
       //dl=dl.toString();
       //deadline=dl.substr(0,dl.indexOf(":")-2);
-      deadline = df(dl, "ddd, mmm dS, yyyy");
+      deadline = df(dl, 'ddd, mmm dS, yyyy');
     }
     return deadline;
   },
@@ -48,7 +48,7 @@ module.exports = {
       criteria.limit = 50;
     }
     if (!criteria.filter) {
-      criteria.filter = "";
+      criteria.filter = '';
     }
     return criteria;
   },
@@ -65,13 +65,13 @@ module.exports = {
     req.session.eventBookings = false;
     res.locals.event = {};
     res.locals.selectedUser = {};
-    res.view("bookings", {
+    res.view('bookings', {
       criteria: sails.controllers.booking.criteria(req),
       myBookings: true,
       eventBookings: false,
       userBookings: false,
       viewOnly: false,
-      errors: req.flash("error"),
+      errors: req.flash('error')
     });
   },
 
@@ -86,19 +86,19 @@ module.exports = {
     req.session.eventBookings = true;
     req.session.userBookings = false;
     res.locals.selectedUser = {};
-    Event.findOne(req.param("eventid"))
-      .populate("organiser")
-      .populate("organiser2")
-      .populate("dc")
+    Event.findOne(req.param('eventid'))
+      .populate('organiser')
+      .populate('organiser2')
+      .populate('dc')
       .exec(function (err, event) {
         res.locals.event = Utility.sanitiseEventDates(event);
-        res.view("bookings", {
+        res.view('bookings', {
           criteria: sails.controllers.booking.criteria(req),
           myBookings: false,
           eventBookings: true,
           userBookings: false,
-          viewOnly: req.param("viewonly") || false,
-          errors: req.flash("error"),
+          viewOnly: req.param('viewonly') || false,
+          errors: req.flash('error')
         });
       });
   },
@@ -114,18 +114,18 @@ module.exports = {
     req.session.eventBookings = false;
     req.session.userBookings = true;
     res.locals.event = {};
-    User.findOne(req.param("userid")).exec(function (err, user) {
+    User.findOne(req.param('userid')).exec(function (err, user) {
       if (err) {
         return res.negotiate(err);
       }
       res.locals.selectedUser = user;
-      res.view("bookings", {
+      res.view('bookings', {
         criteria: sails.controllers.booking.criteria(req),
         myBookings: false,
         eventBookings: false,
         userBookings: true,
         viewOnly: false,
-        errors: req.flash("error"),
+        errors: req.flash('error')
       });
     });
   },
@@ -134,7 +134,7 @@ module.exports = {
    * Add permanent diners
    */
   addPD: function (req, res) {
-    var eventId = req.param("eventid");
+    var eventId = req.param('eventid');
     //sails.log.debug("Adding permanent diners for event "+eventId);
     // Find all permanent diners
     Event.findOne(eventId).exec(function (err, event) {
@@ -166,21 +166,16 @@ module.exports = {
                   b.bookingDate = new Date();
                   b.createdBy = req.user.id;
                   b.cost = Utility.calculateTotalBookingCost(event, b.places);
-                  Event.incrementLastBookingRef(
-                    eventId,
-                    function (err, updatedEvent) {
-                      if (!err) {
-                        b.ref =
-                          updatedEvent.code +
-                          updatedEvent.lastBookingRef.toString();
-                        Booking.create(b).exec(function () {
-                          next();
-                        });
-                      } else {
-                        next(err);
-                      }
+                  Event.incrementLastBookingRef(eventId, function (err, updatedEvent) {
+                    if (!err) {
+                      b.ref = updatedEvent.code + updatedEvent.lastBookingRef.toString();
+                      Booking.create(b).exec(function () {
+                        next();
+                      });
+                    } else {
+                      next(err);
                     }
-                  );
+                  });
                 } else {
                   next();
                 }
@@ -206,22 +201,18 @@ module.exports = {
    * Prepare data for booking
    */
   prepareBooking: function (req, res) {
-    var eventId = req.param("eventid");
-    var bookingId = req.param("bookingid");
-    var userId = req.param("userid");
-    var selectedUserId = req.param("selecteduserid"); //Only populated when an admin is making a booking on behalf of someone else
-    var action = req.param("action");
-    var mode = req.param("mode")
-      ? req.param("mode")
-      : selectedUserId && !bookingId
-      ? "create"
-      : "edit";
+    var eventId = req.param('eventid');
+    var bookingId = req.param('bookingid');
+    var userId = req.param('userid');
+    var selectedUserId = req.param('selecteduserid'); //Only populated when an admin is making a booking on behalf of someone else
+    var action = req.param('action');
+    var mode = req.param('mode') ? req.param('mode') : selectedUserId && !bookingId ? 'create' : 'edit';
     if (action) {
       mode = action.substr(0, 1).toUpperCase() + action.substr(1);
     }
-    var myBookings = req.param("mybookings") ? true : false;
-    var eventBookings = req.param("eventbookings") ? true : false;
-    var userBookings = req.param("userbookings") ? true : false;
+    var myBookings = req.param('mybookings') ? true : false;
+    var eventBookings = req.param('eventbookings') ? true : false;
+    var userBookings = req.param('userbookings') ? true : false;
 
     // Private function to process the initiation
     var initialiseBooking = function (event, existingBooking) {
@@ -233,8 +224,8 @@ module.exports = {
       var preparedBooking = function (userForBooking, criteria) {
         var potentialDuplicates = [];
         Booking.find(criteria)
-          .populate("user")
-          .populate("additions", { sort: { seq: "asc" } })
+          .populate('user')
+          .populate('additions', { sort: { seq: 'asc' } })
           .exec(function (err, bookings) {
             if (!err) {
               bookings.forEach(function (booking, index) {
@@ -245,19 +236,16 @@ module.exports = {
                     if (
                       addition.surname &&
                       userForBooking.surname &&
-                      addition.surname.toLowerCase() ==
-                        userForBooking.surname.toLowerCase() &&
+                      addition.surname.toLowerCase() == userForBooking.surname.toLowerCase() &&
                       addition.firstName &&
                       userForBooking.firstName &&
-                      addition.firstName.toLowerCase() ==
-                        userForBooking.firstName.toLowerCase()
+                      addition.firstName.toLowerCase() == userForBooking.firstName.toLowerCase()
                     ) {
                       if (
                         !addition.lodge ||
                         (addition.lodge &&
                           userForBooking.lodge &&
-                          addition.lodge.toLowerCase() ==
-                            userForBooking.lodge.toLowerCase())
+                          addition.lodge.toLowerCase() == userForBooking.lodge.toLowerCase())
                       ) {
                         addition.host = booking.user;
                         potentialDuplicates.push(addition);
@@ -271,18 +259,13 @@ module.exports = {
             res.locals.event = Utility.sanitiseEventDates(event);
             // Remember that mysql adaptor will very unhelpfully adjust the date for DST so use a utility to get UTC date
             if (event.openingDate) {
-              res.locals.event.UTCOpeningDate = Utility.UTCDBdate(
-                event.openingDate
-              );
+              res.locals.event.UTCOpeningDate = Utility.UTCDBdate(event.openingDate);
             }
             if (event.closingDate) {
-              res.locals.event.UTCClosingDate = Utility.UTCDBdate(
-                event.closingDate
-              );
+              res.locals.event.UTCClosingDate = Utility.UTCDBdate(event.closingDate);
             }
             // Obscure some fields!
-            if (res.locals.event.bypassCode)
-              res.locals.event.bypassCode = "*redacted";
+            if (res.locals.event.bypassCode) res.locals.event.bypassCode = '*redacted';
             res.locals.now = Utility.UTCDBdate(Utility.today());
             var now = new Date();
             res.locals.nowHH = now.getHours();
@@ -293,44 +276,38 @@ module.exports = {
               res.locals.event.capacity = 0;
             }
             res.locals.booking = existingBooking;
-            res.locals.isAdmin = existingBooking
-              ? Utility.isAdmin(req.user, existingBooking.event)
-              : false;
+            res.locals.isAdmin = existingBooking ? Utility.isAdmin(req.user, existingBooking.event) : false;
             res.locals.myBookings = myBookings;
             res.locals.eventBookings = eventBookings;
             res.locals.userBookings = userBookings;
             res.locals.mops = sails.config.events.mops;
-            res.locals.selectedUserId = selectedUserId ? selectedUserId : "";
+            res.locals.selectedUserId = selectedUserId ? selectedUserId : '';
             res.locals.areas = Utility.areas();
             res.locals.centres = Utility.centres();
             res.locals.potentialDuplicates = potentialDuplicates;
             res.locals.lodgeMandatory = sails.config.events.lodgeMandatory;
-            res.locals.onlinePaymentPlatforms =
-              Utility.getOnlinePaymentPlatforms();
+            res.locals.onlinePaymentPlatforms = Utility.getOnlinePaymentPlatforms();
 
             // Get the data for the event and the user and then navigate to the booking view
             if (req.wantsJSON)
               return res.json({
-                model: "booking",
-                mode: mode,
+                model: 'booking',
+                mode: mode
               });
             else
-              return res.view("book", {
-                model: "booking",
-                mode: mode,
+              return res.view('book', {
+                model: 'booking',
+                mode: mode
               });
           });
       };
 
       // Return prepared booking
       if (existingBooking) {
-        criteria.id = { "!": existingBooking.id }; // Exclude the existing booking details from the calcs
-        existingBooking.deadline = sails.controllers.booking.paymentDeadline(
-          event,
-          existingBooking
-        );
-        if (mode == "create") {
-          mode = "edit";
+        criteria.id = { '!': existingBooking.id }; // Exclude the existing booking details from the calcs
+        existingBooking.deadline = sails.controllers.booking.paymentDeadline(event, existingBooking);
+        if (mode == 'create') {
+          mode = 'edit';
         }
         return preparedBooking(existingBooking.user, criteria);
       } else {
@@ -354,8 +331,8 @@ module.exports = {
         if (err) {
           return res.negotiate(err);
         }
-        return res.view("userBookings", {
-          selectedUser: user,
+        return res.view('userBookings', {
+          selectedUser: user
         });
       });
     } else {
@@ -363,33 +340,26 @@ module.exports = {
       // as opposed to the public dashboard
       if (bookingId) {
         Booking.findOne(bookingId)
-          .populate("user")
+          .populate('user')
           .exec(function (err, existingBooking) {
             if (err) {
-              return res.genericErrorResponse(
-                "470",
-                "This booking no longer exists!"
-              );
+              return res.genericErrorResponse('470', 'This booking no longer exists!');
             } else {
               if (!existingBooking) {
-                return res.view("events", {
+                return res.view('events', {
                   filter: req.session.eventFilter,
-                  errors: req.flash("error"),
+                  errors: req.flash('error')
                 });
               }
               Event.findOne(existingBooking.event)
-                .populate("organiser")
-                .populate("organiser2")
+                .populate('organiser')
+                .populate('organiser2')
                 .exec(function (err, event) {
                   if (err) {
                     return res.negotiate(err);
                   }
                   if (!event) {
-                    return res.negotiate(
-                      new Error(
-                        "No event found for id " + existingBooking.event
-                      )
-                    );
+                    return res.negotiate(new Error('No event found for id ' + existingBooking.event));
                   }
                   initialiseBooking(event, existingBooking);
                 });
@@ -397,19 +367,17 @@ module.exports = {
           });
       } else {
         Event.findOne(eventId)
-          .populate("organiser")
-          .populate("organiser2")
+          .populate('organiser')
+          .populate('organiser2')
           .exec(function (err, event) {
             if (err) {
               return res.negotiate(err);
             }
             if (!event) {
-              return res.negotiate(
-                new Error("No event found for id " + eventId)
-              );
+              return res.negotiate(new Error('No event found for id ' + eventId));
             }
             // Create or edit/delete mode?
-            if (action == "create") {
+            if (action == 'create') {
               initialiseBooking(event);
             } else {
               // Has the user already made this booking?  If multiple bookings are allowed, we don't care (treat it as a new booking)
@@ -417,9 +385,9 @@ module.exports = {
                 var userId = selectedUserId ? selectedUserId : req.user.id;
                 Booking.findOne({
                   event: eventId,
-                  user: userId,
+                  user: userId
                 })
-                  .populate("user")
+                  .populate('user')
                   .exec(function (err, existingBooking) {
                     // if there is already a booking for this user the called function will get it, otherwise it will get nada
                     initialiseBooking(event, existingBooking);
@@ -439,18 +407,18 @@ module.exports = {
   orderLabel: function (order) {
     // Order label
     var orderLabel;
-    if (order && order != "C") {
+    if (order && order != 'C') {
       sails.config.events.orders.forEach(function (cfg) {
         if (order == cfg.code) {
-          orderLabel = cfg.label ? cfg.label : "Lodge";
+          orderLabel = cfg.label ? cfg.label : 'Lodge';
           return false;
         }
       });
       if (!orderLabel) {
-        orderLabel = "Lodge";
+        orderLabel = 'Lodge';
       }
     } else {
-      orderLabel = "Lodge";
+      orderLabel = 'Lodge';
     }
     return orderLabel;
   },
@@ -459,7 +427,7 @@ module.exports = {
    * Set email info
    */
   setEmailInfo: function (event, user, orders) {
-    if (event.order && event.order != "C") {
+    if (event.order && event.order != 'C') {
       _.forEach(orders, function (order) {
         if (event.order == order.code) {
           user.lodge = order.name;
@@ -494,7 +462,7 @@ module.exports = {
     var formattedDate = opts.formattedDate;
     var linkedBookings = opts.linkedBookings;
     var bookingRef = opts.bookingRef;
-    var menu = "n/a";
+    var menu = 'n/a';
     if (event.menu) {
       menu = event.menu;
       if (booking.menuChoice === 2) {
@@ -527,15 +495,14 @@ module.exports = {
     }
 
     Email.send(
-      "bookingConfirmation",
+      'bookingConfirmation',
       {
         recipientName: recipientName,
         senderName: sails.config.events.title,
         updated: updated,
         regInterest: event.regInterest,
         orderLabel: orderLabel,
-        lodgeYearLabel:
-          sails.config.events.lodgeYearLabel || orderLabel + " year",
+        lodgeYearLabel: sails.config.events.lodgeYearLabel || orderLabel + ' year',
         eventOnlinePayments: event.onlinePayments,
         eventFree: event.free,
         eventName: event.name,
@@ -543,58 +510,58 @@ module.exports = {
         eventTime: event.time,
         recoverOnlinePaymentFee: event.recoverOnlinePaymentFee,
         eventAdditionalInfo: event.additionalInfo,
-        eventVenue: event.venue.replace(/[\n\r]/g, "<br>"),
+        eventVenue: event.venue.replace(/[\n\r]/g, '<br>'),
         eventOrganiser: event.organiser.name,
         organiserEmail: event.organiser.email,
-        organiserContactNo: event.organiser.phone || "",
-        eventBlurb: (event.blurb || "n/a").replace(/[\n\r]/g, "<br>"),
+        organiserContactNo: event.organiser.phone || '',
+        eventBlurb: (event.blurb || 'n/a').replace(/[\n\r]/g, '<br>'),
         menuChoice: booking.menuChoice,
-        eventMenu: menu.replace(/[\n\r]/g, "<br>"),
-        eventDressCode: (event.dressCode || "n/a").replace(/[\n\r]/g, "<br>"),
+        eventMenu: menu.replace(/[\n\r]/g, '<br>'),
+        eventDressCode: (event.dressCode || 'n/a').replace(/[\n\r]/g, '<br>'),
         email: user.email,
-        salutation: user.salutation || "",
-        firstName: user.firstName || "",
-        surname: user.surname || "",
-        category: user.category || "",
+        salutation: user.salutation || '',
+        firstName: user.firstName || '',
+        surname: user.surname || '',
+        category: user.category || '',
         addressReqd: event.addressReqd,
-        address1: user.address1 || "",
-        address2: user.address2 || "",
-        address3: user.address3 || "",
-        address4: user.address4 || "",
-        postcode: user.postcode || "",
-        phone: user.phone || "",
-        lodge: user.lodge || "",
-        lodgeNo: user.lodgeNo || "",
-        lodgeYear: user.lodgeYear || "",
-        centre: user.centre || "",
-        area: user.area || "",
-        rank: user.rank || "",
+        address1: user.address1 || '',
+        address2: user.address2 || '',
+        address3: user.address3 || '',
+        address4: user.address4 || '',
+        postcode: user.postcode || '',
+        phone: user.phone || '',
+        lodge: user.lodge || '',
+        lodgeNo: user.lodgeNo || '',
+        lodgeYear: user.lodgeYear || '',
+        centre: user.centre || '',
+        area: user.area || '',
+        rank: user.rank || '',
         voReqd: event.voReqd,
         isVO: user.isVO,
-        voLodge: user.voLodge || "",
-        voLodgeNo: user.voLodgeNo || "",
-        voCentre: user.voCentre || "",
-        voArea: user.voArea || "",
-        dietary: user.dietary || "",
+        voLodge: user.voLodge || '',
+        voLodgeNo: user.voLodgeNo || '',
+        voCentre: user.voCentre || '',
+        voArea: user.voArea || '',
+        dietary: user.dietary || '',
         bookingRef: bookingRef,
-        info: (booking.info || "n/a").replace(/[\n\r]/g, "<br>"),
+        info: (booking.info || 'n/a').replace(/[\n\r]/g, '<br>'),
         attendingOnly: booking.attendingOnly,
         carReg: booking.carReg,
         places: booking.places,
         paid: booking.paid,
         linkedBookings: linkedBookings,
-        paymentDetails: (event.paymentDetails || "n/a")
-          .replace(/[\n\r]/g, "<br>")
-          .replace(new RegExp("<%BOOKINGREF%>", "g"), bookingRef),
+        paymentDetails: (event.paymentDetails || 'n/a')
+          .replace(/[\n\r]/g, '<br>')
+          .replace(new RegExp('<%BOOKINGREF%>', 'g'), bookingRef),
         total: booking.places * event.price,
-        deadline: deadline,
+        deadline: deadline
       },
       {
         from: from,
         to: to,
         cc: cc,
         bcc: bcc,
-        subject: subject,
+        subject: subject
       },
       function (err) {
         Utility.emailError(err);
@@ -606,16 +573,16 @@ module.exports = {
    * Make booking
    */
   makeBooking: function (req, res) {
-    var eventId = req.param("eventid");
-    var bookingId = req.param("bookingId");
-    var action = req.param("action");
-    var selectedUserId = req.param("selecteduserid");
+    var eventId = req.param('eventid');
+    var bookingId = req.param('bookingId');
+    var action = req.param('action');
+    var selectedUserId = req.param('selecteduserid');
     var bookingRef = null;
     var lodgeRoomArr = [];
 
     Event.findOne(eventId)
-      .populate("organiser")
-      .populate("organiser2")
+      .populate('organiser')
+      .populate('organiser2')
       .exec(function (err, event) {
         if (err) {
           return res.negotiate(err);
@@ -629,39 +596,39 @@ module.exports = {
 
         // Careful with the user lodge details. This depends on the order
         // for the event
-        if (!event.order || event.order == "C") {
+        if (!event.order || event.order == 'C') {
           // Craft
-          user.salutation = req.param("salutation");
-          user.lodge = req.param("lodge");
-          user.lodgeNo = req.param("lodgeNo");
-          user.lodgeYear = req.param("lodgeYear");
-          user.centre = req.param("centre");
-          user.area = req.param("area");
-          user.rank = req.param("rank");
+          user.salutation = req.param('salutation');
+          user.lodge = req.param('lodge');
+          user.lodgeNo = req.param('lodgeNo');
+          user.lodgeYear = req.param('lodgeYear');
+          user.centre = req.param('centre');
+          user.area = req.param('area');
+          user.rank = req.param('rank');
         }
-        user.name = req.param("name");
-        user.surname = req.param("surname");
-        user.firstName = req.param("firstName");
-        user.category = req.param("category");
-        user.isVO = req.param("isVO");
-        user.voLodge = req.param("voLodge");
-        user.voLodgeNo = req.param("voLodgeNo");
-        user.voCentre = req.param("voCentre");
-        user.voArea = req.param("voArea");
-        user.dietary = req.param("dietary");
-        user.email = req.param("email");
-        user.address1 = req.param("address1");
-        user.address2 = req.param("address2");
-        user.address3 = req.param("address3");
-        user.address4 = req.param("address4");
-        user.postcode = req.param("postcode");
-        if (req.param("phone")) user.phone = req.param("phone");
-        var linkedBookings = req.param("linkedBookings");
+        user.name = req.param('name');
+        user.surname = req.param('surname');
+        user.firstName = req.param('firstName');
+        user.category = req.param('category');
+        user.isVO = req.param('isVO');
+        user.voLodge = req.param('voLodge');
+        user.voLodgeNo = req.param('voLodgeNo');
+        user.voCentre = req.param('voCentre');
+        user.voArea = req.param('voArea');
+        user.dietary = req.param('dietary');
+        user.email = req.param('email');
+        user.address1 = req.param('address1');
+        user.address2 = req.param('address2');
+        user.address3 = req.param('address3');
+        user.address4 = req.param('address4');
+        user.postcode = req.param('postcode');
+        if (req.param('phone')) user.phone = req.param('phone');
+        var linkedBookings = req.param('linkedBookings');
 
         // Sort out linked bookings/placeholders
         var ph = 0;
         _.forEach(linkedBookings, function (lb, l) {
-          if (lb.surname.toLowerCase() == "*placeholder*") {
+          if (lb.surname.toLowerCase() == '*placeholder*') {
             ph++;
             lb.firstName = ph.toString();
           }
@@ -680,12 +647,9 @@ module.exports = {
                 err.invalidAttributes &&
                 err.invalidAttributes.email &&
                 err.invalidAttributes.email[0] &&
-                err.invalidAttributes.email[0].rule === "unique"
+                err.invalidAttributes.email[0].rule === 'unique'
               ) {
-                return res.genericErrorResponse(
-                  409,
-                  "Email address is already in use"
-                );
+                return res.genericErrorResponse(409, 'Email address is already in use');
               }
               return res.negotiate(err);
             }
@@ -703,7 +667,7 @@ module.exports = {
               var criteria = {};
               criteria.event = eventId;
               if (bookingId) {
-                criteria.id = { "!": bookingId }; // Exclude the existing booking details from the calcs
+                criteria.id = { '!': bookingId }; // Exclude the existing booking details from the calcs
               }
               Booking.find(criteria).exec(function (err, bookings) {
                 if (!err) {
@@ -714,7 +678,7 @@ module.exports = {
                 event.capacity -= places;
 
                 // Capacity must exceed (at least) places requested
-                if (event.capacity >= req.param("places")) {
+                if (event.capacity >= req.param('places')) {
                   // Private function to process booking
                   var processBooking = async function () {
                     let booking = {};
@@ -728,21 +692,18 @@ module.exports = {
                     }
                     booking.user = user.id;
                     booking.event = eventId;
-                    booking.attendingOnly = req.param("attendingOnly");
-                    booking.menuChoice = req.param("menuChoice") || 1;
-                    if (
-                      booking.menuChoice > event.menusOnOffer ||
-                      booking.menuChoice < 0
-                    ) {
+                    booking.attendingOnly = req.param('attendingOnly');
+                    booking.menuChoice = req.param('menuChoice') || 1;
+                    if (booking.menuChoice > event.menusOnOffer || booking.menuChoice < 0) {
                       booking.menuChoice = 1;
                     }
-                    booking.info = req.param("info");
-                    if (req.param("places")) {
-                      booking.places = req.param("places");
+                    booking.info = req.param('info');
+                    if (req.param('places')) {
+                      booking.places = req.param('places');
                     } else {
                       booking.places = 1;
                     }
-                    booking.carReg = req.param("carReg");
+                    booking.carReg = req.param('carReg');
                     if (booking.attendingOnly) {
                       booking.cost = 0;
                     } else {
@@ -751,8 +712,7 @@ module.exports = {
                         if (places < 0) {
                           // Looks like a refund is due.  What did we charge per place
                           // on the original booking? We need to use that to get the correct refund amount
-                          let originalCostPerBooking =
-                            existingBooking.cost / existingBooking.places;
+                          let originalCostPerBooking = existingBooking.cost / existingBooking.places;
                           if (event.recoverOnlinePaymentFee) {
                             // At this juncture it is important to note that Stripe does *not* refund the original
                             // fee.  Costs are incurred taking the payment and refunding it, so the fee remains.
@@ -762,33 +722,25 @@ module.exports = {
                           }
                           booking.cost += originalCostPerBooking * places;
                         } else {
-                          booking.cost += Utility.calculateTotalBookingCost(
-                            event,
-                            places
-                          );
+                          booking.cost += Utility.calculateTotalBookingCost(event, places);
                         }
                       } else {
-                        booking.cost = Utility.calculateTotalBookingCost(
-                          event,
-                          booking.places
-                        );
+                        booking.cost = Utility.calculateTotalBookingCost(event, booking.places);
                       }
                     }
 
                     booking.dietary = user.dietary;
 
-                    balance = booking.attendingOnly
-                      ? 0
-                      : booking.cost - booking.amountPaid;
+                    balance = booking.attendingOnly ? 0 : booking.cost - booking.amountPaid;
                     if (balance < 0) {
                       refund = parseFloat((balance * -1).toFixed(2));
                     }
 
                     if (req.session.eventBookings || req.session.userBookings) {
-                      booking.amountPaid = req.param("amountPaid");
-                      booking.paid = req.param("paid");
-                      booking.mop = req.param("mop");
-                      booking.tableNo = req.param("tableNo");
+                      booking.amountPaid = req.param('amountPaid');
+                      booking.paid = req.param('paid');
+                      booking.mop = req.param('mop');
+                      booking.tableNo = req.param('tableNo');
                     } else {
                       if (!existingBooking) {
                         // New booking
@@ -798,10 +750,7 @@ module.exports = {
                         booking.tableNo = null;
                       } else {
                         // If we are autocalculating online bookings and we arrive at a total between -0.1 and 0.1 then just ignore it
-                        if (
-                          event.onlinePayments &&
-                          event.recoverOnlinePaymentFee
-                        ) {
+                        if (event.onlinePayments && event.recoverOnlinePaymentFee) {
                           if (balance >= -0.1 && balance <= 0.1) {
                             balance = 0;
                           }
@@ -836,23 +785,17 @@ module.exports = {
                         linkedBookings.forEach(function (linkedBooking, index) {
                           linkedBooking.booking = booking.id;
                           linkedBooking.seq = index + 1;
-                          if (!linkedBooking.rank) linkedBooking.rank = "";
-                          if (!linkedBooking.dietary)
-                            linkedBooking.dietary = "";
-                          if (!linkedBooking.lodge) linkedBooking.lodge = "";
-                          if (!linkedBooking.lodgeNo)
-                            linkedBooking.lodgeNo = "";
-                          if (!linkedBooking.lodgeYear)
-                            linkedBooking.lodgeYear = "";
-                          if (!linkedBooking.area) linkedBooking.area = "";
-                          if (!linkedBooking.centre) linkedBooking.centre = "";
+                          if (!linkedBooking.rank) linkedBooking.rank = '';
+                          if (!linkedBooking.dietary) linkedBooking.dietary = '';
+                          if (!linkedBooking.lodge) linkedBooking.lodge = '';
+                          if (!linkedBooking.lodgeNo) linkedBooking.lodgeNo = '';
+                          if (!linkedBooking.lodgeYear) linkedBooking.lodgeYear = '';
+                          if (!linkedBooking.area) linkedBooking.area = '';
+                          if (!linkedBooking.centre) linkedBooking.centre = '';
                           if (!linkedBooking.menuChoice) {
                             linkedBooking.menuChoice = 1;
                           }
-                          if (
-                            linkedBooking.menuChoice > event.menusOnOffer ||
-                            booking.menuChoice < 0
-                          ) {
+                          if (linkedBooking.menuChoice > event.menusOnOffer || booking.menuChoice < 0) {
                             linkedBooking.menuChoice = 1;
                           }
                           //LinkedBooking.create(linkedBooking).exec(function(err,lb){
@@ -860,10 +803,7 @@ module.exports = {
                           //		console.log(err)
                           //})
                         });
-                        LinkedBooking.create(linkedBookings).exec(function (
-                          err,
-                          lb
-                        ) {
+                        LinkedBooking.create(linkedBookings).exec(function (err, lb) {
                           if (err) {
                             sails.log.error(err);
                           } else {
@@ -880,7 +820,7 @@ module.exports = {
                         // If the user has previously sent an apology, delete it
                         Apology.destroy({
                           event: booking.event,
-                          user: booking.user,
+                          user: booking.user
                         }).exec(function (err, deleted) {
                           if (!err) {
                             //console.log(deleted)
@@ -892,10 +832,7 @@ module.exports = {
                         // organiser makes a new booking for somebody
                         var sendEmail = false;
                         if (user.email) {
-                          if (
-                            !req.session.eventBookings &&
-                            !req.session.userBookings
-                          ) {
+                          if (!req.session.eventBookings && !req.session.userBookings) {
                             sendEmail = true;
                           } else {
                             if (!existingBooking) {
@@ -911,82 +848,56 @@ module.exports = {
                         }
                         if (sendEmail) {
                           var formattedDate = event.date.toString();
-                          formattedDate = formattedDate.substr(
-                            0,
-                            formattedDate.indexOf("00:00:00")
-                          );
+                          formattedDate = formattedDate.substr(0, formattedDate.indexOf('00:00:00'));
 
                           // Booking payment deadline
-                          var deadline =
-                            sails.controllers.booking.paymentDeadline(
-                              event,
-                              booking
-                            );
+                          var deadline = sails.controllers.booking.paymentDeadline(event, booking);
 
-                          var updated = "";
-                          var subject = "";
+                          var updated = '';
+                          var subject = '';
                           if (!event.regInterest) {
-                            subject = "Event booking confirmation";
+                            subject = 'Event booking confirmation';
                           } else {
-                            subject = "Event interest confirmation";
+                            subject = 'Event interest confirmation';
                           }
                           if (bookingId) {
-                            updated = " has been updated";
+                            updated = ' has been updated';
                             if (event.regInterest) {
-                              subject = "Event interest update confirmation";
+                              subject = 'Event interest update confirmation';
                             } else {
-                              subject = "Event booking update confirmation";
+                              subject = 'Event booking update confirmation';
                             }
                           }
 
                           if (!existingBooking && booking.paid) {
-                            updated += ". It has been flagged as PAID";
-                          } else if (
-                            existingBooking &&
-                            !existingBooking.paid &&
-                            booking.paid
-                          ) {
+                            updated += '. It has been flagged as PAID';
+                          } else if (existingBooking && !existingBooking.paid && booking.paid) {
                             // Paid flag changed
-                            updated += " and flagged as PAID";
+                            updated += ' and flagged as PAID';
                           } else {
                             if (!event.onlinePayments) {
                               // Is there a balance to pay?
                               if (balance > 0) {
-                                updated +=
-                                  " and there is a balance to pay of £" +
-                                  balance;
+                                updated += ' and there is a balance to pay of £' + balance;
                               } else {
                                 if (refund) {
-                                  updated +=
-                                    " and there is a refund due of £" + refund;
+                                  updated += ' and there is a refund due of £' + refund;
                                 }
                               }
                             }
                           }
 
-                          sails.controllers.booking.setEmailInfo(
-                            event,
-                            user,
-                            orders
-                          );
+                          sails.controllers.booking.setEmailInfo(event, user, orders);
 
                           var emailOpts = {
-                            recipientName: Utility.recipient(
-                              user.salutation,
-                              user.firstName,
-                              user.surname
-                            ),
+                            recipientName: Utility.recipient(user.salutation, user.firstName, user.surname),
                             subject: subject,
-                            from:
-                              event.name +
-                              " <" +
-                              sails.config.events.email +
-                              ">",
+                            from: event.name + ' <' + sails.config.events.email + '>',
                             to: user.email,
                             bcc: sails.controllers.booking.bookingBCC(booking, [
                               event.organiser,
                               event.organiser2,
-                              sails.config.events.developer,
+                              sails.config.events.developer
                             ]),
                             user: user,
                             event: event,
@@ -996,11 +907,9 @@ module.exports = {
                             deadline: deadline,
                             formattedDate: formattedDate,
                             linkedBookings: linkedBookings,
-                            bookingRef: bookingRef,
+                            bookingRef: bookingRef
                           };
-                          sails.controllers.booking.bookingConfirmationEmail(
-                            emailOpts
-                          );
+                          sails.controllers.booking.bookingConfirmationEmail(emailOpts);
                         }
 
                         // Return to caller with complete booking info
@@ -1016,88 +925,75 @@ module.exports = {
                       // The code is still in the same place so that we can fall back to that
                       // method if the new atomic function fails for some reason (paranoia)
                       if (!bookingRef) {
-                        Event.incrementLastBookingRef(
-                          event.id,
-                          function (err, updatedEvent) {
-                            if (!err) {
-                              bookingRef =
-                                updatedEvent.code +
-                                updatedEvent.lastBookingRef.toString();
-                            } else {
-                              // Use the original event object as the update failed
-                              bookingRef = event.code + booking.id.toString();
-                              // Email developer for comfort
-                              try {
-                                if (sails.config.events.developer) {
-                                  Email.send(
-                                    "diagnostic",
-                                    {
-                                      err:
-                                        "Booking id resorted to original method " +
-                                        bookingRef,
-                                    },
-                                    {
-                                      to: sails.config.events.developer,
-                                      subject:
-                                        "Booking id resorted to original method " +
-                                        bookingRef,
-                                    },
-                                    function () {}
-                                  );
-                                }
-                              } catch (e) {}
-                            }
-                            // Update the booking ref
-                            Booking.update(booking.id, {
-                              ref: bookingRef,
-                            }).exec(function () {
-                              booking.ref = bookingRef;
-
-                              // If we are using online payments, add a checkout session id to the booking
-                              // But only if this is a registered user booking themselves in.
-                              if (
-                                user.authProvider !== "dummy" &&
-                                !event.free &&
-                                !event.regInterest &&
-                                event.onlinePayments &&
-                                event.onlinePaymentConfig &&
-                                !booking.paid &&
-                                !booking.attendingOnly
-                              ) {
-                                sails.controllers.payment
-                                  .getNewCheckoutSession(booking.id)
-                                  .then((sessionId) => {
-                                    const paymentConfig =
-                                      sails.controllers.payment.getConfig(
-                                        event
-                                      );
-                                    Booking.update(booking.id, {
-                                      paymentSessionId: sessionId,
-                                    }).exec(() => {
-                                      booking.stripePublishableKey =
-                                        paymentConfig.publishableKey;
-                                      booking.paymentSessionId = sessionId;
-                                      // Finalise booking
-                                      finalise();
-                                    });
-                                  })
-                                  .catch((err) => {
-                                    return res.genericErrorResponse(
-                                      "455",
-                                      "Booking failed. Unable to create a payment session"
-                                    );
-                                  });
-                              } else {
-                                // Finalise booking
-                                finalise();
+                        Event.incrementLastBookingRef(event.id, function (err, updatedEvent) {
+                          if (!err) {
+                            bookingRef = updatedEvent.code + updatedEvent.lastBookingRef.toString();
+                          } else {
+                            // Use the original event object as the update failed
+                            bookingRef = event.code + booking.id.toString();
+                            // Email developer for comfort
+                            try {
+                              if (sails.config.events.developer) {
+                                Email.send(
+                                  'diagnostic',
+                                  {
+                                    err: 'Booking id resorted to original method ' + bookingRef
+                                  },
+                                  {
+                                    to: sails.config.events.developer,
+                                    subject: 'Booking id resorted to original method ' + bookingRef
+                                  },
+                                  function () {}
+                                );
                               }
-                            });
+                            } catch (e) {}
                           }
-                        );
+                          // Update the booking ref
+                          Booking.update(booking.id, {
+                            ref: bookingRef
+                          }).exec(function () {
+                            booking.ref = bookingRef;
+
+                            // If we are using online payments, add a checkout session id to the booking
+                            // But only if this is a registered user booking themselves in.
+                            if (
+                              user.authProvider !== 'dummy' &&
+                              !event.free &&
+                              !event.regInterest &&
+                              event.onlinePayments &&
+                              event.onlinePaymentConfig &&
+                              !booking.paid &&
+                              !booking.attendingOnly
+                            ) {
+                              sails.controllers.payment
+                                .getNewCheckoutSession(booking.id)
+                                .then((sessionId) => {
+                                  const paymentConfig = sails.controllers.payment.getConfig(event);
+                                  Booking.update(booking.id, {
+                                    paymentSessionId: sessionId
+                                  }).exec(() => {
+                                    booking.stripePublishableKey = paymentConfig.publishableKey;
+                                    booking.paymentSessionId = sessionId;
+                                    // Finalise booking
+                                    finalise();
+                                  });
+                                })
+                                .catch((err) => {
+                                  return res.genericErrorResponse(
+                                    '455',
+                                    'Booking failed. Unable to create a payment session'
+                                  );
+                                });
+                            } else {
+                              // Finalise booking
+                              finalise();
+                            }
+                          });
+                        });
                       } else {
                         // Are we using online payments?
                         if (
-                          user.authProvider !== "dummy" &&
+                          user.authProvider !== 'dummy' &&
                           !event.free &&
                           !event.regInterest &&
                           event.onlinePayments &&
@@ -1109,13 +1005,11 @@ module.exports = {
                               .getNewCheckoutSession(booking.id)
                               .then((sessionId) => {
                                 if (sessionId) {
-                                  const paymentConfig =
-                                    sails.controllers.payment.getConfig(event);
+                                  const paymentConfig = sails.controllers.payment.getConfig(event);
                                   Booking.update(booking.id, {
-                                    paymentSessionId: sessionId,
+                                    paymentSessionId: sessionId
                                   }).exec(() => {
-                                    booking.stripePublishableKey =
-                                      paymentConfig.publishableKey;
+                                    booking.stripePublishableKey = paymentConfig.publishableKey;
                                     booking.paymentSessionId = sessionId;
                                     // Finalise booking
                                     finalise();
@@ -1126,8 +1020,8 @@ module.exports = {
                               })
                               .catch((err) => {
                                 return res.genericErrorResponse(
-                                  "455",
-                                  "Booking failed. Unable to create a payment session"
+                                  '455',
+                                  'Booking failed. Unable to create a payment session'
                                 );
                               });
                           } else {
@@ -1135,21 +1029,12 @@ module.exports = {
                             if (
                               refund &&
                               booking.paymentReference &&
-                              moment().diff(
-                                moment(event.closingDate),
-                                "days"
-                              ) <= 0
+                              moment().diff(moment(event.closingDate), 'days') <= 0
                             ) {
                               try {
-                                await sails.controllers.payment.issueRefund(
-                                  booking,
-                                  refund
-                                );
+                                await sails.controllers.payment.issueRefund(booking, refund);
                               } catch (err) {
-                                sails.log.error(
-                                  "Error occurred processing refund",
-                                  err
-                                );
+                                sails.log.error('Error occurred processing refund', err);
                               }
                               finalise();
                             } else {
@@ -1173,7 +1058,7 @@ module.exports = {
                         surname: user.surname,
                         firstName: user.firstName,
                         rank: user.rank,
-                        cancelled: false,
+                        cancelled: false
                       };
                       lodgeRoomArr.push(lr);
                       _.forEach(linkedBookings, function (lb, l) {
@@ -1183,7 +1068,7 @@ module.exports = {
                           surname: lb.surname,
                           firstName: lb.firstName,
                           rank: lb.rank,
-                          cancelled: false,
+                          cancelled: false
                         };
                         lodgeRoomArr.push(lr);
                       });
@@ -1194,7 +1079,7 @@ module.exports = {
                       existingMain = false;
                       LodgeRoom.find({
                         event: eventId,
-                        booking: existingBooking.id,
+                        booking: existingBooking.id
                       }).exec(function (err, elrds) {
                         if (!err && elrds) {
                           // Flag any that are no longer on the booking as cancelled
@@ -1202,36 +1087,29 @@ module.exports = {
                           _.forEach(elrd, function (elr, l) {
                             var found = false;
                             if (
-                              elr.surname.toLowerCase() ==
-                                existingBooking.user.surname.toLowerCase() &&
-                              elr.firstName.toLowerCase() ==
-                                existingBooking.user.firstName.toLowerCase()
+                              elr.surname.toLowerCase() == existingBooking.user.surname.toLowerCase() &&
+                              elr.firstName.toLowerCase() == existingBooking.user.firstName.toLowerCase()
                             ) {
                               found = true;
                               existingMain = true;
                             } else {
-                              _.forEach(
-                                existingBooking.additions,
-                                function (eba, a) {
-                                  if (
-                                    eba.surname.toLowerCase() ==
-                                      elr.surname.toLowerCase() &&
-                                    eba.firstName.toLowerCase() ==
-                                      elr.firstName.toLowerCase()
-                                  ) {
-                                    found = true;
-                                    return false;
-                                  }
+                              _.forEach(existingBooking.additions, function (eba, a) {
+                                if (
+                                  eba.surname.toLowerCase() == elr.surname.toLowerCase() &&
+                                  eba.firstName.toLowerCase() == elr.firstName.toLowerCase()
+                                ) {
+                                  found = true;
+                                  return false;
                                 }
-                              );
+                              });
                             }
                             if (!found) {
                               LodgeRoom.update(elr.id, {
-                                cancelled: true,
+                                cancelled: true
                               }).exec(function () {});
                             } else {
                               LodgeRoom.update(elr.id, {
-                                cancelled: false,
+                                cancelled: false
                               }).exec(function () {});
                             }
                           });
@@ -1245,7 +1123,7 @@ module.exports = {
                             surname: existingBooking.user.surname,
                             firstName: existingBooking.user.firstName,
                             rank: existingBooking.user.rank,
-                            cancelled: false,
+                            cancelled: false
                           };
                           LodgeRoom.create(lr).exec(function () {});
                         }
@@ -1253,10 +1131,8 @@ module.exports = {
                           var found = false;
                           _.forEach(elrd, function (elr, l) {
                             if (
-                              eba.surname.toLowerCase() ==
-                                elr.surname.toLowerCase() &&
-                              eba.firstName.toLowerCase() ==
-                                elr.firstName.toLowerCase()
+                              eba.surname.toLowerCase() == elr.surname.toLowerCase() &&
+                              eba.firstName.toLowerCase() == elr.firstName.toLowerCase()
                             ) {
                               found = true;
                               return false;
@@ -1270,7 +1146,7 @@ module.exports = {
                               surname: eba.surname,
                               firstName: eba.firstName,
                               rank: eba.rank,
-                              cancelled: false,
+                              cancelled: false
                             };
                             LodgeRoom.create(lr).exec(function () {});
                           }
@@ -1283,12 +1159,9 @@ module.exports = {
                   // If we have an existing booking, zap it before making the new booking
                   if (bookingId) {
                     Booking.destroy(bookingId, function (err) {
-                      LinkedBooking.destroy(
-                        { booking: bookingId },
-                        function (err) {
-                          processBooking();
-                        }
-                      );
+                      LinkedBooking.destroy({ booking: bookingId }, function (err) {
+                        processBooking();
+                      });
                     });
                   } else {
                     lodgeRoom(null, processBooking);
@@ -1296,8 +1169,8 @@ module.exports = {
                 } else {
                   //No capacity!
                   return res.genericErrorResponse(
-                    "455",
-                    "Booking failed. The event does not have capacity for the places requested"
+                    '455',
+                    'Booking failed. The event does not have capacity for the places requested'
                   );
                 }
               });
@@ -1312,21 +1185,18 @@ module.exports = {
           // If not Craft, update/create the users order details.
           // If the user is in two orders of the same type
           // we will ignore that and only cater for the first one
-          if (event.order && event.order != "C") {
-            Order.destroy({ user: userId, code: event.order }).exec(function (
-              err,
-              deleted
-            ) {
+          if (event.order && event.order != 'C') {
+            Order.destroy({ user: userId, code: event.order }).exec(function (err, deleted) {
               var order = {
                 user: userId,
                 code: event.order,
-                salutation: req.param("salutation"),
-                name: req.param("lodge"),
-                number: req.param("lodgeNo"),
-                year: req.param("lodgeYear"),
-                centre: req.param("centre"),
-                area: req.param("area"),
-                rank: req.param("rank"),
+                salutation: req.param('salutation'),
+                name: req.param('lodge'),
+                number: req.param('lodgeNo'),
+                year: req.param('lodgeYear'),
+                centre: req.param('centre'),
+                area: req.param('area'),
+                rank: req.param('rank')
               };
               Order.create(order).exec(function (err, newOrder) {
                 checked();
@@ -1340,10 +1210,10 @@ module.exports = {
             // Check existing booking before continuing
             Booking.findOne({
               event: eventId,
-              user: userId,
+              user: userId
             })
-              .populate("additions")
-              .populate("user")
+              .populate('additions')
+              .populate('user')
               .exec(function (err, existingBooking) {
                 if (existingBooking) {
                   if (existingBooking.id == bookingId) {
@@ -1352,8 +1222,8 @@ module.exports = {
                   } else {
                     if (!sails.config.events.multipleBookings) {
                       return res.genericErrorResponse(
-                        "460",
-                        "Booking failed. This user is already booked in to the event"
+                        '460',
+                        'Booking failed. This user is already booked in to the event'
                       );
                     } else {
                       // OK
@@ -1371,34 +1241,24 @@ module.exports = {
 
         // We need to decide if we are using the current user (normal booking) or if we
         // are in "create" mode where the user may or may not exist yet
-        if (action == "create") {
+        if (action == 'create') {
           if (selectedUserId) {
             // Administrator making booking on behalf of another user
             checkAndbookIt(selectedUserId);
           } else {
             // Does the user exist already (with this email address?)
             if (user.email) {
-              User.findOne({ email: user.email }).exec(function (
-                err,
-                existingUser
-              ) {
+              User.findOne({ email: user.email }).exec(function (err, existingUser) {
                 if (err || !existingUser) {
                   // Create a dummy user for the booking
-                  user.authProvider = "dummy";
+                  user.authProvider = 'dummy';
                   User.create(user).exec(function (err, newUser) {
                     if (err) {
                       //!Ouch!
                       sails.log.error(
-                        "res.genericErrorResponse() :: Sending " +
-                          err.code +
-                          ": " +
-                          err.message +
-                          " response"
+                        'res.genericErrorResponse() :: Sending ' + err.code + ': ' + err.message + ' response'
                       );
-                      return res.genericErrorResponse(
-                        "455",
-                        "Booking failed. Attempt to create new user failed!"
-                      );
+                      return res.genericErrorResponse('455', 'Booking failed. Attempt to create new user failed!');
                     }
                     checkAndbookIt(newUser.id);
                   });
@@ -1408,21 +1268,14 @@ module.exports = {
               });
             } else {
               // No email provided so we must create a dummy user regardless
-              user.authProvider = "dummy";
+              user.authProvider = 'dummy';
               User.create(user).exec(function (err, newUser) {
                 if (err) {
                   //!Ouch!
                   sails.log.error(
-                    "res.genericErrorResponse() :: Sending " +
-                      err.code +
-                      ": " +
-                      err.message +
-                      " response"
+                    'res.genericErrorResponse() :: Sending ' + err.code + ': ' + err.message + ' response'
                   );
-                  return res.genericErrorResponse(
-                    "455",
-                    "Booking failed. Attempt to create new user failed!"
-                  );
+                  return res.genericErrorResponse('455', 'Booking failed. Attempt to create new user failed!');
                 }
                 checkAndbookIt(newUser.id);
               });
@@ -1436,21 +1289,13 @@ module.exports = {
                 // Arrgh!
                 if (err) {
                   sails.log.error(
-                    "res.genericErrorResponse() :: Sending " +
-                      err.code +
-                      ": " +
-                      err.message +
-                      " response"
+                    'res.genericErrorResponse() :: Sending ' + err.code + ': ' + err.message + ' response'
                   );
-                  return res.genericErrorResponse(
-                    "455",
-                    "Booking failed. Attempt to rebook failed!"
-                  );
+                  return res.genericErrorResponse('455', 'Booking failed. Attempt to rebook failed!');
                 }
                 return res.genericErrorResponse(
-                  "455",
-                  "Booking failed. Attempt to rebook failed!. Existing booking not found for " +
-                    bookingId
+                  '455',
+                  'Booking failed. Attempt to rebook failed!. Existing booking not found for ' + bookingId
                 );
               } else {
                 bookingRef = booking.ref;
@@ -1470,20 +1315,20 @@ module.exports = {
    *
    */
   validateAdditions: function (req, res) {
-    var bookingId = req.param("bookingId");
-    var linkedBookings = req.param("linkedBookings");
-    var eventId = req.param("eventId");
+    var bookingId = req.param('bookingId');
+    var linkedBookings = req.param('linkedBookings');
+    var eventId = req.param('eventId');
     var where = {};
     where.event = eventId;
     if (bookingId) {
-      where.id = { "!": bookingId };
+      where.id = { '!': bookingId };
     }
     // Now we want a list of additional bookings that are recorded against this
     // event, excluding those from this particular booking
     var duplicates = [];
     Booking.find(where)
-      .populate("user")
-      .populate("additions")
+      .populate('user')
+      .populate('additions')
       .exec(function (err, bookings) {
         if (err) {
           console.log(err);
@@ -1493,22 +1338,17 @@ module.exports = {
           bookings.forEach(function (booking, b) {
             // Check the main bookee first
             linkedBookings.forEach(function (ob, m) {
-              if (ob.surname.toLowerCase() != "*placeholder*") {
+              if (ob.surname.toLowerCase() != '*placeholder*') {
                 if (booking.user?.surname && booking.user?.firstName) {
                   if (
                     ob.surname &&
                     ob.firstName &&
-                    booking.user.surname.toLowerCase() ==
-                      ob.surname.toLowerCase() &&
-                    booking.user.firstName.toLowerCase() ==
-                      ob.firstName.toLowerCase()
+                    booking.user.surname.toLowerCase() == ob.surname.toLowerCase() &&
+                    booking.user.firstName.toLowerCase() == ob.firstName.toLowerCase()
                   ) {
                     if (
                       !booking.user?.lodge ||
-                      (booking.user?.lodge &&
-                        ob.lodge &&
-                        booking.user.lodge.toLowerCase() ==
-                          ob.lodge.toLowerCase())
+                      (booking.user?.lodge && ob.lodge && booking.user.lodge.toLowerCase() == ob.lodge.toLowerCase())
                     )
                       duplicates.push(ob);
                   }
@@ -1517,19 +1357,14 @@ module.exports = {
             });
             // Additions
             booking.additions.forEach(function (lb, l) {
-              if (lb.surname.toLowerCase() != "*placeholder*") {
+              if (lb.surname.toLowerCase() != '*placeholder*') {
                 // Possible duplicate?
                 linkedBookings.forEach(function (ob, m) {
                   if (
                     lb.surname.toLowerCase() == ob.surname.toLowerCase() &&
                     lb.firstName.toLowerCase() == ob.firstName.toLowerCase()
                   ) {
-                    if (
-                      !lb.lodge ||
-                      (lb.lodge &&
-                        ob.lodge &&
-                        lb.lodge.toLowerCase() == ob.lodge.toLowerCase())
-                    )
+                    if (!lb.lodge || (lb.lodge && ob.lodge && lb.lodge.toLowerCase() == ob.lodge.toLowerCase()))
                       duplicates.push(ob);
                   }
                 });
@@ -1548,7 +1383,7 @@ module.exports = {
    * @param {Object} res
    */
   allMyBookings: function (req, res) {
-    var criteria = req.param("criteria");
+    var criteria = req.param('criteria');
     if (criteria) {
       try {
         criteria = JSON.parse(criteria);
@@ -1559,36 +1394,30 @@ module.exports = {
       criteria = {};
     }
     req.session.bookingCriteria = JSON.stringify(criteria);
-    req.session.userCriteria = "{}";
+    req.session.userCriteria = '{}';
 
     // Special case for no data
-    if (req.param("nodata") == "1") {
+    if (req.param('nodata') == '1') {
       return res.json({});
     }
 
-    var download = req.param("download");
+    var download = req.param('download');
 
     var where = {};
     where.user = req.user.id;
     var pag = {
       page: criteria.page || 1,
-      limit: criteria.limit || 50,
+      limit: criteria.limit || 50
     };
     var filter = criteria.filter;
 
-    if (filter == "late" && pag.page > 1) {
+    if (filter == 'late' && pag.page > 1) {
       // Don't need to return anything since "late" will have returned the lot
       return res.json({});
     }
 
     // If we are looking for late payments then pagination will defeat us!
-    if (
-      filter == "late" ||
-      download ||
-      criteria.sortByName ||
-      criteria.incNonDiners ||
-      criteria.nonDinersOnly
-    ) {
+    if (filter == 'late' || download || criteria.sortByName || criteria.incNonDiners || criteria.nonDinersOnly) {
       pag.page = 1;
       pag.limit = 99999999;
     }
@@ -1598,12 +1427,12 @@ module.exports = {
         { event: { name: { contains: filter } } },
         { event: { venue: { contains: filter } } },
         { event: { blurb: { contains: filter } } },
-        { ref: { contains: filter } },
+        { ref: { contains: filter } }
       ];
-      if (filter.toLowerCase() == "paid") {
+      if (filter.toLowerCase() == 'paid') {
         where.or.push({ paid: true });
       }
-      if (filter.toLowerCase() == "unpaid" || filter.toLowerCase() == "late") {
+      if (filter.toLowerCase() == 'unpaid' || filter.toLowerCase() == 'late') {
         where.or.push({ paid: false });
         where.or.push({ paid: null });
       }
@@ -1614,40 +1443,31 @@ module.exports = {
       //       We will have to sort it after getting the data set
       sort: {
         event: {
-          date: "desc",
-          time: "desc",
-        },
-      },
+          date: 'desc',
+          time: 'desc'
+        }
+      }
     })
-      .populate("user")
-      .populate("event")
-      .populate("additions", { sort: { seq: "asc" } })
+      .populate('user')
+      .populate('event')
+      .populate('additions', { sort: { seq: 'asc' } })
       .paginate(pag)
       .exec(function (err, bookings) {
         if (err) {
-          sails.log.verbose("Error occurred trying to retrieve bookings.");
+          sails.log.verbose('Error occurred trying to retrieve bookings.');
           return res.negotiate(err);
         }
 
         // If we only want late bookings, filter the list
-        if (filter && filter.toLowerCase() == "late") {
+        if (filter && filter.toLowerCase() == 'late') {
           bookings = sails.controllers.booking.filterLate(bookings);
         }
 
         // Sort response by event date
-        bookings.sort(Utility.jsonSort("event.date", true));
+        bookings.sort(Utility.jsonSort('event.date', true));
 
         if (download) {
-          sails.controllers.booking.download(
-            req,
-            res,
-            req.user.username,
-            false,
-            false,
-            false,
-            bookings,
-            req.user
-          );
+          sails.controllers.booking.download(req, res, req.user.username, false, false, false, bookings, req.user);
         } else {
           // If session refers to a user who no longer exists, still allow logout.
           if (!bookings) {
@@ -1667,7 +1487,7 @@ module.exports = {
    */
   allEventBookings: function (req, res) {
     var pagLimit = 50;
-    var criteria = req.param("criteria");
+    var criteria = req.param('criteria');
     if (criteria) {
       try {
         criteria = JSON.parse(criteria);
@@ -1678,37 +1498,31 @@ module.exports = {
       criteria = {};
     }
     req.session.bookingCriteria = JSON.stringify(criteria);
-    req.session.userCriteria = "{}";
+    req.session.userCriteria = '{}';
 
     // Special case for no data
-    if (req.param("nodata") == "1") {
+    if (req.param('nodata') == '1') {
       return res.json({});
     }
 
-    var download = req.param("download");
+    var download = req.param('download');
 
     var where = {};
-    where.event = req.param("eventid");
+    where.event = req.param('eventid');
 
     var pag = {
       page: criteria.page || 1,
-      limit: criteria.limit || pagLimit,
+      limit: criteria.limit || pagLimit
     };
     var filter = criteria.filter;
 
-    if (filter == "late" && pag.page > 1) {
+    if (filter == 'late' && pag.page > 1) {
       // Don't need to return anything since "late" will have returned the lot
       return res.json({});
     }
 
     // If we are looking for late payments then pagination will defeat us!
-    if (
-      filter == "late" ||
-      download ||
-      criteria.sortByName ||
-      criteria.incNonDiners ||
-      criteria.nonDinersOnly
-    ) {
+    if (filter == 'late' || download || criteria.sortByName || criteria.incNonDiners || criteria.nonDinersOnly) {
       pag.page = 1;
       pag.limit = 99999999;
     }
@@ -1722,45 +1536,41 @@ module.exports = {
         { user: { lodgeNo: { contains: filter } } },
         { user: { lodgeYear: { contains: filter } } },
         { user: { category: { contains: filter } } },
-        { ref: { contains: filter } },
+        { ref: { contains: filter } }
       ];
-      if (filter.toLowerCase() == "paid") {
+      if (filter.toLowerCase() == 'paid') {
         where.or.push({ paid: true });
       }
-      if (filter.toLowerCase() == "unpaid" || filter.toLowerCase() == "late") {
+      if (filter.toLowerCase() == 'unpaid' || filter.toLowerCase() == 'late') {
         where.or.push({ paid: false });
         where.or.push({ paid: null });
       }
     }
 
     var result = {
-      bookings: [],
+      bookings: []
     };
 
     // Drive the data from the main event
-    Event.findOne(req.param("eventid")).exec(function (err, event) {
+    Event.findOne(req.param('eventid')).exec(function (err, event) {
       if (err) {
         sails.log.error(err);
         return res.json({});
       }
 
       // Diagnostic email required?
-      if (
-        sails.config.events.emailDeveloperOnDownload &&
-        download &&
-        sails.config.events.developer
-      ) {
+      if (sails.config.events.emailDeveloperOnDownload && download && sails.config.events.developer) {
         Email.send(
-          "downloadAlert",
+          'downloadAlert',
           {
             user: req.user,
             event: event,
-            what: event.regInterest ? "interest" : "bookings",
+            what: event.regInterest ? 'interest' : 'bookings'
           },
           {
-            from: event.name + " <" + sails.config.events.email + ">",
+            from: event.name + ' <' + sails.config.events.email + '>',
             to: sails.config.events.developer,
-            subject: "Download alert",
+            subject: 'Download alert'
           },
           function (err) {
             Utility.emailError(err);
@@ -1772,8 +1582,8 @@ module.exports = {
       if (pag.page == 1 && !event.regInterest) {
         Booking.find({
           where: {
-            event: req.param("eventid"),
-          },
+            event: req.param('eventid')
+          }
         }).exec(function (err, bookings) {
           if (bookings) {
             result.capacity = event.capacity;
@@ -1796,7 +1606,7 @@ module.exports = {
       // Now get the paginated bookings
       Booking.find({
         where: where,
-        sort: "createdAt",
+        sort: 'createdAt'
         // NOTE: Sorting by the surname/name of the foreign "user" table as shown below does not appear to work at all.
         //       We will have to sort it after getting the data set
         //sort: {
@@ -1806,22 +1616,19 @@ module.exports = {
         //		}
         //}
       })
-        .populate("event")
-        .populate("user")
-        .populate("additions", { sort: { seq: "asc" } }) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
+        .populate('event')
+        .populate('user')
+        .populate('additions', { sort: { seq: 'asc' } }) // Sorting a "populate" by more than one field doesn't seem to work. You get no results at all.
         .paginate(pag)
         .exec(function (err, bookings) {
           if (err) {
-            sails.log.verbose("Error occurred trying to retrieve bookings.");
+            sails.log.verbose('Error occurred trying to retrieve bookings.');
             return res.negotiate(err);
           }
 
           // If we only want late bookings, filter the list
-          if (filter && filter.toLowerCase() == "late") {
-            bookings = sails.controllers.booking.filterLate(
-              bookings,
-              event.grace
-            );
+          if (filter && filter.toLowerCase() == 'late') {
+            bookings = sails.controllers.booking.filterLate(bookings, event.grace);
           }
 
           // Augment the bookings with the particular order info
@@ -1850,23 +1657,15 @@ module.exports = {
 
             if (criteria.sortByName) {
               bookings.sort(
-                Utility.jsonSort("user.surname", false, function (a) {
-                  return a && typeof a == "string" ? a.toUpperCase() : a;
+                Utility.jsonSort('user.surname', false, function (a) {
+                  return a && typeof a == 'string' ? a.toUpperCase() : a;
                 })
               );
             }
 
             if (download) {
               ////Event.findOne(req.param("eventid")).exec(function(err,event){
-              sails.controllers.booking.download(
-                req,
-                res,
-                event.code,
-                true,
-                event.addressReqd,
-                event.voReqd,
-                bookings
-              );
+              sails.controllers.booking.download(req, res, event.code, true, event.addressReqd, event.voReqd, bookings);
               ////})
             } else {
               // If session refers to a user who no longer exists, still allow logout.
@@ -1882,19 +1681,15 @@ module.exports = {
               bookings,
               function (booking, next) {
                 var b = booking;
-                if (event.order && event.order != "C") {
-                  Utility.augmentUser(
-                    event,
-                    booking.user,
-                    function (augmentedUser) {
-                      b.user = augmentedUser;
-                      b.orderLabel = augmentedUser.orderLabel;
-                      newBookings.push(b);
-                      next();
-                    }
-                  );
+                if (event.order && event.order != 'C') {
+                  Utility.augmentUser(event, booking.user, function (augmentedUser) {
+                    b.user = augmentedUser;
+                    b.orderLabel = augmentedUser.orderLabel;
+                    newBookings.push(b);
+                    next();
+                  });
                 } else {
-                  b.orderLabel = "Lodge";
+                  b.orderLabel = 'Lodge';
                   newBookings.push(b);
                   next();
                 }
@@ -1918,7 +1713,7 @@ module.exports = {
    * @param {Object} res
    */
   allUserBookings: function (req, res) {
-    var criteria = req.param("criteria");
+    var criteria = req.param('criteria');
     if (criteria) {
       try {
         criteria = JSON.parse(criteria);
@@ -1932,32 +1727,32 @@ module.exports = {
     /////req.session.userCriteria="{}";
 
     // Special case for no data
-    if (req.param("nodata") == "1") {
+    if (req.param('nodata') == '1') {
       return res.json({});
     }
 
-    var download = req.param("download");
+    var download = req.param('download');
 
     var pag = {
       page: criteria.page || 1,
-      limit: criteria.limit || 50,
+      limit: criteria.limit || 50
     };
     var filter = criteria.filter;
 
-    if (filter == "late" && pag.page > 1) {
+    if (filter == 'late' && pag.page > 1) {
       // Don't need to return anything since "late" will have returned the lot
       return res.json({});
     }
 
     // If we are looking for late payments then pagination will defeat us!
-    if (filter == "late" || download) {
+    if (filter == 'late' || download) {
       pag.page = 1;
       pag.limit = 99999999;
     }
 
-    User.findOne(req.param("userid")).exec(function (err, user) {
+    User.findOne(req.param('userid')).exec(function (err, user) {
       if (err) {
-        sails.log.verbose("Error occurred trying to retrieve user.");
+        sails.log.verbose('Error occurred trying to retrieve user.');
         return res.negotiate(err);
       }
       var where = {};
@@ -1968,15 +1763,12 @@ module.exports = {
           { event: { name: { contains: filter } } },
           { event: { venue: { contains: filter } } },
           { event: { blurb: { contains: filter } } },
-          { ref: { contains: filter } },
+          { ref: { contains: filter } }
         ];
-        if (filter.toLowerCase() == "paid") {
+        if (filter.toLowerCase() == 'paid') {
           where.or.push({ paid: true });
         }
-        if (
-          filter.toLowerCase() == "unpaid" ||
-          filter.toLowerCase() == "late"
-        ) {
+        if (filter.toLowerCase() == 'unpaid' || filter.toLowerCase() == 'late') {
           where.or.push({ paid: false });
           where.or.push({ paid: null });
         }
@@ -1988,17 +1780,17 @@ module.exports = {
         //       We will have to sort it after getting the data set
         sort: {
           event: {
-            date: "desc",
-            time: "desc",
-          },
-        },
+            date: 'desc',
+            time: 'desc'
+          }
+        }
       })
-        .populate("event")
-        .populate("additions", { sort: { seq: "asc" } })
+        .populate('event')
+        .populate('additions', { sort: { seq: 'asc' } })
         .paginate(pag)
         .exec(function (err, theBookings) {
           if (err) {
-            sails.log.verbose("Error occurred trying to retrieve bookings.");
+            sails.log.verbose('Error occurred trying to retrieve bookings.');
             return res.negotiate(err);
           }
 
@@ -2011,20 +1803,18 @@ module.exports = {
           });
 
           // If we only want late bookings, filter the list
-          if (filter && filter.toLowerCase() == "late") {
+          if (filter && filter.toLowerCase() == 'late') {
             bookings = sails.controllers.booking.filterLate(bookings);
           }
 
           // Sort response by event date
-          bookings.sort(Utility.jsonSort("event.date", true));
+          bookings.sort(Utility.jsonSort('event.date', true));
 
           if (download) {
             sails.controllers.booking.download(
               req,
               res,
-              user.surname.replace(RegExp(" ", "g"), "_") +
-                "_" +
-                user.firstName,
+              user.surname.replace(RegExp(' ', 'g'), '_') + '_' + user.firstName,
               false,
               false,
               false,
@@ -2059,10 +1849,7 @@ module.exports = {
             organiserIsDev = true;
           }
         } else {
-          if (
-            typeof organiser === "string" &&
-            organiser !== sails.config.events.developer
-          ) {
+          if (typeof organiser === 'string' && organiser !== sails.config.events.developer) {
             bcc.push(organiser);
           }
         }
@@ -2117,30 +1904,25 @@ module.exports = {
     // The only supported action is "delete" as the rest of booking maintenance is done via
     // the "makeBooking" function.  However, we will stick to our naming convention
     // in case that changes
-    var action = req.param("action");
-    var bookingId = req.param("bookingid");
+    var action = req.param('action');
+    var bookingId = req.param('bookingid');
 
     // Get all the information first (for the email)
     Booking.findOne(bookingId)
-      .populate("user")
-      .populate("event")
-      .populate("additions")
+      .populate('user')
+      .populate('event')
+      .populate('additions')
       .exec(function (err, booking) {
         if (err) {
-          return res.genericErrorResponse(
-            "470",
-            "This booking no longer exists!"
-          );
+          return res.genericErrorResponse('470', 'This booking no longer exists!');
         }
 
         // Order label
-        var orderLabel = sails.controllers.booking.orderLabel(
-          booking.event.order
-        );
+        var orderLabel = sails.controllers.booking.orderLabel(booking.event.order);
 
         Order.find({ user: booking.user.id }).exec(function (err, orders) {
           var where = {
-            or: [{ id: booking.event.organiser }],
+            or: [{ id: booking.event.organiser }]
           };
           if (booking.event.organiser2) {
             where.or.push({ id: booking.event.organiser2 });
@@ -2152,7 +1934,7 @@ module.exports = {
               organisers = [];
             }
             var mainOrganiser = {
-              name: "Unknown",
+              name: 'Unknown'
             };
             var bcc = sails.controllers.booking.bookingBCC(booking, organisers);
 
@@ -2160,42 +1942,32 @@ module.exports = {
             var linkedBookings = booking.additions;
             if (linkedBookings) {
               linkedBookings.forEach(function (linkedBooking, index) {
-                if (!linkedBooking.rank) linkedBooking.rank = "";
-                if (!linkedBooking.dietary) linkedBooking.dietary = "";
-                if (!linkedBooking.lodge) linkedBooking.lodge = "";
-                if (!linkedBooking.lodgeNo) linkedBooking.lodgeNo = "";
+                if (!linkedBooking.rank) linkedBooking.rank = '';
+                if (!linkedBooking.dietary) linkedBooking.dietary = '';
+                if (!linkedBooking.lodge) linkedBooking.lodge = '';
+                if (!linkedBooking.lodgeNo) linkedBooking.lodgeNo = '';
               });
             }
 
             var formattedDate = booking.event.date.toString();
-            formattedDate = formattedDate.substr(
-              0,
-              formattedDate.indexOf("00:00:00")
-            );
-            var updated = "";
+            formattedDate = formattedDate.substr(0, formattedDate.indexOf('00:00:00'));
+            var updated = '';
 
             // Booking payment deadline
-            var deadline = "N/A";
-            if (
-              booking.event.grace &&
-              booking.event.grace > 0 &&
-              !booking.paid
-            ) {
+            var deadline = 'N/A';
+            if (booking.event.grace && booking.event.grace > 0 && !booking.paid) {
               var dl = new Date(booking.bookingDate);
               dl.setDate(dl.getDate() + booking.event.grace);
               dl = dl.toString();
-              deadline = dl.substr(0, dl.indexOf(":") - 2);
+              deadline = dl.substr(0, dl.indexOf(':') - 2);
             }
 
             // Decide what to do based on the action
-            if (action == "edit") {
+            if (action == 'edit') {
               // Not supported
-            } else if (action == "delete") {
+            } else if (action == 'delete') {
               // Issue refund if online payments used and not closed
-              if (
-                booking.paymentReference &&
-                moment().diff(moment(booking.event.closingDate), "days") <= 0
-              ) {
+              if (booking.paymentReference && moment().diff(moment(booking.event.closingDate), 'days') <= 0) {
                 try {
                   let refund = booking.amountPaid;
                   if (booking.event.recoverOnlinePaymentFee) {
@@ -2218,22 +1990,13 @@ module.exports = {
                   return res.negotiate(err);
                 }
                 // Cancel lodge room details
-                LodgeRoom.update(
-                  { booking: bookingId },
-                  { cancelled: true }
-                ).exec(function () {});
+                LodgeRoom.update({ booking: bookingId }, { cancelled: true }).exec(function () {});
                 // Deal with linked bookings
-                LinkedBooking.destroy({ booking: bookingId }).exec(function (
-                  err
-                ) {
-                  if (bookingId) updated = " has been cancelled";
+                LinkedBooking.destroy({ booking: bookingId }).exec(function (err) {
+                  if (bookingId) updated = ' has been cancelled';
 
                   if (booking.user.email) {
-                    sails.controllers.booking.setEmailInfo(
-                      booking.event,
-                      booking.user,
-                      orders
-                    );
+                    sails.controllers.booking.setEmailInfo(booking.event, booking.user, orders);
 
                     var emailOpts = {
                       recipientName: Utility.recipient(
@@ -2242,13 +2005,9 @@ module.exports = {
                         booking.user.surname
                       ),
                       subject: booking.event.regInterest
-                        ? "Event interest cancellation confirmation"
-                        : "Event booking cancellation confirmation",
-                      from:
-                        booking.event.name +
-                        " <" +
-                        sails.config.events.email +
-                        ">",
+                        ? 'Event interest cancellation confirmation'
+                        : 'Event booking cancellation confirmation',
+                      from: booking.event.name + ' <' + sails.config.events.email + '>',
                       to: booking.user.email,
                       bcc: bcc,
                       user: booking.user,
@@ -2259,17 +2018,15 @@ module.exports = {
                       deadline: deadline,
                       formattedDate: formattedDate,
                       linkedBookings: linkedBookings,
-                      bookingRef: booking.ref,
+                      bookingRef: booking.ref
                     };
-                    sails.controllers.booking.bookingConfirmationEmail(
-                      emailOpts
-                    );
+                    sails.controllers.booking.bookingConfirmationEmail(emailOpts);
                   }
 
                   return res.ok();
                 });
               });
-            } else if (action == "copy" || action == "create") {
+            } else if (action == 'copy' || action == 'create') {
               // Not supported
             }
           });
@@ -2281,9 +2038,9 @@ module.exports = {
    * Transfer bookings
    */
   transferBookings: function (req, res) {
-    var from = req.param("id");
-    var to = req.param("newuser");
-    var booking = req.param("booking");
+    var from = req.param('id');
+    var to = req.param('newuser');
+    var booking = req.param('booking');
 
     // Here we are going to build an array of promises for each update and only return
     // to the client when .all() the updates are complete
@@ -2298,9 +2055,7 @@ module.exports = {
       .then(function (bookings) {
         bookings.forEach(function (booking, b) {
           updates.push(
-            Booking.update(booking.id, { user: to }).then(function (
-              bookingArr
-            ) {
+            Booking.update(booking.id, { user: to }).then(function (bookingArr) {
               //console.log("Updated "+bookingArr[0].id)
             })
           );
@@ -2323,34 +2078,24 @@ module.exports = {
   handleIncompleteOnlinePayments: function (event, bookings) {
     bookings.forEach(function (booking) {
       // How late in days?
-      const late = moment().diff(moment(booking.bookingDate), "days");
-      const daysSinceReminded = moment().diff(
-        moment(booking.lastPaymentReminder),
-        "days"
-      );
+      const late = moment().diff(moment(booking.bookingDate), 'days');
+      const daysSinceReminded = moment().diff(moment(booking.lastPaymentReminder), 'days');
       let formattedDate = event.date.toString();
-      formattedDate = formattedDate.substr(
-        0,
-        formattedDate.indexOf("00:00:00")
-      );
+      formattedDate = formattedDate.substr(0, formattedDate.indexOf('00:00:00'));
 
       if (late >= 1 && (!daysSinceReminded || daysSinceReminded >= 1)) {
         // Send email reminder
         const latePaymentReminder = {
-          recipientName: Utility.recipient(
-            booking.user.salutation,
-            booking.user.firstName,
-            booking.user.surname
-          ),
+          recipientName: Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname),
           senderName: sails.config.events.title,
           eventDate: formattedDate,
           event: event,
-          details: booking,
+          details: booking
         };
         const to = booking.user.email.toLowerCase();
         const cc = [
-          event.organiser.email.toLowerCase() || "",
-          event.organiser2 ? event.organiser2.email.toLowerCase() || "" : "",
+          event.organiser.email.toLowerCase() || '',
+          event.organiser2 ? event.organiser2.email.toLowerCase() || '' : ''
         ];
         const recipients = {
           //to: booking.user.email,
@@ -2361,35 +2106,28 @@ module.exports = {
             sails.config.events.developer &&
             sails.config.events.developer != event.organiser.email
               ? sails.config.events.developer
-              : "",
-          subject: event.name + " - Incomplete payment reminder",
+              : '',
+          subject: event.name + ' - Incomplete payment reminder'
         };
-        Email.send(
-          "onlinePaymentWarning",
-          latePaymentReminder,
-          recipients,
-          function (err) {
-            if (err) {
-              sails.log.error(
-                "Error occurred sending late payment reminder email to " + to
-              );
-              sails.log.error(recipients);
-              // sails.log.error(latePaymentReminder);
-              sails.log.error(err);
-            }
+        Email.send('onlinePaymentWarning', latePaymentReminder, recipients, function (err) {
+          if (err) {
+            sails.log.error('Error occurred sending late payment reminder email to ' + to);
+            sails.log.error(recipients);
+            // sails.log.error(latePaymentReminder);
+            sails.log.error(err);
           }
-        );
+        });
         sails.log.debug(
-          "Success: Incomplete payment reminder for " +
+          'Success: Incomplete payment reminder for ' +
             event.name +
-            " for " +
+            ' for ' +
             booking.user.name +
-            (sails.config.events.reminderTestMode ? " in test mode" : " ")
+            (sails.config.events.reminderTestMode ? ' in test mode' : ' ')
         );
         booking.remindersSent += 1;
         Booking.update(booking.id, {
           lastPaymentReminder: Utility.today(),
-          remindersSent: booking.remindersSent,
+          remindersSent: booking.remindersSent
         }).exec(function (err, booking) {});
       }
     });
@@ -2399,7 +2137,7 @@ module.exports = {
    * Process late payers
    */
   processLatePayers: function () {
-    var info = "Processing late payers...";
+    var info = 'Processing late payers...';
 
     /*
         Email.send(
@@ -2447,57 +2185,48 @@ module.exports = {
       where: {
         or: [
           { open: true },
-          { open: false, closingDate: { ">=": today } },
-          { open: null, closingDate: { ">=": today } },
+          { open: false, closingDate: { '>=': today } },
+          { open: null, closingDate: { '>=': today } }
         ],
         or: [{ free: false }, { free: null }],
         or: [{ regInterest: false }, { regInterest: null }],
         latePaymentChecking: true,
-        closingDate: { ">=": today },
-        or: [{ grace: { ">": 0 } }, { onlinePayments: true }],
-        price: { ">": 0 },
+        closingDate: { '>=': today },
+        or: [{ grace: { '>': 0 } }, { onlinePayments: true }],
+        price: { '>': 0 }
       },
       sort: {
-        date: "desc",
-        time: "desc",
-      },
+        date: 'desc',
+        time: 'desc'
+      }
     })
-      .populate("organiser")
-      .populate("organiser2")
+      .populate('organiser')
+      .populate('organiser2')
       .then(function (events) {
         //console.log(events)
         // Get a list of bookings for this event that are late with their payment
         events.forEach(function (event, ev) {
           // Format some data for the email
           var formattedDate = event.date.toString();
-          formattedDate = formattedDate.substr(
-            0,
-            formattedDate.indexOf("00:00:00")
-          );
+          formattedDate = formattedDate.substr(0, formattedDate.indexOf('00:00:00'));
           // Get bookings
           Booking.find({
             where: {
               event: event.id,
               attendingOnly: false,
-              or: [{ paid: false }, { paid: null }],
-            },
+              or: [{ paid: false }, { paid: null }]
+            }
           })
-            .populate("user")
+            .populate('user')
             .then(function (bookings) {
               // Treat incomplete online payments separately
               if (event.onlinePayments) {
-                sails.controllers.booking.handleIncompleteOnlinePayments(
-                  event,
-                  bookings
-                );
+                sails.controllers.booking.handleIncompleteOnlinePayments(event, bookings);
               } else {
                 var remindersSent = false;
                 // Get bookings that will be late in 48 hours
                 if (event.grace > 2) {
-                  var warnings = sails.controllers.booking.filterLate(
-                    bookings,
-                    event.grace - 2
-                  );
+                  var warnings = sails.controllers.booking.filterLate(bookings, event.grace - 2);
                   if (warnings.length > 0) {
                     var nw = [];
                     warnings.forEach(function (booking, b) {
@@ -2505,9 +2234,7 @@ module.exports = {
                       reminderDeadline.setDate(reminderDeadline.getDate() - 2);
                       if (booking.lastPaymentReminder) {
                         reminderDeadline.setDate(
-                          booking.lastPaymentReminder.getDate() +
-                            (sails.config.events.latePaymentReminderInterval -
-                              2)
+                          booking.lastPaymentReminder.getDate() + (sails.config.events.latePaymentReminderInterval - 2)
                         );
                       }
                       if (reminderDeadline <= today) {
@@ -2519,9 +2246,7 @@ module.exports = {
                       // 48 hours
                       var to = [
                         event.organiser.email.toLowerCase(),
-                        event.organiser2
-                          ? event.organiser2.email.toLowerCase() || ""
-                          : "",
+                        event.organiser2 ? event.organiser2.email.toLowerCase() || '' : ''
                       ];
                       ////if (sails.config.events.reminderTestMode) {
                       ////	to="";
@@ -2537,7 +2262,7 @@ module.exports = {
                         reminderTestMode: sails.config.events.reminderTestMode,
                         eventDate: formattedDate,
                         event: event,
-                        bookings: nw,
+                        bookings: nw
                       };
                       const recipients = {
                         //to: booking.user.email,
@@ -2547,27 +2272,18 @@ module.exports = {
                           sails.config.events.developer &&
                           sails.config.events.developer != event.organiser.email
                             ? sails.config.events.developer
-                            : "",
-                        subject:
-                          event.name + " - Late payment reminder warning",
+                            : '',
+                        subject: event.name + ' - Late payment reminder warning'
                       };
-                      Email.send(
-                        "latePaymentWarning",
-                        latePaymentWarning,
-                        recipients,
-                        function (err) {
-                          if (err) {
-                            sails.log.error(
-                              "Error occurred sending late payment warning email to " +
-                                to
-                            );
-                            sails.log.error(recipients);
-                            // sails.log.error(latePaymentWarning);
-                            sails.log.error(err);
-                          }
-                          emailLate();
+                      Email.send('latePaymentWarning', latePaymentWarning, recipients, function (err) {
+                        if (err) {
+                          sails.log.error('Error occurred sending late payment warning email to ' + to);
+                          sails.log.error(recipients);
+                          // sails.log.error(latePaymentWarning);
+                          sails.log.error(err);
                         }
-                      );
+                        emailLate();
+                      });
                     }
                   }
                 }
@@ -2581,10 +2297,7 @@ module.exports = {
                 function emailLate() {
                   // Filter bookings so we only have late payers
                   //Utility.diagnosticEmail(bookings.slice(),"Bookings pre-filter");
-                  bookings = sails.controllers.booking.filterLate(
-                    bookings,
-                    event.grace
-                  );
+                  bookings = sails.controllers.booking.filterLate(bookings, event.grace);
 
                   // Process late payers using async so that the emails do not go simultaneously
                   async.each(
@@ -2594,47 +2307,36 @@ module.exports = {
                       var reminderDeadline = Utility.today();
                       if (booking.lastPaymentReminder) {
                         reminderDeadline.setDate(
-                          booking.lastPaymentReminder.getDate() +
-                            sails.config.events.latePaymentReminderInterval
+                          booking.lastPaymentReminder.getDate() + sails.config.events.latePaymentReminderInterval
                         );
                       }
                       //sails.log.debug(booking.user.name+" reminder deadline "+reminderDeadline);
                       if (reminderDeadline <= today) {
                         if (sails.config.events.reminderTestMode) {
                           sails.log.debug(
-                            "Reminder test mode: " +
-                              Utility.recipient(
-                                booking.user.salutation,
-                                booking.user.firstName,
-                                booking.user.surname
-                              )
+                            'Reminder test mode: ' +
+                              Utility.recipient(booking.user.salutation, booking.user.firstName, booking.user.surname)
                           );
                           next();
                         }
                         sails.log.debug(
-                          "Issuing late payment reminder for " +
+                          'Issuing late payment reminder for ' +
                             event.name +
-                            " for " +
+                            ' for ' +
                             booking.user.name +
-                            (sails.config.events.reminderTestMode
-                              ? " in test mode"
-                              : " ")
+                            (sails.config.events.reminderTestMode ? ' in test mode' : ' ')
                         );
                         // Update the booking so we don't spam them
                         var to = booking.user.email.toLowerCase();
                         var cc = [
-                          event.organiser.email.toLowerCase() || "",
-                          event.organiser2
-                            ? event.organiser2.email.toLowerCase() || ""
-                            : "",
+                          event.organiser.email.toLowerCase() || '',
+                          event.organiser2 ? event.organiser2.email.toLowerCase() || '' : ''
                         ];
                         // Update the booking whether we are in test mode or not
-                        var howMany = !booking.remindersSent
-                          ? 1
-                          : booking.remindersSent + 1;
+                        var howMany = !booking.remindersSent ? 1 : booking.remindersSent + 1;
                         Booking.update(booking.id, {
                           lastPaymentReminder: today,
-                          remindersSent: howMany,
+                          remindersSent: howMany
                         }).exec(function (err, booking) {});
 
                         // In test mode, make sure only the developer gets an email
@@ -2645,7 +2347,7 @@ module.exports = {
                         var dl = new Date(booking.bookingDate);
                         dl.setDate(dl.getDate() + event.grace);
                         dl = dl.toString();
-                        var deadline = dl.substr(0, dl.indexOf(":") - 2);
+                        var deadline = dl.substr(0, dl.indexOf(':') - 2);
 
                         // Send email reminder
                         const latePaymentReminder = {
@@ -2658,7 +2360,7 @@ module.exports = {
                           eventDate: formattedDate,
                           event: event,
                           deadline: deadline,
-                          details: booking,
+                          details: booking
                         };
                         const recipients = {
                           //to: booking.user.email,
@@ -2667,36 +2369,25 @@ module.exports = {
                           bcc:
                             sails.config.events.emailDeveloperOnLatePayment &&
                             sails.config.events.developer &&
-                            sails.config.events.developer !=
-                              event.organiser.email
+                            sails.config.events.developer != event.organiser.email
                               ? sails.config.events.developer
-                              : "",
-                          subject: event.name + " - Late payment reminder",
+                              : '',
+                          subject: event.name + ' - Late payment reminder'
                         };
-                        Email.send(
-                          "latePaymentReminder",
-                          latePaymentReminder,
-                          recipients,
-                          function (err) {
-                            if (err) {
-                              sails.log.error(
-                                "Error occurred sending late payment reminder email to " +
-                                  to
-                              );
-                              sails.log.error(recipients);
-                              // sails.log.error(latePaymentReminder);
-                              sails.log.error(err);
-                            }
+                        Email.send('latePaymentReminder', latePaymentReminder, recipients, function (err) {
+                          if (err) {
+                            sails.log.error('Error occurred sending late payment reminder email to ' + to);
+                            sails.log.error(recipients);
+                            // sails.log.error(latePaymentReminder);
+                            sails.log.error(err);
                           }
-                        );
+                        });
                         sails.log.debug(
-                          "Success: Late payment reminder for " +
+                          'Success: Late payment reminder for ' +
                             event.name +
-                            " for " +
+                            ' for ' +
                             booking.user.name +
-                            (sails.config.events.reminderTestMode
-                              ? " in test mode"
-                              : " ")
+                            (sails.config.events.reminderTestMode ? ' in test mode' : ' ')
                         );
                         next(); // Next booking
                       } else {
@@ -2721,16 +2412,7 @@ module.exports = {
   /**
    * Download bookings
    */
-  download: function (
-    req,
-    res,
-    prefix,
-    eventBookings,
-    addressReqd,
-    voReqd,
-    bookings,
-    user
-  ) {
+  download: function (req, res, prefix, eventBookings, addressReqd, voReqd, bookings, user) {
     if (!bookings) {
       bookings = [];
     }
@@ -2739,11 +2421,7 @@ module.exports = {
 
     // Create basic options
     var options = {};
-    options.filename =
-      prefix.replace(RegExp("/", "g"), "") +
-      "_" +
-      new Date().getTime().toString() +
-      ".csv";
+    options.filename = prefix.replace(RegExp('/', 'g'), '') + '_' + new Date().getTime().toString() + '.csv';
     //options.nested=true;
 
     // Build a custom JSON for the CSV
@@ -2761,14 +2439,14 @@ module.exports = {
           // All the bookings are for the same event so we only need to work out the labels
           // once
           if (!label) {
-            if (!booking.event.order || booking.event.order == "C") {
-              label = "lodge";
-              labelNo = "lodgeNo";
+            if (!booking.event.order || booking.event.order == 'C') {
+              label = 'lodge';
+              labelNo = 'lodgeNo';
             } else {
               _.forEach(sails.config.events.orders, function (cfg) {
                 if (booking.event.order == cfg.code) {
-                  label = cfg.label ? cfg.label.toLowerCase() : "lodge";
-                  labelNo = label + "No";
+                  label = cfg.label ? cfg.label.toLowerCase() : 'lodge';
+                  labelNo = label + 'No';
                   return false;
                 }
               });
@@ -2777,13 +2455,12 @@ module.exports = {
         } else {
           // We cannot know what the order might be from booking to booking
           // so use a generic label
-          label = "order";
-          labelNo = "orderNo";
+          label = 'order';
+          labelNo = 'orderNo';
         }
         var row = {};
         // Is there a balance due?
-        booking.balance =
-          Math.round((booking.cost - booking.amountPaid) * 100) / 100;
+        booking.balance = Math.round((booking.cost - booking.amountPaid) * 100) / 100;
         var amountPaid;
         // Divide amount paid between places UNLESS there is a balance
         // due - in which case that is nonsensical
@@ -2792,40 +2469,40 @@ module.exports = {
         } else {
           amountPaid = booking.amountPaid / booking.places;
         }
-        var mop = booking.mop || "";
+        var mop = booking.mop || '';
         //if (!user) {
         //    row.seq=parseInt(booking.ref.replace(prefix,""));
         //}
         row.count = null;
-        row.tableNo = booking.tableNo || "";
-        row.ref = booking.ref || "";
-        row.surname = booking.user?.surname || "";
-        row.firstName = booking.user?.firstName || "";
-        row.displayName = booking.user?.salutation + " " + booking.user?.name;
+        row.tableNo = booking.tableNo || '';
+        row.ref = booking.ref || '';
+        row.surname = booking.user?.surname || '';
+        row.firstName = booking.user?.firstName || '';
+        row.displayName = booking.user?.salutation + ' ' + booking.user?.name;
         if (booking.event.regReqd) {
-          row.carReg = booking.carReg || "";
+          row.carReg = booking.carReg || '';
         }
         if (sails.config.events.userCategories.length > 0) {
-          row.category = booking.user?.category || "";
+          row.category = booking.user?.category || '';
         }
         if (addressReqd) {
-          row.address1 = booking.user?.address1 || "";
-          row.address2 = booking.user?.address2 || "";
-          row.address3 = booking.user?.address3 || "";
-          row.address4 = booking.user?.address4 || "";
-          row.postcode = booking.user?.postcode || "";
+          row.address1 = booking.user?.address1 || '';
+          row.address2 = booking.user?.address2 || '';
+          row.address3 = booking.user?.address3 || '';
+          row.address4 = booking.user?.address4 || '';
+          row.postcode = booking.user?.postcode || '';
         }
-        row.email = booking.user?.email || "";
-        row.phone = booking.user?.phone ? "Tel: " + booking.user?.phone : ""; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
-        row.dietary = booking.attendingOnly ? "" : booking.dietary || "";
-        row.menuChoice = booking.attendingOnly ? "" : booking.menuChoice || "";
-        row.info = booking.info || "";
+        row.email = booking.user?.email || '';
+        row.phone = booking.user?.phone ? 'Tel: ' + booking.user?.phone : ''; // Using the "Tel:" string stops excel turning it into a meaningless numeric column
+        row.dietary = booking.attendingOnly ? '' : booking.dietary || '';
+        row.menuChoice = booking.attendingOnly ? '' : booking.menuChoice || '';
+        row.info = booking.info || '';
         row.places = booking.places;
-        row.attendingOnly = booking.attendingOnly || "";
-        row.paid = booking.paid || "";
-        row.cost = booking.cost || "";
-        row.amountPaid = amountPaid || "";
-        row.balance = booking.balance || "";
+        row.attendingOnly = booking.attendingOnly || '';
+        row.paid = booking.paid || '';
+        row.cost = booking.cost || '';
+        row.amountPaid = amountPaid || '';
+        row.balance = booking.balance || '';
         row.mop = mop;
         row.creationDate = booking.bookingDate;
         if (voReqd && booking.user?.isVO) {
@@ -2834,26 +2511,26 @@ module.exports = {
           row.voAvcCentre = booking.user?.voCentre;
           row.voAvcAcArea = booking.user?.voArea;
         } else {
-          row.voLodge = "";
-          row.voLodgeNo = "";
-          row.voAvcCentre = "";
-          row.voAvcAcArea = "";
+          row.voLodge = '';
+          row.voLodgeNo = '';
+          row.voAvcCentre = '';
+          row.voAvcAcArea = '';
         }
         //row.createdAt=booking.createdAt;
 
         // Craft or other order?
-        if (!booking.event.order || booking.event.order == "C") {
+        if (!booking.event.order || booking.event.order == 'C') {
           // Craft
-          row.salutation = booking.user?.salutation || "";
-          row.rank = booking.user?.rank || "";
-          row[label] = booking.user?.lodge || "";
-          row[labelNo] = booking.user?.lodgeNo || "";
+          row.salutation = booking.user?.salutation || '';
+          row.rank = booking.user?.rank || '';
+          row[label] = booking.user?.lodge || '';
+          row[labelNo] = booking.user?.lodgeNo || '';
           if (sails.config.events.lodgeYear) {
-            var ly = sails.config.events.lodgeYearDownloadLabel || "lodgeYear";
-            row[ly] = booking.user?.lodgeYear || "";
+            var ly = sails.config.events.lodgeYearDownloadLabel || 'lodgeYear';
+            row[ly] = booking.user?.lodgeYear || '';
           }
-          row.centre = booking.user?.centre || "";
-          row.area = booking.user?.area || "";
+          row.centre = booking.user?.centre || '';
+          row.area = booking.user?.area || '';
           pushRow(booking, amountPaid, mop, row);
           // Next booking
           next();
@@ -2863,15 +2540,15 @@ module.exports = {
             function (err, orders) {
               _.forEach(orders, function (order) {
                 if (booking.event.order == order.code) {
-                  row.salutation = order.salutation || "";
-                  row.rank = order.rank || "";
-                  row[label] = order.name || "";
-                  row[labelNo] = order.number || "";
+                  row.salutation = order.salutation || '';
+                  row.rank = order.rank || '';
+                  row[label] = order.name || '';
+                  row[labelNo] = order.number || '';
                   if (sails.config.events.lodgeYear) {
-                    row.lodgeYear = order.year || "";
+                    row.lodgeYear = order.year || '';
                   }
-                  row.centre = order.centre || "";
-                  row.area = order.area || "";
+                  row.centre = order.centre || '';
+                  row.area = order.area || '';
                 }
                 return false;
               });
@@ -2883,7 +2560,7 @@ module.exports = {
               booking: booking,
               amountPaid: amountPaid,
               mop: mop,
-              row: row,
+              row: row
             }
           );
 
@@ -2929,31 +2606,30 @@ module.exports = {
         //}
         count++;
         row.count = count;
-        row.tableNo = booking.tableNo || "";
-        row.ref = booking.ref || "";
-        row.salutation = addition.salutation || "";
-        row.surname = addition.surname || "";
-        row.firstName = addition.firstName || "";
-        row.displayName =
-          row.salutation + " " + row.firstName + " " + row.surname;
+        row.tableNo = booking.tableNo || '';
+        row.ref = booking.ref || '';
+        row.salutation = addition.salutation || '';
+        row.surname = addition.surname || '';
+        row.firstName = addition.firstName || '';
+        row.displayName = row.salutation + ' ' + row.firstName + ' ' + row.surname;
         if (booking.event.regReqd) {
-          row.carReg = addition.carReg || "";
+          row.carReg = addition.carReg || '';
         }
-        row.rank = addition.rank || "";
-        row[label] = addition.lodge || "";
-        row[labelNo] = addition.lodgeNo || "";
+        row.rank = addition.rank || '';
+        row[label] = addition.lodge || '';
+        row[labelNo] = addition.lodgeNo || '';
         if (sails.config.events.lodgeYear) {
-          row.lodgeYear = addition.year || "";
+          row.lodgeYear = addition.year || '';
         }
-        row.centre = addition.centre || booking.user.centre || "";
-        row.area = addition.area || booking.user.area || "";
-        row.dietary = booking.attendingOnly ? "" : addition.dietary || "";
-        row.menuChoice = booking.attendingOnly ? "" : addition.menuChoice || "";
-        row.attendingOnly = booking.attendingOnly || ""; // This is at the booking level - not individual level
-        row.paid = booking.paid || "";
-        row.amountPaid = amountPaid || "";
-        row.balance = "";
-        row.mop = mop || "";
+        row.centre = addition.centre || booking.user.centre || '';
+        row.area = addition.area || booking.user.area || '';
+        row.dietary = booking.attendingOnly ? '' : addition.dietary || '';
+        row.menuChoice = booking.attendingOnly ? '' : addition.menuChoice || '';
+        row.attendingOnly = booking.attendingOnly || ''; // This is at the booking level - not individual level
+        row.paid = booking.paid || '';
+        row.amountPaid = amountPaid || '';
+        row.balance = '';
+        row.mop = mop || '';
         // If the createdAt date is later than the booking date for the main booking, use that for the booking date
         //var ca=new Date(addition.createdAt.getFullYear(), addition.createdAt.getMonth(), addition.createdAt.getDate());
         //var ba=new Date(booking.bookingDate.getFullYear(), booking.bookingDate.getMonth(), booking.bookingDate.getDate());
@@ -2976,24 +2652,21 @@ module.exports = {
     var options = {};
 
     // Get the event
-    Event.findOne(req.param("eventid")).exec(function (err, event) {
+    Event.findOne(req.param('eventid')).exec(function (err, event) {
       if (event) {
         // Diagnostic email required?
-        if (
-          sails.config.events.emailDeveloperOnDownload &&
-          sails.config.events.developer
-        ) {
+        if (sails.config.events.emailDeveloperOnDownload && sails.config.events.developer) {
           Email.send(
-            "downloadAlert",
+            'downloadAlert',
             {
               user: req.user,
               event: event,
-              what: "the lodge room",
+              what: 'the lodge room'
             },
             {
-              from: event.name + " <" + sails.config.events.email + ">",
+              from: event.name + ' <' + sails.config.events.email + '>',
               to: sails.config.events.developer,
-              subject: "Download alert",
+              subject: 'Download alert'
             },
             function (err) {
               Utility.emailError(err);
@@ -3002,25 +2675,21 @@ module.exports = {
         }
 
         var seq = 0;
-        options.filename =
-          event.name.replace(RegExp("/", "g"), "") +
-          "_lr_" +
-          new Date().getTime().toString() +
-          ".csv";
+        options.filename = event.name.replace(RegExp('/', 'g'), '') + '_lr_' + new Date().getTime().toString() + '.csv';
         LodgeRoom.find({ event: event.id })
-          .sort("createdAt")
-          .populate("booking")
+          .sort('createdAt')
+          .populate('booking')
           .exec(function (err, data) {
             _.forEach(data, function (d, i) {
               seq++;
               d.seq = seq;
               // Add the sequence number and remove confusing extras
-              d.ref = "";
+              d.ref = '';
               if (d.booking) {
                 d.ref = d.booking.ref;
               }
-              d.rank = d.rank || "";
-              d.status = d.cancelled ? "Cancelled" : "";
+              d.rank = d.rank || '';
+              d.status = d.cancelled ? 'Cancelled' : '';
               delete d.id;
               delete d.event;
               delete d.booking;
@@ -3032,5 +2701,5 @@ module.exports = {
         Utility.sendCsv(req, res, [], options);
       }
     });
-  },
+  }
 };

@@ -3,44 +3,40 @@
  *
  */
 var LodgeRoom = {
-  
   schema: true,
-  
+
   attributes: {
-         
-    event:{
-        model:'event'
+    event: {
+      model: 'event'
     },
-    
-    booking:{
-        model:'booking'
-    },   
-    
+
+    booking: {
+      model: 'booking'
+    },
+
     // Salutation
     salutation: {
       type: 'string'
     },
-    
+
     // Preferred name
     surname: {
       type: 'string'
     },
-    
+
     firstName: {
       type: 'string'
-    },   
-   
+    },
+
     // The user's rank
     rank: {
       type: 'string'
     },
-    
-    cancelled: {
-        type: 'boolean',
-    }
 
-  },
- 
+    cancelled: {
+      type: 'boolean'
+    }
+  }
 };
 
 module.exports = LodgeRoom;

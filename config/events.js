@@ -9,17 +9,20 @@
  */
 
 module.exports.events = {
-
   // Allow login via social media?
   socialMedia: true,
 
   // Default skin
-  skin: "skins/defaultskin.css",
+  skin: 'skins/defaultskin.css',
 
-  allowAppUpdate: ((typeof process.env.ALLOW_APP_UPDATE === 'undefined') || (process.env.ALLOW_APP_UPDATE && process.env.ALLOW_APP_UPDATE === '1')) ? true : false,
+  allowAppUpdate:
+    typeof process.env.ALLOW_APP_UPDATE === 'undefined' ||
+    (process.env.ALLOW_APP_UPDATE && process.env.ALLOW_APP_UPDATE === '1')
+      ? true
+      : false,
 
   // Enter an email address if you want developer(s) to get bcc's on everything
-  developer: process.env.DEVELOPER || "kevin@kpturner.co.uk",
+  developer: process.env.DEVELOPER || 'kevin@kpturner.co.uk',
 
   // Email developer when a download is activated
   emailDeveloperOnDownload: false,
@@ -42,7 +45,7 @@ module.exports.events = {
   // Email developer on signup
   emailDeveloperOnSignup: false,
 
-  smtpApi: "sendinblue",
+  smtpApi: 'sendinblue',
 
   mailgun: {
     apiKey: '',
@@ -61,7 +64,7 @@ module.exports.events = {
   maintenance: false,
 
   // Timezone
-  timezone: "Europe/London",
+  timezone: 'Europe/London',
 
   // Expire session after this many milliseconds
   sessionExpiry: 30 * 60 * 1000,
@@ -70,25 +73,25 @@ module.exports.events = {
   admins: ['kturner', 'kevin@kpturner.co.uk'],
 
   // Browser tab title
-  title: "Provincial Events",
+  title: 'Provincial Events',
 
   // Homepage heading
-  heading: "Provincial Events",
+  heading: 'Provincial Events',
 
   // Email address
-  email: "noreply@squareevents.org",
+  email: 'noreply@squareevents.org',
 
   // Logo
-  logo: "/images/pgl/crest.png",
+  logo: '/images/pgl/crest.png',
 
   // Logo link
-  logoLink: "http://www.hiowmasons.org/",
+  logoLink: 'http://www.hiowmasons.org/',
 
   // Quick start guide
-  quickStart: "/doc/quick_start.pdf",
+  quickStart: '/doc/quick_start.pdf',
 
   // Logo tip
-  logoTip: "Provincial website",
+  logoTip: 'Provincial website',
 
   // Can multiple bookings be made per user (useful when testing) or should the system present the existing booking if applicable?
   multipleBookings: false,
@@ -101,7 +104,7 @@ module.exports.events = {
 
   // Orders supported by this instance (e.g. {"code":"C","desc":"Craft"},{"code":"RA","desc":"Royal Arch"} )
   // Craft is the default and if no others are added then "Order" is not something that will be prompted for anywhere
-  orders: [{ "code": "C", "desc": "Craft" }],
+  orders: [{ code: 'C', desc: 'Craft' }],
 
   // User categories
   userCategories: [],
@@ -131,13 +134,13 @@ module.exports.events = {
   permanentDiningList: false,
 
   // Domain (for signup email confirmations)
-  domain: "http://squareevents.org",
+  domain: 'http://squareevents.org',
 
   // Late payment interval
-  latePaymentDaemon: (process.env.LATEPAYMENTDAEMON == "0") ? false : true,
+  latePaymentDaemon: process.env.LATEPAYMENTDAEMON == '0' ? false : true,
 
   // Reminder test mode
-  reminderTestMode: (process.env.REMINDERTESTMODE == '1') ? true : false,
+  reminderTestMode: process.env.REMINDERTESTMODE == '1' ? true : false,
 
   // Late payment interval
   latePaymentInterval: process.env.LATEPAYMENTINTERVAL || 86400000,
@@ -150,10 +153,22 @@ module.exports.events = {
 
   // Domains requiring SPAM warning
   spamDomains: {
-    "gmail.com": { video: "http://screencast.com/t/goyOqiGM", additionalinfo: "In addition, ensure that /%sender%/ is in your list of contacts." },
-    "googlemail.com": { video: "http://screencast.com/t/goyOqiGM", additionalinfo: "In addition, ensure that /%sender%/ is in your list of contacts." },
-    "hotmail.com": { additionalinfo: "Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address." },
-    "hotmail.co.uk": { additionalinfo: "Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address." },
+    'gmail.com': {
+      video: 'http://screencast.com/t/goyOqiGM',
+      additionalinfo: 'In addition, ensure that /%sender%/ is in your list of contacts.'
+    },
+    'googlemail.com': {
+      video: 'http://screencast.com/t/goyOqiGM',
+      additionalinfo: 'In addition, ensure that /%sender%/ is in your list of contacts.'
+    },
+    'hotmail.com': {
+      additionalinfo:
+        'Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address.'
+    },
+    'hotmail.co.uk': {
+      additionalinfo:
+        'Unfortunately HOTMAIL may block emails from this application. Please consider using an alternative address.'
+    }
   },
 
   // DKIM details to help prevent our emails being flagged as spam
@@ -171,16 +186,15 @@ module.exports.events = {
         {
           effective: '20200101',
           fee: 0.014,
-          fixedFee: 0.20
+          fixedFee: 0.2
         },
         {
           effective: '20230410',
           fee: 0.015,
-          fixedFee: 0.20
+          fixedFee: 0.2
         }
       ],
       instances: []
     }
   }
-
 };

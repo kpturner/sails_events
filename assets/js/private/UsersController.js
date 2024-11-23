@@ -1,20 +1,24 @@
-angular.module('EventsModule').controller('UsersController', ['scroller', '$scope', '$http', 'toastr', function(scroller, $scope, $http, toastr){
+angular.module('EventsModule').controller('UsersController', [
+  'scroller',
+  '$scope',
+  '$http',
+  'toastr',
+  function (scroller, $scope, $http, toastr) {
+    // Let's trap the scroll to bottom on the body and
+    // increment the page when they get there (it will load more data if need be)
+    var scrollHandler = $.proxy(scroller.scroll, {
+      scope: $scope,
+      dataProperty: 'users',
+      queryString: null,
+      urn: '/allusers/',
+      augmentationFunction: 'augment'
+    });
+    $(document).ready(function () {
+      //$(window).scroll($scope.scroll);
+      $(window).scroll(scrollHandler);
+    });
 
-		// Let's trap the scroll to bottom on the body and
-		// increment the page when they get there (it will load more data if need be)		
-		var scrollHandler=$.proxy(scroller.scroll,{
-				scope: 	$scope,
-				dataProperty: "users",
-				queryString: null,
-				urn: 	"/allusers/",
-				augmentationFunction: "augment"
-			})
-		$(document).ready(function(){			
-			//$(window).scroll($scope.scroll);			
-			$(window).scroll(scrollHandler); 
-		});
-		
-		/*
+    /*
 		 *  Now define in EventsModule.js 
 		$scope.scroll=function(){ 
 			if(!$scope.scrollDisabled) {
@@ -45,73 +49,72 @@ angular.module('EventsModule').controller('UsersController', ['scroller', '$scop
 			}			
 		}
 		*/
-		
-		// Initialise "user" in the scope with the data set in the view script 
-		$scope.user=SAILS_LOCALS.user;
-		
-		// Animate a spinner while we load the users
-		$scope.loading=true;
-		 
-		$scope.filterForm = {
-			loading: false,
-			paging: false,	
-			criteria:SAILS_LOCALS.criteria,						
-		}
-		$scope.initialLimit=SAILS_LOCALS.criteria.limit;
-		$scope.initialPage=SAILS_LOCALS.criteria.page;
-		$scope.scrollPage=1;
-		// If paging is not visible (i.e. the user cannot do it manually because of screen size)
-		// make sure that page is set to 1 regardless of what was stored in the session. This 
-		// means that if the user has partially scrolled with dynamic update and then clicks
-		// on this screen again they go back to the beginning
-		if (!$("#page").is(":visible")) {
-			$scope.filterForm.criteria.page=1;
-		}
 
-		// Get the users
-		$http.get('/allusers/'+encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
-			.success(function(data, status) {
-				$scope.loading=false;
-				if (typeof data == 'object') {
-					$scope.users = data; 
-                	$scope.augment($scope.users);
-				}
-				else {
-					window.location = '/';
-				}
-			}).
-			error(function(data, status, headers, config) {
-		   		// called asynchronously if an error occurs
-		    	// or server returns response with an error status.
-				window.location = '/';
-		  	}
-		);
-		  
-		/**
-		 * Augment data 
-		 **/  
-		$scope.augment=function(data){
-			// Traverse the events and calculate an appropriate width
-			// for each event name
-			angular.forEach(data,function(user){
-				// Calculate an appropriate width for the user name
-				user.nameClass="user-name-100";
-				if (user.gravatarUrl) {
-					user.showPicture=true;
-					user.nameClass="user-name-65";                            
-				}                          
-			})				
-		};
+    // Initialise "user" in the scope with the data set in the view script
+    $scope.user = SAILS_LOCALS.user;
 
-		/**
-		 * Filter users
-		 */  
-		$scope.filterUsers = function(paging){
-			$scope.loading=true;
-			scroller.filter($scope,"users","/allusers/","","augment",paging,false,function(sailsResponse){				
-				$scope.loading=false;	
-			});
-			/*
+    // Animate a spinner while we load the users
+    $scope.loading = true;
+
+    $scope.filterForm = {
+      loading: false,
+      paging: false,
+      criteria: SAILS_LOCALS.criteria
+    };
+    $scope.initialLimit = SAILS_LOCALS.criteria.limit;
+    $scope.initialPage = SAILS_LOCALS.criteria.page;
+    $scope.scrollPage = 1;
+    // If paging is not visible (i.e. the user cannot do it manually because of screen size)
+    // make sure that page is set to 1 regardless of what was stored in the session. This
+    // means that if the user has partially scrolled with dynamic update and then clicks
+    // on this screen again they go back to the beginning
+    if (!$('#page').is(':visible')) {
+      $scope.filterForm.criteria.page = 1;
+    }
+
+    // Get the users
+    $http
+      .get('/allusers/' + encodeURIComponent(JSON.stringify($scope.filterForm.criteria)))
+      .success(function (data, status) {
+        $scope.loading = false;
+        if (typeof data == 'object') {
+          $scope.users = data;
+          $scope.augment($scope.users);
+        } else {
+          window.location = '/';
+        }
+      })
+      .error(function (data, status, headers, config) {
+        // called asynchronously if an error occurs
+        // or server returns response with an error status.
+        window.location = '/';
+      });
+
+    /**
+     * Augment data
+     **/
+    $scope.augment = function (data) {
+      // Traverse the events and calculate an appropriate width
+      // for each event name
+      angular.forEach(data, function (user) {
+        // Calculate an appropriate width for the user name
+        user.nameClass = 'user-name-100';
+        if (user.gravatarUrl) {
+          user.showPicture = true;
+          user.nameClass = 'user-name-65';
+        }
+      });
+    };
+
+    /**
+     * Filter users
+     */
+    $scope.filterUsers = function (paging) {
+      $scope.loading = true;
+      scroller.filter($scope, 'users', '/allusers/', '', 'augment', paging, false, function (sailsResponse) {
+        $scope.loading = false;
+      });
+      /*
 			if (paging) {
 				$scope.filterForm.paging=true;
 				$scope.initialLimit=$scope.filterForm.criteria.limit;			
@@ -158,13 +161,13 @@ angular.module('EventsModule').controller('UsersController', ['scroller', '$scop
 					$scope.loading=false;									
 				})
 			*/
-		}
+    };
 
-		/**
-		 * Navigate to editor
-		 */
-		$scope.navigate = function(action,userId) {
-			$document.location("/user/"+action+"?userid="+userId)
-		}
-
-}])
+    /**
+     * Navigate to editor
+     */
+    $scope.navigate = function (action, userId) {
+      $document.location('/user/' + action + '?userid=' + userId);
+    };
+  }
+]);

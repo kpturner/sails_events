@@ -1,8 +1,8 @@
-angular.module("EventsModule").controller("BookingsController", [
-  "scroller",
-  "$scope",
-  "$http",
-  "toastr",
+angular.module('EventsModule').controller('BookingsController', [
+  'scroller',
+  '$scope',
+  '$http',
+  'toastr',
   function (scroller, $scope, $http, toastr) {
     // Initialise "user" in the scope with the data set in the view script
     $scope.user = SAILS_LOCALS.user;
@@ -11,12 +11,12 @@ angular.module("EventsModule").controller("BookingsController", [
     $scope.newBooking = false;
     $scope.addingPD = false;
     // Calculate all addresses
-    $scope.allAddresses = "";
+    $scope.allAddresses = '';
 
     $scope.filterForm = {
       loading: false,
       paging: false,
-      criteria: SAILS_LOCALS.criteria,
+      criteria: SAILS_LOCALS.criteria
     };
     $scope.initialLimit = SAILS_LOCALS.criteria.limit;
     $scope.initialPage = SAILS_LOCALS.criteria.page;
@@ -31,7 +31,7 @@ angular.module("EventsModule").controller("BookingsController", [
     $scope.viewOnly = SAILS_LOCALS.viewOnly;
     // For view only we only want to see the name
     if ($scope.viewOnly) {
-      $scope.bookingCardHeight = "60px";
+      $scope.bookingCardHeight = '60px';
       $scope.filterForm.criteria.sortByName = true;
     }
     $scope.scrollDisabled =
@@ -43,7 +43,7 @@ angular.module("EventsModule").controller("BookingsController", [
     // make sure that page is set to 1 regardless of what was stored in the session. This
     // means that if the user has partially scrolled with dynamic update and then clicks
     // on this screen again they go back to the beginning
-    if (!$("#page").is(":visible")) {
+    if (!$('#page').is(':visible')) {
       $scope.filterForm.criteria.page = 1;
     }
 
@@ -53,58 +53,49 @@ angular.module("EventsModule").controller("BookingsController", [
       if ($scope.viewOnly) {
         if (
           ($scope.event.dc && $scope.user.email == $scope.event.dc.email) ||
-          ($scope.event.organiser &&
-            $scope.user.email == $scope.event.organiser.email) ||
-          ($scope.event.organiser2 &&
-            $scope.user.email == $scope.event.organiser2.email)
+          ($scope.event.organiser && $scope.user.email == $scope.event.organiser.email) ||
+          ($scope.event.organiser2 && $scope.user.email == $scope.event.organiser2.email)
         ) {
           $scope.viewOnly = false;
         }
       }
     }
     $scope.permanentDiningList = SAILS_LOCALS.permanentDiningList;
-    $scope.allAddresses = "";
-    $scope.event.bookInText = $scope.event.regInterest
-      ? "register interest"
-      : "book in";
+    $scope.allAddresses = '';
+    $scope.event.bookInText = $scope.event.regInterest ? 'register interest' : 'book in';
 
     // Get the bookings
     if (SAILS_LOCALS.myBookings) {
-      $scope.urn = "/allmybookings/";
-      $scope.queryString = "mybookings=1";
+      $scope.urn = '/allmybookings/';
+      $scope.queryString = 'mybookings=1';
     } else if (SAILS_LOCALS.eventBookings) {
-      $scope.urn = "/alleventbookings/";
-      $scope.queryString = "eventid=" + $scope.event.id;
+      $scope.urn = '/alleventbookings/';
+      $scope.queryString = 'eventid=' + $scope.event.id;
     } else if (SAILS_LOCALS.userBookings) {
-      $scope.urn = "/alluserbookings/";
-      $scope.queryString = "userid=" + $scope.selectedUser.id;
+      $scope.urn = '/alluserbookings/';
+      $scope.queryString = 'userid=' + $scope.selectedUser.id;
     }
-    var uri =
-      $scope.urn +
-      encodeURIComponent(JSON.stringify($scope.filterForm.criteria)) +
-      "?" +
-      $scope.queryString;
+    var uri = $scope.urn + encodeURIComponent(JSON.stringify($scope.filterForm.criteria)) + '?' + $scope.queryString;
     // Let's trap the scroll to bottom on the body and
     // increment the page when they get there (it will load more data if need be)
     var scrollHandler = $.proxy(scroller.scroll, {
       scope: $scope,
-      dataProperty: "bookings",
+      dataProperty: 'bookings',
       urn: $scope.urn,
       queryString: $scope.queryString,
-      augmentationFunction: "augment",
+      augmentationFunction: 'augment'
     });
     $(window).scroll(scrollHandler);
     $scope.loading = true;
-    $scope.downloadUrl = uri + "&download=1";
+    $scope.downloadUrl = uri + '&download=1';
     $http
       .get(uri)
       .success(function (data, status) {
         $scope.hideCapacity = false;
-        if (typeof data == "object") {
+        if (typeof data == 'object') {
           if (data.bookings) {
             $scope.bookings = data.bookings;
-            $scope.hideCapacity =
-              data.capacity == null || data.capacity == undefined;
+            $scope.hideCapacity = data.capacity == null || data.capacity == undefined;
             $scope.capacity = data.capacity;
           } else {
             $scope.bookings = data;
@@ -112,13 +103,13 @@ angular.module("EventsModule").controller("BookingsController", [
           }
           $scope.augment($scope.bookings);
         } else {
-          window.location = "/";
+          window.location = '/';
         }
       })
       .error(function (data, status, headers, config) {
         // called asynchronously if an error occurs
         // or server returns response with an error status.
-        window.location = "/";
+        window.location = '/';
       })
       .finally(function () {
         $scope.loading = false;
@@ -133,16 +124,13 @@ angular.module("EventsModule").controller("BookingsController", [
       angular.forEach(data, function (booking) {
         // Calculate an appropriate width for the booking name
         if (booking.user) {
-          booking.user.nameClass = "user-name-100";
-          if (
-            booking.user.gravatarUrl &&
-            booking.user.gravatarUrl.indexOf("www.gravatar.com") < 0
-          ) {
+          booking.user.nameClass = 'user-name-100';
+          if (booking.user.gravatarUrl && booking.user.gravatarUrl.indexOf('www.gravatar.com') < 0) {
             booking.user.showPicture = true;
-            booking.user.nameClass = "user-name-65";
+            booking.user.nameClass = 'user-name-65';
           }
           if (booking.user.email) {
-            $scope.allAddresses += booking.user.email + ";";
+            $scope.allAddresses += booking.user.email + ';';
           }
         }
       });
@@ -155,19 +143,17 @@ angular.module("EventsModule").controller("BookingsController", [
       $scope.loading = true;
       scroller.filter(
         $scope,
-        "bookings",
+        'bookings',
         $scope.urn,
         $scope.queryString,
-        "augment",
+        'augment',
         paging,
         false,
         function (sailsResponse) {
           $scope.loading = false;
           $scope.hideCapacity = false;
           if (sailsResponse.data.bookings) {
-            $scope.hideCapacity =
-              sailsResponse.data.capacity == null ||
-              sailsResponse.data.capacity == undefined;
+            $scope.hideCapacity = sailsResponse.data.capacity == null || sailsResponse.data.capacity == undefined;
             $scope.capacity = sailsResponse.data.capacity;
           } else {
             $scope.hideCapacity = true;
@@ -233,14 +219,10 @@ angular.module("EventsModule").controller("BookingsController", [
     $scope.createNewBooking = function (eventId) {
       $scope.newBooking = true;
       if ($scope.userBookings) {
-        window.location =
-          "/booking/create/?userid=" +
-          $scope.selectedUser.id +
-          "&userbookings=true";
+        window.location = '/booking/create/?userid=' + $scope.selectedUser.id + '&userbookings=true';
       } else {
         var eventId = eventId ? eventId : $scope.event.id;
-        window.location =
-          "/booking/create/?eventid=" + eventId + "&eventbookings=true";
+        window.location = '/booking/create/?eventid=' + eventId + '&eventbookings=true';
       }
     };
 
@@ -250,15 +232,15 @@ angular.module("EventsModule").controller("BookingsController", [
     $scope.addPD = function (eventId) {
       $scope.addingPD = true;
       $http
-        .post("/addpd/" + $scope.event.id, {
-          _csrf: SAILS_LOCALS._csrf,
+        .post('/addpd/' + $scope.event.id, {
+          _csrf: SAILS_LOCALS._csrf
         })
         .then(function onSuccess(sailsResponse) {
           $scope.filterBookings();
         })
         .catch(function onError(sailsResponse) {
           // Handle known error type(s).
-          toastr.error(sailsResponse.data, "Error");
+          toastr.error(sailsResponse.data, 'Error');
         })
         .finally(function eitherWay() {
           $scope.addingPD = false;
@@ -271,22 +253,19 @@ angular.module("EventsModule").controller("BookingsController", [
     $scope.filterChanged = function () {
       if (SAILS_LOCALS.myBookings) {
         $scope.downloadUrl =
-          "/allmybookings/" +
+          '/allmybookings/' +
           encodeURIComponent(JSON.stringify($scope.filterForm.criteria)) +
-          "?mybookings=1&download=1";
+          '?mybookings=1&download=1';
       } else {
         $scope.downloadUrl =
-          "/alleventbookings/" +
+          '/alleventbookings/' +
           encodeURIComponent(JSON.stringify($scope.filterForm.criteria)) +
-          "?eventid=" +
+          '?eventid=' +
           $scope.event.id +
-          "&download=1";
+          '&download=1';
       }
       // If "sort by name" disable scroller
-      if (
-        $scope.filterForm.criteria.sortByName ||
-        $scope.filterForm.criteria.incNonDiners
-      ) {
+      if ($scope.filterForm.criteria.sortByName || $scope.filterForm.criteria.incNonDiners) {
         $scope.scrollDisabled = true;
       } else {
         $scope.scrollDisabled = false;
@@ -303,7 +282,7 @@ angular.module("EventsModule").controller("BookingsController", [
      * Download lodge room
      */
     $scope.downloadLodgeRoom = function () {
-      window.location = "/lodgeroom?eventid=" + $scope.event.id;
+      window.location = '/lodgeroom?eventid=' + $scope.event.id;
     };
-  },
+  }
 ]);

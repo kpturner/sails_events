@@ -3,15 +3,13 @@
  *
  */
 var Order = {
-  
   schema: true,
-  
+
   attributes: {
-    
-    user:{
-        model:'user'
+    user: {
+      model: 'user'
     },
-    
+
     // Order code (from sails.config.events.orders)
     code: {
       type: 'string'
@@ -20,22 +18,22 @@ var Order = {
     // Salutation
     salutation: {
       type: 'string'
-    },    
-    
+    },
+
     // The order entity name
     name: {
       type: 'string'
     },
-    
+
     // The order entity number
     number: {
       type: 'string'
     },
-    
+
     year: {
       type: 'string'
     },
-    
+
     // Centre
     centre: {
       type: 'string'
@@ -45,16 +43,12 @@ var Order = {
     area: {
       type: 'string'
     },
-    
+
     // Rank
     rank: {
       type: 'string'
-    },
-   
-   
-
-  },
- 
+    }
+  }
 };
 
 module.exports = Order;

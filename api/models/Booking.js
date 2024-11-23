@@ -12,114 +12,114 @@ module.exports = {
   attributes: {
     // Who made the booking
     user: {
-      model: "User",
-      required: true,
+      model: 'User',
+      required: true
     },
 
     // Which event?
     event: {
-      model: "Event",
-      required: true,
+      model: 'Event',
+      required: true
     },
 
     // Menu choice
     menuChoice: {
-      type: "integer",
+      type: 'integer'
     },
 
     // Booking reference
     ref: {
-      type: "string",
+      type: 'string'
     },
 
     // Attending but not dining
     attendingOnly: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     // The user's dietary requirements
     dietary: {
-      type: "string",
+      type: 'string'
     },
 
     // Places booked
     places: {
-      type: "integer",
+      type: 'integer'
     },
 
     // Total cost
     cost: {
-      type: "float",
-      size: 15.2, // Decimal
+      type: 'float',
+      size: 15.2 // Decimal
     },
 
     amountPaid: {
-      type: "float",
-      size: 15.2, // Decimal
+      type: 'float',
+      size: 15.2 // Decimal
     },
 
     paid: {
-      type: "boolean",
+      type: 'boolean'
     },
 
     mop: {
-      type: "string",
+      type: 'string'
     },
 
     // Additional info
     info: {
-      type: "text",
+      type: 'text'
     },
 
     // Additional linked bookings
     additions: {
-      collection: "LinkedBooking",
-      via: "booking",
+      collection: 'LinkedBooking',
+      via: 'booking'
     },
 
     // Booking date
     bookingDate: {
-      type: "date",
+      type: 'date'
     },
 
     // Last payment reminder
     lastPaymentReminder: {
-      type: "date",
+      type: 'date'
     },
 
     // The user's dietary requirements
     carReg: {
-      type: "string",
+      type: 'string'
     },
 
     // Reminders sent (total)
     remindersSent: {
-      type: "integer",
+      type: 'integer'
     },
 
     // Table no
     tableNo: {
-      type: "integer",
+      type: 'integer'
     },
 
     // Created by
     createdBy: {
-      model: "user",
+      model: 'user'
     },
 
     // Online payment session id
     paymentSessionId: {
-      type: "string",
+      type: 'string'
     },
 
     // Online payment reference(s)
     paymentReference: {
-      type: "text",
+      type: 'text'
     },
 
     // Online refund reference(s)
     refundReference: {
-      type: "text",
-    },
-  },
+      type: 'text'
+    }
+  }
 };

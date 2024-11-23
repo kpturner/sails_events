@@ -4,16 +4,14 @@
  *
  */
 var LinkedBooking = {
-
   schema: true,
 
   attributes: {
-
-    booking:{
-        model:'booking'
+    booking: {
+      model: 'booking'
     },
 
-    seq:{
+    seq: {
       type: 'integer'
     },
 
@@ -75,9 +73,7 @@ var LinkedBooking = {
     menuChoice: {
       type: 'integer'
     }
-
-  },
-
+  }
 };
 
 module.exports = LinkedBooking;

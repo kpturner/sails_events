@@ -4,17 +4,19 @@ var User = {
 
   attributes: {
     // Username
-    username  : { 
-      type: 'string', 
-      unique: true 
+    username: {
+      type: 'string',
+      unique: true
     },
-    
-    passports : { 
-      collection: 'Passport', via: 'user' 
+
+    passports: {
+      collection: 'Passport',
+      via: 'user'
     },
-    
-    orders : { 
-      collection: 'Order', via: 'user' 
+
+    orders: {
+      collection: 'Order',
+      via: 'user'
     },
 
     // Preferred name
@@ -25,32 +27,32 @@ var User = {
     category: {
       type: 'string'
     },
-    
+
     // Salutation
     salutation: {
       type: 'string'
     },
-    
+
     // Surname
     surname: {
       type: 'string'
     },
-    
+
     // First name
     firstName: {
       type: 'string'
     },
-    
+
     // The user's lodge
     lodge: {
       type: 'string'
     },
-    
+
     // The user's lodge no
     lodgeNo: {
       type: 'string'
-    },       
-    
+    },
+
     lodgeYear: {
       type: 'string'
     },
@@ -64,33 +66,33 @@ var User = {
     area: {
       type: 'string'
     },
-    
+
     // The user's rank
     rank: {
       type: 'string'
     },
-    
+
     // Address
     address1: {
-        type: "string"
+      type: 'string'
     },
-    
+
     address2: {
-        type: "string"
+      type: 'string'
     },
-    
+
     address3: {
-        type: "string"
+      type: 'string'
     },
-    
+
     address4: {
-        type: "string"
+      type: 'string'
     },
-    
+
     postcode: {
-        type: "string"
+      type: 'string'
     },
-    
+
     // The user's dietary requirements
     dietary: {
       type: 'string'
@@ -98,10 +100,10 @@ var User = {
 
     // The user's email address
     email: {
-      type: 'email', 
+      type: 'email',
       unique: true
     },
-    
+
     // Contact number
     phone: {
       type: 'string'
@@ -109,39 +111,39 @@ var User = {
 
     // Administrator?
     isAdmin: {
-      type: 'boolean' 
+      type: 'boolean'
     },
-    
+
     // Organiser?
     isOrganiser: {
-      type: 'boolean' 
-    }, 
+      type: 'boolean'
+    },
 
     // DC?
     isDC: {
-      type: 'boolean' 
-    },        
+      type: 'boolean'
+    },
 
     // Permanent diner?
     isPD: {
-      type: 'boolean' 
-    },        
+      type: 'boolean'
+    },
 
     // VO?
     isVO: {
-      type: 'boolean' 
-    },     
-    
+      type: 'boolean'
+    },
+
     // VO Lodge
     voLodge: {
       type: 'string'
-    },    
-    
+    },
+
     // VO lodge number
     voLodgeNo: {
       type: 'string'
     },
-    
+
     // The VO masonic centre
     voCentre: {
       type: 'string'
@@ -155,9 +157,9 @@ var User = {
     // Authentication provider (some redundancy here as we can get this from the passport, but takes
     // the additional I/O out of each request)
     authProvider: {
-      type: 'string'  
+      type: 'string'
     },
-        
+
     // The timestamp when the the user last logged in
     // (i.e. sent a username and password to the server)
     lastLoggedIn: {
@@ -166,19 +168,18 @@ var User = {
     },
 
     useGravatar: {
-      type: 'boolean' 
+      type: 'boolean'
     },
 
     // url for gravatar (unless the user is using Social Media, in which case we will get it from there)
     gravatarUrl: {
       type: 'string'
     },
-    
+
     // SPAM warning acknowledged
     spamAck: {
-      type: 'boolean'  
+      type: 'boolean'
     }
-    
   }
 };
 
