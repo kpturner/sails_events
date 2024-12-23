@@ -43,17 +43,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: TEST
-        shell: bash
-        run: |
-          echo "HELLO KEVIN"
-
       - name: Deploy
         shell: bash
         run: |
           # Split the comma separate string into an array
-          # IFS=\, read -a fields <<<"${{ github.event.inputs.tag }}"
-          echo "HELLO KEVIN"
-          #docker login ghcr.io/kpturner -u ${{ github.actor }} -p ${{ secrets.REPO_ACCESS_TOKEN }}
-          #./docker.sh -u -a up -n ${fields[0]} -t ${fields[1]} -p ${fields[2]}
-          #./docker-cleanup.sh
+          IFS=\, read -a fields <<<"${{ github.event.inputs.tag }}"
+          docker login ghcr.io/kpturner -u ${{ github.actor }} -p ${{ secrets.REPO_ACCESS_TOKEN }}
+          ./docker.sh -u -a up -n ${fields[0]} -t ${fields[1]} -p ${fields[2]}
+          ./docker-cleanup.sh
