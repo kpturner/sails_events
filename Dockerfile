@@ -19,10 +19,11 @@ RUN npm run build
 
 RUN apt-get update && apt-get install -y wget tar
 # RUN apt-get install default-mysql-client -y
-RUN wget https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64.tar.xz && \
-  tar -xvf mysql-connector-c-8.0.33-linux-glibc2.12-x86_64.tar.xz && \
-  cp mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/lib/* /usr/lib/x86_64-linux-gnu/ && \
-  cp mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/bin/* /usr/bin/
+RUN wget https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64.tar.xz -O /tmp/mysql-connector.tar.xz && \
+  tar -xvf /tmp/mysql-connector.tar.xz -C /tmp && \
+  cp /tmp/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/lib/* /usr/lib/x86_64-linux-gnu/ && \
+  cp /tmp/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/bin/* /usr/bin/ && \
+  rm -rf /tmp/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
