@@ -41,8 +41,10 @@ RUN rm -rf mysql-apt-config_0.8.29-1_all.deb
 RUN mysql --version
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-RUN export NVM_DIR="$HOME/.nvm" && \
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+RUN export NVM_DIR="$HOME/.nvm"
+RUN . "/usr/local/opt/nvm/nvm.sh"
+RUN [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+RUN [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 RUN nvm install 16
 RUN nvm use 16
