@@ -17,7 +17,7 @@ ENV ALLOW_APP_UPDATE="0"
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
-RUN apt-get update
+# RUN apt-get update
 # RUN apt-get install default-mysql-client -y
 RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.17-1_all.deb
 RUN dpkg -i mysql-apt-config_0.8.17-1_all.deb
