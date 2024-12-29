@@ -40,11 +40,12 @@ RUN rm -rf mysql-apt-config_0.8.29-1_all.deb
 # Confirm installations
 RUN mysql --version
 
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash && \
-  export NVM_DIR="$HOME/.nvm" && \
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-  nvm install 16 && \
-  nvm use 16
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+RUN export NVM_DIR="$HOME/.nvm" && \
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+RUN nvm install 16
+RUN nvm use 16
 
 
 RUN npm install --legacy-peer-deps
