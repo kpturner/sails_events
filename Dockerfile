@@ -1,6 +1,6 @@
-# syntax = docker/dockerfile:1.2
+# syntax = docker/dockerfile:1.4
 
-FROM node:16
+FROM debian:buster
 
 ARG ASSETS=pgl
 ARG OPTS=--prod
@@ -14,27 +14,30 @@ ENV OPTS=${OPTS}
 ENV EVENTS_PORT=1337
 ENV ALLOW_APP_UPDATE="0"
 
+# Install wget, gnupg, curl, and dependencies
+RUN apt-get update && apt-get install -y wget gnupg curl lsb-release apt-transport-https && apt-get clean
+
+# Add MySQL GPG key and repository
+RUN wget https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
+  && gpg --dearmor -o /usr/share/keyrings/mysql-archive-keyring.gpg RPM-GPG-KEY-mysql-2022 \
+  && echo "deb [signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/debian/ buster mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
+  && rm -f RPM-GPG-KEY-mysql-2022
+
+# Add NodeSource Node.js 16 repository
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+
+# Install MySQL client and Node.js
+RUN apt-get update && apt-get install -y mysql-community-client nodejs && apt-get clean
+
+# Confirm installations
+RUN mysql --version && node --version
+
+
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
 # RUN apt-get update
 # RUN apt-get install default-mysql-client -y
-
-# Install wget and dependencies
-RUN apt-get update && apt-get install -y wget gnupg lsb-release
-
-# Add MySQL APT Repository GPG key and configure the repository
-RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.26-1_all.deb \
-  && dpkg -i mysql-apt-config_0.8.26-1_all.deb \
-  && wget https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
-  && gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg RPM-GPG-KEY-mysql-2022 \
-  && rm -f mysql-apt-config_0.8.26-1_all.deb RPM-GPG-KEY-mysql-2022
-
-# Update APT and install the MySQL 8 compatible client
-RUN apt-get update && apt-get install -y mysql-community-client
-
-RUN apt-get update \
-  && apt-get install -y mysql-community-client
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
