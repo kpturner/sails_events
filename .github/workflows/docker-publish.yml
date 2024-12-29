@@ -117,7 +117,7 @@ jobs:
           repo: 'kpturner/sails_events'
           config: 'secrets/secrets_pgschap.json'
           dkim_private_key: 'secrets/dkim_private_key.pem'
-          assets: 'pgsl'
+          assets: 'pgschap'
           ecr-uri: 'ghcr.io'
 
       #- name: Get the version

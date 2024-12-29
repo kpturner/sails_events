@@ -43,7 +43,7 @@ let sails: any;
     console.error(
       'When you run `sails lift`, your app will still use a local `./node_modules/sails` dependency if it exists,'
     );
-    console.error("but if it doesn't, the app will run with the global sails instead!");
+    console.error('but if it doesn\'t, the app will run with the global sails instead!');
     return;
   }
 
@@ -79,7 +79,7 @@ process.on('uncaughtException', function (err: Error): void {
       // We don't need an email of docker is just shutting down. The port will defo be
       // 6379 in docker
       if (msg.indexOf('Redis connection to events-redis:6379 failed') < 0) {
-        Utility.diagnosticEmail(msg, 'Application crash', function () {
+        Utility.diagnosticEmail(msg, 'Application crash', function (): void {
           process.exit(1);
         });
       }
