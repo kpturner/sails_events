@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
   wget \
   dpkg \
   gnupg \
+  lsb-release \
   && apt-get clean
 
 # Download the MySQL APT config package
