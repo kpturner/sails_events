@@ -22,8 +22,12 @@ RUN npm run build
 # RUN apt-get update
 # RUN apt-get install default-mysql-client -y
 
+# Install required libraries (e.g., libssl)
+RUN apt-get update && apt-get install -y libssl1.1 libssl-dev
+
 # Copy the MySQL client from the MySQL image
 COPY --from=mysql_stage /usr/bin/mysql /usr/bin/mysql
+COPY --from=mysql_stage /usr/lib/x86_64-linux-gnu/libssl.so.* /usr/lib/x86_64-linux-gnu/
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
