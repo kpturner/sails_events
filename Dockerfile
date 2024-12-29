@@ -21,13 +21,14 @@ RUN npm run build
 # RUN apt-get install default-mysql-client -y
 
 # Install wget and dependencies
-RUN apt-get update && apt-get install -y wget lsb-release gnupg
+RUN apt-get update && apt-get install -y wget gnupg lsb-release
 
-# Add MySQL APT Repository
+# Add MySQL APT Repository GPG key and configure the repository
 RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.26-1_all.deb \
   && dpkg -i mysql-apt-config_0.8.26-1_all.deb \
-  && wget -O /etc/apt/trusted.gpg.d/mysql.gpg https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
-  && rm -f mysql-apt-config_0.8.26-1_all.deb
+  && wget https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
+  && gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg RPM-GPG-KEY-mysql-2022 \
+  && rm -f mysql-apt-config_0.8.26-1_all.deb RPM-GPG-KEY-mysql-2022
 
 # Update APT and install the MySQL 8 compatible client
 RUN apt-get update && apt-get install -y mysql-community-client
