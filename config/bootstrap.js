@@ -43,6 +43,9 @@ module.exports.bootstrap = function (cb) {
             sails.log.error(
               'Error occurred updating database - but it probably is just adding a field that already exists!'
             );
+            sails.log.error('Here is the error anyway: "' + err + '"');
+            sails.log.info('stdout: ' + stdout);
+            sails.log.info('stderr: ' + stderr);
             return;
           }
         }
