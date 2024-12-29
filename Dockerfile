@@ -22,8 +22,8 @@ RUN npm run build
 # RUN apt-get update
 # RUN apt-get install default-mysql-client -y
 
-# Install MySQL client in the Node 16 image
-RUN apt-get update && apt-get install -y mysql-client
+# Copy the MySQL client from the MySQL image
+COPY --from=mysql_stage /usr/bin/mysql /usr/bin/mysql
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
