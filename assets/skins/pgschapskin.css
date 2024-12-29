@@ -1,0 +1,46 @@
+.navbar-logo {
+	margin-top: -5px;
+}
+
+.navbar-inverse {
+	background-color:#a0171d;
+}
+
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+  background-color: #a0171d;
+}
+
+	
+.omb_login .omb_socialButtons a {
+	color: white; 
+}
+.omb_login .omb_socialButtons a:hover {
+    color: white;
+}
+.omb_login .omb_socialButtons .omb_btn-facebook {background: #3b5998;}
+.omb_login .omb_socialButtons .omb_btn-twitter {background: #00aced;}
+.omb_login .omb_socialButtons .omb_btn-google {background: #c32f10;}
+
+
+.omb_login .omb_loginOr {
+	color: #aaa;	
+}
+.omb_login .omb_loginOr .omb_hrOr {
+	background-color: #cdcdcd;	
+}
+.omb_login .omb_loginOr .omb_spanOr {
+	background-color: #eee;	
+}			
+.omb_login .omb_loginOr .omb_spanSocial {
+	background-color: #eee;	
+}	
+.omb_login .omb_loginOr .omb_spanManual {
+	background-color: #eee;
+}	
+.omb_login .omb_loginForm .input-group.i {
+	width: 2em;
+}
+.omb_login .omb_loginForm  .help-block {
+    color: red;
+}

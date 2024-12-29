@@ -8,7 +8,7 @@ function usage {
     echo "Usage: ./docker.sh"
     echo "--install            | -i   [Install docker]"
     echo "--name               | -n   [sails-events(default)]"
-    echo "--instance           | -t   [pgl,csl,hamtun,mtsfc,pgsl]"
+    echo "--instance           | -t   [pgl,csl,hamtun,mtsfc,pgsl,pgschap]"
     echo "--port               | -p   [1337(default)]"
     echo "--file               | -f   [docker-compose.yml(default)]"
     echo "--action             | -a   ['up'(default), 'down']"
