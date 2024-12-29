@@ -1,8 +1,6 @@
 # syntax = docker/dockerfile:1.2
 
-FROM mysql:8.0 as mysql_stage
-
-FROM node:16 as node_stage
+FROM node:16
 
 ARG ASSETS=pgl
 ARG OPTS=--prod
@@ -19,15 +17,12 @@ ENV ALLOW_APP_UPDATE="0"
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
-# RUN apt-get update
+RUN apt-get update && apt-get install -y wget tar
 # RUN apt-get install default-mysql-client -y
-
-# Install required libraries (e.g., libssl)
-RUN apt-get update && apt-get install -y libssl1.1 libssl-dev
-
-# Copy the MySQL client from the MySQL image
-COPY --from=mysql_stage /usr/bin/mysql /usr/bin/mysql
-COPY --from=mysql_stage /usr/lib/x86_64-linux-gnu/libssl.so.* /usr/lib/x86_64-linux-gnu/
+RUN wget https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64.tar.xz && \
+  tar -xvf mysql-connector-c-8.0.33-linux-glibc2.12-x86_64.tar.xz && \
+  cp mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/lib/* /usr/lib/x86_64-linux-gnu/ && \
+  cp mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/bin/* /usr/bin/
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
