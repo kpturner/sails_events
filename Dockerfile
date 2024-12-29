@@ -1,6 +1,8 @@
 # syntax = docker/dockerfile:1.2
 
-FROM node:16
+FROM mysql:8.0 as mysql_stage
+
+FROM node:16 as node_stage
 
 ARG ASSETS=pgl
 ARG OPTS=--prod
@@ -19,19 +21,9 @@ RUN npm run build
 
 # RUN apt-get update
 # RUN apt-get install default-mysql-client -y
-# Install lsb-release and wget
-RUN apt-get update && apt-get install -y lsb-release wget gnupg
 
-# Add the MySQL GPG key to apt's trusted keys
-RUN wget -qO /usr/share/keyrings/mysql-archive-keyring.gpg https://repo.mysql.com/RPM-GPG-KEY-mysql
-
-# Download and install the MySQL APT config package
-RUN wget https://repo.mysql.com//mysql-apt-config_0.8.17-1_all.deb \
-  && dpkg -i mysql-apt-config_0.8.17-1_all.deb \
-  && apt-get update
-
-# Install the MySQL client
-RUN apt-get install mysql-client -y
+# Install MySQL client in the Node 16 image
+RUN apt-get update && apt-get install -y mysql-client
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
