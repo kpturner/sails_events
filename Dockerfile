@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y wget lsb-release gnupg
 # Add MySQL APT Repository
 RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.26-1_all.deb \
   && dpkg -i mysql-apt-config_0.8.26-1_all.deb \
+  && wget -O /etc/apt/trusted.gpg.d/mysql.gpg https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
   && rm -f mysql-apt-config_0.8.26-1_all.deb
 
 # Update APT and install the MySQL 8 compatible client
