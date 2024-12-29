@@ -6,18 +6,8 @@ ARG OPTS=--prod
 
 FROM node:${NODE_VERSION} as node
 
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
-# Install dependencies for MySQL client and node binaries
-RUN apt-get update && apt-get install -y \
-  wget \
-  dpkg \
-  gnupg \
-  lsb-release \
-  libstdc++6 \
-  && apt-get clean
-
-# Copy Node.js binaries and libraries from the node image
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
@@ -35,6 +25,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV OPTS=${OPTS}
 ENV EVENTS_PORT=1337
 ENV ALLOW_APP_UPDATE="0"
+
+# Install dependencies for downloading and installing the MySQL APT config package
+RUN apt-get update && apt-get install -y \
+  wget \
+  dpkg \
+  gnupg \
+  lsb-release \
+  && apt-get clean
 
 # Download the MySQL APT config package
 RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.29-1_all.deb
