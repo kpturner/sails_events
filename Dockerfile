@@ -1,9 +1,19 @@
 # syntax = docker/dockerfile:1.4
 
-FROM ubuntu:20.04
-
+ARG NODE_VERSION=16
 ARG ASSETS=pgl
 ARG OPTS=--prod
+
+FROM node:${NODE_VERSION} as node
+
+FROM ubuntu:20.04
+
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+
+RUN node -v
 
 WORKDIR /usr/src/app
 
@@ -19,7 +29,6 @@ ENV ALLOW_APP_UPDATE="0"
 # Install dependencies for downloading and installing the MySQL APT config package
 RUN apt-get update && apt-get install -y \
   wget \
-  curl \
   dpkg \
   gnupg \
   lsb-release \
@@ -39,14 +48,6 @@ RUN rm -rf mysql-apt-config_0.8.29-1_all.deb
 
 # Confirm installations
 RUN mysql --version
-
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-# Add NVM to the PATH by sourcing the NVM script
-ENV NVM_DIR="/root/.nvm"
-ENV NODE_VERSION 16
-
-# RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION && nvm alias default $NODE_VERSION"
-RUN bash -c "source $NVM_DIR/nvm.sh"
 
 RUN npm install --legacy-peer-deps
 RUN npm run build
