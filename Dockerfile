@@ -17,13 +17,19 @@ ENV ALLOW_APP_UPDATE="0"
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
-RUN apt-get update && apt-get install -y wget tar
+# RUN apt-get update
 # RUN apt-get install default-mysql-client -y
-RUN wget https://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64.tar.xz -O /tmp/mysql-connector.tar.xz && \
-  tar -xvf /tmp/mysql-connector.tar.xz -C /tmp && \
-  cp /tmp/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/lib/* /usr/lib/x86_64-linux-gnu/ && \
-  cp /tmp/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64/bin/* /usr/bin/ && \
-  rm -rf /tmp/mysql-connector-c-8.0.33-linux-glibc2.12-x86_64
+
+# Install dependencies for building MySQL client from source
+RUN apt-get update && apt-get install -y build-essential wget libssl-dev
+
+# Download and extract MySQL source code
+RUN wget https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.33.tar.gz && \
+  tar -xvzf mysql-8.0.33.tar.gz && \
+  cd mysql-8.0.33 && \
+  cmake . && \
+  make && \
+  make install
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
