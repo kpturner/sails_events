@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.4
 
-FROM debian:buster
+FROM ubuntu:20.04
 
 ARG ASSETS=pgl
 ARG OPTS=--prod
@@ -10,23 +10,26 @@ WORKDIR /usr/src/app
 # Bundle app source
 COPY . .
 
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
 ENV OPTS=${OPTS}
 ENV EVENTS_PORT=1337
 ENV ALLOW_APP_UPDATE="0"
 
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-  wget gnupg curl lsb-release apt-transport-https && apt-get clean
+  wget curl gnupg lsb-release apt-transport-https && apt-get clean
 
-# Add the MySQL GPG key and repository
+# Add MySQL GPG key and repository
 RUN wget https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
   && gpg --dearmor -o /usr/share/keyrings/mysql-archive-keyring.gpg RPM-GPG-KEY-mysql-2022 \
-  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/debian/ buster mysql-8.0" > /etc/apt/sources.list.d/mysql.list
+  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/ubuntu/ focal mysql-8.0" > /etc/apt/sources.list.d/mysql.list
 
 # Add NodeSource repository for Node.js 16
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 
 # Install MySQL client and Node.js
-RUN apt-get update && apt-get install -y mysql-community-client nodejs && apt-get clean
+RUN apt-get update && apt-get install -y mysql-client nodejs && apt-get clean
 
 # Confirm installations
 RUN mysql --version && node --version
