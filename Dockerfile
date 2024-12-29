@@ -41,12 +41,14 @@ RUN rm -rf mysql-apt-config_0.8.29-1_all.deb
 RUN mysql --version
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-RUN export NVM_DIR="$HOME/.nvm"
-RUN [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-RUN [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Add NVM to the PATH by sourcing the NVM script
+ENV NVM_DIR /root/.nvm
+ENV NODE_VERSION 16
 
-RUN nvm install 16
-RUN nvm use 16
+RUN . $NVM_DIR/nvm.sh && \
+  nvm install $NODE_VERSION && \
+  nvm use $NODE_VERSION && \
+  nvm alias default $NODE_VERSION
 
 
 RUN npm install --legacy-peer-deps
