@@ -1,59 +1,24 @@
-# syntax = docker/dockerfile:1.4
+# syntax = docker/dockerfile:1.2
 
-ARG NODE_VERSION=16
+FROM node:16
+
 ARG ASSETS=pgl
 ARG OPTS=--prod
-
-FROM node:${NODE_VERSION} as node
-
-FROM ubuntu:18.04
-
-COPY --from=node /usr/lib /usr/lib
-COPY --from=node /usr/local/lib /usr/local/lib
-COPY --from=node /usr/local/include /usr/local/include
-COPY --from=node /usr/local/bin /usr/local/bin
-
-RUN node -v
 
 WORKDIR /usr/src/app
 
 # Bundle app source
 COPY . .
 
-# Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive
 ENV OPTS=${OPTS}
 ENV EVENTS_PORT=1337
 ENV ALLOW_APP_UPDATE="0"
 
-# Install dependencies for downloading and installing the MySQL APT config package
-RUN apt-get update && apt-get install -y \
-  wget \
-  dpkg \
-  gnupg \
-  lsb-release \
-  && apt-get clean
-
-# Download the MySQL APT config package
-RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.29-1_all.deb
-
-# Install the MySQL APT config package
-RUN dpkg -i mysql-apt-config_0.8.29-1_all.deb
-
-# Update the package list and install MySQL client
-RUN apt-get update && apt-get install -y mysql-client && apt-get clean
-
-# Clean up unnecessary files to keep the image size small
-RUN rm -rf mysql-apt-config_0.8.29-1_all.deb
-
-# Confirm installations
-RUN mysql --version
-
 RUN npm install --legacy-peer-deps
 RUN npm run build
 
-# RUN apt-get update
-# RUN apt-get install default-mysql-client -y
+RUN apt-get update
+RUN apt-get install default-mysql-client -y
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js

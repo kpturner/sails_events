@@ -33,7 +33,7 @@ module.exports.bootstrap = function (cb) {
     } else {
       // Build database (who cares if it already exists)
       require('child_process').exec(
-        `mysql --default-auth=mysql_native_password --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname}/../sql/db.sql`,
+        `mysql --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname}/../sql/db.sql`,
         function (err, stdout, stderr) {
           if (err) {
             sails.log.error('Error occurred creating the database - but it probably is just that it aready exists!');
@@ -46,7 +46,7 @@ module.exports.bootstrap = function (cb) {
       );
       // Perform DB updates
       require('child_process').exec(
-        `mysql --default-auth=mysql_native_password --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname}/../sql/update.sql`,
+        `mysql --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname}/../sql/update.sql`,
         function (err, stdout, stderr) {
           if (err) {
             sails.log.error(
