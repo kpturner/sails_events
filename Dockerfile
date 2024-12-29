@@ -20,16 +20,13 @@ RUN npm run build
 # RUN apt-get update
 # RUN apt-get install default-mysql-client -y
 
-# Install dependencies for building MySQL client from source
-RUN apt-get update && apt-get install -y build-essential wget libssl-dev
+# Install dependencies
+RUN apt-get update && apt-get install -y wget lsb-release gnupg
 
-# Download and extract MySQL source code
-RUN wget https://dev.mysql.com/get/Downloads/MySQL-8.0/mysql-8.0.33.tar.gz && \
-  tar -xvzf mysql-8.0.33.tar.gz && \
-  cd mysql-8.0.33 && \
-  cmake . && \
-  make && \
-  make install
+# Add MySQL APT repository
+RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.17-1_all.deb && \
+  dpkg -i mysql-apt-config_0.8.17-1_all.deb && \
+  apt-get update
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
