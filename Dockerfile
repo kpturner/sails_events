@@ -14,16 +14,15 @@ ENV OPTS=${OPTS}
 ENV EVENTS_PORT=1337
 ENV ALLOW_APP_UPDATE="0"
 
-# Install wget, gnupg, curl, and dependencies
-RUN apt-get update && apt-get install -y wget gnupg curl lsb-release apt-transport-https && apt-get clean
+RUN apt-get update && apt-get install -y \
+  wget gnupg curl lsb-release apt-transport-https && apt-get clean
 
-# Add MySQL GPG key and repository
+# Add the MySQL GPG key and repository
 RUN wget https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
   && gpg --dearmor -o /usr/share/keyrings/mysql-archive-keyring.gpg RPM-GPG-KEY-mysql-2022 \
-  && echo "deb [signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/debian/ buster mysql-8.0" > /etc/apt/sources.list.d/mysql.list \
-  && rm -f RPM-GPG-KEY-mysql-2022
+  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/debian/ buster mysql-8.0" > /etc/apt/sources.list.d/mysql.list
 
-# Add NodeSource Node.js 16 repository
+# Add NodeSource repository for Node.js 16
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 
 # Install MySQL client and Node.js
