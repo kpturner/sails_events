@@ -19,6 +19,7 @@ ENV ALLOW_APP_UPDATE="0"
 # Install dependencies for downloading and installing the MySQL APT config package
 RUN apt-get update && apt-get install -y \
   wget \
+  curl \
   dpkg \
   gnupg \
   lsb-release \
@@ -30,17 +31,20 @@ RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.29-1_all.deb
 # Install the MySQL APT config package
 RUN dpkg -i mysql-apt-config_0.8.29-1_all.deb
 
-# Add NodeSource repository for Node.js 16
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-
 # Update the package list and install MySQL client
-RUN apt-get update && apt-get install -y mysql-client nodejs && apt-get clean
+RUN apt-get update && apt-get install -y mysql-client && apt-get clean
 
 # Clean up unnecessary files to keep the image size small
 RUN rm -rf mysql-apt-config_0.8.29-1_all.deb
 
 # Confirm installations
-RUN mysql --version && node --version
+RUN mysql --version
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash && \
+  export NVM_DIR="$HOME/.nvm" && \
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+  nvm install 16 && \
+  nvm use 16
 
 
 RUN npm install --legacy-peer-deps
