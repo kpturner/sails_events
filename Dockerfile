@@ -45,8 +45,8 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | b
 ENV NVM_DIR="/root/.nvm"
 ENV NODE_VERSION 16
 
-RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION && nvm alias default $NODE_VERSION"
-
+# RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION && nvm alias default $NODE_VERSION"
+RUN bash -c "source $NVM_DIR/nvm.sh"
 
 RUN npm install --legacy-peer-deps
 RUN npm run build
