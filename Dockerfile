@@ -16,20 +16,27 @@ ENV OPTS=${OPTS}
 ENV EVENTS_PORT=1337
 ENV ALLOW_APP_UPDATE="0"
 
-# Install dependencies
+# Install dependencies for downloading and installing the MySQL APT config package
 RUN apt-get update && apt-get install -y \
-  wget curl gnupg lsb-release apt-transport-https && apt-get clean
+  wget \
+  dpkg \
+  gnupg \
+  && apt-get clean
 
-# Add MySQL GPG key and repository
-RUN wget https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 \
-  && gpg --dearmor -o /usr/share/keyrings/mysql-archive-keyring.gpg RPM-GPG-KEY-mysql-2022 \
-  && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mysql-archive-keyring.gpg] http://repo.mysql.com/apt/ubuntu/ focal mysql-8.0" > /etc/apt/sources.list.d/mysql.list
+# Download the MySQL APT config package
+RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.29-1_all.deb
+
+# Install the MySQL APT config package
+RUN dpkg -i mysql-apt-config_0.8.29-1_all.deb
 
 # Add NodeSource repository for Node.js 16
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 
-# Install MySQL client and Node.js
+# Update the package list and install MySQL client
 RUN apt-get update && apt-get install -y mysql-client nodejs && apt-get clean
+
+# Clean up unnecessary files to keep the image size small
+RUN rm -rf mysql-apt-config_0.8.29-1_all.deb
 
 # Confirm installations
 RUN mysql --version && node --version
