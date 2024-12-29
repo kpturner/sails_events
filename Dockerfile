@@ -19,8 +19,11 @@ RUN npm run build
 
 # RUN apt-get update
 # RUN apt-get install default-mysql-client -y
-# Install lsb-release to satisfy the dependency
-RUN apt-get update && apt-get install -y lsb-release
+# Install lsb-release to satisfy dependencies
+RUN apt-get update && apt-get install -y lsb-release wget
+
+# Add the missing MySQL GPG key for package verification
+RUN wget -qO - https://repo.mysql.com/RPM-GPG-KEY-mysql | apt-key add -
 
 # Download and install the MySQL APT config package
 RUN wget https://repo.mysql.com//mysql-apt-config_0.8.17-1_all.deb \
@@ -29,7 +32,6 @@ RUN wget https://repo.mysql.com//mysql-apt-config_0.8.17-1_all.deb \
 
 # Install the MySQL client
 RUN apt-get install mysql-client -y
-
 
 RUN --mount=type=secret,id=SECRETS \
   cp /run/secrets/SECRETS ./config/local.js
