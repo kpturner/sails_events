@@ -36,10 +36,10 @@ module.exports.bootstrap = function (cb) {
         `mysql --host="${sails.config.connections.localhostMysqlServer.host}" --user="${sails.config.connections.localhostMysqlServer.user}" --password="${sails.config.connections.localhostMysqlServer.password}" --database="${sails.config.connections.localhostMysqlServer.database}" < ${__dirname}/../sql/db.sql`,
         function (err, stdout, stderr) {
           if (err) {
-            sails.log.error('Error occurred creating the database - but it probably is just that it aready exists!');
-            sails.log.error('Here is the error anyway: "' + err + '"');
-            sails.log.info('stdout: ' + stdout);
-            sails.log.info('stderr: ' + stderr);
+            sails.log.error('Error occurred creating the database');
+            sails.log.error('"' + err + '"');
+            sails.log.debug('stdout: ' + stdout);
+            sails.log.debug('stderr: ' + stderr);
             return;
           }
         }
@@ -53,8 +53,8 @@ module.exports.bootstrap = function (cb) {
               'Error occurred updating database - but it probably is just adding a field that already exists!'
             );
             sails.log.error('Here is the error anyway: "' + err + '"');
-            sails.log.info('stdout: ' + stdout);
-            sails.log.info('stderr: ' + stderr);
+            sails.log.debug('stdout: ' + stdout);
+            sails.log.debug('stderr: ' + stderr);
             return;
           }
         }
