@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `booking` (
   `event` int(11) DEFAULT NULL,
   `menuChoice` int(11) DEFAULT NULL,
   `ref` varchar(255) DEFAULT NULL,
+  `attendingOnly` tinyint(1) DEFAULT NULL
   `dietary` varchar(255) DEFAULT NULL,
   `places` int(11) DEFAULT NULL,
   `cost` float DEFAULT NULL,
@@ -90,6 +91,12 @@ CREATE TABLE IF NOT EXISTS `event` (
   `menu2` longtext DEFAULT NULL,
   `menu3` longtext DEFAULT NULL,
   `menu4` longtext DEFAULT NULL,
+  `menu5` longtext DEFAULT NULL,
+  `menu6` longtext DEFAULT NULL,
+  `menu7` longtext DEFAULT NULL,
+  `menu8` longtext DEFAULT NULL,
+  `menu9` longtext DEFAULT NULL,
+  `menu10` longtext DEFAULT NULL,
   `dressCode` varchar(255) DEFAULT NULL,
   `capacity` int(11) DEFAULT NULL,
   `date` date DEFAULT NULL,
@@ -104,6 +111,7 @@ CREATE TABLE IF NOT EXISTS `event` (
   `areaReqd` tinyint(1) DEFAULT NULL,
   `free` tinyint(1) DEFAULT NULL,
   `regInterest` tinyint(1) DEFAULT NULL,
+  `allowAttendingOnly` tinyint(1) DEFAULT NULL
   `voReqd` tinyint(1) DEFAULT NULL,
   `price` float DEFAULT NULL,
   `minBookingPlaces` int(11) DEFAULT NULL,
