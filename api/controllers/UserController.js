@@ -267,6 +267,7 @@ module.exports = {
         return res.view('userdetails', {
           mode: mode,
           salutations: sails.config.events.salutations,
+          unitType: sails.config.events.unitType,
           areas: Utility.areas(),
           centres: Utility.centres(),
           lodgeMandatory: sails.config.events.lodgeMandatory,
@@ -278,6 +279,7 @@ module.exports = {
       return res.view('userdetails', {
         mode: mode,
         salutations: sails.config.events.salutations,
+        unitType: sails.config.events.unitType,
         areas: Utility.areas(),
         centres: Utility.centres(),
         lodgeMandatory: sails.config.events.lodgeMandatory,

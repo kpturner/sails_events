@@ -347,6 +347,9 @@ angular.module('EventsModule').controller('BookController', [
     // Salutations
     $scope.salutations = SAILS_LOCALS.salutations;
 
+    // Unit Type
+    $scope.unitType = SAILS_LOCALS.unitType;
+
     // User categories
     $scope.userCategories = SAILS_LOCALS.userCategories;
 

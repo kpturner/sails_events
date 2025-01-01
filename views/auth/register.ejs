@@ -5,8 +5,7 @@
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <!-- meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!--
         Stylesheets and Preprocessors
@@ -46,43 +45,34 @@
     <link rel="stylesheet" href="/styles/ng-dialog/ngDialog.min.css">
     <!--STYLES END-->
 
-    <link rel="stylesheet" href="/<%=sails.config.events.skin%>">
+    <link rel="stylesheet" href="/<%=sails.config.events.skin%>" />
 
     <!--Added this so the client has access to the csrf tag and it's grabbed first service side on every page -->
     <script type="text/javascript">
-    window.SAILS_LOCALS = {
-       _csrf: "<%= _csrf %>",
-       salutations: <%- JSON.stringify(sails.config.events.salutations) %>,
-       userCategories: <%- JSON.stringify(sails.config.events.userCategories) %>,
-       areas: <%- JSON.stringify(res.locals.areas) %>,
-       centres: <%- JSON.stringify(res.locals.centres) %>,
-       lodgeMandatory: <%- res.locals.lodgeMandatory %>,
-       orders: <%- JSON.stringify(sails.config.events.orders) %>,
-       defaults: {
-         lodge: "<%- sails.config.events.lodgeDefault || '' %>",
-         lodgeNo: <%- sails.config.events.lodgeNoDefault || 0 %>,
-       },
-    };
+      window.SAILS_LOCALS = {
+         _csrf: "<%= _csrf %>",
+         salutations: <%- JSON.stringify(sails.config.events.salutations) %>,
+         unitType: <%- JSON.stringify(sails.config.events.unitType) %>,
+         userCategories: <%- JSON.stringify(sails.config.events.userCategories) %>,
+         areas: <%- JSON.stringify(res.locals.areas) %>,
+         centres: <%- JSON.stringify(res.locals.centres) %>,
+         lodgeMandatory: <%- res.locals.lodgeMandatory %>,
+         orders: <%- JSON.stringify(sails.config.events.orders) %>,
+         defaults: {
+           lodge: "<%- sails.config.events.lodgeDefault || '' %>",
+           lodgeNo: <%- sails.config.events.lodgeNoDefault || 0 %>,
+         },
+      };
     </script>
-
   </head>
 
   <body ng-app="EventsModule" ng-cloak>
-
-
     <div class="container-fluid">
-
       <% include ../partials/public/navbar.ejs %>
 
-
       <div data-ng-controller="SignupController">
-
         <!-- SIGNUP FORM -->
-        <% if (errors) {%>
-          <% errors.forEach(function (error) { %>
-            <%= __(error) %>
-          <% }) %>
-        <% } %>
+        <% if (errors) {%> <% errors.forEach(function (error) { %> <%= __(error) %> <% }) %> <% } %>
 
         <!--
         <form role="form" action="/auth/local/register" method="post">
@@ -93,63 +83,86 @@
         </form>
         -->
 
-        <form ng-submit="submitSignupForm()" id="sign-up-form" name="signup"
-          ng-class="{'form-max-50':'<%- req.device.type %>'=='desktop'}">
+        <form
+          ng-submit="submitSignupForm()"
+          id="sign-up-form"
+          name="signup"
+          ng-class="{ 'form-max-50': '<%- req.device.type %>' == 'desktop' }"
+        >
+          <h2 class="form-heading">Create an account</h2>
+          <h5>Items marked with * are mandatory</h5>
+          <div class="row">
+            <% include ../partials/userDetails.ejs %>
 
-        <h2 class="form-heading">Create an account</h2>
-        <h5>Items marked with * are mandatory</h5>
-        <div class="row">
+            <!-- P A S S W O R D -->
 
+            <div
+              class="control-group form-group col-xs-10"
+              ng-class="{ 'has-error': signup.password.$invalid && signup.password.$dirty }"
+            >
+              <label>* Choose a password</label>
+              <!-- Added the compareTo directive that compares the passwords -->
+              <input
+                type="password"
+                class="form-control"
+                placeholder="at least 8 characters"
+                name="password"
+                ng-model="signupForm.password"
+                id="password"
+                ng-minlength="8"
+                compare-to="signupForm.confirmPassword"
+                required
+              />
+              <span class="help-block has-error" ng-if="signup.password.$dirty">
+                <span ng-show="signup.password.$error.required">Password is required.</span>
+                <span ng-show="signup.password.$error.minlength">Password must be at least 8 characters.</span>
+              </span>
+            </div>
 
-          <% include ../partials/userDetails.ejs %>
+            <!-- C O N F I R M  P A S S W O R D -->
 
+            <div
+              class="control-group form-group col-xs-10"
+              ng-class="{
+                'has-error':
+                  (signup.confirmation.$invalid || signup.password.$error.compareTo) && signup.confirmation.$dirty
+              }"
+            >
+              <label>Re-enter your password</label>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="one more time"
+                name="confirmation"
+                ng-model="signupForm.confirmPassword"
+                required
+              />
+              <span class="help-block has-error" ng-if="signup.confirmation.$dirty">
+                <span ng-show="signup.password.$error.compareTo">Password must match.</span>
+                <span ng-show="signup.confirmation.$error.required">Confirmation password is required.</span>
+              </span>
+            </div>
 
-          <!-- P A S S W O R D -->
-
-          <div class="control-group form-group col-xs-10"
-          ng-class="{'has-error':signup.password.$invalid &&
-                                signup.password.$dirty}">
-            <label>* Choose a password</label>
-            <!-- Added the compareTo directive that compares the passwords -->
-            <input type="password" class="form-control" placeholder="at least 8 characters" name="password" ng-model="signupForm.password" id="password" ng-minlength="8" compare-to="signupForm.confirmPassword" required>
-            <span class="help-block has-error" ng-if="signup.password.$dirty">
-              <span ng-show="signup.password.$error.required">Password is required.</span>
-              <span ng-show="signup.password.$error.minlength">Password must be at least 8 characters.</span>
-            </span>
+            <% include ../partials/otherOrders.ejs %>
           </div>
 
-          <!-- C O N F I R M  P A S S W O R D -->
+          <br />
 
-          <div class="control-group form-group col-xs-10"
-             ng-class="{'has-error':(signup.confirmation.$invalid || signup.password.$error.compareTo) &&
-                                signup.confirmation.$dirty}">
-            <label>Re-enter your password</label>
-            <input type="password" class="form-control" placeholder="one more time" name="confirmation" ng-model="signupForm.confirmPassword" required>
-            <span class="help-block has-error" ng-if="signup.confirmation.$dirty">
-              <span ng-show="signup.password.$error.compareTo">Password must match.</span>
-              <span ng-show="signup.confirmation.$error.required">Confirmation password is required.</span>
-            </span>
-          </div>
+          <!-- Disable signup button until the form has no errors -->
+          <button
+            class="btn btn-primary btn-lg btn-block"
+            type="submit"
+            ng-disabled="signup.$invalid || signupForm.loading || !detailsComplete()"
+          >
+            <span ng-show="!signupForm.loading">Create Account</span>
+            <span class="fa-pulse fa fa-spinner" ng-show="signupForm.loading"></span>
+            <span ng-show="signupForm.loading">Preparing your new account...</span>
+          </button>
 
-          <% include ../partials/otherOrders.ejs %>
-
-        </div>
-
-        <br/>
-
-
-        <!-- Disable signup button until the form has no errors -->
-        <button class="btn btn-primary btn-lg btn-block" type="submit" ng-disabled="signup.$invalid || signupForm.loading || !detailsComplete()">
-          <span ng-show="!signupForm.loading">Create Account</span>
-          <span class="fa-pulse fa fa-spinner" ng-show="signupForm.loading" ></span>
-          <span ng-show="signupForm.loading">Preparing your new account...</span>
-        </button>
-
-        <input type="hidden" name="_csrf" value="<%= _csrf %>" />
-      </form>
+          <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+        </form>
       </div>
-
-     </div>
+    </div>
 
     <!--SCRIPTS-->
     <script src="/js/dependencies/jquery/jquery.js"></script>

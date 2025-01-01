@@ -118,6 +118,7 @@ var AuthController = {
     res.view({
       form: 'signup',
       salutations: sails.config.events.salutations,
+      unitType: sails.config.events.unitType,
       areas: Utility.areas(),
       centres: Utility.centres(),
       lodgeMandatory: sails.config.events.lodgeMandatory,
@@ -268,6 +269,7 @@ var AuthController = {
     res.view('profile', {
       form: 'profile',
       salutations: sails.config.events.salutations,
+      unitType: sails.config.events.unitType,
       areas: Utility.areas(),
       centres: Utility.centres(),
       errors: req.flash('error'),

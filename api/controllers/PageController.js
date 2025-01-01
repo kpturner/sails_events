@@ -52,6 +52,7 @@ module.exports = {
         return res.view('profile', {
           form: 'profile',
           salutations: sails.config.events.salutations,
+          unitType: sails.config.events.unitType,
           areas: Utility.areas(),
           centres: Utility.centres(),
           signup: true,

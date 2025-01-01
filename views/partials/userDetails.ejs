@@ -1,30 +1,47 @@
- 
-  
-
 <!-- S A L U T A T I O N -->
-<div class="control-group form-group col-xs-10"
+<div
+  class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.salutation.$invalid &&
-                      <%-form%>.salutation.$dirty}">
-  <label>* Salutation</label>  
-  <select class="form-control" placeholder="e.g. Bro. or W.Bro etc" name="salutation" ng-options="salutation for salutation in salutations" ng-model="<%-form%>Form.salutation" required>
+                      <%-form%>.salutation.$dirty}"
+>
+  <label>* Salutation</label>
+  <select
+    class="form-control"
+    placeholder="e.g. Bro. or W.Bro etc"
+    name="salutation"
+    ng-options="salutation for salutation in salutations"
+    ng-model="<%-form%>Form.salutation"
+    required
+  >
     <option value="">-- choose salutation --</option>
   </select>
   <span class="help-block has-error" ng-if="<%-form%>.salutation.$dirty">
-    <span ng-show="<%-form%>.salutation.$error.required">Salutation is required.</span> 
+    <span ng-show="<%-form%>.salutation.$error.required">Salutation is required.</span>
   </span>
-</div>     
-         
+</div>
+
 <!-- N A M E -->
 
 <!-- checking whether the form "<%-form%>" with the "name" property is both $invalid AND $dirty.  If it is
 insert the "has-error" class on the input field (i.e. insert a red border around the input field)
 -->
-<div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-form%>.name.$invalid &&
-                      <%-form%>.name.$dirty}">
-  <label>* Full name (for <span class="hidden-xs">seating</span> reservation card)</label>  
+<div
+  class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-form%>.name.$invalid &&
+                      <%-form%>.name.$dirty}"
+>
+  <label>* Full name (for <span class="hidden-xs">seating</span> reservation card)</label>
   <!-- For this input field make it required, and have a max length of 50 -->
-  <input type="text" populate-names="['surname:last','firstname:0']" class="form-control" placeholder="e.g. Fred Bloggs" name="name" ng-model="<%-form%>Form.name" ng-maxlength="50" required>  
+  <input
+    type="text"
+    populate-names="['surname:last','firstname:0']"
+    class="form-control"
+    placeholder="e.g. Fred Bloggs"
+    name="name"
+    ng-model="<%-form%>Form.name"
+    ng-maxlength="50"
+    required
+  />
   <!-- Also, if <%-form%>.name.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
   and/or maxlength) -->
   <span class="help-block has-error" ng-if="<%-form%>.name.$dirty">
@@ -38,14 +55,25 @@ ng-class="{'has-error':<%-form%>.name.$invalid &&
 <!-- checking whether the form field is both $invalid AND $dirty.  If it is
 insert the "has-error" class on the input field (i.e. insert a red border around the input field)
 -->
-<div class="control-group form-group col-xs-10"
-ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
-                      <%-form%>.username.$dirty}" ng-hide="(<%-form%>Form.authProvider!='local' && '<%-form%>'!='signup')">
+<div
+  class="control-group form-group col-xs-10"
+  ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
+                      <%-form%>.username.$dirty}"
+  ng-hide="(<%-form%>Form.authProvider!='local' && '<%-form%>'!='signup')"
+>
   <label>* User name (for logging in)</label>
-    <!-- For this input field make it required, and have a max length of 25 -->
-  <input type="text" class="form-control" placeholder="e.g. fbloggs" name="username" ng-model="<%-form%>Form.username" ng-maxlength="50" 
-        ng-change="checkUsername()" ng-required="<%-form%>Form.authProvider=='local'">
-    <!-- Also, if <%-form%>.username.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
+  <!-- For this input field make it required, and have a max length of 25 -->
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. fbloggs"
+    name="username"
+    ng-model="<%-form%>Form.username"
+    ng-maxlength="50"
+    ng-change="checkUsername()"
+    ng-required="<%-form%>Form.authProvider=='local'"
+  />
+  <!-- Also, if <%-form%>.username.$dirty is true, show the message depending upon the particular properties truthiness (e.g. required
   and/or maxlength) -->
   <span class="help-block has-error" ng-if="<%-form%>.username.$dirty">
     <span ng-show="invalidUsername">User name must not contain spaces.</span>
@@ -56,26 +84,46 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 
 <!-- S U R N A M E -->
 
-<div class="control-group form-group col-xs-10"
+<div
+  class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.surname.$invalid &&
-                      <%-form%>.surname.$dirty}">
-  <label>* Surname (for correspondence)</label>  
+                      <%-form%>.surname.$dirty}"
+>
+  <label>* Surname (for correspondence)</label>
   <!-- For this input field make it required, and have a max length of 50 -->
-  <input type="text" class="form-control" placeholder="e.g. Bloggs" name="surname" ng-model="<%-form%>Form.surname" ng-maxlength="50" required>  
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. Bloggs"
+    name="surname"
+    ng-model="<%-form%>Form.surname"
+    ng-maxlength="50"
+    required
+  />
   <span class="help-block has-error" ng-if="<%-form%>.surname.$dirty">
     <span ng-show="<%-form%>.surname.$error.required">Surname is required.</span>
     <span ng-show="<%-form%>.surname.$error.maxlength">The surname cannot be more than 50 characters.</span>
   </span>
 </div>
 
- <!-- F I R S T  N A M E -->
+<!-- F I R S T  N A M E -->
 
-<div class="control-group form-group col-xs-10"
+<div
+  class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.firstName.$invalid &&
-                      <%-form%>.firstName.$dirty}">
-  <label>* First name (for correspondence)</label>  
+                      <%-form%>.firstName.$dirty}"
+>
+  <label>* First name (for correspondence)</label>
   <!-- For this input field make it required, and have a max length of 50 -->
-  <input type="text" class="form-control" placeholder="e.g. Fred" name="firstname" ng-model="<%-form%>Form.firstName" ng-maxlength="50" required>  
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. Fred"
+    name="firstname"
+    ng-model="<%-form%>Form.firstName"
+    ng-maxlength="50"
+    required
+  />
   <span class="help-block has-error" ng-if="<%-form%>.firstname.$dirty">
     <span ng-show="<%-form%>.firstname.$error.required">First name is required.</span>
     <span ng-show="<%-form%>.firstname.$error.maxlength">The first name cannot be more than 50 characters.</span>
@@ -83,25 +131,40 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 </div>
 
 <!-- C A T E G O R Y -->
-<div class="control-group form-group col-xs-10"
+<div
+  class="control-group form-group col-xs-10"
   ng-show="<%-sails.config.events.userCategories.length>0 %>"
   ng-class="{'has-error':<%-form%>.category.$invalid &&
-                      <%-form%>.category.$dirty}">
-  <label>Category</label>  
-  <select class="form-control" name="category" ng-options="userCategory for userCategory in userCategories" ng-model="<%-form%>Form.category">
+                      <%-form%>.category.$dirty}"
+>
+  <label>Category</label>
+  <select
+    class="form-control"
+    name="category"
+    ng-options="userCategory for userCategory in userCategories"
+    ng-model="<%-form%>Form.category"
+  >
     <option value="">-- choose category --</option>
   </select>
-  <span class="help-block has-error" ng-if="<%-form%>.category.$dirty"> 
-  </span>
-</div> 
+  <span class="help-block has-error" ng-if="<%-form%>.category.$dirty"> </span>
+</div>
 
 <!-- R A N K -->
 
-<div class="control-group form-group col-xs-10"
+<div
+  class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.rank.$invalid &&
-                        <%-form%>.rank.$dirty}">
+                        <%-form%>.rank.$dirty}"
+>
   <label>Rank (for <span class="hidden-xs">seating</span> reservation card)</label>
-  <input type="text" class="form-control" placeholder="e.g. Master Mason or your Provincial and/or Grand rank" name="rank" ng-model="<%-form%>Form.rank" ng-maxlength="100" >
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. Master Mason or your Provincial and/or Grand rank"
+    name="rank"
+    ng-model="<%-form%>Form.rank"
+    ng-maxlength="100"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.rank.$dirty">
     <span ng-show="<%-form%>.rank.$error.maxlength">Your rank cannot be more than 100 characters.</span>
   </span>
@@ -109,24 +172,45 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 
 <!-- L O D G E -->
 
-<div class="control-group form-group col-xs-10 col-md-6"
+<div
+  class="control-group form-group col-xs-10 col-md-6"
   ng-class="{'has-error':<%-form%>.lodge.$invalid &&
-                        <%-form%>.lodge.$dirty}">
-  <label><span ng-hide="<%-form%>Form.authProvider=='dummy' || !lodgeMandatory">* </span>Lodge name</label>
-  <input type="text" class="form-control" placeholder="e.g. Hamtun" name="lodge" ng-model="<%-form%>Form.lodge" ng-maxlength="50" ng-required="<%-form%>Form.authProvider!='dummy' && lodgeMandatory">
+                        <%-form%>.lodge.$dirty}"
+>
+  <label><span ng-hide="<%-form%>Form.authProvider=='dummy' || !lodgeMandatory">* </span>{{ unitType }} name</label>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. Hamtun"
+    name="lodge"
+    ng-model="<%-form%>Form.lodge"
+    ng-maxlength="50"
+    ng-required="<%-form%>Form.authProvider!='dummy' && lodgeMandatory"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.lodge.$dirty">
-    <span ng-show="<%-form%>.lodge.$error.required">Lodge name is required.</span>
+    <span ng-show="<%-form%>.lodge.$error.required">{{ unitType }} name is required.</span>
     <span ng-show="<%-form%>.lodge.$error.maxlength">The name cannot be more than 50 characters.</span>
   </span>
 </div>
 
 <!-- L O D G E  N U M B E R-->
 
-<div class="control-group form-group col-xs-6 col-md-4"
+<div
+  class="control-group form-group col-xs-6 col-md-4"
   ng-class="{'has-error':<%-form%>.lodgeno.$invalid &&
-                        <%-form%>.lodgeno.$dirty}">
+                        <%-form%>.lodgeno.$dirty}"
+>
   <label><span ng-hide="<%-form%>Form.authProvider=='dummy' || !lodgeMandatory">* </span>Lodge number</label>
-  <input type="number" class="form-control" placeholder="e.g. 7083" name="lodgeno" ng-model="<%-form%>Form.lodgeNo" ng-maxlength="5" ng-min="(<%-form%>Form.authProvider!='dummy' && lodgeMandatory)?1:0" ng-required="<%-form%>Form.authProvider!='dummy' && lodgeMandatory">
+  <input
+    type="number"
+    class="form-control"
+    placeholder="e.g. 7083"
+    name="lodgeno"
+    ng-model="<%-form%>Form.lodgeNo"
+    ng-maxlength="5"
+    ng-min="(<%-form%>Form.authProvider!='dummy' && lodgeMandatory)?1:0"
+    ng-required="<%-form%>Form.authProvider!='dummy' && lodgeMandatory"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.lodgeno.$dirty">
     <span ng-show="<%-form%>.lodgeno.$error.required">Lodge number is required.</span>
     <span ng-show="<%-form%>.lodgeno.$error.maxlength">The lodge number cannot be more than 5 digits.</span>
@@ -136,12 +220,22 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 
 <!-- L O D G E  Y E A R-->
 
-<div class="control-group form-group col-xs-10"
+<div
+  class="control-group form-group col-xs-10"
   ng-show="<%-sails.config.events.lodgeYear%>"
   ng-class="{'has-error':<%-form%>.lodgeyear.$invalid &&
-                        <%-form%>.lodgeyear.$dirty}">
+                        <%-form%>.lodgeyear.$dirty}"
+>
   <label><%-sails.config.events.lodgeYearLabel || 'Lodge year' %></label>
-  <input type="text" class="form-control" placeholder="e.g. year you joined" name="lodgeyear" ng-model="<%-form%>Form.lodgeYear" ng-minlength="4" ng-maxlength="4" >
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. year you joined"
+    name="lodgeyear"
+    ng-model="<%-form%>Form.lodgeYear"
+    ng-minlength="4"
+    ng-maxlength="4"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.lodgeyear.$dirty">
     <span ng-show="<%-form%>.lodgeyear.$error.maxlength">The year cannot be more than 4 characters.</span>
     <span ng-show="<%-form%>.lodgeyear.$error.minlength">The year cannot be less than 4 characters.</span>
@@ -149,76 +243,130 @@ ng-class="{'has-error':(invalidUsername || <%-form%>.username.$invalid) &&
 </div>
 
 <!-- C E N T R E -->
-<div class="control-group form-group col-xs-10" 
+<div
+  class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.centre.$invalid &&
-                        <%-form%>.centre.$dirty}">
+                        <%-form%>.centre.$dirty}"
+>
   <label>Centre</label>
-  <select class="form-control" placeholder="e.g. South Central" name="centre" ng-show="centres" ng-options="centre for centre in centres" ng-model="<%-form%>Form.centre">
+  <select
+    class="form-control"
+    placeholder="e.g. South Central"
+    name="centre"
+    ng-show="centres"
+    ng-options="centre for centre in centres"
+    ng-model="<%-form%>Form.centre"
+  >
     <option value="">-- choose centre --</option>
-  </select>  
-  <input type="text" class="form-control" ng-hide="centres" placeholder="e.g. Woolston" name="centre" ng-model="<%-form%>Form.centre" ng-maxlength="50">
+  </select>
+  <input
+    type="text"
+    class="form-control"
+    ng-hide="centres"
+    placeholder="e.g. Woolston"
+    name="centre"
+    ng-model="<%-form%>Form.centre"
+    ng-maxlength="50"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.centre.$dirty">
     <span ng-show="<%-form%>.centre.$error.maxlength">The centre name cannot be more than 50 characters.</span>
   </span>
 </div>
 
 <!-- A R E A -->
-<div class="control-group form-group col-xs-10" ng-hide="areas.length==0">
-  <label>Area</label>  
-  <select class="form-control" placeholder="e.g. South Central" name="area" ng-options="area for area in areas" ng-model="<%-form%>Form.area">
+<div class="control-group form-group col-xs-10" ng-hide="areas.length == 0">
+  <label>Area</label>
+  <select
+    class="form-control"
+    placeholder="e.g. South Central"
+    name="area"
+    ng-options="area for area in areas"
+    ng-model="<%-form%>Form.area"
+  >
     <option value="">-- choose area --</option>
   </select>
 </div>
 
 <!-- D I E T A R Y -->
 
-<div class="control-group form-group col-xs-10"
+<div
+  class="control-group form-group col-xs-10"
   ng-class="{'has-error':<%-form%>.dietary.$invalid &&
-                        <%-form%>.dietary.$dirty}">
+                        <%-form%>.dietary.$dirty}"
+>
   <label>Dietary requirements</label>
-  <input type="text" class="form-control" placeholder="e.g. Vegetarian" name="dietary" ng-model="<%-form%>Form.dietary" ng-maxlength="50" >
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. Vegetarian"
+    name="dietary"
+    ng-model="<%-form%>Form.dietary"
+    ng-maxlength="50"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.dietary.$dirty">
-    <span ng-show="<%-form%>.dietary.$error.maxlength">Your dietary requirements cannot be more than 50 characters.</span>
+    <span ng-show="<%-form%>.dietary.$error.maxlength"
+      >Your dietary requirements cannot be more than 50 characters.</span
+    >
   </span>
 </div>
 
 <!-- E M A I L -->
 
-<div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-form%>.email.$invalid &&
-                      <%-form%>.email.$dirty}">
-                        
+<div
+  class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-form%>.email.$invalid &&
+                      <%-form%>.email.$dirty}"
+>
   <label><span ng-hide="<%-form%>Form.authProvider=='dummy'">* </span>Email address</label>
-  <input type="email" class="form-control" placeholder="e.g fred.bloggs@somedomain.com" name="email" ng-model="<%-form%>Form.email" compare-to="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'">
+  <input
+    type="email"
+    class="form-control"
+    placeholder="e.g fred.bloggs@somedomain.com"
+    name="email"
+    ng-model="<%-form%>Form.email"
+    compare-to="<%-form%>Form.confirmemail"
+    ng-required="<%-form%>Form.authProvider!='dummy'"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.email.$dirty">
     <span ng-show="<%-form%>.email.$error.required">Email address is required.</span>
     <span ng-show="<%-form%>.email.$error.email">Not a valid email address.</span>
   </span>
 </div>
 
- <!-- C O N F I R M  E M A I L -->
+<!-- C O N F I R M  E M A I L -->
 
-<div class="control-group form-group col-xs-10"
-ng-class="{'has-error':<%-form%>.confirmemail.$invalid || <%-form%>.email.$error.compareTo}">
+<div
+  class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-form%>.confirmemail.$invalid || <%-form%>.email.$error.compareTo}"
+>
   <label>Re-enter your email address</label>
-  <input type="email" class="form-control" placeholder="one more time" name="confirmemail" ng-model="<%-form%>Form.confirmemail" ng-required="<%-form%>Form.authProvider!='dummy'" >
+  <input
+    type="email"
+    class="form-control"
+    placeholder="one more time"
+    name="confirmemail"
+    ng-model="<%-form%>Form.confirmemail"
+    ng-required="<%-form%>Form.authProvider!='dummy'"
+  />
   <span class="help-block has-error" ng-if="<%-form%>.confirmemail.$dirty">
     <span ng-show="<%-form%>.confirmemail.$error.required">Confirmation email address is required.</span>
     <span ng-show="<%-form%>.confirmemail.$error.email">Not a valid email address.</span>
   </span>
   <span class="help-block has-error">
-    <span ng-show="<%-form%>.email.$error.compareTo">Email address must match.</span>   
+    <span ng-show="<%-form%>.email.$error.compareTo">Email address must match.</span>
   </span>
 </div>
 
- <!-- U S E   G R A V A T A R -->
+<!-- U S E   G R A V A T A R -->
 
-<div class="control-group form-group col-xs-12"
-    ng-class="{'has-error':<%-form%>.usegravatar.$invalid &&
-                          <%-form%>.usegravatar.$dirty}" ng-show="<%-form%>Form.authProvider=='local'">
-    <label>
-        <input type="checkbox" class="bigcheckbox" name="usegravatar" ng-model="<%-form%>Form.useGravatar" />
-          &nbsp;&nbsp;&nbsp;Use email address for Gravatar image?
-     </label>
-    
- </div>
+<div
+  class="control-group form-group col-xs-12"
+  ng-class="{'has-error':<%-form%>.usegravatar.$invalid &&
+                          <%-form%>.usegravatar.$dirty}"
+  ng-show="<%-form%>Form.authProvider=='local'"
+>
+  <label>
+    <input type="checkbox" class="bigcheckbox" name="usegravatar" ng-model="<%-form%>Form.useGravatar" />
+    &nbsp;&nbsp;&nbsp;Use email address for Gravatar image?
+  </label>
+</div>

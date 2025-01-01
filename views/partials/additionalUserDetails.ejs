@@ -1,94 +1,166 @@
+<!-- P E R M A N E N T  D I N E R -->
+<div class="control-group form-group col-xs-10" ng-show="permanentDiningList">
+  <label>
+    <input type="checkbox" class="bigcheckbox" name="ispd" ng-model="<%-form%>Form.isPD" />
+    &nbsp;&nbsp;&nbsp;Permanent diner?
+  </label>
+</div>
 
-          <!-- P E R M A N E N T  D I N E R -->
-          <div class="control-group form-group col-xs-10" ng-show="permanentDiningList">
-            <label>
-              <input type="checkbox" class="bigcheckbox" name="ispd" ng-model="<%-form%>Form.isPD" />
-              &nbsp;&nbsp;&nbsp;Permanent diner?
-            </label>
-          </div>
+<!-- A D D R E S S -->
 
+<div class="control-group form-group col-xs-10">
+  <label>Address (for postal correspondence)</label>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="address line 1"
+    name="address1"
+    ng-model="<%-form%>Form.address1"
+  />
+  <br />
+  <input
+    type="text"
+    class="form-control"
+    placeholder="address line 2"
+    name="address2"
+    ng-model="<%-form%>Form.address2"
+  />
+  <br />
+  <input
+    type="text"
+    class="form-control"
+    placeholder="address line 3"
+    name="address3"
+    ng-model="<%-form%>Form.address3"
+  />
+  <br />
+  <input
+    type="text"
+    class="form-control"
+    placeholder="address line 4"
+    name="address4"
+    ng-model="<%-form%>Form.address4"
+  />
+</div>
 
-          <!-- A D D R E S S -->
+<!-- P O S T   C O D E -->
 
-          <div class="control-group form-group col-xs-10">
-            <label>Address (for postal correspondence)</label>  
-            <input type="text" class="form-control" placeholder="address line 1" name="address1" ng-model="<%-form%>Form.address1">  
-            <br>
-            <input type="text" class="form-control" placeholder="address line 2" name="address2" ng-model="<%-form%>Form.address2">  
-            <br>
-            <input type="text" class="form-control" placeholder="address line 3" name="address3" ng-model="<%-form%>Form.address3">  
-            <br>
-            <input type="text" class="form-control" placeholder="address line 4" name="address4" ng-model="<%-form%>Form.address4">  
-          </div>
+<div class="control-group form-group col-xs-6">
+  <label>Postcode</label>
+  <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-form%>Form.postcode" />
+</div>
 
-          <!-- P O S T   C O D E -->
+<!-- C O N T A C T   N U M B E R -->
 
-          <div class="control-group form-group col-xs-6">
-            <label>Postcode</label>  
-            <input type="text" class="form-control" placeholder="postcode" name="postcode" ng-model="<%-form%>Form.postcode">  
-          </div>
+<div class="control-group form-group col-xs-10">
+  <label>Contact number</label>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. your work/home or mobile number"
+    name="phone"
+    ng-model="<%-form%>Form.phone"
+  />
+</div>
 
+<!-- V O ? -->
+<div
+  class="control-group form-group col-xs-10"
+  ng-class="{ 'has-error': userdetails.isvo.$invalid && userdetails.isvo.$dirty }"
+>
+  <label>
+    <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-form%>Form.isVO" />
+    &nbsp;&nbsp;&nbsp;VO/AVC/AC?
+  </label>
+</div>
 
-          <!-- C O N T A C T   N U M B E R -->
+<!-- V O  L O D G E -->
+<div
+  class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-form%>.volodge.$invalid &&
+                                  <%-form%>.volodge.$dirty}"
+  ng-hide="!<%-form%>Form.isVO"
+>
+  <label>VO lodge (if applic.)</label>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="name of lodge you are assigned to"
+    name="volodge"
+    ng-model="<%-form%>Form.voLodge"
+    ng-maxlength="50"
+  />
+  <span class="help-block has-error" ng-if="<%-form%>.volodge.$dirty">
+    <span ng-show="<%-form%>.volodge.$error.maxlength"
+      >Exec {{ unitType }} name cannot be more than 50 characters.</span
+    >
+  </span>
+</div>
 
-          <div class="control-group form-group col-xs-10">
-            <label>Contact number</label>
-            <input type="text" class="form-control" placeholder="e.g. your work/home or mobile number" name="phone" ng-model="<%-form%>Form.phone">   
-          </div>   
+<!-- V O  L O D G E  N U M B E R-->
+<div
+  class="control-group form-group col-xs-6 col-md-4"
+  ng-class="{'has-error':<%-form%>.volodgeno.$invalid &&
+                                  <%-form%>.volodgeno.$dirty}"
+  ng-hide="!<%-form%>Form.isVO"
+>
+  <label>VO lodge number</label>
+  <input
+    type="number"
+    class="form-control"
+    name="volodgeno"
+    ng-model="<%-form%>Form.voLodgeNo"
+    ng-min="1"
+    ng-maxlength="5"
+  />
+  <span class="help-block has-error" ng-if="<%-form%>.volodgeno.$dirty">
+    <span ng-show="<%-form%>.volodgeno.$error.maxlength">The Exec lodge number cannot be more than 5 characters.</span>
+    <span ng-show="<%-form%>.volodgeno.$error.min">The Exec lodge number must be greater than zero.</span>
+  </span>
+</div>
 
-          <!-- V O ? -->
-          <div class="control-group form-group col-xs-10"
-            ng-class="{'has-error':userdetails.isvo.$invalid &&
-                                  userdetails.isvo.$dirty}">
-              <label>
-              <input type="checkbox" class="bigcheckbox" name="isvo" ng-model="<%-form%>Form.isVO" />
-              &nbsp;&nbsp;&nbsp;VO/AVC/AC?
-              </label>
-          </div>
-                    
-          
-          <!-- V O  L O D G E -->
-          <div class="control-group form-group col-xs-10"
-            ng-class="{'has-error':<%-form%>.volodge.$invalid &&
-                                  <%-form%>.volodge.$dirty}" ng-hide="!<%-form%>Form.isVO">
-            <label>VO lodge (if applic.)</label>
-            <input type="text" class="form-control" placeholder="name of lodge you are assigned to" name="volodge" ng-model="<%-form%>Form.voLodge" ng-maxlength="50" >
-            <span class="help-block has-error" ng-if="<%-form%>.volodge.$dirty">
-              <span ng-show="<%-form%>.volodge.$error.maxlength">Exec lodge name cannot be more than 50 characters.</span>
-            </span>
-          </div>
+<!-- V O  C E N T R E -->
+<div
+  class="control-group form-group col-xs-10"
+  ng-class="{'has-error':<%-form%>.vocentre.$invalid &&
+                                  <%-form%>.vocentre.$dirty}"
+  ng-hide="!<%-form%>Form.isVO"
+>
+  <label>VO/AVC centre</label>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="e.g. Woolston"
+    name="vocentre"
+    ng-hide="centres"
+    ng-model="<%-form%>Form.voCentre"
+    ng-maxlength="50"
+  />
+  <select
+    class="form-control"
+    placeholder="e.g. South Central"
+    name="vocentre"
+    ng-show="centres"
+    ng-options="centre for centre in centres"
+    ng-model="<%-form%>Form.voCentre"
+  >
+    <option value="">-- choose centre --</option>
+  </select>
+  <span class="help-block has-error" ng-if="<%-form%>.vocentre.$dirty">
+    <span ng-show="<%-form%>.vocentre.$error.maxlength">The Exec centre name cannot be more than 50 characters.</span>
+  </span>
+</div>
 
-          <!-- V O  L O D G E  N U M B E R-->
-          <div class="control-group form-group col-xs-6 col-md-4"
-            ng-class="{'has-error':<%-form%>.volodgeno.$invalid &&
-                                  <%-form%>.volodgeno.$dirty}" ng-hide="!<%-form%>Form.isVO">
-            <label>VO lodge number</label>
-            <input type="number" class="form-control"  name="volodgeno" ng-model="<%-form%>Form.voLodgeNo" ng-min="1" ng-maxlength="5" >
-            <span class="help-block has-error" ng-if="<%-form%>.volodgeno.$dirty">
-              <span ng-show="<%-form%>.volodgeno.$error.maxlength">The Exec lodge number cannot be more than 5 characters.</span>
-              <span ng-show="<%-form%>.volodgeno.$error.min">The Exec lodge number must be greater than zero.</span>
-            </span>
-          </div>
-
-
-          <!-- V O  C E N T R E -->
-          <div class="control-group form-group col-xs-10" 
-            ng-class="{'has-error':<%-form%>.vocentre.$invalid &&
-                                  <%-form%>.vocentre.$dirty}" ng-hide="!<%-form%>Form.isVO">
-            <label>VO/AVC centre</label>  
-            <input type="text" class="form-control" placeholder="e.g. Woolston" name="vocentre" ng-hide="centres" ng-model="<%-form%>Form.voCentre" ng-maxlength="50">
-            <select class="form-control" placeholder="e.g. South Central" name="vocentre" ng-show="centres" ng-options="centre for centre in centres" ng-model="<%-form%>Form.voCentre">
-              <option value="">-- choose centre --</option>
-            </select>
-            <span class="help-block has-error" ng-if="<%-form%>.vocentre.$dirty">
-              <span ng-show="<%-form%>.vocentre.$error.maxlength">The Exec centre name cannot be more than 50 characters.</span>
-            </span>
-          </div>
-
-          <!-- V O  A R E A -->
-          <div class="control-group form-group col-xs-10" ng-hide="areas.length==0 || !<%-form%>Form.isVO">
-            <label>VO/AVC/AC area</label>  
-            <select class="form-control" placeholder="e.g. South Central" name="voarea" ng-options="area for area in areas" ng-model="<%-form%>Form.voArea">
-              <option value="">-- choose area --</option>
-            </select>
-          </div>
+<!-- V O  A R E A -->
+<div class="control-group form-group col-xs-10" ng-hide="areas.length==0 || !<%-form%>Form.isVO">
+  <label>VO/AVC/AC area</label>
+  <select
+    class="form-control"
+    placeholder="e.g. South Central"
+    name="voarea"
+    ng-options="area for area in areas"
+    ng-model="<%-form%>Form.voArea"
+  >
+    <option value="">-- choose area --</option>
+  </select>
+</div>

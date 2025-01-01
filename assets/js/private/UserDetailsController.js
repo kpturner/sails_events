@@ -33,6 +33,9 @@ angular.module('EventsModule').controller('UserDetailsController', [
     // Salutations
     $scope.salutations = SAILS_LOCALS.salutations;
 
+    // Unit Type
+    $scope.unitType = SAILS_LOCALS.unitType;
+
     // User categories
     $scope.userCategories = SAILS_LOCALS.userCategories;
 
@@ -148,7 +151,7 @@ angular.module('EventsModule').controller('UserDetailsController', [
         $scope.userdetailsForm.firstName.length == 0 ||
         ($scope.userdetailsForm.authProvider == 'local' &&
           (!$scope.userdetailsForm.username || $scope.userdetailsForm.username.length == 0 || $scope.invalidUsername))
-          //			|| (!$scope.userdetailsForm.password ||$scope.userdetailsForm.password.length==0)
+        //			|| (!$scope.userdetailsForm.password ||$scope.userdetailsForm.password.length==0)
       ) {
         complete = false;
       }

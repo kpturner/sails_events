@@ -222,7 +222,7 @@ module.exports = {
                 next();
               });
             } else {
-              b.orderLabel = 'Lodge';
+              b.orderLabel = sails.config.events.unitType;
               newApologies.push(b);
               next();
             }
