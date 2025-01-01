@@ -775,6 +775,9 @@ module.exports = {
           result[platform].push(config);
         });
       }
+      if (!result[platform].length) {
+        delete result[platform];
+      }
     }
     return result;
   },
