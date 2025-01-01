@@ -100,20 +100,11 @@ var AuthController = {
   },
 
   /**
-     * Render the registration page
-     *
-     * Just like the login form, the registration form is just simple HTML:
-     *
-        <form role="form" action="/auth/local/register" method="post">
-          <input type="text" name="username" placeholder="username">
-          <input type="text" name="email" placeholder="Email">
-          <input type="password" name="password" placeholder="Password">
-          <button type="submit">Sign up</button>
-        </form>
-     *
-     * @param {Object} req
-     * @param {Object} res
-     */
+   * Render the registration page
+   *
+   * @param {Object} req
+   * @param {Object} res
+   */
   register: function (req, res) {
     res.view({
       form: 'signup',
