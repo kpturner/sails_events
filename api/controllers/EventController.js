@@ -49,8 +49,8 @@ module.exports = {
       }
 
       // Events with no particular order defined are included
-      // and Craft events are always included
-      let ordersToInclude = ['', null, 'C'];
+      // and events for the default order are always included
+      let ordersToInclude = ['', null, sails.config.events.defaultOrder];
 
       // Include the users orders
       Order.find({ user: userId })

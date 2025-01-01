@@ -216,7 +216,7 @@ module.exports = {
           apologies,
           function (apology, next) {
             var b = apology;
-            if (apology.event.order && apology.event.order != 'C') {
+            if (apology.event.order && apology.event.order != sails.config.events.defaultOrder) {
               Utility.augmentUser(apology.event, apology.user, function (augmentedUser) {
                 b.user = augmentedUser;
                 b.orderLabel = augmentedUser.orderLabel;

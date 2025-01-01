@@ -200,7 +200,7 @@ insert the "has-error" class on the input field (i.e. insert a red border around
   ng-class="{'has-error':<%-form%>.lodgeno.$invalid &&
                         <%-form%>.lodgeno.$dirty}"
 >
-  <label><span ng-hide="<%-form%>Form.authProvider=='dummy' || !lodgeMandatory">* </span>Lodge number</label>
+  <label><span ng-hide="<%-form%>Form.authProvider=='dummy' || !lodgeMandatory">* </span>{{ unitType }} number</label>
   <input
     type="number"
     class="form-control"
@@ -212,8 +212,8 @@ insert the "has-error" class on the input field (i.e. insert a red border around
     ng-required="<%-form%>Form.authProvider!='dummy' && lodgeMandatory"
   />
   <span class="help-block has-error" ng-if="<%-form%>.lodgeno.$dirty">
-    <span ng-show="<%-form%>.lodgeno.$error.required">Lodge number is required.</span>
-    <span ng-show="<%-form%>.lodgeno.$error.maxlength">The lodge number cannot be more than 5 digits.</span>
+    <span ng-show="<%-form%>.lodgeno.$error.required">{{ unitType }} number is required.</span>
+    <span ng-show="<%-form%>.lodgeno.$error.maxlength">The {{ unitType }} number cannot be more than 5 digits.</span>
     <span ng-show="<%-form%>.lodgeno.$error.min">The lodge number must be greater than zero.</span>
   </span>
 </div>

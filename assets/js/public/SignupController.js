@@ -42,7 +42,7 @@ angular.module('EventsModule').controller('SignupController', [
 
     // Enable a repeater for other orders
     $scope.orders = SAILS_LOCALS.orders.filter(function (order) {
-      return order.code !== 'C';
+      return order.code !== SAILS_LOCALS.defaultOrder;
     });
     $scope.ordersArr = [];
     $scope.ordersModel = [];

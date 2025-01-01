@@ -585,7 +585,7 @@ module.exports = {
   augmentUser: function (event, user, cb) {
     if (user) {
       user.orderLabel = Utility.orderLabel(event.order);
-      if (event.order && event.order != 'C') {
+      if (event.order && event.order != sails.config.events.defaultOrder) {
         Order.find({ user: user.id }).exec(function (err, orders) {
           _.forEach(orders, function (order) {
             if (event.order == order.code) {
@@ -614,7 +614,7 @@ module.exports = {
   orderLabel: function (order) {
     // Order label
     var orderLabel;
-    if (order && order != 'C') {
+    if (order && order != sails.config.events.defaultOrder) {
       sails.config.events.orders.forEach(function (cfg) {
         if (order == cfg.code) {
           orderLabel = cfg.label ? cfg.label : sails.config.events.unitType;
@@ -636,7 +636,7 @@ module.exports = {
   orderDetails: function (order) {
     // Order label
     var res = {};
-    if (order.code && order.code != 'C') {
+    if (order.code && order.code != sails.config.events.defaultOrder) {
       sails.config.events.orders.forEach(function (cfg) {
         if (order.code == cfg.code) {
           res.label = cfg.label ? cfg.label : sails.config.events.unitType;

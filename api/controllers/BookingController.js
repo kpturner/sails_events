@@ -407,7 +407,7 @@ module.exports = {
   orderLabel: function (order) {
     // Order label
     var orderLabel;
-    if (order && order != 'C') {
+    if (order && order != sails.config.events.defaultOrder) {
       sails.config.events.orders.forEach(function (cfg) {
         if (order == cfg.code) {
           orderLabel = cfg.label ? cfg.label : sails.config.events.unitType;
@@ -427,7 +427,7 @@ module.exports = {
    * Set email info
    */
   setEmailInfo: function (event, user, orders) {
-    if (event.order && event.order != 'C') {
+    if (event.order && event.order != sails.config.events.defaultOrder) {
       _.forEach(orders, function (order) {
         if (event.order == order.code) {
           user.lodge = order.name;
@@ -598,7 +598,7 @@ module.exports = {
 
         // Careful with the user lodge details. This depends on the order
         // for the event
-        if (!event.order || event.order == 'C') {
+        if (!event.order || event.order == sails.config.events.defaultOrder) {
           // Craft
           user.salutation = req.param('salutation');
           user.lodge = req.param('lodge');
@@ -1187,7 +1187,7 @@ module.exports = {
           // If not Craft, update/create the users order details.
           // If the user is in two orders of the same type
           // we will ignore that and only cater for the first one
-          if (event.order && event.order != 'C') {
+          if (event.order && event.order != sails.config.events.defaultOrder) {
             Order.destroy({ user: userId, code: event.order }).exec(function (err, deleted) {
               var order = {
                 user: userId,
@@ -1683,7 +1683,7 @@ module.exports = {
               bookings,
               function (booking, next) {
                 var b = booking;
-                if (event.order && event.order != 'C') {
+                if (event.order && event.order != sails.config.events.defaultOrder) {
                   Utility.augmentUser(event, booking.user, function (augmentedUser) {
                     b.user = augmentedUser;
                     b.orderLabel = augmentedUser.orderLabel;
@@ -2441,7 +2441,7 @@ module.exports = {
           // All the bookings are for the same event so we only need to work out the labels
           // once
           if (!label) {
-            if (!booking.event.order || booking.event.order == 'C') {
+            if (!booking.event.order || booking.event.order == sails.config.events.defaultOrder) {
               label = 'lodge';
               labelNo = 'lodgeNo';
             } else {
@@ -2521,7 +2521,7 @@ module.exports = {
         //row.createdAt=booking.createdAt;
 
         // Craft or other order?
-        if (!booking.event.order || booking.event.order == 'C') {
+        if (!booking.event.order || booking.event.order == sails.config.events.defaultOrder) {
           // Craft
           row.salutation = booking.user?.salutation || '';
           row.rank = booking.user?.rank || '';

@@ -20,18 +20,18 @@ angular.module('EventsModule').controller('BookController', [
     $scope.lodgeMandatory = SAILS_LOCALS.lodgeMandatory;
 
     // Order label
-    if ($scope.event.order && $scope.event.order != 'C') {
+    if ($scope.event.order && $scope.event.order != SAILS_LOCALS.defaultOrder) {
       SAILS_LOCALS.orders.forEach(function (cfg) {
         if ($scope.event.order == cfg.code) {
-          $scope.orderlabel = cfg.label ? cfg.label : sails.config.events.unitType;
+          $scope.orderlabel = cfg.label ? cfg.label : SAILS_LOCALS.unitType;
           return false;
         }
       });
       if (!$scope.orderlabel) {
-        $scope.orderlabel = sails.config.events.unitType;
+        $scope.orderlabel = SAILS_LOCALS.unitType;
       }
     } else {
-      $scope.orderlabel = sails.config.events.unitType;
+      $scope.orderlabel = SAILS_LOCALS.unitType;
     }
 
     // Enable a repeater for additional attendees
@@ -136,7 +136,7 @@ angular.module('EventsModule').controller('BookController', [
 
       function setInfo(userOrders) {
         $scope.userOrders = userOrders;
-        if ($scope.event.order && $scope.event.order != 'C') {
+        if ($scope.event.order && $scope.event.order != SAILS_LOCALS.defaultOrder) {
           // Overwrite the lodge info with the relevant order info
           userOrders.forEach(function (order) {
             if ($scope.event.order == order.code) {

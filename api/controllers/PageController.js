@@ -53,6 +53,7 @@ module.exports = {
           form: 'profile',
           salutations: sails.config.events.salutations,
           unitType: sails.config.events.unitType,
+          defaultOrder: sails.config.events.defaultOrder,
           areas: Utility.areas(),
           centres: Utility.centres(),
           signup: true,

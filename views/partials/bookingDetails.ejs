@@ -307,7 +307,7 @@
 >
   <label>* Salutation</label>
   <select
-    ng-show="!event.order || event.order == 'C' || event.order == 'OV'"
+    ng-show="!event.order || event.order == sails.config.events.defaultOrder || event.order == 'OV'"
     class="form-control"
     placeholder="e.g. Bro. or W.Bro etc"
     name="salutation"
@@ -318,7 +318,7 @@
     <option value="">-- choose salutation --</option>
   </select>
   <input
-    ng-hide="!event.order || event.order == 'C' || event.order == 'OV'"
+    ng-hide="!event.order || event.order == sails.config.events.defaultOrder || event.order == 'OV'"
     type="text"
     class="form-control"
     placeholder="salutation"
@@ -882,7 +882,7 @@ and/or maxlength) -->
     <div class="control-group form-group col-xs-10">
       <label>* Salutation</label>
       <select
-        ng-show="!event.order || event.order == 'C' || event.order == 'OV'"
+        ng-show="!event.order || event.order == sails.config.events.defaultOrder || event.order == 'OV'"
         class="form-control"
         placeholder="e.g. Mr or Bro. or W.Bro etc"
         name="salutation_{{ place }}"
@@ -892,7 +892,7 @@ and/or maxlength) -->
         <option value="">-- choose salutation --</option>
       </select>
       <input
-        ng-hide="!event.order || event.order == 'C' || event.order == 'OV'"
+        ng-hide="!event.order || event.order == sails.config.events.defaultOrder || event.order == 'OV'"
         type="text"
         class="form-control"
         placeholder="salutation"
