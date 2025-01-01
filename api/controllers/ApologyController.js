@@ -54,6 +54,8 @@ module.exports = {
                 Email.send(
                   'apology',
                   {
+                    unitType: sails.config.events.unitType,
+                    unitDesc: sails.config.events.unitDesc,
                     event: event,
                     eventDate: formattedDate,
                     user: apologiser,

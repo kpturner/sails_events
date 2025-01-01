@@ -411,6 +411,8 @@ module.exports = {
                     Email.send(
                       'gracePeriodChanged',
                       {
+                        unitType: sails.config.events.unitType,
+                        unitDesc: sails.config.events.unitDesc,
                         recipientName: Utility.recipient(
                           booking.user.salutation,
                           booking.user.firstName,

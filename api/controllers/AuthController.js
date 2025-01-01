@@ -423,6 +423,8 @@ var AuthController = {
             Email.send(
               'profileChanged',
               {
+                unitType: sails.config.events.unitType,
+                unitDesc: sails.config.events.unitDesc,
                 timestamp: new Date(),
                 recipientName: Utility.recipient(
                   updatedUser[0].salutation,
@@ -478,6 +480,8 @@ var AuthController = {
         Email.send(
           'passwordReset',
           {
+            unitType: sails.config.events.unitType,
+            unitDesc: sails.config.events.unitDesc,
             recipientName: Utility.recipient(user.salutation, user.firstName, user.surname),
             senderName: sails.config.events.title,
             resetInstructions: resetInstructions,

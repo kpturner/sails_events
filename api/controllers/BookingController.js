@@ -497,6 +497,8 @@ module.exports = {
     Email.send(
       'bookingConfirmation',
       {
+        unitType: sails.config.events.unitType,
+        unitDesc: sails.config.events.unitDesc,
         recipientName: recipientName,
         senderName: sails.config.events.title,
         updated: updated,
