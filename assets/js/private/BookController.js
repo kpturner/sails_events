@@ -23,15 +23,15 @@ angular.module('EventsModule').controller('BookController', [
     if ($scope.event.order && $scope.event.order != 'C') {
       SAILS_LOCALS.orders.forEach(function (cfg) {
         if ($scope.event.order == cfg.code) {
-          $scope.orderlabel = cfg.label ? cfg.label : 'Lodge';
+          $scope.orderlabel = cfg.label ? cfg.label : sails.config.events.unitType;
           return false;
         }
       });
       if (!$scope.orderlabel) {
-        $scope.orderlabel = 'Lodge';
+        $scope.orderlabel = sails.config.events.unitType;
       }
     } else {
-      $scope.orderlabel = 'Lodge';
+      $scope.orderlabel = sails.config.events.unitType;
     }
 
     // Enable a repeater for additional attendees

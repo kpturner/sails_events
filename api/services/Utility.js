@@ -617,15 +617,15 @@ module.exports = {
     if (order && order != 'C') {
       sails.config.events.orders.forEach(function (cfg) {
         if (order == cfg.code) {
-          orderLabel = cfg.label ? cfg.label : 'Lodge';
+          orderLabel = cfg.label ? cfg.label : sails.config.events.unitType;
           return false;
         }
       });
       if (!orderLabel) {
-        orderLabel = 'Lodge';
+        orderLabel = sails.config.events.unitType;
       }
     } else {
-      orderLabel = 'Lodge';
+      orderLabel = sails.config.events.unitType;
     }
     return orderLabel;
   },
@@ -639,17 +639,17 @@ module.exports = {
     if (order.code && order.code != 'C') {
       sails.config.events.orders.forEach(function (cfg) {
         if (order.code == cfg.code) {
-          res.label = cfg.label ? cfg.label : 'Lodge';
+          res.label = cfg.label ? cfg.label : sails.config.events.unitType;
           res.desc = cfg.desc;
           return false;
         }
       });
       if (!res.label) {
-        res.label = 'Lodge';
+        res.label = sails.config.events.unitType;
         res.desc = 'Craft';
       }
     } else {
-      res.label = 'Lodge';
+      res.label = sails.config.events.unitType;
       res.desc = 'Craft';
     }
     return res;

@@ -410,15 +410,15 @@ module.exports = {
     if (order && order != 'C') {
       sails.config.events.orders.forEach(function (cfg) {
         if (order == cfg.code) {
-          orderLabel = cfg.label ? cfg.label : 'Lodge';
+          orderLabel = cfg.label ? cfg.label : sails.config.events.unitType;
           return false;
         }
       });
       if (!orderLabel) {
-        orderLabel = 'Lodge';
+        orderLabel = sails.config.events.unitType;
       }
     } else {
-      orderLabel = 'Lodge';
+      orderLabel = sails.config.events.unitType;
     }
     return orderLabel;
   },
