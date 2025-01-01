@@ -646,11 +646,11 @@ module.exports = {
       });
       if (!res.label) {
         res.label = sails.config.events.unitType;
-        res.desc = 'Craft';
+        res.desc = sails.config.events.unitDesc;
       }
     } else {
       res.label = sails.config.events.unitType;
-      res.desc = 'Craft';
+      res.desc = sails.config.events.unitDesc;
     }
     return res;
   },

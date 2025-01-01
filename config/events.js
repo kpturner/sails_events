@@ -118,6 +118,9 @@ module.exports.events = {
   // Unit type
   unitType: 'Lodge',
 
+  // Unit description
+  unitDesc: 'Craft',
+
   // Areas
   areas: ['North Central', 'North East', 'Solent', 'South Central', 'South East', 'South West'],
 
